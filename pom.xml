@@ -61,6 +61,7 @@
 		<module>myconfig-web</module>
 		<module>myconfig-service-api</module>
 		<module>myconfig-service-impl</module>
+		<module>myconfig-test</module>
 	</modules>
 
 	<dependencyManagement>
