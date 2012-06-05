@@ -1,0 +1,41 @@
+<dataset>
+
+	<APPLICATION id="1" name="myapp" />
+	<APPLICATION id="2" name="anotherapp" />
+	
+	<VERSION application="1" name="1.0" />
+	<VERSION application="1" name="1.1" />
+	<VERSION application="1" name="1.2" />
+	<VERSION application="2" name="1.0.0" />
+	<VERSION application="2" name="1.0.1" />
+	
+	<ENVIRONMENT application="1" name="DEV" />
+	<ENVIRONMENT application="1" name="ACC" />
+	<ENVIRONMENT application="1" name="UAT" />
+	<ENVIRONMENT application="1" name="PROD" />
+	<ENVIRONMENT application="2" name="DEV" />
+	<ENVIRONMENT application="2" name="ACC" />
+	<ENVIRONMENT application="2" name="UAT" />
+	<ENVIRONMENT application="2" name="PROD" />
+	
+	<KEY application="1" name="jdbc.user" description="User used to connect to the database" />
+	<KEY application="1" name="jdbc.password" description="Password used to connect to the database" />
+	
+	<VERSION_KEY application="1" version="1.0" key="jdbc.user" />
+	<VERSION_KEY application="1" version="1.1" key="jdbc.user" />
+	<VERSION_KEY application="1" version="1.2" key="jdbc.user" />
+	
+	<CONFIG application="1" version="1.0" key="jdbc.user" environment="DEV" value="1.0 jdbc.user DEV" />
+	<CONFIG application="1" version="1.0" key="jdbc.user" environment="ACC" value="1.0 jdbc.user ACC" />
+	<CONFIG application="1" version="1.0" key="jdbc.user" environment="UAT" value="1.0 jdbc.user UAT" />
+	<CONFIG application="1" version="1.0" key="jdbc.user" environment="PROD" value="1.0 jdbc.user PROD" />
+	<CONFIG application="1" version="1.1" key="jdbc.user" environment="DEV" value="1.1 jdbc.user DEV" />
+	<CONFIG application="1" version="1.1" key="jdbc.user" environment="ACC" value="1.1 jdbc.user ACC" />
+	<CONFIG application="1" version="1.1" key="jdbc.user" environment="UAT" value="1.1 jdbc.user UAT" />
+	<CONFIG application="1" version="1.1" key="jdbc.user" environment="PROD" value="1.1 jdbc.user PROD" />
+	<CONFIG application="1" version="1.2" key="jdbc.user" environment="DEV" value="1.2 jdbc.user DEV" />
+	<CONFIG application="1" version="1.2" key="jdbc.user" environment="ACC" value="1.2 jdbc.user ACC" />
+	<CONFIG application="1" version="1.2" key="jdbc.user" environment="UAT" value="1.2 jdbc.user UAT" />
+	<CONFIG application="1" version="1.2" key="jdbc.user" environment="PROD" value="1.2 jdbc.user PROD" />
+
+</dataset>
