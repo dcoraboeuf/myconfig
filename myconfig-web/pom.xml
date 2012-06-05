@@ -21,6 +21,19 @@
 	</properties>
 	
 	<dependencies>
+		<!-- This -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>myconfig-service-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>myconfig-service-impl</artifactId>
+			<version>${project.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
