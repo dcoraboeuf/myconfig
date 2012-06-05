@@ -2,29 +2,29 @@ package net.myconfig.service.db;
 
 import javax.sql.DataSource;
 
-import net.myconfig.core.MyConfigProfiles;
+import net.myconfig.service.api.ConfigurationService;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile({ MyConfigProfiles.DEV, MyConfigProfiles.PROD })
 public class DataSourceConfig {
 	
-	// FIXME Configuration using myconfig !
+	@Autowired
+	private ConfigurationService configurationService;
 	
 	@Bean
 	public DataSource dataSource() {
 		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName("org.h2.Driver");
-		ds.setUrl(String.format("jdbc:h2:file:%s/myconfig-dev/db/data;AUTOCOMMIT=OFF;MVCC=true", System.getProperty("user.home")));
-		ds.setUsername("sa");
-		ds.setPassword("");
+		ds.setDriverClassName(configurationService.getDBDriver());
+		ds.setUrl(configurationService.getDBURL());
+		ds.setUsername(configurationService.getDBUser());
+		ds.setPassword(configurationService.getDBPassword());
 		ds.setDefaultAutoCommit(false);
-		ds.setInitialSize(5);
-		ds.setMaxActive(10);
+		ds.setInitialSize(configurationService.getDBPoolInitial());
+		ds.setMaxActive(configurationService.getDBPoolMax());
 		return ds;
 	}
 
