@@ -129,7 +129,7 @@
 					<artifactId>jetty-maven-plugin</artifactId>
 					<configuration>
 						<webApp>
-							<contextPath>/cipol</contextPath>
+							<contextPath>/myconfig</contextPath>
 							<defaultsDescriptor>${project.basedir}/src/test/resources/jetty/webdefault.xml</defaultsDescriptor>
 						</webApp>
 						<stopPort>9966</stopPort>
