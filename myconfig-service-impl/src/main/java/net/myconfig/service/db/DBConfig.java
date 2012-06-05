@@ -19,7 +19,7 @@ public class DBConfig {
 		DBInit db = new DBInit();
 		db.setVersion(0);
 		db.setJdbcDataSource(dataSource);
-		db.setVersionTable("VERSION");
+		db.setVersionTable("DBVERSION");
 		db.setVersionColumnName("VALUE");
 		db.setVersionColumnTimestamp("UPDATED");
 		db.setResourceInitialization("/META-INF/db/init.sql");
