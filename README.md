@@ -1,0 +1,4 @@
+myconfig
+========
+
+Application configuration management
