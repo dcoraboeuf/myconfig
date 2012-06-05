@@ -24,6 +24,11 @@
 		<!-- This -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>myconfig-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>myconfig-service-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -93,6 +98,12 @@
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
 		<!-- Testing -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>myconfig-test</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 	    <dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
