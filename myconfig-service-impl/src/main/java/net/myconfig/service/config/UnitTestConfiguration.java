@@ -1,16 +1,20 @@
 package net.myconfig.service.config;
 
 import net.myconfig.core.MyConfigProfiles;
+import net.myconfig.service.api.ConfigurationService;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 @Profile(MyConfigProfiles.TEST)
-public class UTConfigurationService extends AbstractConfigurationService {
+public class UnitTestConfiguration implements GeneralConfiguration {
 	
-	public UTConfigurationService() {
-		super (
+	@Override
+	@Bean
+	public ConfigurationService configurationService() {
+		return new DefaultConfigurationService(
 				MyConfigProfiles.TEST,
 				"classpath:log4j_dev.properties",
 				"org.h2.Driver",

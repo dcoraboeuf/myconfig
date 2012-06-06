@@ -10,7 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Log4jConfigurer;
 
-public abstract class AbstractConfigurationService implements ConfigurationService {
+public class DefaultConfigurationService implements ConfigurationService {
 
 	private final Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
 
@@ -24,7 +24,7 @@ public abstract class AbstractConfigurationService implements ConfigurationServi
 	private final int dbPoolInitial;
 	private final int dbPoolMax;
 
-	public AbstractConfigurationService(String profile, String loggingPath, String dbDriver, String dbUrl, String dbUser, String dbPassword, int dbPoolInitial, int dbPoolMax) {
+	public DefaultConfigurationService(String profile, String loggingPath, String dbDriver, String dbUrl, String dbUser, String dbPassword, int dbPoolInitial, int dbPoolMax) {
 		this.profile = profile;
 		this.loggingPath = loggingPath;
 		this.dbDriver = dbDriver;

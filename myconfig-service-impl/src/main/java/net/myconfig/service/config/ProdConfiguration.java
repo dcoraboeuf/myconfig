@@ -1,19 +1,23 @@
 package net.myconfig.service.config;
 
 import net.myconfig.core.MyConfigProfiles;
+import net.myconfig.service.api.ConfigurationService;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
-@Component
+@Configuration
 @Profile(MyConfigProfiles.PROD)
-public class ProdConfigurationService extends AbstractConfigurationService {
+public class ProdConfiguration implements GeneralConfiguration {
 	
 	// FIXME Gets the configuration from outside
 	// FIXME Logging configuration must be taken from outside
 	
-	public ProdConfigurationService() {
-		super (
+	@Override
+	@Bean
+	public ConfigurationService configurationService() {
+		return new DefaultConfigurationService (
 				MyConfigProfiles.PROD,
 				"classpath:log4j_prod.properties",
 				"org.h2.Driver",
