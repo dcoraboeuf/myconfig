@@ -1,4 +1,4 @@
-package net.myconfig.service.impl;
+package net.myconfig.service.config;
 
 import java.io.FileNotFoundException;
 

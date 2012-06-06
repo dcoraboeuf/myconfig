@@ -1,4 +1,4 @@
-package net.myconfig.service.impl;
+package net.myconfig.service.config;
 
 import net.myconfig.core.MyConfigProfiles;
 
@@ -6,12 +6,12 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile(MyConfigProfiles.IT)
-public class ITConfigurationService extends AbstractConfigurationService {
+@Profile(MyConfigProfiles.TEST)
+public class UTConfigurationService extends AbstractConfigurationService {
 	
-	public ITConfigurationService() {
+	public UTConfigurationService() {
 		super (
-				MyConfigProfiles.IT,
+				MyConfigProfiles.TEST,
 				"org.h2.Driver",
 				"jdbc:h2:file:target/db/data;AUTOCOMMIT=OFF;MVCC=true",
 				"sa",

@@ -1,4 +1,4 @@
-package net.myconfig.service.impl;
+package net.myconfig.service.config;
 
 import net.myconfig.core.MyConfigProfiles;
 
