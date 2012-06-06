@@ -8,12 +8,15 @@ import net.myconfig.service.api.ConfigurationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Log4jConfigurer;
 
 public abstract class AbstractConfigurationService implements ConfigurationService {
 
 	private final Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
 
 	private final String profile;
+	private final String loggingPath;
+	
 	private final String dbDriver;
 	private final String dbUrl;
 	private final String dbUser;
@@ -21,8 +24,9 @@ public abstract class AbstractConfigurationService implements ConfigurationServi
 	private final int dbPoolInitial;
 	private final int dbPoolMax;
 
-	public AbstractConfigurationService(String profile, String dbDriver, String dbUrl, String dbUser, String dbPassword, int dbPoolInitial, int dbPoolMax) {
+	public AbstractConfigurationService(String profile, String loggingPath, String dbDriver, String dbUrl, String dbUser, String dbPassword, int dbPoolInitial, int dbPoolMax) {
 		this.profile = profile;
+		this.loggingPath = loggingPath;
 		this.dbDriver = dbDriver;
 		this.dbUrl = dbUrl;
 		this.dbUser = dbUser;
@@ -38,7 +42,7 @@ public abstract class AbstractConfigurationService implements ConfigurationServi
 	}
 
 	protected void initLogging() throws FileNotFoundException {
-		// FIXME Log4jConfigurer.initLogging(loggingPath);
+		Log4jConfigurer.initLogging(loggingPath);
 	}
 
 	protected void initGeneral() {
