@@ -4,8 +4,10 @@ import net.myconfig.core.MyConfigProfiles;
 
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 
 @ActiveProfiles(MyConfigProfiles.PROD)
+@TestExecutionListeners(ProdConfigurationTestListener.class)
 public class ProdConfigurationTest extends AbstractConfigurationTest {
 	
 	@Test
