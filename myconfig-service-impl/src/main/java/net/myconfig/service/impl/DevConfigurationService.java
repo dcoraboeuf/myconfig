@@ -11,6 +11,7 @@ public class DevConfigurationService extends AbstractConfigurationService {
 	
 	public DevConfigurationService() {
 		super (
+				MyConfigProfiles.DEV,
 				"org.h2.Driver",
 				String.format("jdbc:h2:file:%s/myconfig-dev/db/data;AUTOCOMMIT=OFF;MVCC=true", System.getProperty("user.home")),
 				"sa",

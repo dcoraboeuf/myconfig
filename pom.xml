@@ -285,6 +285,18 @@
 					<version>7.6.3.v20120416</version>
 				</plugin>
 				<plugin>
+					<groupId>org.codehaus.gmaven</groupId>
+					<artifactId>gmaven-plugin</artifactId>
+					<version>1.4</version>
+				    <dependencies>
+				        <dependency>
+				            <groupId>org.codehaus.gmaven.runtime</groupId>
+				            <artifactId>gmaven-runtime-1.7</artifactId>
+				            <version>1.4</version>
+				        </dependency>
+				    </dependencies>
+				</plugin>
+				<plugin>
 					<groupId>net.sf.sido</groupId>
 					<artifactId>sido-gen-maven</artifactId>
 					<version>${sidoVersion}</version>

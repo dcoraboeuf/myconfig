@@ -13,6 +13,7 @@ public class ProdConfigurationService extends AbstractConfigurationService {
 	
 	public ProdConfigurationService() {
 		super (
+				MyConfigProfiles.PROD,
 				"org.h2.Driver",
 				String.format("jdbc:h2:file:%s/myconfig-prod/db/data;AUTOCOMMIT=OFF;MVCC=true", System.getProperty("user.home")),
 				"sa",
