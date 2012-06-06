@@ -12,5 +12,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
     
     <context:component-scan base-package="net.myconfig"/>
+    <context:property-placeholder location="classpath:META-INF/resources/app.properties"/>
 
 </beans>

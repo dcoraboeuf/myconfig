@@ -19,6 +19,12 @@ public class GetController {
 	public GetController(MyConfigService myConfigService) {
 		this.myConfigService = myConfigService;
 	}
+	
+	@RequestMapping("/version")
+	public @ResponseBody
+	String version () {
+		return myConfigService.getVersion();
+	}
 
 	// FIXME Full configuration for app x version x env
 	// FIXME Configuration description for app x version

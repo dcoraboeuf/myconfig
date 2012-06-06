@@ -13,7 +13,6 @@ import groovyx.net.http.HTTPBuilder;
 import groovyx.net.http.Method;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 class ITRestGet {
@@ -42,14 +41,16 @@ class ITRestGet {
 	}
 	
 	@Test
-	@Ignore
 	void version() {
-		http.get ( path: 'version' ) { resp, json ->
-			println("Response status : $resp.status")
-			println("Response content: $json")
-			def actualVersion = json.versionNumber
-			if (actualVersion != version) {
-				fail("Expected version $version but was $actualVersion")
+		http.request ( Method.GET, ContentType.TEXT ) {
+			uri.path = "version"
+			response.success = { resp, reader ->
+				def content = reader.text
+				println("Response status : $resp.status")
+				println("Response content: $content")
+				if (version != content) {
+					fail("Expected version $version but was $content")
+				}
 			}
 		}
 	}

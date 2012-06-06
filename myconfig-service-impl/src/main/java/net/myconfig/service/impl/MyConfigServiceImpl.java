@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +12,17 @@ import net.myconfig.service.api.MyConfigService;
 @Service
 public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigService {
 
+	private final String versionNumber;
+
 	@Autowired
-	public MyConfigServiceImpl(DataSource dataSource) {
+	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource) {
 		super(dataSource);
+		this.versionNumber = versionNumber;
+	}
+	
+	@Override
+	public String getVersion() {
+		return versionNumber;
 	}
 
 	@Override

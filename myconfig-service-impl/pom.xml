@@ -34,6 +34,10 @@
 			<artifactId>spring-jdbc</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.jstring</groupId>
+			<artifactId>jstring</artifactId>
+		</dependency>
+		<dependency>
 		    <groupId>net.sf.dbinit</groupId>
 		    <artifactId>dbinit</artifactId>
 		</dependency>
@@ -76,5 +80,14 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
 	
 </project>

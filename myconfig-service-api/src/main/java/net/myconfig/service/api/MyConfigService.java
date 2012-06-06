@@ -4,4 +4,6 @@ public interface MyConfigService {
 
 	String getKey(String application, String version, String environment, String key);
 
+	String getVersion();
+
 }
