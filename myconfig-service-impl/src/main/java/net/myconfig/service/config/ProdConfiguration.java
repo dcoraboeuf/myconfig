@@ -30,8 +30,6 @@ public class ProdConfiguration implements GeneralConfiguration {
 	
 	private File home;
 	
-	// FIXME The default logging configuration is parameterized
-	
 	@Override
 	@Bean
 	public ConfigurationService configurationService() throws Exception {
@@ -41,6 +39,8 @@ public class ProdConfiguration implements GeneralConfiguration {
 		if (!home.exists() && !home.isDirectory() && !home.canWrite()) {
 			throw new IllegalStateException(String.format("The home directory at %s does not exist, is not a directory or cannot be written.", home.getAbsolutePath()));
 		}
+		// System configuration
+		System.setProperty(HomeSupport.SYSTEM_HOME, home.getAbsolutePath());
 		// Path to the log configuration
 		String logPath = initLoggingConfiguration (home);
 		// Gets the configuration
