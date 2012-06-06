@@ -57,7 +57,7 @@ class ITRestGet {
 	@Test
 	void get_key_ok() {
 		http.request ( Method.GET, ContentType.TEXT ) {
-			uri.path = 'key/myapp/1.2/UAT/jdbc.user'
+			uri.path = "key/jdbc.user/myapp/1.2/UAT"
 			response.success = { resp, reader ->
 				def content = reader.text
 				println("Response status : $resp.status")

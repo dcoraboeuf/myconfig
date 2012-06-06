@@ -23,7 +23,7 @@ public class GetController {
 	// FIXME Full configuration for app x version x env
 	// FIXME Configuration description for app x version
 
-	@RequestMapping("/key/{application}/{version}/{environment}/{key}")
+	@RequestMapping("/key/{key}/{application}/{version}/{environment}")
 	public @ResponseBody
 	String key(@PathVariable String application, @PathVariable String version, @PathVariable String environment, @PathVariable String key) {
 		return myConfigService.getKey(application, version, environment, key);
