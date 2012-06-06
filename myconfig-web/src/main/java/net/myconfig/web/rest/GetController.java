@@ -1,10 +1,17 @@
 package net.myconfig.web.rest;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletResponse;
+
 import net.myconfig.core.CoreException;
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.web.renderer.HttpRenderer;
+import net.myconfig.web.renderer.HttpRendererService;
+import net.myconfig.web.renderer.RendererNotFoundException;
 import net.sf.jstring.Strings;
 
 import org.slf4j.Logger;
@@ -27,11 +34,13 @@ public class GetController {
 
 	private final Strings strings;
 	private final MyConfigService myConfigService;
+	private final HttpRendererService httpRendererService;
 
 	@Autowired
-	public GetController(Strings strings, MyConfigService myConfigService) {
+	public GetController(Strings strings, MyConfigService myConfigService, HttpRendererService httpRendererService) {
 		this.myConfigService = myConfigService;
 		this.strings = strings;
+		this.httpRendererService = httpRendererService;
 	}
 	
 	// TODO Moves this handler in a more generic location
@@ -56,13 +65,32 @@ public class GetController {
 		return myConfigService.getVersion();
 	}
 
-	// FIXME Full configuration for app x version x env
 	// FIXME Configuration description for app x version
 
 	@RequestMapping("/key/{key}/{application}/{version}/{environment}")
 	public @ResponseBody
 	String key(@PathVariable String application, @PathVariable String version, @PathVariable String environment, @PathVariable String key) {
 		return myConfigService.getKey(application, version, environment, key);
+	}
+
+	@RequestMapping("/env/{application}/{version}/{environment}/{mode}")
+	public void env (@PathVariable String application, @PathVariable String version, @PathVariable String environment,
+			@PathVariable String mode,
+			HttpServletResponse response) throws IOException {
+		// Gets the configuration
+		ConfigurationSet set = myConfigService.getEnv (application, version, environment);
+		// Gets the renderer
+		HttpRenderer<ConfigurationSet> renderer = getConfigurationSetRenderer(mode);
+		// Renders the configuration into the response
+		renderer.renderer (set, response);
+	}
+
+	private HttpRenderer<ConfigurationSet> getConfigurationSetRenderer(String mode) {
+		try {
+			return httpRendererService.getRenderer (ConfigurationSet.class, mode);
+		} catch (RendererNotFoundException ex) {
+			throw new ConfigurationModeNotFoundException (mode);
+		}
 	}
 
 }
