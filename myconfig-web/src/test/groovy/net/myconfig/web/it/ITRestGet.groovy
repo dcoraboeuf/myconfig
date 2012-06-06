@@ -67,5 +67,29 @@ class ITRestGet {
 			}
 		}
 	}
+	
+	@Test
+	void get_key_not_found() {
+		http.request ( Method.GET, ContentType.TEXT ) {
+			uri.path = "key/jdbc.usr/myapp/1.2/UAT"
+			response.failure = { resp, reader ->
+				def content = reader.text
+				println("Response status : $resp.status")
+				println("Response content: $content")
+				assertEquals(500, resp.status);
+				def expectedMessage = """\
+An error has occurred.
+Message: [S-001] Cannot find key jdbc.usr for application myapp, version 1.2 and environment UAT.
+Reference: """
+				// Removes the last 36 characters of the content
+				def modifiedContent = content[0..-37]
+				// Comparison
+				assertEquals (expectedMessage, modifiedContent); 
+			}
+			response.success = { resp ->
+				fail("Should have failed")
+			}
+		}
+	}
 
 }

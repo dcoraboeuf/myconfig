@@ -4,10 +4,12 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.exception.KeyNotFoundException;
 
 @Service
 public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigService {
@@ -27,7 +29,8 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 
 	@Override
 	public String getKey(String application, String version, String environment, String key) {
-		return getNamedParameterJdbcTemplate().queryForObject(
+		try {
+			return getNamedParameterJdbcTemplate().queryForObject(
 				SQL.GET_KEY,
 				new MapSqlParameterSource()
 					.addValue("application", application)
@@ -36,6 +39,9 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 					.addValue("key", key),
 				String.class
 				);
+		} catch (EmptyResultDataAccessException ex) {
+			throw new KeyNotFoundException (application, version, environment, key);
+		}
 	}
 
 }

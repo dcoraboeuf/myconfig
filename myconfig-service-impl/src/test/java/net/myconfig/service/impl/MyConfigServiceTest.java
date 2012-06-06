@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.test.AbstractIntegrationTest;
 
 public class MyConfigServiceTest extends AbstractIntegrationTest {
@@ -17,6 +18,11 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	public void get_key_ok() {
 		String value = myConfigService.getKey("myapp", "1.1", "UAT", "jdbc.user");
 		assertEquals ("1.1 jdbc.user UAT", value);
+	}
+	
+	@Test(expected = KeyNotFoundException.class)
+	public void get_key_not_found() {
+		myConfigService.getKey("myapp", "1.1", "UAT", "jdbc.usr");
 	}
 
 }
