@@ -12,7 +12,7 @@ import org.springframework.util.Log4jConfigurer;
 
 public class DefaultConfigurationService implements ConfigurationService {
 
-	private final Logger logger = LoggerFactory.getLogger(ConfigurationService.class);
+	private final Logger logger = LoggerFactory.getLogger(DefaultConfigurationService.class);
 
 	private final String profile;
 	private final String loggingPath;
@@ -42,6 +42,7 @@ public class DefaultConfigurationService implements ConfigurationService {
 	}
 
 	protected void initLogging() throws FileNotFoundException {
+		logger.info("Initializing logging from '{}'", loggingPath);
 		Log4jConfigurer.initLogging(loggingPath);
 	}
 

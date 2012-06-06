@@ -4,6 +4,6 @@ import net.myconfig.service.api.ConfigurationService;
 
 public interface GeneralConfiguration {
 	
-	ConfigurationService configurationService();
+	ConfigurationService configurationService() throws Exception;
 
 }
