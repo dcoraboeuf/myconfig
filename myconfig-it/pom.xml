@@ -118,12 +118,10 @@
 								            <name>spring.profiles.active</name>
 								            <value>it</value>
 							            </systemProperty>
-							            <!--
 							            <systemProperty>
-							            	<name>dbinit.post</name>
-							            	<value>/it.sql</value>
+							            	<name>it.db</name>
+							            	<value>${basedir}/src/test/resources/META-INF/it/db.sql</value>
 							            </systemProperty>
-							            -->
 									    <systemProperty>
 									    	<name>jetty.port</name>
 											<value>${it.port}</value>
