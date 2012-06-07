@@ -15,11 +15,6 @@
 
 	<name>myconfig Web</name>
 	
-	<properties>
-		<!-- Port to use when running IT tests -->
-		<it.port>9999</it.port>
-	</properties>
-	
 	<dependencies>
 		<!-- This -->
 		<dependency>
