@@ -45,26 +45,35 @@
 		</dependency>
 	</dependencies>
 	
+	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+		<plugins>			
+			<!-- Compiles the Groovy integration tests -->
+			<plugin>
+				<groupId>org.codehaus.gmaven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>groovy-compile</id>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 	
     <profiles>
     	<profile>
     		<id>integration-test</id>
     		<build>
     			<plugins>			
-			
-					<!-- Compiles the Groovy integration tests -->
-					<plugin>
-						<groupId>org.codehaus.gmaven</groupId>
-						<artifactId>gmaven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>groovy-compile</id>
-								<goals>
-									<goal>testCompile</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 					
 					<!-- Getting the WAR -->
 					<plugin>
@@ -140,7 +149,6 @@
 					</plugin>
 					
 					<!-- Running integration tests -->
-					<!--
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
@@ -161,7 +169,7 @@
 				          </execution>
 				        </executions>
 					</plugin>
-					-->
+					
     			</plugins>
     		</build>
     	</profile>
