@@ -63,6 +63,7 @@
 		<module>myconfig-service-impl</module>
 		<module>myconfig-test</module>
 		<module>myconfig-core</module>
+		<module>myconfig-it</module>
 	</modules>
 
 	<dependencyManagement>
