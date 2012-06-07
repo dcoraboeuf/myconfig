@@ -44,16 +44,6 @@
     <profiles>
     	<profile>
     		<id>integration-test</id>
-    		<!--
-			<dependencies>
-				<dependency>
-					<groupId>${project.groupId}</groupId>
-					<artifactId>myconfig-test</artifactId>
-					<version>${project.version}</version>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
-			-->
     		<build>
     			<plugins>			
 			
@@ -67,6 +57,31 @@
 								<goals>
 									<goal>testCompile</goal>
 								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					
+					<!-- Getting the WAR -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>it-copy-war</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>myconfig-web</artifactId>
+											<version>${project.version}</version>
+											<type>war</type>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
