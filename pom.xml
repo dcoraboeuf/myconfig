@@ -177,7 +177,7 @@
 			<dependency>
 			    <groupId>net.sf.dbinit</groupId>
 			    <artifactId>dbinit</artifactId>
-			    <version>1.1-SNAPSHOT</version>
+			    <version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.dbunit</groupId>
