@@ -13,7 +13,15 @@
 			<h1><@lh key="home.get" /></h1>
 			<p>
 				<@lh key="home.get.message" />
-				TODO
+				<ul class="rest-api">
+					<#list getInformation.methods as method>
+						<li>
+							<span class="rest-method-path"><@spring.url relativeUrl=method.path /></span>
+							-
+							<span class="rest-method-info"><@lh key=method.key /></span>
+						</li>
+					</#list>
+				</ul>
 			</p>
 		</section>
 		<section>
