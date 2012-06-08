@@ -1,6 +1,21 @@
 /* Colors */
 
+@app-title-color-bg: lightgrey;
+@app-title-color-fg: white;
+@app-title-nav-color-fg: @app-title-color-fg;
+
+/* Debug */
+
+div, section {
+	// border: dotted 1px red;
+}
+
 /* Commons */
+
+.rounded (@radius: 10px) {
+	border-radius: @radius;
+	padding: 5px @radius 5px @radius;
+}
 
 /* General: tags */
 
@@ -27,3 +42,28 @@ body {
 /* Macros */
 
 /* Layout */
+
+section.app-title {
+	.rounded;
+	background-color: @app-title-color-bg;
+	color: @app-title-color-fg;
+	span.app-title {
+		font-size: 200%;
+		font-weight: bold;
+	}
+	div.app-meta {
+		display: inline;
+		position: fixed;
+		top: 20px;
+		right: 15px;
+		a {
+			text-decoration: none;
+			color: @app-title-nav-color-fg;
+			margin-right: 10px;
+			&.language.selected {
+				font-weight: bold;
+				color: gray;
+			}
+		}
+	}
+}

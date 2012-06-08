@@ -22,10 +22,13 @@
 	<@layout_root pageId=pageId>
 		<section class="app-title">
 			<span class="app-title"><@lh key="app.title" /></span>
+			<div class="app-meta">
+				<span class="app-language">
+					<@language value="en" />
+					<@language value="fr" />
+				</span>
 			<span class="app-version"><@lh key="app.version" /></span>
-			<#-- Language selection -->
-			<@language value="en" />
-			<@language value="fr" />
+			</div>
 		</section>
 		<section class="app-page">
 			<#nested>
