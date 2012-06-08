@@ -4,6 +4,9 @@
 @app-title-color-fg: white;
 @app-title-nav-color-fg: @app-title-color-fg;
 
+@app-menu-color-bg: lightgrey;
+@app-menu-color-fg: blue;
+
 /* Debug */
 
 div, section {
@@ -66,4 +69,17 @@ section.app-title {
 			}
 		}
 	}
+}
+
+article.page-content {
+	> h1 {
+		font-size: 150%;
+	}
+}
+
+a.app-menu {
+	.rounded(5px);
+	text-decoration: none;
+	background-color: @app-menu-color-bg;
+	color: @app-menu-color-fg;
 }
