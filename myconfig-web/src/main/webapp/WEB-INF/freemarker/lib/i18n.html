@@ -1,0 +1,16 @@
+<#macro lh key>${loc("${key}")?html}</#macro>
+
+<#macro ljs key>${loc("${key}")?js_string}</#macro>
+
+<#macro ljsh key>${loc("${key}")?js_string?html}</#macro>
+
+<#--
+Language management
+<#macro language value>
+	<#assign lnClass = "" />
+	<#if localeSelected (value)>
+		<#assign lnClass = "selected" />
+	</#if>
+	<a href="ui/?language=${value}" class="language ${lnClass}">${value?upper_case}</a>
+</#macro>
+-->
