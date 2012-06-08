@@ -3,6 +3,7 @@ package net.myconfig.web.support.fm;
 import java.util.List;
 import java.util.Locale;
 
+import net.myconfig.web.language.CurrentLocale;
 import net.sf.jstring.Strings;
 
 import org.apache.commons.lang3.Validate;
@@ -15,13 +16,12 @@ import freemarker.template.TemplateModelException;
 public class FnLocLink implements TemplateMethodModel {
 	
 	private final Strings strings;
-	// FIXME Support for the locale
-	// private final CurrentLocale currentLocale;
+	private final CurrentLocale currentLocale;
 	
 	@Autowired
-	public FnLocLink(Strings strings/*, CurrentLocale currentLocale*/) {
+	public FnLocLink(Strings strings, CurrentLocale currentLocale) {
 		this.strings = strings;
-		// this.currentLocale = currentLocale;
+		this.currentLocale = currentLocale;
 	}
 
 	@Override
@@ -35,9 +35,8 @@ public class FnLocLink implements TemplateMethodModel {
 		String link = (String) list.get(1);
 		// Replacement
 		String replacement = String.format ("%s$1</a>", link);
-		// FIXME Gets the locale from the context
-		// Locale locale = currentLocale.getCurrentLocale();
-		Locale locale = Locale.ENGLISH;
+		// Gets the locale from the context
+		Locale locale = currentLocale.getCurrentLocale();
 		// Gets the complete message
 		String message = strings.get(locale, key);
 		// Replacement using REGEXP

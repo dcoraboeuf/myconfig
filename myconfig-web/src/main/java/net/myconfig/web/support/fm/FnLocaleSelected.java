@@ -1,25 +1,22 @@
 package net.myconfig.web.support.fm;
 
 import java.util.List;
-import java.util.Locale;
 
 import net.myconfig.web.language.CurrentLocale;
-import net.sf.jstring.Strings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModelException;
 
-public class FnLoc implements TemplateMethodModel {
+public class FnLocaleSelected implements TemplateMethodModel {
 	
-	private final Strings strings;
 	private final CurrentLocale currentLocale;
 	
 	@Autowired
-	public FnLoc(Strings strings, CurrentLocale currentLocale) {
-		this.strings = strings;
+	public FnLocaleSelected(CurrentLocale currentLocale) {
 		this.currentLocale = currentLocale;
 	}
 
@@ -28,14 +25,12 @@ public class FnLoc implements TemplateMethodModel {
 		// Checks
 		Validate.notNull(list, "List of arguments is required");
 		Validate.notEmpty(list, "List of arguments must not be empty");
-		// Gets the key
-		String key = (String) list.get(0);
-		// Gets the rest of the arguments
-		Object[] params = list.subList(1, list.size()).toArray();
-		// Gets the locale from the context
-		Locale locale = currentLocale.getCurrentLocale();
 		// Gets the value
-		return strings.get(locale, key, params);
+		String value = (String) list.get(0);
+		// Gets the current locale value
+		String currentValue = currentLocale.getCurrentLocale().toString();
+		// OK?
+		return StringUtils.startsWithIgnoreCase(currentValue, value);
 	}
 
 }
