@@ -24,6 +24,12 @@
 
 <#macro layout_basic>
 	<@layout_root>
-		<#nested>
+		<section class="app-title">
+			<span class="app-title">My Config</span>
+			<span class="app-version">Version</span>
+		</section>
+		<section class="app-page">
+			<#nested>
+		</section>
 	</@layout_root>
 </#macro>
