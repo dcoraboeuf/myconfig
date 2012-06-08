@@ -1,10 +1,10 @@
-package net.myconfig.web.ui;
+package net.myconfig.web.home;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class TopController {
+public class HomeController {
 
 	@RequestMapping("/")
 	public String home() {
