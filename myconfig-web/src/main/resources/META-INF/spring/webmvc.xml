@@ -28,6 +28,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 		<property name="freemarkerVariables">
 			<map>
 				<entry key="loc" value-ref="fnLoc" />
+				<entry key="loclink" value-ref="fnLocLink" />
 				<!--
 				<entry key="localeSelected" value-ref="fnLocaleSelected" />
 				<entry key="uuid" value-ref="fnUuid" />
@@ -38,6 +39,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	</bean>
 	
 	<bean id="fnLoc" class="net.myconfig.web.support.fm.FnLoc" />
+	<bean id="fnLocLink" class="net.myconfig.web.support.fm.FnLocLink" />
 	<!--
 	<bean id="fnLocaleSelected" class="net.cipol.web.support.fm.FnLocaleSelected" />
 	<bean id="fnUuid" class="net.cipol.web.support.fm.FnUuid" />
