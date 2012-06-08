@@ -1,6 +1,6 @@
 <#include "/lib/common.html" >
 
-<#macro layout_root>
+<#macro layout_root pageId>
 	<!DOCTYPE html>
 	<#-- TODO Language -->
 	<html lang="en">
@@ -13,7 +13,7 @@
 			<script src="scripts/ext-core-3.1.0.js" type="text/javascript"></script>
 			<script src="localization" type="text/javascript"></script>
 			-->
-			<title><@lh key="app.title" /> - <@lh key="app.version" /> - TODO</title>
+			<title><@lh key="app.title" /> - <@lh key="app.version" /> - <@lh key=pageId /></title>
 	    </head>
 		<body>
 			<#nested>
@@ -21,11 +21,11 @@
 	</html>
 </#macro>
 
-<#macro layout_basic>
-	<@layout_root>
+<#macro layout_basic pageId>
+	<@layout_root pageId=pageId>
 		<section class="app-title">
-			<span class="app-title">My Config</span>
-			<span class="app-version">Version</span>
+			<span class="app-title"><@lh key="app.title" /></span>
+			<span class="app-version"><@lh key="app.version" /></span>
 		</section>
 		<section class="app-page">
 			<#nested>
