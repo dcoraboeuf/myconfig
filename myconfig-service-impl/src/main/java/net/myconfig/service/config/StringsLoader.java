@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import net.sf.jstring.Strings;
@@ -29,6 +30,8 @@ public class StringsLoader {
 
 	@Bean
 	public Strings load() throws IOException {
+		logger.info("[strings] Setting default locale to English");
+		Locale.setDefault(Locale.ENGLISH);
 		logger.info("[strings] Loading all strings...");
 		Set<String> paths = new HashSet<String>();
 		Strings strings = new Strings();
