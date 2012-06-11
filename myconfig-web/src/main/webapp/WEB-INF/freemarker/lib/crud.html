@@ -14,9 +14,11 @@
 		<tbody>
 			<#list items as item>
 				<tr>
-					<td>
-						TODO
-					</td>
+					<#list columns as column>
+						<td>
+							${item[column.property]}
+						</td>
+					</#list>
 				</tr>
 			</#list>
 		</tbody>
