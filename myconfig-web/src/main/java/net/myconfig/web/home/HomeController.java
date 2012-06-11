@@ -2,15 +2,20 @@ package net.myconfig.web.home;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.myconfig.web.rest.GetController;
 import net.myconfig.web.rest.UIController;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class HomeController {
@@ -62,7 +67,13 @@ public class HomeController {
 			String methodName = method.getName();
 			String controllerName = method.getDeclaringClass().getSimpleName();
 			String methodKey = String.format("rest.%s.%s", controllerName, methodName);
-			return new RESTMethodInformation(methodName, methodKey, path);
+			Set<RequestMethod> requestMethods = new HashSet<RequestMethod>();
+			requestMethods.addAll(Arrays.asList(mapping.method()));
+			if (rootMapping != null) {
+				requestMethods.addAll(Arrays.asList(rootMapping.method()));
+			}
+			String requestMethod = StringUtils.join(requestMethods, ",");
+			return new RESTMethodInformation(methodName, methodKey, path, requestMethod);
 		} else {
 			return null;
 		}
