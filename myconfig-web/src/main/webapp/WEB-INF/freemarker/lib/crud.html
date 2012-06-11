@@ -26,7 +26,7 @@
 			<tr>
 				<td>
 					<#if creation??>
-						<form class="crud-create">
+						<form class="crud-create" action="${creation.action}" method="post">
 							<label>
 								<@lh key=creation.label />
 								<input id="${creation.id}_${creation.field}_text" name="${creation.field}" type="text" maxlength="${creation.maxlength}" size="${creation.size}" />
@@ -44,6 +44,13 @@
 	<#assign columns = columns + [{"property": property, "key": key}] >
 </#macro>
 
-<#macro crud_create label="general.create.label" field="name" id="" maxlength="80" size="20" submit="general.create">
-	<#assign creation = {"label": label, "field": field, "id": id, "maxlength": maxlength, "size": size, "submit": submit} >
+<#macro crud_create action label="general.create.label" field="name" id="" maxlength="80" size="20" submit="general.create">
+	<#assign creation = {"action": action,
+		"label": label,
+		"field": field,
+		"id": id,
+		"maxlength": maxlength,
+		"size": size,
+		"submit": submit
+	} />
 </#macro>
