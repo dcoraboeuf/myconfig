@@ -1,4 +1,7 @@
 <#include "/lib/layout.html">
 <@layout_std pageId="applications" style=true modules=["crud"]>
-	
+	<@crud_table items = applications>
+		<@crud_column property="id" key="model.application.id" />
+		<@crud_column property="name" key="model.application.name" />
+	</@crud_table>
 </@layout_std>

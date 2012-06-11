@@ -1,0 +1,30 @@
+<#macro crud_table items>
+	<#assign columns = [] >
+	<#nested>
+	<table class="crud">
+		<thead>
+			<tr>
+				<#list columns as column>
+					<th>
+						<@lh key=column.key />
+					</th>
+				</#list>
+			</tr>
+		</thead>
+		<tbody>
+			<#list items as item>
+				<tr>
+					<td>
+						TODO
+					</td>
+				</tr>
+			</#list>
+		</tbody>
+		<tfoot>
+		</tfoot>
+	</table>
+</#macro>
+
+<#macro crud_column property key>
+	<#assign columns = columns + [{"property": property, "key": key}] >
+</#macro>
