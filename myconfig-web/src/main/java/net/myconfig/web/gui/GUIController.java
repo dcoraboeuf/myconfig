@@ -52,6 +52,12 @@ public class GUIController {
 		return configure (id);
 	}
 
+	@RequestMapping(value = "/version/delete/{id}", method = RequestMethod.POST)
+	public View versionDelete (@PathVariable int id, String name) {
+		ui.versionDelete (id, name);
+		return configure (id);
+	}
+
 	protected View configure(int id) {
 		return redirect ("application/configure?id=" + id);
 	}

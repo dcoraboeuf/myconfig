@@ -105,13 +105,24 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public Ack createVersion(int id, String name) {
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_CREATE,
-				new MapSqlParameterSource()
-					.addValue("id", id)
-					.addValue("name", name));
+				idNameSource(id, name));
 			return Ack.validate (count == 1);
 		} catch (DuplicateKeyException ex) {
 			throw new VersionAlreadyDefinedException (name);
 		}
+	}
+
+	protected MapSqlParameterSource idNameSource(int id, String name) {
+		return new MapSqlParameterSource()
+			.addValue("id", id)
+			.addValue("name", name);
+	}
+	
+	@Override
+	@Transactional
+	public Ack deleteVersion(int id, String name) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
+		return Ack.validate (count == 1);
 	}
 
 	@Override

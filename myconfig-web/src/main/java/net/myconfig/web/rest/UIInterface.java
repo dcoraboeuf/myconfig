@@ -18,4 +18,6 @@ public interface UIInterface {
 
 	Ack versionCreate(int id, String name);
 
+	Ack versionDelete(int id, String name);
+
 }

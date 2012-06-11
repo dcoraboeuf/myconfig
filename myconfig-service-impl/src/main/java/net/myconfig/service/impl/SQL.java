@@ -25,4 +25,6 @@ public interface SQL {
 
 	String VERSION_CREATE = "insert into version (application, name) values (:id, :name)";
 
+	String VERSION_DELETE = "delete from version where application = :id and name = :name";
+
 }

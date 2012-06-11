@@ -25,4 +25,6 @@ public interface MyConfigService {
 
 	Ack createVersion(int id, String name);
 
+	Ack deleteVersion(int id, String name);
+
 }
