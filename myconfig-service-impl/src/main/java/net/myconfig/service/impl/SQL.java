@@ -13,4 +13,6 @@ public interface SQL {
 			"and c.key = :key " +
 			"order by c.key";
 
+	String APPLICATIONS = "select a.id, a.name from application a order by a.name";
+
 }

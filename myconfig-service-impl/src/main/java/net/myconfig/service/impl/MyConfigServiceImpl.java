@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
 
@@ -32,6 +33,18 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	public String getVersion() {
 		return versionNumber;
+	}
+	
+	@Override
+	public List<ApplicationSummary> getApplications() {
+		return getJdbcTemplate().query(SQL.APPLICATIONS, new RowMapper<ApplicationSummary>() {
+
+			@Override
+			public ApplicationSummary mapRow(ResultSet rs, int i)
+					throws SQLException {
+				return new ApplicationSummary(rs.getInt("id"), rs.getString("name"));
+			}
+		});
 	}
 
 	@Override

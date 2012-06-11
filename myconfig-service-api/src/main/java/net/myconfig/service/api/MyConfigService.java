@@ -1,5 +1,8 @@
 package net.myconfig.service.api;
 
+import java.util.List;
+
+import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 
 public interface MyConfigService {
@@ -9,5 +12,7 @@ public interface MyConfigService {
 	String getVersion();
 
 	ConfigurationSet getEnv(String application, String version, String environment);
+
+	List<ApplicationSummary> getApplications();
 
 }
