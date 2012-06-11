@@ -5,6 +5,7 @@ import net.myconfig.web.rest.UIInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.View;
@@ -37,6 +38,22 @@ public class GUIController {
 	public View applicationCreate (int id) {
 		ui.applicationDelete (id);
 		return redirect ("");
+	}
+
+	@RequestMapping(value = "/application/configure", method = RequestMethod.GET)
+	public String applicationConfigure (int id, Model model) {
+		model.addAttribute("application", ui.applicationConfiguration(id));
+		return "configuration";
+	}
+
+	@RequestMapping(value = "/version/create/{id}", method = RequestMethod.POST)
+	public View versionCreate (@PathVariable int id, String name) {
+		ui.versionCreate (id, name);
+		return configure (id);
+	}
+
+	protected View configure(int id) {
+		return redirect ("application/configure?id=" + id);
 	}
 
 	protected View redirect(String path) {

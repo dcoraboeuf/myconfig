@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.model.Ack;
+import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.sf.jstring.Strings;
 
@@ -39,6 +40,18 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/application/{id}", method = RequestMethod.DELETE)
 	public @ResponseBody Ack applicationDelete(@PathVariable int id) {
 		return getMyConfigService().deleteApplication (id);
+	}
+	
+	@Override
+	@RequestMapping(value = "/application/{id}", method = RequestMethod.GET)
+	public ApplicationConfiguration applicationConfiguration(int id) {
+		return getMyConfigService().getApplicationConfiguration (id);
+	}
+	
+	@Override
+	@RequestMapping(value = "/version/{id}/{name}", method = RequestMethod.PUT)
+	public Ack versionCreate(@PathVariable int id, @PathVariable String name) {
+		return getMyConfigService().createVersion (id, name);
 	}
 
 }

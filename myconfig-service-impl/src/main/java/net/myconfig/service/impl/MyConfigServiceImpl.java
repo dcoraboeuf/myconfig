@@ -9,9 +9,11 @@ import javax.sql.DataSource;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.model.Ack;
+import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.service.model.VersionSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,6 +21,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
@@ -54,6 +57,27 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
+	public ApplicationConfiguration getApplicationConfiguration(int id) {
+		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		// ID
+		MapSqlParameterSource idCriteria = new MapSqlParameterSource("id", id);
+		// Gets the name
+		String name = t.queryForObject(SQL.APPLICATION_NAME, idCriteria, String.class);
+		// Versions	
+		List<VersionSummary> versionSummaryList = t.query(SQL.VERSIONS, idCriteria, new RowMapper<VersionSummary>(){
+			@Override
+			public VersionSummary mapRow(ResultSet rs, int i) throws SQLException {
+				// FIXME Number of keys	
+				return new VersionSummary(rs.getString("name"), 0);
+			}
+		});
+		// OK
+		return new ApplicationConfiguration(id, name,
+				versionSummaryList);
+	}
+	
+	@Override
 	@Transactional
 	public ApplicationSummary createApplication(String name) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -74,6 +98,20 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public Ack deleteApplication(int id) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource ("id", id));
 		return Ack.validate (count == 1);
+	}
+	
+	@Override
+	@Transactional
+	public Ack createVersion(int id, String name) {
+		try {
+			int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_CREATE,
+				new MapSqlParameterSource()
+					.addValue("id", id)
+					.addValue("name", name));
+			return Ack.validate (count == 1);
+		} catch (DuplicateKeyException ex) {
+			throw new VersionAlreadyDefinedException (name);
+		}
 	}
 
 	@Override

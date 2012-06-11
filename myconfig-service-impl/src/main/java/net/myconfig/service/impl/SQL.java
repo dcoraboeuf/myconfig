@@ -19,4 +19,10 @@ public interface SQL {
 
 	String APPLICATION_DELETE = "delete from application where id = :id";
 
+	String APPLICATION_NAME = "select name from application where id = :id";
+	
+	String VERSIONS = "select name from version where application = :id";
+
+	String VERSION_CREATE = "insert into version (application, name) values (:id, :name)";
+
 }

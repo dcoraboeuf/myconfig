@@ -3,6 +3,7 @@ package net.myconfig.web.rest;
 import java.util.List;
 
 import net.myconfig.service.model.Ack;
+import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 
 public interface UIInterface {
@@ -12,5 +13,9 @@ public interface UIInterface {
 	ApplicationSummary applicationCreate(String name);
 
 	Ack applicationDelete(int id);
+
+	ApplicationConfiguration applicationConfiguration(int id);
+
+	Ack versionCreate(int id, String name);
 
 }

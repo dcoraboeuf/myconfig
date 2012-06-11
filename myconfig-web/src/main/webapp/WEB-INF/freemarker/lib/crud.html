@@ -22,7 +22,7 @@
 				<tr>
 					<#list columns as column>
 						<td>
-							${item[column.property]}
+							${item[column.property]?html}
 						</td>
 					</#list>
 					<td>
