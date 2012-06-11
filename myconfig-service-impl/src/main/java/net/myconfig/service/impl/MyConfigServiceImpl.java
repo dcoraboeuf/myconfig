@@ -14,6 +14,7 @@ import net.myconfig.service.model.ConfigurationValue;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -55,11 +56,14 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Transactional
 	public ApplicationSummary createApplication(String name) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		getNamedParameterJdbcTemplate().update(
+		try {
+			getNamedParameterJdbcTemplate().update(
 				SQL.APPLICATION_CREATE,
 				new MapSqlParameterSource("name", name),
 				keyHolder);
-		// TODO Catch unique key constraint
+		} catch (DuplicateKeyException ex) {
+			throw new ApplicationNameAlreadyDefinedException (name);
+		}
 		int id = keyHolder.getKey().intValue();
 		return new ApplicationSummary(id, name);
 	}
