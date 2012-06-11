@@ -1,6 +1,7 @@
 package net.myconfig.service.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -14,6 +15,7 @@ import com.google.common.collect.Iterables;
 
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.test.AbstractIntegrationTest;
 
@@ -61,6 +63,21 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	public void applicationCreate_not_unique () {
 		myConfigService.createApplication("test2");
 		myConfigService.createApplication("test2");
+	}
+
+	@Test
+	public void applicationDelete () {
+		int id = myConfigService.createApplication("test3").getId();
+		Ack ack = myConfigService.deleteApplication(id);
+		assertNotNull (ack);
+		assertTrue (ack.isSuccess());
+	}
+
+	@Test
+	public void applicationDelete_cannot () {
+		Ack ack = myConfigService.deleteApplication(-1);
+		assertNotNull (ack);
+		assertFalse (ack.isSuccess());
 	}
 
 }

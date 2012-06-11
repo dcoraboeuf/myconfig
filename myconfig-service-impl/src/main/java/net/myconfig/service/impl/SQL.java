@@ -17,4 +17,6 @@ public interface SQL {
 	
 	String APPLICATION_CREATE = "insert into application (name) values (:name)";
 
+	String APPLICATION_DELETE = "delete from application where id = :id";
+
 }

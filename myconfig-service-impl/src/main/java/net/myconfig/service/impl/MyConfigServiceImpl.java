@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
@@ -66,6 +67,13 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		}
 		int id = keyHolder.getKey().intValue();
 		return new ApplicationSummary(id, name);
+	}
+	
+	@Override
+	@Transactional
+	public Ack deleteApplication(int id) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource ("id", id));
+		return Ack.validate (count == 1);
 	}
 
 	@Override

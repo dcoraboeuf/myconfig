@@ -2,6 +2,7 @@ package net.myconfig.service.api;
 
 import java.util.List;
 
+import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 
@@ -16,5 +17,7 @@ public interface MyConfigService {
 	List<ApplicationSummary> getApplications();
 
 	ApplicationSummary createApplication(String name);
+
+	Ack deleteApplication(int id);
 
 }

@@ -32,6 +32,12 @@ public class GUIController {
 		ui.applicationCreate (name);
 		return redirect ("");
 	}
+	
+	@RequestMapping(value = "/application/delete", method = RequestMethod.POST)
+	public View applicationCreate (int id) {
+		ui.applicationDelete (id);
+		return redirect ("");
+	}
 
 	protected View redirect(String path) {
 		return new RedirectView("/gui/" + path, true, false, false);

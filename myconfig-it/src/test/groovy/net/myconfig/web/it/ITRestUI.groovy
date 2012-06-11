@@ -67,7 +67,11 @@ class ITRestUI {
 		assertEquals (id, summary.id)
 		assertEquals (appName, summary.name)
 		// TODO Basic stats
-		// TODO Deletes the application		
+		// Deletes the application		
+		application_delete (id);
+		// Checks it has been deleted
+		summary = application_summary(id);
+		assertNull (summary);
 	}
 	
 	def application_summary (int id) {
@@ -85,12 +89,24 @@ class ITRestUI {
 	
 	private int application_create (String name) {
 		http.request ( Method.PUT, ContentType.JSON ) {
-			uri.path = "application/create/" + name
+			uri.path = "application/" + name
 			response.success = { resp, json ->
 				println("Response status : $resp.status")
 				println("Response content: $json")
 				assertEquals (name, json.name)
 				return json.id
+			}
+		}
+	}
+	
+	private void application_delete (int id) {
+		println("Deleting application: id")
+		http.request ( Method.DELETE, ContentType.JSON ) {
+			uri.path = "application/" + id
+			response.success = { resp, json ->
+				println("Response status : $resp.status")
+				println("Response content: $json")
+				assertTrue (json.success)
 			}
 		}
 	}
