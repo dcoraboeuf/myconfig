@@ -8,4 +8,6 @@ public interface UIInterface {
 
 	List<ApplicationSummary> applications();
 
+	ApplicationSummary applicationCreate(String name);
+
 }

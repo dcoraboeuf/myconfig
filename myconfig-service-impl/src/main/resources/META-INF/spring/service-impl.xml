@@ -13,5 +13,11 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
     
     <context:component-scan base-package="net.myconfig"/>
     <context:property-placeholder location="classpath:META-INF/resources/app.properties"/>
+    
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  		<property name="dataSource" ref="dataSource"/>
+  	</bean>
 
 </beans>

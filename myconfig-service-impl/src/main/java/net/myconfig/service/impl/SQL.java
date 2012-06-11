@@ -14,5 +14,7 @@ public interface SQL {
 			"order by c.key";
 
 	String APPLICATIONS = "select a.id, a.name from application a order by a.name";
+	
+	String APPLICATION_CREATE = "insert into application (name) values (:name)";
 
 }

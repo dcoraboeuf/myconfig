@@ -15,4 +15,6 @@ public interface MyConfigService {
 
 	List<ApplicationSummary> getApplications();
 
+	ApplicationSummary createApplication(String name);
+
 }

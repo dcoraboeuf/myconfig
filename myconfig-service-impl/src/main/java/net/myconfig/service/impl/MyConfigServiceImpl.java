@@ -6,18 +6,21 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.stereotype.Service;
-
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigService {
@@ -36,6 +39,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public List<ApplicationSummary> getApplications() {
 		return getJdbcTemplate().query(SQL.APPLICATIONS, new RowMapper<ApplicationSummary>() {
 
@@ -46,8 +50,22 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			}
 		});
 	}
+	
+	@Override
+	@Transactional
+	public ApplicationSummary createApplication(String name) {
+		KeyHolder keyHolder = new GeneratedKeyHolder();
+		getNamedParameterJdbcTemplate().update(
+				SQL.APPLICATION_CREATE,
+				new MapSqlParameterSource("name", name),
+				keyHolder);
+		// TODO Catch unique key constraint
+		int id = keyHolder.getKey().intValue();
+		return new ApplicationSummary(id, name);
+	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public String getKey(String application, String version, String environment, String key) {
 		try {
 			return getNamedParameterJdbcTemplate().queryForObject(
@@ -65,6 +83,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public ConfigurationSet getEnv(String application, String version, String environment) {
 		// List of configuration documented values
 		List<ConfigurationValue> values = getNamedParameterJdbcTemplate().query(SQL.GET_ENV, 
