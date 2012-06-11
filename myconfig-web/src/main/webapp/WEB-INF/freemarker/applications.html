@@ -3,7 +3,7 @@
 	<@crud_table items = applications>
 		<@crud_column property="id" key="model.application.id" />
 		<@crud_column property="name" key="model.application.name" />
-		<@crud_create action="gui/application/create" />
+		<@crud_create action="gui/application/create" label="applications.new" />
 		<@crud_delete action="gui/application/delete" promptKey="application.delete" />
 	</@crud_table>
 </@layout_std>
