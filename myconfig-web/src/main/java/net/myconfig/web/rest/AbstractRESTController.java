@@ -4,6 +4,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import net.myconfig.core.CoreException;
+import net.myconfig.service.api.MyConfigService;
 import net.sf.jstring.Strings;
 
 import org.slf4j.Logger;
@@ -11,15 +12,33 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 public abstract class AbstractRESTController {
 
 	private final Logger errors = LoggerFactory.getLogger("User");
 	
 	private final Strings strings;
+	private final MyConfigService myConfigService;
 	
-	public AbstractRESTController(Strings strings) {
+	public AbstractRESTController(Strings strings, MyConfigService myConfigService) {
 		this.strings = strings;
+		this.myConfigService = myConfigService;
+	}
+	
+	protected Strings getStrings() {
+		return strings;
+	}
+
+	protected MyConfigService getMyConfigService() {
+		return myConfigService;
+	}
+
+	@RequestMapping("/version")
+	public @ResponseBody
+	String version () {
+		return myConfigService.getVersion();
 	}
 
 	@ExceptionHandler(CoreException.class)

@@ -17,24 +17,21 @@ import net.sf.jstring.Strings;
 @RequestMapping("/ui")
 public class UIController extends AbstractRESTController implements UIInterface {
 
-	private final MyConfigService myConfigService;
-
 	@Autowired
 	public UIController(Strings strings, MyConfigService myConfigService) {
-		super(strings);
-		this.myConfigService = myConfigService;
+		super(strings, myConfigService);
 	}
 
 	@Override
 	@RequestMapping(value = "/applications", method = RequestMethod.GET)
 	public @ResponseBody List<ApplicationSummary> applications() {
-		return myConfigService.getApplications();
+		return getMyConfigService().getApplications();
 	}
 	
 	@Override
 	@RequestMapping(value = "/application/create/{name}", method = RequestMethod.GET)
 	public ApplicationSummary applicationCreate(@PathVariable String name) {
-		return myConfigService.createApplication (name);
+		return getMyConfigService().createApplication (name);
 	}
 
 }

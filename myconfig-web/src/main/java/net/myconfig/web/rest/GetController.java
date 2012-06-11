@@ -22,20 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping(method = RequestMethod.GET, value = "/get")
 public class GetController extends AbstractRESTController {
 
-	private final MyConfigService myConfigService;
 	private final HttpRendererService httpRendererService;
 
 	@Autowired
 	public GetController(Strings strings, MyConfigService myConfigService, HttpRendererService httpRendererService) {
-		super (strings);
-		this.myConfigService = myConfigService;
+		super (strings, myConfigService);
 		this.httpRendererService = httpRendererService;
-	}
-	
-	@RequestMapping("/version")
-	public @ResponseBody
-	String version () {
-		return myConfigService.getVersion();
 	}
 
 	// FIXME Configuration description for app x version
@@ -43,7 +35,7 @@ public class GetController extends AbstractRESTController {
 	@RequestMapping("/key/{key}/{application}/{version}/{environment}")
 	public @ResponseBody
 	String key(@PathVariable String application, @PathVariable String version, @PathVariable String environment, @PathVariable String key) {
-		return myConfigService.getKey(application, version, environment, key);
+		return getMyConfigService().getKey(application, version, environment, key);
 	}
 
 	@RequestMapping("/env/{application}/{version}/{environment}/{mode}")
@@ -51,7 +43,7 @@ public class GetController extends AbstractRESTController {
 			@PathVariable String mode,
 			HttpServletResponse response) throws IOException {
 		// Gets the configuration
-		ConfigurationSet set = myConfigService.getEnv (application, version, environment);
+		ConfigurationSet set = getMyConfigService().getEnv (application, version, environment);
 		// Gets the renderer
 		HttpRenderer<ConfigurationSet> renderer = getConfigurationSetRenderer(mode);
 		// Renders the configuration into the response
