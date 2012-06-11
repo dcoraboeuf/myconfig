@@ -43,10 +43,10 @@
 			<tr>
 				<td colspan="${ columns?size + 1 }">
 					<#if creation??>
-						<form class="crud-create" action="${creation.action}" method="post">
+						<form class="crud-create" action="${creation.action}" method="post" onsubmit="return CRUD.validateCreate('${creation.id}')">
 							<label>
 								<@lh key=creation.label />
-								<input id="${creation.id}_${creation.field}_text" name="${creation.field}" type="text" maxlength="${creation.maxlength}" size="${creation.size}" />
+								<input id="crud-create-text-${creation.id}" name="${creation.field}" type="text" maxlength="${creation.maxlength}" size="${creation.size}" autofocus="autofocus" />
 								<input type="submit" value="<@lh key=creation.submit />" />
 							</label>
 						</form>
