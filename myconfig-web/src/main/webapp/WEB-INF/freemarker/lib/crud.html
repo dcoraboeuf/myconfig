@@ -1,3 +1,6 @@
+<#-- Resources -->
+<link rel="stylesheet/less" type="text/css" href="less/modules/crud.less" />
+
 <#macro crud_table items>
 	<#assign columns = [] >
 	<#nested>
@@ -9,6 +12,8 @@
 						<@lh key=column.key />
 					</th>
 				</#list>
+				<th>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -19,12 +24,20 @@
 							${item[column.property]}
 						</td>
 					</#list>
+					<td>
+						<#if deletion??>
+							<form class="crud-action crud-delete" action="${deletion.action}" method="post">
+								<input type="hidden" name="${deletion.field}" value="${ item[deletion.field] }" />
+								<input class="crud-action crud-delete" type="image" src="images/crud/delete.png" />
+							</form>
+						</#if>
+					</td>
 				</tr>
 			</#list>
 		</tbody>
 		<tfoot>
 			<tr>
-				<td>
+				<td colspan="${ columns?size + 1 }">
 					<#if creation??>
 						<form class="crud-create" action="${creation.action}" method="post">
 							<label>
@@ -52,5 +65,12 @@
 		"maxlength": maxlength,
 		"size": size,
 		"submit": submit
+	} />
+</#macro>
+
+<#macro crud_delete action field="id">
+	<#assign deletion = {
+		"action": action,
+		"field": field
 	} />
 </#macro>
