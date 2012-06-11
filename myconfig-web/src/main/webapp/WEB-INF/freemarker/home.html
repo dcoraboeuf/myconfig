@@ -1,4 +1,17 @@
 <#include "/lib/layout.html">
+
+<#macro restapi information>
+	<ul class="rest-api">
+		<#list information.methods as method>
+			<li>
+				<span class="rest-method-path">${method.path}</span>
+				-
+				<span class="rest-method-info"><@lh key=method.key /></span>
+			</li>
+		</#list>
+	</ul>
+</#macro>
+
 <@layout_basic pageId="home" style=true>
 	<article class="app-content">
 		<h1><@lh key="home.welcome" /></h1>
@@ -13,22 +26,14 @@
 			<h1><@lh key="home.get" /></h1>
 			<p>
 				<@lh key="home.get.message" />
-				<ul class="rest-api">
-					<#list getInformation.methods as method>
-						<li>
-							<span class="rest-method-path"><@spring.url relativeUrl=method.path /></span>
-							-
-							<span class="rest-method-info"><@lh key=method.key /></span>
-						</li>
-					</#list>
-				</ul>
+				<@restapi information = getInformation />
 			</p>
 		</section>
 		<section>
 			<h1><@lh key="home.api" /></h1>
 			<p>
 				<@lh key="home.api.message" />
-				TODO
+				<@restapi information = uiInformation />
 			</p>
 		</section>
 	</article>
