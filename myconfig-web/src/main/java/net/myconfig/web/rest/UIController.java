@@ -29,8 +29,8 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/create/{name}", method = RequestMethod.GET)
-	public ApplicationSummary applicationCreate(@PathVariable String name) {
+	@RequestMapping(value = "/application/create/{name}", method = RequestMethod.PUT)
+	public @ResponseBody ApplicationSummary applicationCreate(@PathVariable String name) {
 		return getMyConfigService().createApplication (name);
 	}
 

@@ -54,5 +54,45 @@ class ITRestUI {
 			}
 		}
 	}
+	
+	@Test
+	void application() {
+		// Creates a unique application
+		def uuid = UUID.randomUUID().toString()
+		def appName = "test_" + uuid;
+		int id = application_create (appName)
+		// Gets the application summary
+		def summary = application_summary (id)
+		println("Summary: $summary")
+		assertEquals (id, summary.id)
+		assertEquals (appName, summary.name)
+		// TODO Basic stats
+		// TODO Deletes the application		
+	}
+	
+	def application_summary (int id) {
+		http.request ( Method.GET, ContentType.JSON ) {
+			uri.path = "applications"
+			response.success = { resp, json ->
+				println("Response status : $resp.status")
+				println("Response content: $json")
+				return json.find {
+					sum -> (sum.id == id) 
+				}
+			}
+		}
+	}
+	
+	private int application_create (String name) {
+		http.request ( Method.PUT, ContentType.JSON ) {
+			uri.path = "application/create/" + name
+			response.success = { resp, json ->
+				println("Response status : $resp.status")
+				println("Response content: $json")
+				assertEquals (name, json.name)
+				return json.id
+			}
+		}
+	}
 
 }
