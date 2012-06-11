@@ -3,12 +3,12 @@
 	<article class="configuration">
 		<h1>${application.name?html}</h1>
 		<section class="versions">
-			<h1>Versions</h1>
-		<@crud_table items = application.versionSummaryList>
-			<@crud_column property="name" key="model.version.name" />
-			<@crud_create action="gui/version/create/${application.id}" label="configuration.version.new" />
-			<@crud_delete action="gui/version/delete/${application.id}" field="name" promptKey="version.delete" />
-		</@crud_table>
+			<h1><@lh key="configuration.versions" /></h1>
+			<@crud_table items = application.versionSummaryList>
+				<@crud_column property="name" key="model.version.name" />
+				<@crud_create action="gui/version/create/${application.id}" label="configuration.version.new" />
+				<@crud_delete action="gui/version/delete/${application.id}" field="name" promptKey="version.delete" />
+			</@crud_table>
 		</section>
 		TODO Back to the list of applications
 	</article>
