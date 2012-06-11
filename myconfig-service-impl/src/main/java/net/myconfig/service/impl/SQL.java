@@ -21,7 +21,14 @@ public interface SQL {
 
 	String APPLICATION_NAME = "select name from application where id = :id";
 	
-	String VERSIONS = "select name from version where application = :id";
+	String VERSIONS = "select v.name, count (vk.key) as keyNumber " +
+			"from version v " +
+			"left join version_key vk " +
+			"on vk.application = v.application " + 
+			"and vk.version = v.name " + 
+			"where v.application = :id " +
+			"group by v.name " +
+			"order by v.name";
 
 	String VERSION_CREATE = "insert into version (application, name) values (:id, :name)";
 

@@ -68,8 +68,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		List<VersionSummary> versionSummaryList = t.query(SQL.VERSIONS, idCriteria, new RowMapper<VersionSummary>(){
 			@Override
 			public VersionSummary mapRow(ResultSet rs, int i) throws SQLException {
-				// FIXME Number of keys	
-				return new VersionSummary(rs.getString("name"), 0);
+				return new VersionSummary(rs.getString("name"), rs.getInt("keyNumber"));
 			}
 		});
 		// OK

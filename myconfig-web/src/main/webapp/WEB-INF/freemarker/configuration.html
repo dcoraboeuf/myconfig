@@ -6,6 +6,7 @@
 			<h1><@lh key="configuration.versions" /></h1>
 			<@crud_table items = application.versionSummaryList>
 				<@crud_column property="name" key="model.version.name" />
+				<@crud_column property="keyNumber" key="configuration.version.keyNumber" class="crud-number" />
 				<@crud_create action="gui/version/create/${application.id}" label="configuration.version.new" />
 				<@crud_delete action="gui/version/delete/${application.id}" field="name" promptKey="version.delete" />
 			</@crud_table>

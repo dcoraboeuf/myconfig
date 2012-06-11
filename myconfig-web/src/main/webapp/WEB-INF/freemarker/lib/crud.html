@@ -21,7 +21,7 @@
 			<#list items as item>
 				<tr>
 					<#list columns as column>
-						<td>
+						<td class="${column.class}">
 							${item[column.property]?html}
 						</td>
 					</#list>
@@ -64,8 +64,12 @@
 	</table>
 </#macro>
 
-<#macro crud_column property key>
-	<#assign columns = columns + [{"property": property, "key": key}] >
+<#macro crud_column property key class="">
+	<#assign columns = columns + [{
+		"property": property,
+		"key": key,
+		"class": class
+	}] >
 </#macro>
 
 <#macro crud_create action label="general.create.label" field="name" id="" maxlength="80" size="20" submit="general.create">
