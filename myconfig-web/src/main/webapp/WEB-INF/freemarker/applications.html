@@ -1,6 +1,6 @@
 <#include "/lib/layout.html">
 <@layout_std pageId="applications" style=false modules=["crud"]>
-	<@crud_table items = applications>
+	<@crud_table id="applications" items = applications>
 		<@crud_column property="id" key="model.application.id" />
 		<@crud_column property="name" key="model.application.name" />
 		<@crud_create action="gui/application/create" label="applications.new" />
