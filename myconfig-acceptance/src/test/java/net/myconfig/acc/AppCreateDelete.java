@@ -23,21 +23,15 @@ public class AppCreateDelete {
 
     @After
     public void tearDown() throws Exception {
-        driver.quit();
+        // TODO driver.quit();
     }
 
 	@Test
 	public void appCreateDelete() throws Exception {
 		HomePage home = HomePage.start(driver);
 		ApplicationsPage applications = home.ui();
-		
-//		selenium.click("link=here");
-//		selenium.waitForPageToLoad("30000");
-//		selenium.type("id=crud-create-text-", "test");
-//		selenium.click("css=input[type=\"submit\"]");
-//		selenium.waitForPageToLoad("30000");
-//		selenium.click("xpath=(//input[@type='image'])[1]");
-//		assertTrue(selenium.getConfirmation().matches("^\\[M-001\\] Do you want to delete the \"test\" application and all its associated configuration[\\s\\S]$"));
+		// TODO Generate a unique name
+		applications.createApplication ("Test");
 	}
 	
 }
