@@ -1,6 +1,6 @@
 package net.myconfig.service.model;
 
-public class Ack {
+public final class Ack {
 
 	public static final Ack OK = new Ack(true);
 	public static final Ack NOK = new Ack(false); 
