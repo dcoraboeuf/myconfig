@@ -91,5 +91,17 @@ Reference: """
 			}
 		}
 	}
+	
+	@Test
+	void get_env_json_concise () {
+		http.request ( Method.GET, ContentType.JSON ) {
+			uri.path = "env/myapp/UAT/1.2/json/concise"
+			response.success = { resp, json ->
+				println("Response status : $resp.status")
+				println("Response content: $json")
+				assertEquals ("1.2 UAT jdbc.user", json["jdbc.user"]); 
+			}
+		}
+	}
 
 }

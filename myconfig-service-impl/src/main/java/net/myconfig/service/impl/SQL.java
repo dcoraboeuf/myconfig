@@ -7,10 +7,9 @@ public interface SQL {
 	String GET_ENV = "select c.key, k.description, c.value " +
 			"from config c, application a, key k " +
 			"where a.name = :application and a.id = c.application " +
-			"and k.application = c.application and k.name = c.key" +
+			"and k.application = c.application and k.name = c.key " +
 			"and c.version = :version " +
 			"and c.environment = :environment " +
-			"and c.key = :key " +
 			"order by c.key";
 
 	String APPLICATIONS = "select a.id, a.name from application a order by a.name";
