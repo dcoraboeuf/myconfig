@@ -22,8 +22,11 @@
 	<KEY application="1" name="jdbc.password" description="Password used to connect to the database" />
 	
 	<VERSION_KEY application="1" version="1.0" key="jdbc.user" />
+	<VERSION_KEY application="1" version="1.0" key="jdbc.password" />
 	<VERSION_KEY application="1" version="1.1" key="jdbc.user" />
+	<VERSION_KEY application="1" version="1.1" key="jdbc.password" />
 	<VERSION_KEY application="1" version="1.2" key="jdbc.user" />
+	<VERSION_KEY application="1" version="1.2" key="jdbc.password" />
 	
 	<CONFIG application="1" version="1.0" key="jdbc.user" environment="DEV" value="1.0 jdbc.user DEV" />
 	<CONFIG application="1" version="1.0" key="jdbc.user" environment="ACC" value="1.0 jdbc.user ACC" />
@@ -37,5 +40,18 @@
 	<CONFIG application="1" version="1.2" key="jdbc.user" environment="ACC" value="1.2 jdbc.user ACC" />
 	<CONFIG application="1" version="1.2" key="jdbc.user" environment="UAT" value="1.2 jdbc.user UAT" />
 	<CONFIG application="1" version="1.2" key="jdbc.user" environment="PROD" value="1.2 jdbc.user PROD" />
+	
+	<CONFIG application="1" version="1.0" key="jdbc.password" environment="DEV" value="1.0 jdbc.password DEV" />
+	<CONFIG application="1" version="1.0" key="jdbc.password" environment="ACC" value="1.0 jdbc.password ACC" />
+	<CONFIG application="1" version="1.0" key="jdbc.password" environment="UAT" value="1.0 jdbc.password UAT" />
+	<CONFIG application="1" version="1.0" key="jdbc.password" environment="PROD" value="1.0 jdbc.password PROD" />
+	<CONFIG application="1" version="1.1" key="jdbc.password" environment="DEV" value="1.1 jdbc.password DEV" />
+	<CONFIG application="1" version="1.1" key="jdbc.password" environment="ACC" value="1.1 jdbc.password ACC" />
+	<CONFIG application="1" version="1.1" key="jdbc.password" environment="UAT" value="1.1 jdbc.password UAT" />
+	<CONFIG application="1" version="1.1" key="jdbc.password" environment="PROD" value="1.1 jdbc.password PROD" />
+	<CONFIG application="1" version="1.2" key="jdbc.password" environment="DEV" value="1.2 jdbc.password DEV" />
+	<CONFIG application="1" version="1.2" key="jdbc.password" environment="ACC" value="1.2 jdbc.password ACC" />
+	<CONFIG application="1" version="1.2" key="jdbc.password" environment="UAT" value="1.2 jdbc.password UAT" />
+	<CONFIG application="1" version="1.2" key="jdbc.password" environment="PROD" value="1.2 jdbc.password PROD" />
 
 </dataset>

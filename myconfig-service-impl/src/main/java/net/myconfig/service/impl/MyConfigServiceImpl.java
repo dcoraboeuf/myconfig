@@ -3,11 +3,18 @@ package net.myconfig.service.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
+import net.myconfig.core.CoreException;
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
+import net.myconfig.service.exception.ApplicationNotFoundException;
+import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.exception.VersionAlreadyDefinedException;
+import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
@@ -22,6 +29,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
@@ -127,6 +135,11 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional(readOnly = true)
 	public String getKey(String application, String version, String environment, String key) {
+		// Checks for existing data
+		checkApplication (application);
+		checkVersion (application, version);
+		checkEnvironment (application, environment);
+		// Query
 		try {
 			return getNamedParameterJdbcTemplate().queryForObject(
 				SQL.GET_KEY,
@@ -145,6 +158,10 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional(readOnly = true)
 	public ConfigurationSet getEnv(String application, String version, String environment) {
+		// Checks for existing data
+		checkApplication (application);
+		checkVersion (application, version);
+		checkEnvironment (application, environment);
 		// List of configuration documented values
 		List<ConfigurationValue> values = getNamedParameterJdbcTemplate().query(SQL.GET_ENV, 
 				new MapSqlParameterSource()
@@ -162,6 +179,36 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				});
 		// OK
 		return new ConfigurationSet(values);
+	}
+
+	protected void checkApplication(String application) {
+		check (
+				SQL.APPLICATION_EXISTS,
+				new MapSqlParameterSource("name", application),
+				new ApplicationNotFoundException(application));
+	}
+
+	protected void checkVersion(String application, String version) {
+		check (
+				SQL.VERSION_EXISTS,
+				new MapSqlParameterSource("name", version).addValue("application", application),
+				new VersionNotFoundException(application, version));
+	}
+
+	protected void checkEnvironment(String application, String environment) {
+		check (
+				SQL.ENVIRONMENT_EXISTS,
+				new MapSqlParameterSource("name", environment).addValue("application", application),
+				new EnvironmentNotFoundException(application, environment));
+	}
+
+	protected void check(String sql,
+			SqlParameterSource sqlParameterSource,
+			CoreException exception) {
+		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(sql, sqlParameterSource);
+		if (list.isEmpty()) {
+			throw exception;
+		}
 	}
 
 }

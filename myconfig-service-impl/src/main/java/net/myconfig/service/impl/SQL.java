@@ -33,4 +33,18 @@ public interface SQL {
 
 	String VERSION_DELETE = "delete from version where application = :id and name = :name";
 
+	String APPLICATION_EXISTS = "select id from application where name = :name";
+
+	String VERSION_EXISTS = "select v.name " +
+			"from version v, application a " +
+			"where v.name = :name " +
+			"and v.application = a.id " +
+			"and a.name = :application";
+
+	String ENVIRONMENT_EXISTS = "select e.name " +
+			"from environment e, application a " +
+			"where e.name = :name " +
+			"and e.application = a.id " +
+			"and a.name = :application";
+
 }

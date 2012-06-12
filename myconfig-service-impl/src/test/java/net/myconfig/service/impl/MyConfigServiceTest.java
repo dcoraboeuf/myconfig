@@ -14,9 +14,15 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
+import net.myconfig.service.exception.ApplicationNotFoundException;
+import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.test.AbstractIntegrationTest;
 
 public class MyConfigServiceTest extends AbstractIntegrationTest {
@@ -33,6 +39,42 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test(expected = KeyNotFoundException.class)
 	public void get_key_not_found() {
 		myConfigService.getKey("myapp", "1.1", "UAT", "jdbc.usr");
+	}
+	
+	@Test
+	public void get_env () {
+		ConfigurationSet set = myConfigService.getEnv("myapp", "1.1", "UAT");
+		assertNotNull (set);
+		List<ConfigurationValue> values = set.getValues();
+		assertNotNull (values);
+		assertEquals (2, values.size());
+		{
+			ConfigurationValue value = values.get(0);
+			assertEquals ("jdbc.password", value.getKey());
+			assertEquals ("Password used to connect to the database", value.getDescription());
+			assertEquals ("1.1 jdbc.password UAT", value.getValue());
+		}
+		{
+			ConfigurationValue value = values.get(1);
+			assertEquals ("jdbc.user", value.getKey());
+			assertEquals ("User used to connect to the database", value.getDescription());
+			assertEquals ("1.1 jdbc.user UAT", value.getValue());
+		}
+	}
+	
+	@Test(expected = ApplicationNotFoundException.class)
+	public void get_env_no_app () {
+		myConfigService.getEnv("myappxxx", "1.1", "UAT");
+	}
+	
+	@Test(expected = VersionNotFoundException.class)
+	public void get_env_no_version () {
+		myConfigService.getEnv("myapp", "1.x", "UAT");
+	}
+	
+	@Test(expected = EnvironmentNotFoundException.class)
+	public void get_env_no_environment () {
+		myConfigService.getEnv("myapp", "1.1", "XXX");
 	}
 	
 	@Test
