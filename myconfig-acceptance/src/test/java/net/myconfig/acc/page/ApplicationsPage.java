@@ -13,7 +13,7 @@ public class ApplicationsPage extends Page {
 		id("crud-create-text-").sendKeys(name);
 		id("crud-create-submit-").click();
 		// Waits for the name to appear
-		xpath("//td[@class='crud-column-name' and text() = '%s']", name);
+		element ("td", "crud-column-name", name);
 	}
 	
 

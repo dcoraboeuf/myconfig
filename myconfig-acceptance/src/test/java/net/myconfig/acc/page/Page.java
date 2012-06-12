@@ -21,5 +21,9 @@ public abstract class Page {
 				xpath,
 				args)));
 	}
+	
+	protected WebElement element (String tag, String className, String text) {
+		return xpath("//%s[contains(@class, '%s') and contains(text(), '%s')]", tag, className, text);
+	}
 
 }
