@@ -39,7 +39,7 @@ public class GetController extends AbstractRESTController {
 	}
 
 	@RequestMapping("/env/{application}/{environment}/{version}/{mode}")
-	public void env (@PathVariable String application, @PathVariable String version, @PathVariable String environment,
+	public void env_default (@PathVariable String application, @PathVariable String version, @PathVariable String environment,
 			@PathVariable String mode,
 			HttpServletResponse response) throws IOException {
 		// No variant

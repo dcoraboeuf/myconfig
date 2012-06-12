@@ -43,7 +43,27 @@ public class HomeControllerTest extends AbstractConfigurationTest {
 		assertNotNull (info);
 		RESTMethodInformation method = getMethod(info, "key");
 		assertEquals ("rest.GetController.key", method.getKey());
-		assertEquals ("/get/key/{key}/{application}/{version}/{environment}", method.getPath());
+		assertEquals ("/get/key/{application}/{environment}/{version}/{key:.*}", method.getPath());
+		assertEquals ("GET", method.getMethod());
+	}
+	
+	@Test
+	public void getRESTInformationEnv() {
+		RESTInformation info = homeController.getRESTInformation(getController);
+		assertNotNull (info);
+		RESTMethodInformation method = getMethod(info, "env");
+		assertEquals ("rest.GetController.env", method.getKey());
+		assertEquals ("/get/env/{application}/{environment}/{version}/{mode}/{variant}", method.getPath());
+		assertEquals ("GET", method.getMethod());
+	}
+	
+	@Test
+	public void getRESTInformationEnvDefault() {
+		RESTInformation info = homeController.getRESTInformation(getController);
+		assertNotNull (info);
+		RESTMethodInformation method = getMethod(info, "env_default");
+		assertEquals ("rest.GetController.env_default", method.getKey());
+		assertEquals ("/get/env/{application}/{environment}/{version}/{mode}", method.getPath());
 		assertEquals ("GET", method.getMethod());
 	}
 	
