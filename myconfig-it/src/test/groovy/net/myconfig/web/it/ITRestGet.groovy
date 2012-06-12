@@ -58,7 +58,7 @@ class ITRestGet {
 	@Test
 	void get_key_ok() {
 		http.request ( Method.GET, ContentType.TEXT ) {
-			uri.path = "key/jdbc.user/myapp/1.2/UAT"
+			uri.path = "key/myapp/UAT/1.2/jdbc.user"
 			response.success = { resp, reader ->
 				def content = reader.text
 				println("Response status : $resp.status")
@@ -71,7 +71,7 @@ class ITRestGet {
 	@Test
 	void get_key_not_found() {
 		http.request ( Method.GET, ContentType.TEXT ) {
-			uri.path = "key/jdbc.usr/myapp/1.2/UAT"
+			uri.path = "key/myapp/UAT/1.2/jdbc.usr"
 			response.failure = { resp, reader ->
 				def content = reader.text
 				println("Response status : $resp.status")

@@ -32,13 +32,13 @@ public class GetController extends AbstractRESTController {
 
 	// FIXME Configuration description for app x version
 
-	@RequestMapping("/key/{key}/{application}/{version}/{environment}")
+	@RequestMapping("/key/{application}/{environment}/{version}/{key:.*}")
 	public @ResponseBody
 	String key(@PathVariable String application, @PathVariable String version, @PathVariable String environment, @PathVariable String key) {
 		return getMyConfigService().getKey(application, version, environment, key);
 	}
 
-	@RequestMapping("/env/{application}/{version}/{environment}/{mode}")
+	@RequestMapping("/env/{application}/{environment}/{version}/{mode}")
 	public void env (@PathVariable String application, @PathVariable String version, @PathVariable String environment,
 			@PathVariable String mode,
 			HttpServletResponse response) throws IOException {
@@ -46,7 +46,7 @@ public class GetController extends AbstractRESTController {
 		env (application, version, environment, mode, null, response);
 	}
 
-	@RequestMapping("/env/{application}/{version}/{environment}/{mode}/{variant}")
+	@RequestMapping("/env/{application}/{environment}/{version}/{mode}/{variant}")
 	public void env (@PathVariable String application, @PathVariable String version, @PathVariable String environment,
 			@PathVariable String mode, @PathVariable String variant,
 			HttpServletResponse response) throws IOException {
