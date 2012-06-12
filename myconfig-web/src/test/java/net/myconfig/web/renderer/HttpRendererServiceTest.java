@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.test.AbstractIntegrationTest;
 
 public class HttpRendererServiceTest extends AbstractIntegrationTest {
@@ -14,7 +15,7 @@ public class HttpRendererServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void jsonAvailable() {
-		HttpRenderer<Object> renderer = httpRendererService.getRenderer(Object.class, "json");
+		HttpRenderer<ConfigurationSet> renderer = httpRendererService.getRenderer(ConfigurationSet.class, "json");
 		assertNotNull (renderer);
 	}
 	

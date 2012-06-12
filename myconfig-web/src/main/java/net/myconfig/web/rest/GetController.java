@@ -42,12 +42,20 @@ public class GetController extends AbstractRESTController {
 	public void env (@PathVariable String application, @PathVariable String version, @PathVariable String environment,
 			@PathVariable String mode,
 			HttpServletResponse response) throws IOException {
+		// No variant
+		env (application, version, environment, mode, null, response);
+	}
+
+	@RequestMapping("/env/{application}/{version}/{environment}/{mode}/{variant}")
+	public void env (@PathVariable String application, @PathVariable String version, @PathVariable String environment,
+			@PathVariable String mode, @PathVariable String variant,
+			HttpServletResponse response) throws IOException {
 		// Gets the configuration
 		ConfigurationSet set = getMyConfigService().getEnv (application, version, environment);
 		// Gets the renderer
 		HttpRenderer<ConfigurationSet> renderer = getConfigurationSetRenderer(mode);
 		// Renders the configuration into the response
-		renderer.renderer (set, response);
+		renderer.renderer (set, variant, response);
 	}
 
 	private HttpRenderer<ConfigurationSet> getConfigurationSetRenderer(String mode) {
