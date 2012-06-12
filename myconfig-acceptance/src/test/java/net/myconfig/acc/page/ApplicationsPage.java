@@ -15,6 +15,11 @@ public class ApplicationsPage extends Page {
 		// Waits for the name to appear
 		element ("td", "crud-column-name", name);
 	}
+
+	public void deleteApplication(String name) {
+		// TODO Gets the delete button for this application
+		// xpath("//input[contains(@class,'crud-delete)]", name);
+	}
 	
 
 }

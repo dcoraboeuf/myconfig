@@ -15,6 +15,8 @@ public class AppCreateDelete extends AccTest {
 		// Creates the application
 		String appName = generateUniqueName("app");
 		applications.createApplication (appName);
+		// Deletes the application
+		applications.deleteApplication (appName);
 	}
 	
 }
