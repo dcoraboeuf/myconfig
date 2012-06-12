@@ -1,0 +1,12 @@
+package net.myconfig.service.impl;
+
+public interface SQLColumns {
+	
+	String ENVIRONMENT = "environment";
+	String VERSION = "version";
+	String APPLICATION = "application";
+	String KEY_NUMBER = "keyNumber";
+	String NAME = "name";
+	String ID = "id";
+
+}

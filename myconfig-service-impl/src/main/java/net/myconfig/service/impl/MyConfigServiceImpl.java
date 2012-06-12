@@ -1,5 +1,12 @@
 package net.myconfig.service.impl;
 
+import static net.myconfig.service.impl.SQLColumns.APPLICATION;
+import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT;
+import static net.myconfig.service.impl.SQLColumns.ID;
+import static net.myconfig.service.impl.SQLColumns.KEY_NUMBER;
+import static net.myconfig.service.impl.SQLColumns.NAME;
+import static net.myconfig.service.impl.SQLColumns.VERSION;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -59,7 +66,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			@Override
 			public ApplicationSummary mapRow(ResultSet rs, int i)
 					throws SQLException {
-				return new ApplicationSummary(rs.getInt("id"), rs.getString("name"));
+				return new ApplicationSummary(rs.getInt(ID), rs.getString(NAME));
 			}
 		});
 	}
@@ -69,14 +76,14 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public ApplicationConfiguration getApplicationConfiguration(int id) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// ID
-		MapSqlParameterSource idCriteria = new MapSqlParameterSource("id", id);
+		MapSqlParameterSource idCriteria = new MapSqlParameterSource(ID, id);
 		// Gets the name
 		String name = t.queryForObject(SQL.APPLICATION_NAME, idCriteria, String.class);
 		// Versions	
 		List<VersionSummary> versionSummaryList = t.query(SQL.VERSIONS, idCriteria, new RowMapper<VersionSummary>(){
 			@Override
 			public VersionSummary mapRow(ResultSet rs, int i) throws SQLException {
-				return new VersionSummary(rs.getString("name"), rs.getInt("keyNumber"));
+				return new VersionSummary(rs.getString(NAME), rs.getInt(KEY_NUMBER));
 			}
 		});
 		// OK
@@ -91,7 +98,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		try {
 			getNamedParameterJdbcTemplate().update(
 				SQL.APPLICATION_CREATE,
-				new MapSqlParameterSource("name", name),
+				new MapSqlParameterSource(NAME, name),
 				keyHolder);
 		} catch (DuplicateKeyException ex) {
 			throw new ApplicationNameAlreadyDefinedException (name);
@@ -103,7 +110,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional
 	public Ack deleteApplication(int id) {
-		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource ("id", id));
+		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource (ID, id));
 		return Ack.validate (count == 1);
 	}
 	
@@ -121,8 +128,8 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 
 	protected MapSqlParameterSource idNameSource(int id, String name) {
 		return new MapSqlParameterSource()
-			.addValue("id", id)
-			.addValue("name", name);
+			.addValue(ID, id)
+			.addValue(NAME, name);
 	}
 	
 	@Override
@@ -144,9 +151,9 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			return getNamedParameterJdbcTemplate().queryForObject(
 				SQL.GET_KEY,
 				new MapSqlParameterSource()
-					.addValue("application", application)
-					.addValue("version", version)
-					.addValue("environment", environment)
+					.addValue(APPLICATION, application)
+					.addValue(VERSION, version)
+					.addValue(ENVIRONMENT, environment)
 					.addValue("key", key),
 				String.class
 				);
@@ -165,9 +172,9 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		// List of configuration documented values
 		List<ConfigurationValue> values = getNamedParameterJdbcTemplate().query(SQL.GET_ENV, 
 				new MapSqlParameterSource()
-					.addValue("application", application)
-					.addValue("version", version)
-					.addValue("environment", environment),
+					.addValue(APPLICATION, application)
+					.addValue(VERSION, version)
+					.addValue(ENVIRONMENT, environment),
 				new RowMapper<ConfigurationValue> () {
 					@Override
 					public ConfigurationValue mapRow(ResultSet rs, int index) throws SQLException {
@@ -184,21 +191,21 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	protected void checkApplication(String application) {
 		check (
 				SQL.APPLICATION_EXISTS,
-				new MapSqlParameterSource("name", application),
+				new MapSqlParameterSource(NAME, application),
 				new ApplicationNotFoundException(application));
 	}
 
 	protected void checkVersion(String application, String version) {
 		check (
 				SQL.VERSION_EXISTS,
-				new MapSqlParameterSource("name", version).addValue("application", application),
+				new MapSqlParameterSource(NAME, version).addValue(APPLICATION, application),
 				new VersionNotFoundException(application, version));
 	}
 
 	protected void checkEnvironment(String application, String environment) {
 		check (
 				SQL.ENVIRONMENT_EXISTS,
-				new MapSqlParameterSource("name", environment).addValue("application", application),
+				new MapSqlParameterSource(NAME, environment).addValue(APPLICATION, application),
 				new EnvironmentNotFoundException(application, environment));
 	}
 
