@@ -99,7 +99,9 @@ Reference: """
 			response.success = { resp, json ->
 				println("Response status : $resp.status")
 				println("Response content: $json")
+				assertEquals (2, json.size());
 				assertEquals ("1.2 UAT jdbc.user", json["jdbc.user"]); 
+				assertEquals ("1.2 UAT jdbc.password", json["jdbc.password"]); 
 			}
 		}
 	}
