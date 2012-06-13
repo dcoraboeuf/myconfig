@@ -12,9 +12,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Collections;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -26,9 +24,9 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class ConfigurationSetJSONHttpRendererTest {
+public class ConfigurationSetPropertiesHttpRendererTest {
 	
-	private final ConfigurationSetJSONHttpRenderer renderer = new ConfigurationSetJSONHttpRenderer();
+	private final ConfigurationSetPropertiesHttpRenderer renderer = new ConfigurationSetPropertiesHttpRenderer();
 	
 	@Test
 	public void appliesTo_ok () {
@@ -42,44 +40,16 @@ public class ConfigurationSetJSONHttpRendererTest {
 	
 	@Test
 	public void contentType() {
-		assertEquals ("json", renderer.getContentType());
-	}
-	
-	@Test(expected = ConfigurationSetJSONUnknownVariantException.class)
-	public void unknownVariant () throws IOException {
-		renderer.renderer(new ConfigurationSet(
-				"myapp",
-				"UAT",
-				"1.2",
-				Collections.<ConfigurationValue>emptyList()), "xxx", null);
+		assertEquals ("properties", renderer.getContentType());
 	}
 	
 	@Test
-	public void concise () throws IOException {
-		String expectedText = "{\"aaa\":\"a1\",\"bbb\":\"b2\",\"ccc\":\"c\u00e7c\"}";
-		variant("concise", expectedText);
-	}
-	
-	@Test
-	public void complete () throws IOException {
-		String expectedText = "[{\"key\":\"aaa\",\"description\":\"aaa description\",\"value\":\"a1\"},{\"key\":\"bbb\",\"description\":\"bbb description\",\"value\":\"b2\"},{\"key\":\"ccc\",\"description\":\"ccc accentu\u00e9e\",\"value\":\"c\u00e7c\"}]";
-		variant("complete", expectedText);
-	}
-	
-	@Test
-	public void default_variant () throws IOException {
-		String expectedText = "[{\"key\":\"aaa\",\"description\":\"aaa description\",\"value\":\"a1\"},{\"key\":\"bbb\",\"description\":\"bbb description\",\"value\":\"b2\"},{\"key\":\"ccc\",\"description\":\"ccc accentu\u00e9e\",\"value\":\"c\u00e7c\"}]";
-		variant(null, expectedText);
-	}
-
-	protected void variant(String variant, String expectedText)
-			throws IOException, UnsupportedEncodingException {
+	public void properties () throws IOException {
 		// Set to render
 		ConfigurationSet set = new ConfigurationSet(
 				"myapp",
 				"UAT",
-				"1.2",
-				Arrays.asList(
+				"1.2",Arrays.asList(
 					new ConfigurationValue("aaa", "aaa description", "a1"),
 					new ConfigurationValue("bbb", "bbb description", "b2"),
 					new ConfigurationValue("ccc", "ccc accentu\u00E9e", "c\u00e7c")
@@ -99,13 +69,13 @@ public class ConfigurationSetJSONHttpRendererTest {
 		HttpServletResponse response = mock (HttpServletResponse.class);
 		when (response.getOutputStream()).thenReturn (output);
 		// Call
-		renderer.renderer(set, variant, response);
+		renderer.renderer(set, null, response);
 		// Checks
-		verify(response, times(1)).setContentType("application/json");
-		verify(response, times(1)).setCharacterEncoding("UTF-8");
+		verify(response, times(1)).setContentType("text/plain");
+		verify(response, times(1)).setCharacterEncoding("US-ASCII");
 		// Response
-		String text = bout.toString("UTF-8");
-		assertEquals (expectedText, text);
+		String text = bout.toString("US-ASCII");
+		assertEquals ("# Configuration properties for 'myapp'\n# Version: 1.2\n# Environment: UAT\n\n# aaa description\naaa = a1\n\n# bbb description\nbbb = b2\n\n# ccc accentu\\u00E9e\nccc = c\\u00E7c\n\n", text);
 	}
 
 }
