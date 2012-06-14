@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -32,14 +33,14 @@ public class GUIController {
 	}
 
 	@ExceptionHandler(Exception.class)
-	public String onException (HttpServletRequest request, Locale locale, Exception ex, Model model) {
+	public ModelAndView onException (HttpServletRequest request, Locale locale, Exception ex) {
 		// Error message
 		ErrorMessage error = errorHandler.handleError (request, locale, ex);
 		// Model
-		model.addAttribute("error", error);
+		ModelAndView mav = new ModelAndView("error");
+		mav.addObject("error", error);
 		// OK
-		// FIXME Returns to the origin page
-		return "error";
+		return mav;
 	}
 	
 	@RequestMapping("/")
