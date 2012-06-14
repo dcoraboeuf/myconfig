@@ -19,6 +19,12 @@ public class HttpRendererServiceTest extends AbstractIntegrationTest {
 		assertNotNull (renderer);
 	}
 	
+	@Test
+	public void propertiesAvailable() {
+		HttpRenderer<ConfigurationSet> renderer = httpRendererService.getRenderer(ConfigurationSet.class, "properties");
+		assertNotNull (renderer);
+	}
+	
 	@Test(expected = RendererNotFoundException.class)
 	public void notAvailable() {
 		httpRendererService.getRenderer(Object.class, "xxx");

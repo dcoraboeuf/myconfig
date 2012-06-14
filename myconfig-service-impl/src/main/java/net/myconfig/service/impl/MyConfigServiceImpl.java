@@ -185,7 +185,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 					}
 				});
 		// OK
-		return new ConfigurationSet(values);
+		return new ConfigurationSet(application, environment, version, values);
 	}
 
 	protected void checkApplication(String application) {

@@ -59,13 +59,22 @@ section.app-title {
 		position: fixed;
 		top: 20px;
 		right: 15px;
-		a {
-			text-decoration: none;
+		.nav-item {
 			color: @app-title-nav-color-fg;
 			margin-right: 10px;
-			&.language.selected {
+		}
+		a {
+			.nav-item;
+			text-decoration: none;
+		}
+		.language {
+			.nav-item;
+			&.selected {
 				font-weight: bold;
 				color: gray;
+			}
+			&.unselected {
+				.action;
 			}
 		}
 	}
