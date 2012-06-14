@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.myconfig.core.CoreException;
 import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
 
@@ -45,6 +46,11 @@ public class DefaultErrorHandler implements ErrorHandler {
 		errors.error(String.format("[%s] %s", uuid, message));
 		// OK
 		return new ErrorMessage(uuid, message);
+	}
+	
+	@Override
+	public String displayableError(CoreException ex, Locale locale) {
+		return ex.getLocalizedMessage(strings, locale);
 	}
 
 }
