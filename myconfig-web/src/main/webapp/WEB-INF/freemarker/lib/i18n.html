@@ -8,6 +8,6 @@
 	<#if localeSelected (value)>
 		<span class="language selected">${value?upper_case}</span>
 	<#else>
-		<span class="language unselected">${value?upper_case}</span>
+		<span class="language unselected" onclick="myconfig.changeLanguage('${value?lower_case}')">${value?upper_case}</span>
 	</#if>
 </#macro>
