@@ -5,9 +5,9 @@
 <#macro ljsh key>${loc("${key}")?js_string?html}</#macro>
 
 <#macro language value>
-	<#assign lnClass = "" />
 	<#if localeSelected (value)>
-		<#assign lnClass = "selected" />
+		<span class="language selected">${value?upper_case}</span>
+	<#else>
+		<span class="language unselected">${value?upper_case}</span>
 	</#if>
-	<a href=".?language=${value}" class="language ${lnClass}">${value?upper_case}</a>
 </#macro>
