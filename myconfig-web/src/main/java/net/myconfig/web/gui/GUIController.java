@@ -1,10 +1,17 @@
 package net.myconfig.web.gui;
 
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
 import net.myconfig.web.rest.UIInterface;
+import net.myconfig.web.support.ErrorHandler;
+import net.myconfig.web.support.ErrorMessage;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,10 +23,23 @@ import org.springframework.web.servlet.view.RedirectView;
 public class GUIController {
 	
 	private final UIInterface ui;
-
+	private final ErrorHandler errorHandler;
+	
 	@Autowired
-	public GUIController(UIInterface ui) {
+	public GUIController(UIInterface ui, ErrorHandler errorHandler) {
 		this.ui = ui;
+		this.errorHandler = errorHandler;
+	}
+
+	@ExceptionHandler(Exception.class)
+	public String onException (HttpServletRequest request, Locale locale, Exception ex, Model model) {
+		// Error message
+		ErrorMessage error = errorHandler.handleError (request, locale, ex);
+		// Model
+		model.addAttribute("error", error);
+		// OK
+		// FIXME Returns to the origin page
+		return "error";
 	}
 	
 	@RequestMapping("/")

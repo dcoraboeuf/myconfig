@@ -9,6 +9,7 @@ import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.web.renderer.HttpRenderer;
 import net.myconfig.web.renderer.HttpRendererService;
 import net.myconfig.web.renderer.RendererNotFoundException;
+import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,8 @@ public class GetController extends AbstractRESTController {
 	private final HttpRendererService httpRendererService;
 
 	@Autowired
-	public GetController(Strings strings, MyConfigService myConfigService, HttpRendererService httpRendererService) {
-		super (strings, myConfigService);
+	public GetController(Strings strings, ErrorHandler errorHandler, MyConfigService myConfigService, HttpRendererService httpRendererService) {
+		super (strings, errorHandler, myConfigService);
 		this.httpRendererService = httpRendererService;
 	}
 
