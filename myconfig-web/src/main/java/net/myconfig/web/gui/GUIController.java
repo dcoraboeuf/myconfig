@@ -54,33 +54,48 @@ public class GUIController {
 			ui.applicationCreate (name);
 			return redirect ("");
 		} catch (CoreException ex) {
-			// Error handling
-			model.addAttribute("error", errorHandler.displayableError (ex, locale));
-			// OK
-			return applications(model);
+			return applicationsError(model, locale, ex);
 		}
+	}
+
+	protected String applicationsError(Model model, Locale locale,
+			CoreException ex) {
+		// Error handling
+		model.addAttribute("error", errorHandler.displayableError (ex, locale));
+		// OK
+		return applications(model);
 	}
 	
 	@RequestMapping(value = "/application/delete", method = RequestMethod.POST)
-	public String applicationCreate (int id) {
-		ui.applicationDelete (id);
-		return redirect ("");
+	public String applicationCreate (int id, Model model, Locale locale) {
+		try {
+			ui.applicationDelete (id);
+			return redirect ("");
+		} catch (CoreException ex) {
+			return applicationsError(model, locale, ex);
+		}
 	}
 
 	@RequestMapping(value = "/application/configure", method = RequestMethod.GET)
-	public String applicationConfigure (int id, Model model) {
-		model.addAttribute("application", ui.applicationConfiguration(id));
-		return "configuration";
+	public String applicationConfigure (int id, Model model, Locale locale) {
+		try {
+			model.addAttribute("application", ui.applicationConfiguration(id));
+			return "configuration";
+		} catch (CoreException ex) {
+			return applicationsError(model, locale, ex);
+		}
 	}
 
 	@RequestMapping(value = "/version/create/{id}", method = RequestMethod.POST)
 	public String versionCreate (@PathVariable int id, String name) {
+		// FIXME Error handling
 		ui.versionCreate (id, name);
 		return configure (id);
 	}
 
 	@RequestMapping(value = "/version/delete/{id}", method = RequestMethod.POST)
 	public String versionDelete (@PathVariable int id, String name) {
+		// FIXME Error handling
 		ui.versionDelete (id, name);
 		return configure (id);
 	}
