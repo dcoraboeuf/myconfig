@@ -1,37 +1,26 @@
 package net.myconfig.web.gui;
 
-import java.util.Locale;
-
-import net.myconfig.core.CoreException;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("/gui")
-public class GUIApplicationsController extends AbstractGUIController {
+public class GUIApplicationsController extends AbstractGUIPageController {
 	
 	@Autowired
 	public GUIApplicationsController(UIInterface ui, ErrorHandler errorHandler) {
 		super (ui, errorHandler);
 	}
-
-	@ExceptionHandler(CoreException.class)
-	public ModelAndView onException (Locale locale, CoreException ex) {
-		// Model
-		ExtendedModelMap model = new ExtendedModelMap();
-		// Error handling
-		model.addAttribute("error", errorHandler.displayableError (ex, locale));
-		// OK
-		return new ModelAndView (applications(model), model);
+	
+	@Override
+	protected String errorFallbackView(Model model) {
+		return applications(model);
 	}
 	
 	@RequestMapping("/")
