@@ -19,7 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.ui.ExtendedModelMap;
 
-public class GUIControllerTest {
+public class GUIApplicationControllerTest {
 	
 	private static DefaultErrorHandler errorHandler;
 
@@ -34,7 +34,7 @@ public class GUIControllerTest {
 		List<ApplicationSummary> summaries = Collections.emptyList();
 		UIInterface ui = mock(UIInterface.class);
 		when(ui.applicationCreate("test")).thenThrow(new ApplicationNameAlreadyDefinedException("test"));
-		GUIController controller = new GUIController(ui, errorHandler);
+		GUIApplicationsController controller = new GUIApplicationsController(ui, errorHandler);
 		ExtendedModelMap model = new ExtendedModelMap();
 		String view = controller.applicationCreate("test", model, Locale.ENGLISH);
 		assertEquals ("applications", view);
