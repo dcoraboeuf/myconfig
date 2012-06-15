@@ -34,5 +34,17 @@ public abstract class AbstractGUIController {
 		// OK
 		return mav;
 	}
+	
+	protected String redirectToListOfApplications () {
+		return redirect ("");
+	}
+
+	protected String redirectToApplicationConfiguration(int id) {
+		return redirect ("application/configure?id=" + id);
+	}
+
+	private String redirect(String path) {
+		return "redirect:/gui/" + path;
+	}
 
 }

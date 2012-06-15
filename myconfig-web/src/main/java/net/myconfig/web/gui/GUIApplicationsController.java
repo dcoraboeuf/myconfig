@@ -9,7 +9,6 @@ import net.myconfig.web.support.ErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,7 +31,7 @@ public class GUIApplicationsController extends AbstractGUIController {
 	public String applicationCreate (String name, Model model, Locale locale) {
 		try {
 			ui.applicationCreate (name);
-			return redirect ("");
+			return redirectToListOfApplications();
 		} catch (CoreException ex) {
 			return applicationsError(model, locale, ex);
 		}
@@ -50,7 +49,7 @@ public class GUIApplicationsController extends AbstractGUIController {
 	public String applicationCreate (int id, Model model, Locale locale) {
 		try {
 			ui.applicationDelete (id);
-			return redirect ("");
+			return redirectToListOfApplications ();
 		} catch (CoreException ex) {
 			return applicationsError(model, locale, ex);
 		}
@@ -64,28 +63,6 @@ public class GUIApplicationsController extends AbstractGUIController {
 		} catch (CoreException ex) {
 			return applicationsError(model, locale, ex);
 		}
-	}
-
-	@RequestMapping(value = "/version/create/{id}", method = RequestMethod.POST)
-	public String versionCreate (@PathVariable int id, String name) {
-		// FIXME Error handling
-		ui.versionCreate (id, name);
-		return configure (id);
-	}
-
-	@RequestMapping(value = "/version/delete/{id}", method = RequestMethod.POST)
-	public String versionDelete (@PathVariable int id, String name) {
-		// FIXME Error handling
-		ui.versionDelete (id, name);
-		return configure (id);
-	}
-
-	protected String configure(int id) {
-		return redirect ("application/configure?id=" + id);
-	}
-
-	protected String redirect(String path) {
-		return "redirect:/gui/" + path;
 	}
 
 }
