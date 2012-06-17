@@ -1,6 +1,5 @@
 package net.myconfig.service.exception;
 
-import net.myconfig.core.CoreException;
 
 public class VersionAlreadyDefinedException extends CoreException {
 

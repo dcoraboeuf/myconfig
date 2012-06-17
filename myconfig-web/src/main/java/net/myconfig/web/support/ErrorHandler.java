@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.myconfig.core.CoreException;
+import net.myconfig.service.exception.CoreException;
 
 public interface ErrorHandler {
 

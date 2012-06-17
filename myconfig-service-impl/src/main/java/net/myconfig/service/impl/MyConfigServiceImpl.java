@@ -14,10 +14,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import net.myconfig.core.CoreException;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
+import net.myconfig.service.exception.CoreException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;

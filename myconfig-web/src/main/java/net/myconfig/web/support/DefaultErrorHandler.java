@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.myconfig.core.CoreException;
+import net.myconfig.service.exception.CoreException;
 import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
 
