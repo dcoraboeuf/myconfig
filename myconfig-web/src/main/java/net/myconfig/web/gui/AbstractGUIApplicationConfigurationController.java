@@ -19,7 +19,7 @@ public abstract class AbstractGUIApplicationConfigurationController extends Abst
 		super(ui, errorHandler);
 	}
 
-	@ExceptionHandler
+	@ExceptionHandler(ApplicationRelatedException.class)
 	public ModelAndView onApplicationError(Locale locale, ApplicationRelatedException ex) {
 		ExtendedModelMap model = prepareModelForError(locale, ex);
 		// OK
