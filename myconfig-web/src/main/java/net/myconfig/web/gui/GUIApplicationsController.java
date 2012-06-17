@@ -18,10 +18,10 @@ public class GUIApplicationsController extends AbstractGUIPageController {
 		super (ui, errorHandler);
 	}
 	
-	@Override
-	protected String errorFallbackView(Model model) {
-		return applications(model);
-	}
+//	@Override
+//	protected String errorFallbackView(Model model) {
+//		return applications(model);
+//	}
 	
 	@RequestMapping("/")
 	public String applications (Model model) {
@@ -39,12 +39,6 @@ public class GUIApplicationsController extends AbstractGUIPageController {
 	public String applicationCreate (int id) {
 		ui.applicationDelete (id);
 		return redirectToListOfApplications ();
-	}
-
-	@RequestMapping(value = "/application/configure", method = RequestMethod.GET)
-	public String applicationConfigure (int id, Model model) {
-		model.addAttribute("application", ui.applicationConfiguration(id));
-		return "configuration";
 	}
 
 }

@@ -11,23 +11,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/gui/version")
-public class GUIVersionController extends AbstractGUIController {
+public class GUIVersionController extends AbstractGUIApplicationConfigurationController {
 	
 	@Autowired
 	public GUIVersionController(UIInterface ui, ErrorHandler errorHandler) {
 		super (ui, errorHandler);
 	}
+	
+	@Override
+	protected String getErrorKeyInModel() {
+		return "version_error";
+	}
 
 	@RequestMapping(value = "/create/{id:.*}", method = RequestMethod.POST)
 	public String versionCreate (@PathVariable int id, String name) {
-		// FIXME Error handling
 		ui.versionCreate (id, name);
 		return redirectToApplicationConfiguration(id);
 	}
 
 	@RequestMapping(value = "/delete/{id:*.}", method = RequestMethod.POST)
 	public String versionDelete (@PathVariable int id, String name) {
-		// FIXME Error handling
 		ui.versionDelete (id, name);
 		return redirectToApplicationConfiguration(id);
 	}

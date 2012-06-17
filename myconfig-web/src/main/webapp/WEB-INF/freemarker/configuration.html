@@ -4,7 +4,7 @@
 		<h1>${application.name?html}</h1>
 		<section class="versions">
 			<h1><@lh key="configuration.versions" /></h1>
-			<@crud_table items = application.versionSummaryList>
+			<@crud_table items = application.versionSummaryList errorKey = "version_error">
 				<@crud_column property="name" key="model.version.name" />
 				<@crud_column property="keyNumber" key="configuration.version.keyNumber" class="crud-number" />
 				<@crud_create action="gui/version/create/${application.id}" label="configuration.version.new" />
