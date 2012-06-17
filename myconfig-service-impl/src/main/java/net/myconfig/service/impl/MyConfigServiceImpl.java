@@ -122,7 +122,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				idNameSource(id, name));
 			return Ack.validate (count == 1);
 		} catch (DuplicateKeyException ex) {
-			throw new VersionAlreadyDefinedException (name);
+			throw new VersionAlreadyDefinedException (id, name);
 		}
 	}
 
