@@ -27,4 +27,8 @@ public interface MyConfigService {
 
 	Ack deleteVersion(int id, String name);
 
+	Ack createEnvironment(int id, String name);
+
+	Ack deleteEnvironment(int id, String name);
+
 }

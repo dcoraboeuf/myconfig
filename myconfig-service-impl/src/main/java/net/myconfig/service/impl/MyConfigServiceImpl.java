@@ -14,10 +14,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import net.myconfig.core.CoreException;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
+import net.myconfig.service.exception.CoreException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
@@ -27,6 +27,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.VersionSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,9 +87,17 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				return new VersionSummary(rs.getString(NAME), rs.getInt(KEY_NUMBER));
 			}
 		});
+		// Environments
+		List<EnvironmentSummary> environmentSummaryList = t.query(SQL.ENVIRONMENTS, idCriteria, new RowMapper<EnvironmentSummary>(){
+			@Override
+			public EnvironmentSummary mapRow(ResultSet rs, int i) throws SQLException {
+				return new EnvironmentSummary(rs.getString(NAME));
+			}
+		});
+		// TODO Keys
 		// OK
 		return new ApplicationConfiguration(id, name,
-				versionSummaryList);
+				versionSummaryList, environmentSummaryList);
 	}
 	
 	@Override
@@ -122,7 +131,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				idNameSource(id, name));
 			return Ack.validate (count == 1);
 		} catch (DuplicateKeyException ex) {
-			throw new VersionAlreadyDefinedException (name);
+			throw new VersionAlreadyDefinedException (id, name);
 		}
 	}
 
@@ -136,6 +145,25 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Transactional
 	public Ack deleteVersion(int id, String name) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
+		return Ack.validate (count == 1);
+	}
+	
+	@Override
+	@Transactional
+	public Ack createEnvironment(int id, String name) {
+		try {
+			int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_CREATE,
+				idNameSource(id, name));
+			return Ack.validate (count == 1);
+		} catch (DuplicateKeyException ex) {
+			throw new VersionAlreadyDefinedException (id, name);
+		}
+	}
+	
+	@Override
+	@Transactional
+	public Ack deleteEnvironment(int id, String name) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
 		return Ack.validate (count == 1);
 	}
 

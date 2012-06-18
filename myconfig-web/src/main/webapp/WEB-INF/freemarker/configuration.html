@@ -4,11 +4,19 @@
 		<h1>${application.name?html}</h1>
 		<section class="versions">
 			<h1><@lh key="configuration.versions" /></h1>
-			<@crud_table items = application.versionSummaryList>
+			<@crud_table items = application.versionSummaryList errorKey = "version_error">
 				<@crud_column property="name" key="model.version.name" />
 				<@crud_column property="keyNumber" key="configuration.version.keyNumber" class="crud-number" />
-				<@crud_create action="gui/version/create/${application.id}" label="configuration.version.new" />
+				<@crud_create id="version" action="gui/version/create/${application.id}" label="configuration.version.new" />
 				<@crud_delete action="gui/version/delete/${application.id}" field="name" promptKey="version.delete" />
+			</@crud_table>
+		</section>
+		<section class="environments">
+			<h1><@lh key="configuration.environments" /></h1>
+			<@crud_table items = application.environmentSummaryList errorKey = "environment_error">
+				<@crud_column property="name" key="model.environment.name" />
+				<@crud_create id="environment" action="gui/environment/create/${application.id}" label="configuration.environment.new" />
+				<@crud_delete action="gui/environment/delete/${application.id}" field="name" promptKey="environment.delete" />
 			</@crud_table>
 		</section>
 		TODO Back to the list of applications

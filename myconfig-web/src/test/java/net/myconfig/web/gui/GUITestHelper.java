@@ -1,0 +1,18 @@
+package net.myconfig.web.gui;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.ModelAndView;
+
+public interface GUITestHelper {
+
+	String generateName(String prefix);
+
+	ModelAndView run(HttpServletRequest request, HttpServletResponse response) throws Exception;
+
+	ModelAndView run(String method, String path, String paramName, String paramValue) throws Exception;
+
+	void assertErrorMessage(ModelAndView mav, String errorKey, String format, Object... parameters);
+
+}

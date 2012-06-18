@@ -16,6 +16,10 @@
 	
 	<dependencies>
 		<dependency>
+			<groupId>net.sf.jstring</groupId>
+			<artifactId>jstring</artifactId>
+		</dependency>
+		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>
 		</dependency>

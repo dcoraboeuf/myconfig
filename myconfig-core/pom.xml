@@ -14,11 +14,4 @@
 	
 	<name>myconfig Core</name>
 	
-	<dependencies>
-		<dependency>
-			<groupId>net.sf.jstring</groupId>
-			<artifactId>jstring</artifactId>
-		</dependency>
-	</dependencies>
-	
 </project>
