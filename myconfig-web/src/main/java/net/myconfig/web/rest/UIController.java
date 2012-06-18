@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.myconfig.service.api.MyConfigService;
@@ -71,6 +72,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/environment/{id}/{name}", method = RequestMethod.DELETE)
 	public Ack environmentDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteEnvironment (id, name);
+	}
+	
+	@Override
+	@RequestMapping(value = "/key/{id}/{name}", method = RequestMethod.PUT)
+	public Ack keyCreate(@PathVariable int id, @PathVariable String name, @RequestParam String description) {
+		return getMyConfigService().createKey (id, name, description);
 	}
 	
 	@Override

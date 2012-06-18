@@ -26,4 +26,6 @@ public interface UIInterface {
 
 	Ack keyDelete(int id, String name);
 
+	Ack keyCreate(int id, String name, String description);
+
 }

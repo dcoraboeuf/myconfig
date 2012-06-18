@@ -23,6 +23,12 @@ public class GUIKeyController extends AbstractGUIApplicationConfigurationControl
 		return "key_error";
 	}
 
+	@RequestMapping(value = "/create/{id:.*}", method = RequestMethod.POST)
+	public String versionCreate (@PathVariable int id, String name, String description) {
+		ui.keyCreate (id, name, description);
+		return redirectToApplicationConfiguration(id);
+	}
+
 	@RequestMapping(value = "/delete/{id:.*}", method = RequestMethod.POST)
 	public String keyDelete (@PathVariable int id, String name) {
 		ui.keyDelete (id, name);

@@ -51,6 +51,8 @@ public interface SQL {
 			"group by k.name " +
 			"order by k.name";
 
+	String KEY_CREATE = "insert into key (application, name, description) values (:id, :name, :description)";
+
 	String KEY_DELETE = "delete from key where application = :id and name = :name";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";

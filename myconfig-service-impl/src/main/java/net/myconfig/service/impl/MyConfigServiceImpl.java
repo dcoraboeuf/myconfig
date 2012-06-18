@@ -1,6 +1,7 @@
 package net.myconfig.service.impl;
 
 import static net.myconfig.service.impl.SQLColumns.APPLICATION;
+import static net.myconfig.service.impl.SQLColumns.DESCRIPTION;
 import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT;
 import static net.myconfig.service.impl.SQLColumns.ID;
 import static net.myconfig.service.impl.SQLColumns.KEY_NUMBER;
@@ -172,6 +173,18 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public Ack deleteEnvironment(int id, String name) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
 		return Ack.validate (count == 1);
+	}
+	
+	@Override
+	@Transactional
+	public Ack createKey(int id, String name, String description) {
+		try {
+			int count = getNamedParameterJdbcTemplate().update(SQL.KEY_CREATE,
+				idNameSource(id, name).addValue(DESCRIPTION, description));
+			return Ack.validate (count == 1);
+		} catch (DuplicateKeyException ex) {
+			throw new VersionAlreadyDefinedException (id, name);
+		}
 	}
 	
 	@Override

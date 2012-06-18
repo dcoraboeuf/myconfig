@@ -33,4 +33,6 @@ public interface MyConfigService {
 
 	Ack deleteKey(int id, String name);
 
+	Ack createKey(int id, String name, String description);
+
 }
