@@ -48,12 +48,26 @@
 </#macro>
 
 <#macro layout_std pageId style=false modules=[]>
+	<#assign navItems = [] />
 	<@layout_basic pageId=pageId style=style modules=modules>
 		<article class="std-page">
 			<h1><@lh key=pageId /></h1>
 			<div class="std-content">
 				<#nested>
 			</div>
+			<nav>
+				<a href="."><@lh key="home" /></a>
+				<#list navItems as navItem>
+					<a href="${navItem.href?html}"><@lh key=navItem.key /></a>
+				</#list>
+			</nav>
 		</article>
 	</@layout_basic>
+</#macro>
+
+<#macro layout_std_nav href key>
+	<#assign navItems = navItems + [{
+		"href": href,
+		"key": key
+	}] />
 </#macro>

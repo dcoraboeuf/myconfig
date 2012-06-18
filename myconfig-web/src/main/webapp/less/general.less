@@ -7,6 +7,9 @@
 @app-menu-color-bg: lightgrey;
 @app-menu-color-fg: blue;
 
+@std-nav-box-color-bg: grey;
+@std-nav-box-color-fg: white;
+
 /* Debug */
 
 div, section {
@@ -91,4 +94,15 @@ a.app-menu {
 	text-decoration: none;
 	background-color: @app-menu-color-bg;
 	color: @app-menu-color-fg;
+}
+
+article.std-page nav {
+	margin-top: 10px;
+	a {
+		text-decoration: none;
+		color: @std-nav-box-color-fg;
+		background-color: @std-nav-box-color-bg;
+		border-radius: 5px;
+		padding: 2px 5px 2px 5px;
+	}
 }
