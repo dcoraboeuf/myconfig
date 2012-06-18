@@ -51,6 +51,8 @@ public interface SQL {
 			"group by k.name " +
 			"order by k.name";
 
+	String KEY_DELETE = "delete from key where application = :id and name = :name";
+
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 
 	String VERSION_EXISTS = "select v.name " +

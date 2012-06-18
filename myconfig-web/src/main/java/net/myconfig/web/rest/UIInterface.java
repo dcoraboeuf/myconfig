@@ -24,4 +24,6 @@ public interface UIInterface {
 
 	Ack environmentDelete(int id, String name);
 
+	Ack keyDelete(int id, String name);
+
 }

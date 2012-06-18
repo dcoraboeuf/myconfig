@@ -173,6 +173,13 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
 		return Ack.validate (count == 1);
 	}
+	
+	@Override
+	@Transactional
+	public Ack deleteKey(int id, String name) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
+		return Ack.validate (count == 1);
+	}
 
 	@Override
 	@Transactional(readOnly = true)

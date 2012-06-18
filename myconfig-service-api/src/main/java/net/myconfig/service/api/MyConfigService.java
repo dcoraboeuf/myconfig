@@ -31,4 +31,6 @@ public interface MyConfigService {
 
 	Ack deleteEnvironment(int id, String name);
 
+	Ack deleteKey(int id, String name);
+
 }
