@@ -7,6 +7,7 @@
 	<#assign creation = {"defined": false} />
 	<#assign deletion = {"defined": false} />
 	<#assign edition = {"defined": false} />
+	<#assign generalActions = [] />
 	<#nested>
 	<table id="crud-table-${id}" class="crud">
 		<thead>
@@ -50,19 +51,26 @@
 			</#list>
 		</tbody>
 		<tfoot>
-			<tr>
-				<td colspan="${ columns?size + 1 }">
-					<#if creation.defined>
-						<form class="crud-create" action="${creation.action}" method="post" onsubmit="return CRUD.validateCreate('${creation.id}')">
+			<#if creation.defined>
+				<tr>
+					<td colspan="${ columns?size + 1 }">
+						<form class="crud" action="${creation.action}" method="post" onsubmit="return CRUD.validateCreate('${creation.id}')">
 							<label>
 								<@lh key=creation.label />
 								<input id="crud-create-text-${creation.id}" name="${creation.field}" type="text" maxlength="${creation.maxlength}" size="${creation.size}" autofocus="autofocus" />
 								<input id="crud-create-submit-${creation.id}" type="submit" value="<@lh key=creation.submit />" />
 							</label>
 						</form>
-					</#if>
-				</td>
-			</tr>
+					</td>
+				</tr>				
+			</#if>
+			<#list generalActions as action>
+				<tr>
+					<td colspan="${ columns?size + 1 }">
+						${action.content}
+					</td>
+				</tr>
+			</#list>
 			<#if errorKey != "" && .data_model[errorKey]??>
 				<tr>
 					<td colspan="${ columns?size + 1 }" class="crud-error">
@@ -93,6 +101,13 @@
 		"size": size,
 		"submit": submit
 	} />
+</#macro>
+
+<#macro crud_general_action>
+	<#assign content><#nested/></#assign>
+	<#assign generalActions = generalActions + [{
+		"content": content
+	}] />
 </#macro>
 
 <#macro crud_delete action field="id" promptKey="general.delete" promptField="name">
