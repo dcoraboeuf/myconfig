@@ -28,6 +28,7 @@ import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.EnvironmentSummary;
+import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.VersionSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,10 +95,16 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				return new EnvironmentSummary(rs.getString(NAME));
 			}
 		});
-		// TODO Keys
+		// Keys
+		List<KeySummary> keySummaryList = t.query(SQL.KEYS, idCriteria, new RowMapper<KeySummary>(){
+			@Override
+			public KeySummary mapRow(ResultSet rs, int i) throws SQLException {
+				return new KeySummary(rs.getString(NAME), rs.getString(SQLColumns.DESCRIPTION), rs.getInt(SQLColumns.VERSION_NUMBER));
+			}
+		});
 		// OK
 		return new ApplicationConfiguration(id, name,
-				versionSummaryList, environmentSummaryList);
+				versionSummaryList, environmentSummaryList, keySummaryList);
 	}
 	
 	@Override

@@ -4,6 +4,9 @@
 
 <#macro crud_table items id="crud" errorKey="error">
 	<#assign columns = [] >
+	<#assign creation = {"defined": false} />
+	<#assign deletion = {"defined": false} />
+	<#assign edition = {"defined": false} />
 	<#nested>
 	<table id="crud-table-${id}" class="crud">
 		<thead>
@@ -26,7 +29,7 @@
 						</td>
 					</#list>
 					<td>
-						<#if deletion??>
+						<#if deletion.defined>
 							<#assign deletionField = item[deletion.field] />
 							<#assign deletionFieldName = item[deletion.promptField] />
 							<form class="crud-action crud-delete" action="${deletion.action}" method="post" onsubmit="return CRUD.confirmDelete('${deletionField}');">
@@ -35,7 +38,7 @@
 								<input class="crud-action crud-delete" type="image" src="modules/crud/images/delete.png" />
 							</form>
 						</#if>
-						<#if edition??>
+						<#if edition.defined>
 							<#assign editionField = item[edition.field] />
 							<form class="crud-action crud-edit" action="${edition.action} " method="get">
 								<input type="hidden" name="${edition.field}" value="${ editionField }" />
@@ -49,7 +52,7 @@
 		<tfoot>
 			<tr>
 				<td colspan="${ columns?size + 1 }">
-					<#if creation??>
+					<#if creation.defined>
 						<form class="crud-create" action="${creation.action}" method="post" onsubmit="return CRUD.validateCreate('${creation.id}')">
 							<label>
 								<@lh key=creation.label />
@@ -80,7 +83,9 @@
 </#macro>
 
 <#macro crud_create action label="general.create.label" field="name" id="" maxlength="80" size="20" submit="general.create">
-	<#assign creation = {"action": action,
+	<#assign creation = {
+		"defined": true,
+		"action": action,
 		"label": label,
 		"field": field,
 		"id": id,
@@ -92,6 +97,7 @@
 
 <#macro crud_delete action field="id" promptKey="general.delete" promptField="name">
 	<#assign deletion = {
+		"defined": true,
 		"action": action,
 		"field": field,
 		"promptKey": promptKey,
@@ -101,6 +107,7 @@
 
 <#macro crud_edit action field="id">
 	<#assign edition = {
+		"defined": true,
 		"action": action,
 		"field": field
 	} />

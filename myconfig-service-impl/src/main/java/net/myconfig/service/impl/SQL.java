@@ -42,6 +42,15 @@ public interface SQL {
 
 	String ENVIRONMENT_DELETE = "delete from environment where application = :id and name = :name";
 
+	String KEYS = "select k.name, k.description, count (vk.version) as versionNumber " +
+			"from key k " +
+			"left join version_key vk " +
+			"on vk.application = k.application " + 
+			"and vk.key = k.name " + 
+			"where k.application = :id " +
+			"group by k.name " +
+			"order by k.name";
+
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 
 	String VERSION_EXISTS = "select v.name " +

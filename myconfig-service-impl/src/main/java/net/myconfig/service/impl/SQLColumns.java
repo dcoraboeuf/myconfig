@@ -8,5 +8,7 @@ public interface SQLColumns {
 	String KEY_NUMBER = "keyNumber";
 	String NAME = "name";
 	String ID = "id";
+	String DESCRIPTION = "description";
+	String VERSION_NUMBER = "versionNumber";
 
 }
