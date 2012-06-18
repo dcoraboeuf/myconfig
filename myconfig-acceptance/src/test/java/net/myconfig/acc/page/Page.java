@@ -17,13 +17,19 @@ public abstract class Page {
 	}
 
 	protected WebElement xpath(String xpath, Object... args) {
-		return driver.findElement(By.xpath(String.format(
-				xpath,
-				args)));
+		return driver.findElement(byXpath(xpath, args));
 	}
 	
 	protected WebElement element (String tag, String className, String text) {
-		return xpath("//%s[contains(@class, '%s') and contains(text(), '%s')]", tag, className, text);
+		return driver.findElement(byElement(tag, className, text));
+	}
+
+	protected By byXpath(String xpath, Object... args) {
+		return By.xpath(String.format(xpath, args));
+	}
+	
+	protected By byElement (String tag, String className, String text) {
+		return byXpath(String.format("//%s[contains(@class, '%s') and contains(text(), '%s')]", tag, className, text));
 	}
 
 }
