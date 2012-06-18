@@ -23,8 +23,8 @@ public abstract class AccTest {
 
     @After
     public void tearDown() throws Exception {
-    	// TODO Configuration: exiting the driver
-        // TODO driver.quit();
+    	// Configuration: exiting the driver
+        driver.quit();
     }
 	
 	protected String generateUniqueName (String prefix) {

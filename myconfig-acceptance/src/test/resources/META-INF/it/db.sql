@@ -1,0 +1,2 @@
+-- Clean-up
+DELETE FROM APPLICATION;

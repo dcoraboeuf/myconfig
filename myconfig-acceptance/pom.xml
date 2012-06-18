@@ -39,4 +39,119 @@
 			<scope>test</scope>
         </dependency>
 	</dependencies>
+	
+	<build>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+		</testResources>
+	</build>
+	
+    <profiles>
+    	<profile>
+    		<id>acceptance-test</id>
+    		<build>
+    			<plugins>			
+					
+					<!-- Getting the WAR -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>it-copy-war</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>copy</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>${project.groupId}</groupId>
+											<artifactId>myconfig-web</artifactId>
+											<version>${project.version}</version>
+											<type>war</type>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					
+					<!-- Running w/ Jetty -->
+					<plugin>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>jetty-maven-plugin</artifactId>
+						<!-- Integration tests with Jetty -->
+						<configuration>
+							<stopPort>9966</stopPort>
+							<stopKey>foo</stopKey>
+						</configuration>
+						<executions>
+							<execution>
+								<id>it-jetty-start</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>run-war</goal>
+								</goals>
+								<configuration>
+									<war>${basedir}/target/dependency/myconfig-web-${project.version}.war</war>
+									<webApp>
+										<contextPath>/myconfig</contextPath>
+									</webApp>
+									<daemon>true</daemon>
+									<systemProperties>
+							            <systemProperty>
+								            <name>spring.profiles.active</name>
+								            <value>it</value>
+							            </systemProperty>
+							            <systemProperty>
+							            	<name>it.db</name>
+							            	<value>${basedir}/src/test/resources/META-INF/it/db.sql</value>
+							            </systemProperty>
+									    <systemProperty>
+									    	<name>jetty.port</name>
+											<value>${it.port}</value>
+									    </systemProperty>
+							        </systemProperties>
+								</configuration>
+							</execution>
+							<execution>
+								<id>it-jetty-stop</id>
+								<phase>post-integration-test</phase>
+								<goals>
+									<goal>stop</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					
+					<!-- Running integration tests -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-failsafe-plugin</artifactId>
+				        <executions>
+				          <execution>
+				            <goals>
+				              <goal>integration-test</goal>
+				              <goal>verify</goal>
+				            </goals>
+							<configuration>
+								<systemProperties>
+									<property>
+										<name>it.port</name>
+										<value>${it.port}</value>
+									</property>
+								</systemProperties>
+							</configuration>
+				          </execution>
+				        </executions>
+					</plugin>
+					
+    			</plugins>
+    		</build>
+    	</profile>
+    </profiles>
 </project>
