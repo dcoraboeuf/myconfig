@@ -139,9 +139,23 @@
 				                <goals>
 				                    <goal>xvfb</goal>
 				                </goals>
+				            </execution>
+				            <execution>
+				                <id>selenium</id>
+				                <phase>pre-integration-test</phase>
+				                <goals>
+				                    <goal>start-server</goal>
+				                </goals>
 				                <configuration>
-				                    <display>:2</display>
+				                    <background>true</background>
 				                </configuration>
+				            </execution>
+				            <execution>
+				                <id>selenium</id>
+				                <phase>post-integration-test</phase>
+				                <goals>
+				                    <goal>stop-server</goal>
+				                </goals>
 				            </execution>
 				         </executions>
 				    </plugin>
