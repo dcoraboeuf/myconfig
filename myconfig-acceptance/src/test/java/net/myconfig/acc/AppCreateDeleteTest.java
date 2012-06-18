@@ -5,7 +5,7 @@ import net.myconfig.acc.page.HomePage;
 
 import org.junit.Test;
 
-public class AppCreateDelete extends AccTest {
+public class AppCreateDeleteTest extends AccTest {
 
 	@Test
 	public void appCreateDelete() throws Exception {
