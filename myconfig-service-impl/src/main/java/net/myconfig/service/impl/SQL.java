@@ -32,6 +32,15 @@ public interface SQL {
 	String VERSION_CREATE = "insert into version (application, name) values (:id, :name)";
 
 	String VERSION_DELETE = "delete from version where application = :id and name = :name";
+	
+	String ENVIRONMENTS = "select e.name " +
+			"from environment e " + 
+			"where e.application = :id " +
+			"order by e.name";
+
+	String ENVIRONMENT_CREATE = "insert into environment (application, name) values (:id, :name)";
+
+	String ENVIRONMENT_DELETE = "delete from environment where application = :id and name = :name";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 

@@ -10,28 +10,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/gui/version")
-public class GUIVersionController extends AbstractGUIApplicationConfigurationController {
+@RequestMapping("/gui/environment")
+public class GUIEnvironmentController extends AbstractGUIApplicationConfigurationController {
 	
 	@Autowired
-	public GUIVersionController(UIInterface ui, ErrorHandler errorHandler) {
+	public GUIEnvironmentController(UIInterface ui, ErrorHandler errorHandler) {
 		super (ui, errorHandler);
 	}
 	
 	@Override
 	protected String getErrorKeyInModel() {
-		return "version_error";
+		return "environment_error";
 	}
 
 	@RequestMapping(value = "/create/{id:.*}", method = RequestMethod.POST)
-	public String versionCreate (@PathVariable int id, String name) {
-		ui.versionCreate (id, name);
+	public String environmentCreate (@PathVariable int id, String name) {
+		ui.environmentCreate (id, name);
 		return redirectToApplicationConfiguration(id);
 	}
 
 	@RequestMapping(value = "/delete/{id:.*}", method = RequestMethod.POST)
-	public String versionDelete (@PathVariable int id, String name) {
-		ui.versionDelete (id, name);
+	public String environmentDelete (@PathVariable int id, String name) {
+		ui.environmentDelete (id, name);
 		return redirectToApplicationConfiguration(id);
 	}
 

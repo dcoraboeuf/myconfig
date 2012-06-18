@@ -20,4 +20,8 @@ public interface UIInterface {
 
 	Ack versionDelete(int id, String name);
 
+	Ack environmentCreate(int id, String name);
+
+	Ack environmentDelete(int id, String name);
+
 }

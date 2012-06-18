@@ -60,5 +60,17 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	public Ack versionDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteVersion (id, name);
 	}
+	
+	@Override
+	@RequestMapping(value = "/environment/{id}/{name}", method = RequestMethod.PUT)
+	public Ack environmentCreate(@PathVariable int id, @PathVariable String name) {
+		return getMyConfigService().createEnvironment (id, name);
+	}
+	
+	@Override
+	@RequestMapping(value = "/environment/{id}/{name}", method = RequestMethod.DELETE)
+	public Ack environmentDelete(@PathVariable int id, @PathVariable String name) {
+		return getMyConfigService().deleteEnvironment (id, name);
+	}
 
 }
