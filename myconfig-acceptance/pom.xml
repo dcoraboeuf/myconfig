@@ -134,14 +134,14 @@
 				        <artifactId>selenium-maven-plugin</artifactId>
 				        <executions>
 				            <execution>
-				                <id>xvfb</id>
+				                <id>selenium-xvfb</id>
 				                <phase>pre-integration-test</phase>
 				                <goals>
 				                    <goal>xvfb</goal>
 				                </goals>
 				            </execution>
 				            <execution>
-				                <id>selenium</id>
+				                <id>selenium-start</id>
 				                <phase>pre-integration-test</phase>
 				                <goals>
 				                    <goal>start-server</goal>
@@ -151,7 +151,7 @@
 				                </configuration>
 				            </execution>
 				            <execution>
-				                <id>selenium</id>
+				                <id>selenium-stop</id>
 				                <phase>post-integration-test</phase>
 				                <goals>
 				                    <goal>stop-server</goal>
