@@ -24,6 +24,7 @@
 			<@crud_table items = application.keySummaryList errorKey = "key_error">
 				<@crud_column property="name" key="model.key.name" />
 				<@crud_column property="description" key="model.key.description" />
+				<@crud_column property="versionNumber" key="configuration.key.versionNumber" class="crud-number" />
 				<@crud_delete action="gui/key/delete/${application.id}" field="name" promptKey="key.delete" />
 			</@crud_table>
 		</section>
