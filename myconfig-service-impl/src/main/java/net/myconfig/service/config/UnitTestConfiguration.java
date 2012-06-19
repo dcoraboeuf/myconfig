@@ -18,7 +18,7 @@ public class UnitTestConfiguration implements GeneralConfiguration {
 				MyConfigProfiles.TEST,
 				"classpath:log4j_dev.properties",
 				"org.h2.Driver",
-				"jdbc:h2:mem",
+				"jdbc:h2:mem:test;DB_CLOSE_DELAY=-1",
 				"sa",
 				"",
 				1,
