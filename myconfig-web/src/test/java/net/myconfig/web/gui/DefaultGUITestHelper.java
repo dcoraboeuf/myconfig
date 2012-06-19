@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.myconfig.core.MyConfigProfiles;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -50,11 +51,11 @@ public class DefaultGUITestHelper implements GUITestHelper {
 	
 	@Override
 	public ModelAndView run(String method, String path, String paramName,
-			String paramValue) throws Exception {
+			Object paramValue) throws Exception {
 		// Request and parameters
 		MockHttpServletRequest request = new MockHttpServletRequest(method, path);
 		if (StringUtils.isNotBlank(paramName)) {
-			request.addParameter(paramName, paramValue);
+			request.addParameter(paramName, ObjectUtils.toString(paramValue, ""));
 		}
 		// Call
 		return run (request, new MockHttpServletResponse());

@@ -11,7 +11,7 @@ public interface GUITestHelper {
 
 	ModelAndView run(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
-	ModelAndView run(String method, String path, String paramName, String paramValue) throws Exception;
+	ModelAndView run(String method, String path, String paramName, Object paramValue) throws Exception;
 
 	void assertErrorMessage(ModelAndView mav, String errorKey, String format, Object... parameters);
 
