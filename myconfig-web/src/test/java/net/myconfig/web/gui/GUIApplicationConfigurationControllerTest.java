@@ -6,6 +6,7 @@ import net.myconfig.core.MyConfigProfiles;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.web.rest.UIInterface;
+import net.myconfig.web.support.ErrorMessage;
 import net.myconfig.web.test.AbstractConfigurationTest;
 
 import org.junit.Test;
@@ -32,6 +33,15 @@ public class GUIApplicationConfigurationControllerTest extends AbstractConfigura
 		assertNotNull (app);
 		assertEquals (summary.getId(), app.getId());
 		assertEquals (summary.getName(), app.getName());
+	}
+	
+	@Test
+	public void application_configuration_not_there() throws Exception {
+		ModelAndView mav = helper.run("GET", "/gui/application/configure", "id", -1);
+		assertNotNull (mav);
+		assertEquals ("error", mav.getViewName());
+		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
+		assertEquals ("[S-004] Cannot find application -1", error.getMessage());
 	}
 
 }
