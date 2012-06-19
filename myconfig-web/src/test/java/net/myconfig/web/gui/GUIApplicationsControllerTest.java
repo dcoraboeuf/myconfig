@@ -57,6 +57,13 @@ public class GUIApplicationsControllerTest extends AbstractConfigurationTest {
 		assertEquals ("applications", mav.getViewName());
 		helper.assertErrorMessage(mav, "error", "[S-002] The application with name \"%s\" is already defined.", appName);
 	}
+	
+	@Test
+	public void application_delete () throws Exception {
+		ModelAndView mav = helper.run("POST", "/gui/application/delete", "id", "0");
+		assertNotNull (mav);
+		assertEquals ("redirect:/gui/", mav.getViewName());
+	}
 
 	protected ModelAndView applicationCreate(String appName) throws Exception {
 		return helper.run("POST", "/gui/application/create", "name", appName);

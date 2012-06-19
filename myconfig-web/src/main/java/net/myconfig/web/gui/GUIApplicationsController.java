@@ -44,7 +44,7 @@ public class GUIApplicationsController extends AbstractGUIPageController {
 	}
 	
 	@RequestMapping(value = "/application/delete", method = RequestMethod.POST)
-	public String applicationCreate (int id) {
+	public String applicationDelete (int id) {
 		ui.applicationDelete (id);
 		return redirectToListOfApplications ();
 	}
