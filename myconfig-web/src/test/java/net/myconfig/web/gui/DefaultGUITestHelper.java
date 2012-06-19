@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.myconfig.core.MyConfigProfiles;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -52,7 +53,9 @@ public class DefaultGUITestHelper implements GUITestHelper {
 			String paramValue) throws Exception {
 		// Request and parameters
 		MockHttpServletRequest request = new MockHttpServletRequest(method, path);
-		request.addParameter(paramName, paramValue);
+		if (StringUtils.isNotBlank(paramName)) {
+			request.addParameter(paramName, paramValue);
+		}
 		// Call
 		return run (request, new MockHttpServletResponse());
 	}
