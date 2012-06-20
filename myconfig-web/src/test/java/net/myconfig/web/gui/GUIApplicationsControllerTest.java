@@ -7,21 +7,30 @@ import java.util.List;
 
 import net.myconfig.core.MyConfigProfiles;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.test.AbstractConfigurationTest;
+import net.myconfig.web.test.ApplicationSummaryNamePredicate;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.common.collect.Iterables;
+
 @ActiveProfiles(MyConfigProfiles.TEST)
 public class GUIApplicationsControllerTest extends AbstractConfigurationTest {
 	
 	@Autowired
 	private GUITestHelper helper;
+
+	@Autowired
+	private UIInterface ui;
 	
 	@Test
 	public void application_list () throws Exception {
+		// Initial number of applications
+		int applicationCount = ui.applications().size();
 		// Initial state
 		applicationCreate("app1");
 		applicationCreate("app2");
@@ -33,9 +42,9 @@ public class GUIApplicationsControllerTest extends AbstractConfigurationTest {
 		@SuppressWarnings("unchecked")
 		List<ApplicationSummary> applications = (List<ApplicationSummary>) mav.getModel().get("applications");
 		assertNotNull (applications);
-		assertEquals (2, applications.size());
-		assertEquals ("app1", applications.get(0).getName());
-		assertEquals ("app2", applications.get(1).getName());
+		assertEquals (applicationCount + 2, applications.size());
+		Iterables.find(applications, new ApplicationSummaryNamePredicate("app1"));
+		Iterables.find(applications, new ApplicationSummaryNamePredicate("app2"));
 	}
 	
 	@Test

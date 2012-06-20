@@ -18,6 +18,8 @@
 	<properties>
 		<!-- Port to use when running IT tests -->
 		<it.port>9999</it.port>
+		<!-- Display to use for Xvfb -->
+		<xvfbDisplay>:22</xvfbDisplay>
 		<!-- Skipping Xvfb tests -->
 		<skipXvfb>false</skipXvfb>
 	</properties>
@@ -156,25 +158,9 @@
 				                    <goal>xvfb</goal>
 				                </goals>
 								<configuration>
+									<display>${xvfbDisplay}</display>
 									<skip>${skipXvfb}</skip>
 								</configuration>
-				            </execution>
-				            <execution>
-				                <id>selenium-start</id>
-				                <phase>pre-integration-test</phase>
-				                <goals>
-				                    <goal>start-server</goal>
-				                </goals>
-				                <configuration>
-				                    <background>true</background>
-				                </configuration>
-				            </execution>
-				            <execution>
-				                <id>selenium-stop</id>
-				                <phase>post-integration-test</phase>
-				                <goals>
-				                    <goal>stop-server</goal>
-				                </goals>
 				            </execution>
 				         </executions>
 				    </plugin>
@@ -194,6 +180,10 @@
 									<property>
 										<name>it.port</name>
 										<value>${it.port}</value>
+									</property>
+									<property>
+										<name>xvfb.display</name>
+										<value>${xvfbDisplay}</value>
 									</property>
 								</systemProperties>
 							</configuration>
