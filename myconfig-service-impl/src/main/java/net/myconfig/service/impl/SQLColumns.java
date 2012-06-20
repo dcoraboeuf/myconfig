@@ -4,6 +4,7 @@ public interface SQLColumns {
 	
 	String ENVIRONMENT = "environment";
 	String VERSION = "version";
+	String KEY = "key";
 	String APPLICATION = "application";
 	String KEY_NUMBER = "keyNumber";
 	String NAME = "name";

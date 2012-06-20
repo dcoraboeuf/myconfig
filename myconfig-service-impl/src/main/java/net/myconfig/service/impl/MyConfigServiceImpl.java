@@ -4,14 +4,19 @@ import static net.myconfig.service.impl.SQLColumns.APPLICATION;
 import static net.myconfig.service.impl.SQLColumns.DESCRIPTION;
 import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT;
 import static net.myconfig.service.impl.SQLColumns.ID;
+import static net.myconfig.service.impl.SQLColumns.KEY;
 import static net.myconfig.service.impl.SQLColumns.KEY_NUMBER;
 import static net.myconfig.service.impl.SQLColumns.NAME;
 import static net.myconfig.service.impl.SQLColumns.VERSION;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
@@ -34,12 +39,14 @@ import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.KeyVersionConfiguration;
+import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -85,7 +92,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		// ID
 		MapSqlParameterSource idCriteria = new MapSqlParameterSource(ID, id);
 		// Gets the name
-		String name = getApplicationName(id, idCriteria);
+		String name = getApplicationName(id);
 		// Versions	
 		List<VersionSummary> versionSummaryList = t.query(SQL.VERSION_SUMMARIES, idCriteria, new RowMapper<VersionSummary>(){
 			@Override
@@ -112,10 +119,10 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				versionSummaryList, environmentSummaryList, keySummaryList);
 	}
 
-	protected String getApplicationName(int id, MapSqlParameterSource idCriteria) {
+	protected String getApplicationName(int id) {
 		String name;
 		try {
-			name = getNamedParameterJdbcTemplate().queryForObject(SQL.APPLICATION_NAME, idCriteria, String.class);
+			name = getNamedParameterJdbcTemplate().queryForObject(SQL.APPLICATION_NAME, new MapSqlParameterSource("id", id), String.class);
 		} catch (EmptyResultDataAccessException ex) {
 			throw new ApplicationNotFoundException(id);
 		}
@@ -220,7 +227,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		checkApplication(id);
 		// Criteria
 		MapSqlParameterSource idCriteria = new MapSqlParameterSource("application", id);
-		String name = getApplicationName(id, idCriteria);
+		String name = getApplicationName(id);
 		// List of keys		
 		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS, idCriteria, new RowMapper<Key>() {
 			@Override
@@ -228,6 +235,28 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
 			}
 		});
+		// Key x version
+		final Map<String, Set<String>> matrix = new TreeMap<String, Set<String>>();
+		getNamedParameterJdbcTemplate().query(SQL.VERSION_CONFIGURATIONS, idCriteria, new RowCallbackHandler() {
+			
+			@Override
+			public void processRow(ResultSet rs) throws SQLException {
+				String version = rs.getString(VERSION);
+				String key = rs.getString(KEY);
+				Set<String> keysForVersions = matrix.get(version);
+				if (keysForVersions == null) {
+					keysForVersions = new HashSet<String>();
+					matrix.put (version, keysForVersions);
+				}
+				keysForVersions.add(key);
+			}
+		});
+		List<VersionConfiguration> versionConfigurationList = new ArrayList<VersionConfiguration>();
+		for (Map.Entry<String, Set<String>> entry: matrix.entrySet()) {
+			String version = entry.getKey();
+			Set<String> keys = entry.getValue();
+			versionConfigurationList.add(new VersionConfiguration(version, keys));
+		}
 		// OK
 		return new KeyVersionConfiguration(id, name, versionConfigurationList, keyList);
 	}

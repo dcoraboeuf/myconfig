@@ -56,6 +56,11 @@ public interface SQL {
 	String KEY_CREATE = "insert into key (application, name, description) values (:id, :name, :description)";
 
 	String KEY_DELETE = "delete from key where application = :id and name = :name";
+	
+	String VERSION_CONFIGURATIONS = "select * " +
+			"from version_key " +
+			"where application = :application " +
+			"order by version, key";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 
