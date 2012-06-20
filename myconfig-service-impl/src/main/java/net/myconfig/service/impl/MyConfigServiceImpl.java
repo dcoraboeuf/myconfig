@@ -31,7 +31,9 @@ import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.EnvironmentSummary;
+import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
+import net.myconfig.service.model.KeyVersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,28 +85,23 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		// ID
 		MapSqlParameterSource idCriteria = new MapSqlParameterSource(ID, id);
 		// Gets the name
-		String name;
-		try {
-			name = t.queryForObject(SQL.APPLICATION_NAME, idCriteria, String.class);
-		} catch (EmptyResultDataAccessException ex) {
-			throw new ApplicationNotFoundException(id);
-		}
+		String name = getApplicationName(id, idCriteria);
 		// Versions	
-		List<VersionSummary> versionSummaryList = t.query(SQL.VERSIONS, idCriteria, new RowMapper<VersionSummary>(){
+		List<VersionSummary> versionSummaryList = t.query(SQL.VERSION_SUMMARIES, idCriteria, new RowMapper<VersionSummary>(){
 			@Override
 			public VersionSummary mapRow(ResultSet rs, int i) throws SQLException {
 				return new VersionSummary(rs.getString(NAME), rs.getInt(KEY_NUMBER));
 			}
 		});
 		// Environments
-		List<EnvironmentSummary> environmentSummaryList = t.query(SQL.ENVIRONMENTS, idCriteria, new RowMapper<EnvironmentSummary>(){
+		List<EnvironmentSummary> environmentSummaryList = t.query(SQL.ENVIRONMENT_SUMMARIES, idCriteria, new RowMapper<EnvironmentSummary>(){
 			@Override
 			public EnvironmentSummary mapRow(ResultSet rs, int i) throws SQLException {
 				return new EnvironmentSummary(rs.getString(NAME));
 			}
 		});
 		// Keys
-		List<KeySummary> keySummaryList = t.query(SQL.KEYS, idCriteria, new RowMapper<KeySummary>(){
+		List<KeySummary> keySummaryList = t.query(SQL.KEY_SUMMARIES, idCriteria, new RowMapper<KeySummary>(){
 			@Override
 			public KeySummary mapRow(ResultSet rs, int i) throws SQLException {
 				return new KeySummary(rs.getString(NAME), rs.getString(SQLColumns.DESCRIPTION), rs.getInt(SQLColumns.VERSION_NUMBER));
@@ -113,6 +110,16 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		// OK
 		return new ApplicationConfiguration(id, name,
 				versionSummaryList, environmentSummaryList, keySummaryList);
+	}
+
+	protected String getApplicationName(int id, MapSqlParameterSource idCriteria) {
+		String name;
+		try {
+			name = getNamedParameterJdbcTemplate().queryForObject(SQL.APPLICATION_NAME, idCriteria, String.class);
+		} catch (EmptyResultDataAccessException ex) {
+			throw new ApplicationNotFoundException(id);
+		}
+		return name;
 	}
 	
 	@Override
@@ -205,6 +212,24 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
 		return Ack.validate (count == 1);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public KeyVersionConfiguration keyVersionConfiguration(int id) {
+		checkApplication(id);
+		// Criteria
+		MapSqlParameterSource idCriteria = new MapSqlParameterSource("application", id);
+		String name = getApplicationName(id, idCriteria);
+		// List of keys		
+		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS, idCriteria, new RowMapper<Key>() {
+			@Override
+			public Key mapRow(ResultSet rs, int i) throws SQLException {
+				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
+			}
+		});
+		// OK
+		return new KeyVersionConfiguration(id, name, versionConfigurationList, keyList);
 	}
 
 	@Override

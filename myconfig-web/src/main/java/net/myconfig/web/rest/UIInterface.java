@@ -5,6 +5,7 @@ import java.util.List;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.KeyVersionConfiguration;
 
 public interface UIInterface {
 
@@ -27,5 +28,7 @@ public interface UIInterface {
 	Ack keyDelete(int id, String name);
 
 	Ack keyCreate(int id, String name, String description);
+
+	KeyVersionConfiguration keyVersionConfiguration(int id);
 
 }

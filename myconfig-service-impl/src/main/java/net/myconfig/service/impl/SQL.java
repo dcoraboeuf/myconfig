@@ -20,7 +20,7 @@ public interface SQL {
 
 	String APPLICATION_NAME = "select name from application where id = :id";
 	
-	String VERSIONS = "select v.name, count (vk.key) as keyNumber " +
+	String VERSION_SUMMARIES = "select v.name, count (vk.key) as keyNumber " +
 			"from version v " +
 			"left join version_key vk " +
 			"on vk.application = v.application " + 
@@ -33,7 +33,7 @@ public interface SQL {
 
 	String VERSION_DELETE = "delete from version where application = :id and name = :name";
 	
-	String ENVIRONMENTS = "select e.name " +
+	String ENVIRONMENT_SUMMARIES = "select e.name " +
 			"from environment e " + 
 			"where e.application = :id " +
 			"order by e.name";
@@ -42,7 +42,9 @@ public interface SQL {
 
 	String ENVIRONMENT_DELETE = "delete from environment where application = :id and name = :name";
 
-	String KEYS = "select k.name, k.description, count (vk.version) as versionNumber " +
+	String KEYS = "select * from key where application = :application order by name";
+
+	String KEY_SUMMARIES = "select k.name, k.description, count (vk.version) as versionNumber " +
 			"from key k " +
 			"left join version_key vk " +
 			"on vk.application = k.application " + 

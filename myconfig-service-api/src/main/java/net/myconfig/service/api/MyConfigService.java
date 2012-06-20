@@ -6,6 +6,7 @@ import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.service.model.KeyVersionConfiguration;
 
 public interface MyConfigService {
 
@@ -34,5 +35,7 @@ public interface MyConfigService {
 	Ack deleteKey(int id, String name);
 
 	Ack createKey(int id, String name, String description);
+
+	KeyVersionConfiguration keyVersionConfiguration(int id);
 
 }

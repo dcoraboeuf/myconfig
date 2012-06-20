@@ -14,6 +14,7 @@ import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.KeyVersionConfiguration;
 import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
@@ -84,6 +85,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/key/{id}/{name}", method = RequestMethod.DELETE)
 	public Ack keyDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteKey (id, name);
+	}
+	
+	@Override
+	@RequestMapping(value = "/application/{id}/key_version", method = RequestMethod.DELETE)
+	public KeyVersionConfiguration keyVersionConfiguration(int id) {
+		return getMyConfigService().keyVersionConfiguration(id);
 	}
 
 }
