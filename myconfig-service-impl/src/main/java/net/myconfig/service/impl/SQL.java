@@ -69,7 +69,7 @@ public interface SQL {
 			"values (:application, :version, :key)";
 
 	String VERSION_KEY_REMOVE = "delete from version_key " +
-			"where application = :application and version = :version and key = :key)";
+			"where application = :application and version = :version and key = :key";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 

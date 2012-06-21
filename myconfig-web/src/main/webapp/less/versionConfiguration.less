@@ -1,3 +1,12 @@
-img.versionConfiguration {
+div.versionConfiguration {
+	width: 16px;
+	height: 16px;
 	cursor: pointer;
+	background-repeat: no-repeat;
+	&[set=yes] {
+		background-image: url('../images/version_key_yes.png');
+	}
+	&[set=no] {
+		background-image: url('../images/version_key_no.png');
+	}
 }

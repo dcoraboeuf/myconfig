@@ -13,21 +13,13 @@ String.prototype.format = function() {
 
 var myconfig = function () {
 	
-	function displayAjaxError (message, jqXHR, textStatus, errorThrown) {
-		var text = '{0}\n[{1}] {2}'.format(message, jqXHR.status, jqXHR.statusText);
+	function displayError (text) {
 		alert(text);
 	}
 	
-	function manageKeyVersion (application, version, key, set) {
-		var mode = set ? 'add' : 'remove';
-		var url = 'ui/version/' + application + '/' + version + '/' + mode + '/' + key;
-		$.post (url)
-			.success(function () {
-				alert('Success!');
-			})
-			.error(function (jqXHR, textStatus, errorThrown) {
-				displayAjaxError ('TODO Error', jqXHR, textStatus, errorThrown);
-			});
+	function displayAjaxError (message, jqXHR, textStatus, errorThrown) {
+		var text = '{0}\n[{1}] {2}'.format(message, jqXHR.status, jqXHR.statusText);
+		displayError(text);
 	}
 	
 	return {
@@ -40,11 +32,24 @@ var myconfig = function () {
 		      location.href += "&language=" + lang;
 		   }
 		},
-		addKeyVersion: function (application, version, key) {
-			manageKeyVersion (application, version, key, true);
-		},
-		removeKeyVersion: function (application, version, key) {
-			manageKeyVersion (application, version, key, false);
+		keyVersion: function (img) {
+			var application = img.getAttribute('application');
+			var version = img.getAttribute('version');
+			var key = img.getAttribute('key');
+			var oldSet = img.getAttribute('set');
+			var set = oldSet == 'yes' ? 'no' : 'yes';
+			var mode = set == 'yes' ? 'add' : 'remove';
+			var url = 'ui/version/' + application + '/' + version + '/' + mode + '/' + key;
+			$.post (url, function (data) {
+					if (data.success) {
+						img.setAttribute('set', set);
+					} else {
+						displayError ('TODO Could not update the key x version');
+					}
+				})
+				.error(function (jqXHR, textStatus, errorThrown) {
+					displayAjaxError ('TODO Error', jqXHR, textStatus, errorThrown);
+				});
 		}
 	};
 	
