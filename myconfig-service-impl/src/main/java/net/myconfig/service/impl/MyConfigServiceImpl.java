@@ -4,7 +4,6 @@ import static net.myconfig.service.impl.SQLColumns.APPLICATION;
 import static net.myconfig.service.impl.SQLColumns.DESCRIPTION;
 import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT;
 import static net.myconfig.service.impl.SQLColumns.ID;
-import static net.myconfig.service.impl.SQLColumns.KEY;
 import static net.myconfig.service.impl.SQLColumns.KEY_NUMBER;
 import static net.myconfig.service.impl.SQLColumns.NAME;
 import static net.myconfig.service.impl.SQLColumns.VERSION;
@@ -12,11 +11,8 @@ import static net.myconfig.service.impl.SQLColumns.VERSION;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import javax.sql.DataSource;
 
@@ -39,6 +35,7 @@ import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.KeyVersionConfiguration;
+import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 
@@ -46,7 +43,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -235,27 +231,25 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
 			}
 		});
-		// Key x version
-		final Map<String, Set<String>> matrix = new TreeMap<String, Set<String>>();
-		getNamedParameterJdbcTemplate().query(SQL.VERSION_CONFIGURATIONS, idCriteria, new RowCallbackHandler() {
-			
+		// List of versions
+		List<Version> versionList = getNamedParameterJdbcTemplate().query(SQL.VERSIONS, idCriteria, new RowMapper<Version>() {
 			@Override
-			public void processRow(ResultSet rs) throws SQLException {
-				String version = rs.getString(VERSION);
-				String key = rs.getString(KEY);
-				Set<String> keysForVersions = matrix.get(version);
-				if (keysForVersions == null) {
-					keysForVersions = new HashSet<String>();
-					matrix.put (version, keysForVersions);
-				}
-				keysForVersions.add(key);
+			public Version mapRow(ResultSet rs, int i) throws SQLException {
+				return new Version(rs.getString(NAME));
 			}
 		});
+		// Configuration list for versions
 		List<VersionConfiguration> versionConfigurationList = new ArrayList<VersionConfiguration>();
-		for (Map.Entry<String, Set<String>> entry: matrix.entrySet()) {
-			String version = entry.getKey();
-			Set<String> keys = entry.getValue();
-			versionConfigurationList.add(new VersionConfiguration(version, keys));
+		for (Version version : versionList) {
+			// Gets the list of keys for this version
+			List<String> keys = getNamedParameterJdbcTemplate().queryForList(
+					SQL.VERSION_KEYS,
+					idCriteria.addValue(VERSION, version.getName()),
+					String.class);
+			// Version configuration
+			VersionConfiguration versionConfiguration = new VersionConfiguration(version.getName(), keys);
+			// Adds to the list
+			versionConfigurationList.add(versionConfiguration);
 		}
 		// OK
 		return new KeyVersionConfiguration(id, name, versionConfigurationList, keyList);

@@ -20,6 +20,8 @@ public interface SQL {
 
 	String APPLICATION_NAME = "select name from application where id = :id";
 	
+	String VERSIONS = "select * from version where application = :application order by name";
+	
 	String VERSION_SUMMARIES = "select v.name, count (vk.key) as keyNumber " +
 			"from version v " +
 			"left join version_key vk " +
@@ -57,10 +59,11 @@ public interface SQL {
 
 	String KEY_DELETE = "delete from key where application = :id and name = :name";
 	
-	String VERSION_CONFIGURATIONS = "select * " +
+	String VERSION_KEYS = "select key " +
 			"from version_key " +
 			"where application = :application " +
-			"order by version, key";
+			"and version = :version " +
+			"order by key";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 
