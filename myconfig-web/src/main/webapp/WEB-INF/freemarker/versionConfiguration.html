@@ -1,5 +1,33 @@
 <#include "/lib/layout.html">
 <@layout_std pageId="versionConfiguration" style=false modules=[] title=loc("versionConfiguration.title", configuration.name)>
+	<article class="versionConfiguration">
+		<table border="1">
+			<thead>
+				<tr>
+					<#list configuration.versionConfigurationList as versionConfiguration>
+						<th>
+							${versionConfiguration.name?html}
+						</th>
+					</#list>
+				</tr>
+			</thead>
+			<tbody>
+				<#list configuration.keyList as key>
+					<tr>
+						<td class="key">
+							<div class="key-name">${key.name?html}</div>
+							<div class="key-description">${key.description?html}</div>
+						</td>
+						<#list configuration.versionConfigurationList as versionConfiguration>
+							<td class="key-flag">
+								TODO ${versionConfiguration.name?html}
+							</td>
+						</#list>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+	</article>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/configure?id=${configuration.id}" key="configuration" />
 </@layout_std>
