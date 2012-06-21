@@ -43,7 +43,7 @@ public abstract class AbstractGUIController {
 		return redirect ("application/configure?id=" + id);
 	}
 
-	private String redirect(String path) {
+	protected String redirect(String path) {
 		return "redirect:/gui/" + path;
 	}
 

@@ -24,7 +24,7 @@ public class GUIKeyController extends AbstractGUIApplicationConfigurationControl
 	}
 
 	@RequestMapping(value = "/create/{id:.*}", method = RequestMethod.POST)
-	public String versionCreate (@PathVariable int id, String name, String description) {
+	public String keyCreate (@PathVariable int id, String name, String description) {
 		ui.keyCreate (id, name, description);
 		return redirectToApplicationConfiguration(id);
 	}

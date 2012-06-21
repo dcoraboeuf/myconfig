@@ -1,5 +1,5 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="versionConfiguration" style=true modules=[] title=loc("versionConfiguration.title", configuration.name)>
+<@layout_std pageId="versionConfiguration" style=true modules=["key"] title=loc("versionConfiguration.title", configuration.name)>
 	<article class="versionConfiguration">
 		<table border="1">
 			<thead>
@@ -44,6 +44,10 @@
 				</#list>
 			</tbody>
 		</table>
+		<section>
+			<h1><@lh key="versionConfiguration.newKey" /></h1>
+			<@key_create action="gui/version/configuration/${configuration.id}/key/create" />
+		</section>
 	</article>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/configure?id=${configuration.id}" key="configuration" />
