@@ -1,5 +1,5 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="versionConfiguration" style=false modules=[] title=loc("versionConfiguration.title", configuration.name)>
+<@layout_std pageId="versionConfiguration" style=true modules=[] title=loc("versionConfiguration.title", configuration.name)>
 	<article class="versionConfiguration">
 		<table border="1">
 			<thead>
@@ -23,7 +23,11 @@
 						</td>
 						<#list configuration.versionConfigurationList as versionConfiguration>
 							<td class="key-flag">
-								TODO ${versionConfiguration.name?html}
+								<#if versionConfiguration.keys?seq_contains(key.name)>
+									<img class="versionConfiguration yes" src="images/version_key_yes.png" title="<@lh key='versionConfiguration.key.yes'/>" />
+								<#else>
+									<img class="versionConfiguration no" src="images/version_key_no.png" title="<@lh key='versionConfiguration.key.no'/>" />
+								</#if>
 							</td>
 						</#list>
 					</tr>
