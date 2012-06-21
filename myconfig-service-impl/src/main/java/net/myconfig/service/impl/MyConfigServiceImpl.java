@@ -4,6 +4,7 @@ import static net.myconfig.service.impl.SQLColumns.APPLICATION;
 import static net.myconfig.service.impl.SQLColumns.DESCRIPTION;
 import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT;
 import static net.myconfig.service.impl.SQLColumns.ID;
+import static net.myconfig.service.impl.SQLColumns.KEY;
 import static net.myconfig.service.impl.SQLColumns.KEY_NUMBER;
 import static net.myconfig.service.impl.SQLColumns.NAME;
 import static net.myconfig.service.impl.SQLColumns.VERSION;
@@ -23,8 +24,10 @@ import net.myconfig.service.exception.CoreException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
+import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
+import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
@@ -145,7 +148,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Transactional
 	public Ack deleteApplication(int id) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource (ID, id));
-		return Ack.validate (count == 1);
+		return Ack.one (count);
 	}
 	
 	@Override
@@ -155,7 +158,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_CREATE,
 				idNameSource(id, name));
-			return Ack.validate (count == 1);
+			return Ack.one (count);
 		} catch (DuplicateKeyException ex) {
 			throw new VersionAlreadyDefinedException (id, name);
 		}
@@ -172,7 +175,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public Ack deleteVersion(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
-		return Ack.validate (count == 1);
+		return Ack.one (count);
 	}
 	
 	@Override
@@ -182,7 +185,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_CREATE,
 				idNameSource(id, name));
-			return Ack.validate (count == 1);
+			return Ack.one (count);
 		} catch (DuplicateKeyException ex) {
 			throw new EnvironmentAlreadyDefinedException(id, name);
 		}
@@ -193,7 +196,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public Ack deleteEnvironment(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
-		return Ack.validate (count == 1);
+		return Ack.one (count);
 	}
 	
 	@Override
@@ -203,7 +206,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.KEY_CREATE,
 				idNameSource(id, name).addValue(DESCRIPTION, description));
-			return Ack.validate (count == 1);
+			return Ack.one (count);
 		} catch (DuplicateKeyException ex) {
 			throw new KeyAlreadyDefinedException (id, name);
 		}
@@ -214,7 +217,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public Ack deleteKey(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
-		return Ack.validate (count == 1);
+		return Ack.one (count);
 	}
 	
 	@Override
@@ -253,6 +256,38 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		}
 		// OK
 		return new KeyVersionConfiguration(id, name, versionConfigurationList, keyList);
+	}
+	
+	@Override
+	@Transactional
+	public Ack addKeyVersion(int application, String version, String key) {
+		checkApplication(application);
+		checkVersion(application, version);
+		checkKey(application, key);
+		int count = getNamedParameterJdbcTemplate().update(
+				SQL.VERSION_KEY_ADD,
+				new MapSqlParameterSource()
+					.addValue(APPLICATION, application)
+					.addValue(VERSION, version)
+					.addValue(KEY, key)
+				);
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	public Ack removeKeyVersion(int application, String version, String key) {
+		checkApplication(application);
+		checkVersion(application, version);
+		checkKey(application, key);
+		int count = getNamedParameterJdbcTemplate().update(
+				SQL.VERSION_KEY_REMOVE,
+				new MapSqlParameterSource()
+					.addValue(APPLICATION, application)
+					.addValue(VERSION, version)
+					.addValue(KEY, key)
+				);
+		return Ack.one(count);
 	}
 
 	@Override
@@ -323,6 +358,20 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				SQL.VERSION_EXISTS,
 				new MapSqlParameterSource(NAME, version).addValue(APPLICATION, application),
 				new VersionNotFoundException(application, version));
+	}
+
+	protected void checkVersion(int application, String version) {
+		check (
+				SQL.VERSION_EXISTS_BY_ID,
+				new MapSqlParameterSource(NAME, version).addValue(APPLICATION, application),
+				new VersionNotDefinedException(application, version));
+	}
+
+	protected void checkKey(int application, String key) {
+		check (
+				SQL.KEY_EXISTS_BY_ID,
+				new MapSqlParameterSource(NAME, key).addValue(APPLICATION, application),
+				new KeyNotDefinedException(application, key));
 	}
 
 	protected void checkEnvironment(String application, String environment) {

@@ -53,37 +53,37 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/version/{id}/{name}", method = RequestMethod.PUT)
-	public Ack versionCreate(@PathVariable int id, @PathVariable String name) {
+	public @ResponseBody Ack versionCreate(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().createVersion (id, name);
 	}
 	
 	@Override
 	@RequestMapping(value = "/version/{id}/{name}", method = RequestMethod.DELETE)
-	public Ack versionDelete(@PathVariable int id, @PathVariable String name) {
+	public @ResponseBody Ack versionDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteVersion (id, name);
 	}
 	
 	@Override
 	@RequestMapping(value = "/environment/{id}/{name}", method = RequestMethod.PUT)
-	public Ack environmentCreate(@PathVariable int id, @PathVariable String name) {
+	public @ResponseBody Ack environmentCreate(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().createEnvironment (id, name);
 	}
 	
 	@Override
 	@RequestMapping(value = "/environment/{id}/{name}", method = RequestMethod.DELETE)
-	public Ack environmentDelete(@PathVariable int id, @PathVariable String name) {
+	public @ResponseBody Ack environmentDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteEnvironment (id, name);
 	}
 	
 	@Override
 	@RequestMapping(value = "/key/{id}/{name}", method = RequestMethod.PUT)
-	public Ack keyCreate(@PathVariable int id, @PathVariable String name, @RequestParam String description) {
+	public @ResponseBody Ack keyCreate(@PathVariable int id, @PathVariable String name, @RequestParam String description) {
 		return getMyConfigService().createKey (id, name, description);
 	}
 	
 	@Override
 	@RequestMapping(value = "/key/{id}/{name}", method = RequestMethod.DELETE)
-	public Ack keyDelete(@PathVariable int id, @PathVariable String name) {
+	public @ResponseBody Ack keyDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteKey (id, name);
 	}
 	
@@ -91,6 +91,18 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/application/{id}/key_version", method = RequestMethod.DELETE)
 	public KeyVersionConfiguration keyVersionConfiguration(int id) {
 		return getMyConfigService().keyVersionConfiguration(id);
+	}
+
+	@Override
+	@RequestMapping(value = "/version/{application}/{version}/add/{key:.*}", method = RequestMethod.POST)
+	public @ResponseBody Ack keyVersionAdd (@PathVariable int application, @PathVariable String version, @PathVariable String key) {
+		return getMyConfigService().addKeyVersion (application, version, key);
+	}
+
+	@Override
+	@RequestMapping(value = "/version/{application}/{version}/remove/{key:.*}", method = RequestMethod.POST)
+	public @ResponseBody Ack keyVersionRemove (@PathVariable int application, @PathVariable String version, @PathVariable String key) {
+		return getMyConfigService().removeKeyVersion (application, version, key);
 	}
 
 }

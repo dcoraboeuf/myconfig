@@ -65,13 +65,29 @@ public interface SQL {
 			"and version = :version " +
 			"order by key";
 
+	String VERSION_KEY_ADD = "insert into version_key (application, version, key) " +
+			"values (:application, :version, :key)";
+
+	String VERSION_KEY_REMOVE = "delete from version_key " +
+			"where application = :application and version = :version and key = :key)";
+
 	String APPLICATION_EXISTS = "select id from application where name = :name";
+
+	String VERSION_EXISTS_BY_ID = "select v.name " +
+			"from version v " +
+			"where v.name = :name " +
+			"and v.application = :application";
 
 	String VERSION_EXISTS = "select v.name " +
 			"from version v, application a " +
 			"where v.name = :name " +
 			"and v.application = a.id " +
 			"and a.name = :application";
+
+	String KEY_EXISTS_BY_ID = "select name " +
+			"from key " +
+			"where name = :name " +
+			"and application = :application";
 
 	String ENVIRONMENT_EXISTS = "select e.name " +
 			"from environment e, application a " +

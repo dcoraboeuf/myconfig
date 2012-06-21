@@ -31,4 +31,8 @@ public interface UIInterface {
 
 	KeyVersionConfiguration keyVersionConfiguration(int id);
 
+	Ack keyVersionAdd(int application, String version, String key);
+
+	Ack keyVersionRemove(int application, String version, String key);
+
 }

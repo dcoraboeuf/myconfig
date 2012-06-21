@@ -9,6 +9,10 @@ public final class Ack {
 		return test ? OK : NOK;
 	}
 
+	public static Ack one(int count) {
+		return validate (count == 1);
+	}
+
 	private final boolean success;
 
 	private Ack(boolean success) {

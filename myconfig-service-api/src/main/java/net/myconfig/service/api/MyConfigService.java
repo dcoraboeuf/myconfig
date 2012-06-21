@@ -38,4 +38,8 @@ public interface MyConfigService {
 
 	KeyVersionConfiguration keyVersionConfiguration(int id);
 
+	Ack addKeyVersion(int application, String version, String key);
+
+	Ack removeKeyVersion(int application, String version, String key);
+
 }
