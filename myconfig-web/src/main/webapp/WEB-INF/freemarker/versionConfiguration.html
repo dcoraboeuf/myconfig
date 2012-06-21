@@ -24,9 +24,9 @@
 						<#list configuration.versionConfigurationList as versionConfiguration>
 							<td class="key-flag">
 								<#if versionConfiguration.keys?seq_contains(key.name)>
-									<img class="versionConfiguration yes" src="images/version_key_yes.png" title="<@lh key='versionConfiguration.key.yes'/>" />
+									<img id="versionConfiguration_${versionConfiguration.name?html}_${key.name?html}" class="versionConfiguration yes" src="images/version_key_yes.png" title="<@lh key='versionConfiguration.key.yes'/>" onclick="myconfig.removeKeyVersion(${configuration.id}, '${versionConfiguration.name?html}', '${key.name?html}');" />
 								<#else>
-									<img class="versionConfiguration no" src="images/version_key_no.png" title="<@lh key='versionConfiguration.key.no'/>" />
+									<img id="versionConfiguration_${versionConfiguration.name?html}_${key.name?html}" class="versionConfiguration no" src="images/version_key_no.png" title="<@lh key='versionConfiguration.key.no'/>" onclick="myconfig.addKeyVersion(${configuration.id}, '${versionConfiguration.name?html}', '${key.name?html}');" />
 								</#if>
 							</td>
 						</#list>
