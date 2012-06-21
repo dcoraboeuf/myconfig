@@ -5,7 +5,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 import net.myconfig.service.api.MyConfigService;
@@ -14,8 +16,11 @@ import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
+import net.myconfig.service.exception.KeyAlreadyInVersionException;
+import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
+import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
@@ -23,10 +28,17 @@ import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.EnvironmentSummary;
+import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
+import net.myconfig.service.model.KeyVersionConfiguration;
+import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,7 +175,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertEquals (3, versions.size());
 		assertVersionSummary ("1.0", 2, versions.get(0));
 		assertVersionSummary ("1.1", 2, versions.get(1));
-		assertVersionSummary ("1.2", 2, versions.get(2));
+		assertVersionSummary ("1.2", 3, versions.get(2));
 		// Environments
 		List<EnvironmentSummary> environments = app.getEnvironmentSummaryList();
 		assertNotNull (environments);
@@ -175,9 +187,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		// Keys
 		List<KeySummary> keys = app.getKeySummaryList();
 		assertNotNull (keys);
-		assertEquals (2, keys.size());
+		assertEquals (3, keys.size());
 		assertKeySummary ("jdbc.password", "Password used to connect to the database", 3, keys.get(0));
-		assertKeySummary ("jdbc.user", "User used to connect to the database", 3, keys.get(1));
+		assertKeySummary ("jdbc.url", "URL used to connect to the database", 1, keys.get(1));
+		assertKeySummary ("jdbc.user", "User used to connect to the database", 3, keys.get(2));
 	}
 	
 	@Test
@@ -292,6 +305,106 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test (expected= ApplicationNotFoundException.class)
 	public void key_delete_noapp () {
 		myConfigService.deleteKey(10, "key5");
+	}
+	
+	@Test
+	public void version_configuration () throws JsonGenerationException, JsonMappingException, IOException {
+		KeyVersionConfiguration configuration = myConfigService.keyVersionConfiguration(1);
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new KeyVersionConfiguration(1, "myapp",
+					Arrays.asList(
+							new VersionConfiguration(
+									"1.0",
+									Arrays.asList("jdbc.password", "jdbc.user")),
+							new VersionConfiguration(
+									"1.1",
+									Arrays.asList("jdbc.password", "jdbc.user")),
+							new VersionConfiguration(
+									"1.2",
+									Arrays.asList("jdbc.password", "jdbc.url", "jdbc.user"))),
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.url", "URL used to connect to the database"),
+							new Key("jdbc.user", "User used to connect to the database"))
+					),
+				configuration);
+	}
+	
+	@Test(expected = ApplicationNotFoundException.class)
+	public void version_configuration_no_app () {
+		myConfigService.keyVersionConfiguration(-1);
+	}
+	
+	@Test
+	public void version_key_add () throws DataSetException, SQLException {
+		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and key = 'jdbc.url'");
+		Ack ack = myConfigService.addKeyVersion(1, "1.1", "jdbc.url");
+		assertTrue (ack.isSuccess());
+		assertRecordExists("select * from version_key where application = 1 and version = '1.1' and key = 'jdbc.url'");
+	}
+	
+	@Test(expected = ApplicationNotFoundException.class)
+	public void version_key_add_noapp () throws DataSetException, SQLException {
+		myConfigService.addKeyVersion(-1, "1.1", "jdbc.url");
+	}
+	
+	@Test(expected = VersionNotDefinedException.class)
+	public void version_key_add_noversion () throws DataSetException, SQLException {
+		myConfigService.addKeyVersion(1, "1.X", "jdbc.url");
+	}
+	
+	@Test(expected = KeyNotDefinedException.class)
+	public void version_key_add_nokey () throws DataSetException, SQLException {
+		myConfigService.addKeyVersion(1, "1.0", "jdbc.xxx");
+	}
+	
+	@Test(expected = KeyAlreadyInVersionException.class)
+	public void version_key_add_duplicate () throws DataSetException, SQLException {
+		assertRecordExists("select * from version_key where application = 1 and version = '1.2' and key = 'jdbc.url'");
+		myConfigService.addKeyVersion(1, "1.2", "jdbc.url");
+	}
+	
+	@Test
+	public void version_key_remove () throws DataSetException, SQLException {
+		assertRecordExists("select * from version_key where application = 1 and version = '1.0' and key = 'jdbc.password'");
+		Ack ack = myConfigService.removeKeyVersion(1, "1.0", "jdbc.password");
+		assertTrue (ack.isSuccess());
+		assertRecordNotExists("select * from version_key where application = 1 and version = '1.0' and key = 'jdbc.password'");
+	}
+	
+	@Test(expected = ApplicationNotFoundException.class)
+	public void version_key_remove_noapp () throws DataSetException, SQLException {
+		myConfigService.removeKeyVersion(-1, "1.1", "jdbc.url");
+	}
+	
+	@Test(expected = VersionNotDefinedException.class)
+	public void version_key_remove_noversion () throws DataSetException, SQLException {
+		myConfigService.removeKeyVersion(1, "1.X", "jdbc.url");
+	}
+	
+	@Test(expected = KeyNotDefinedException.class)
+	public void version_key_remove_nokey () throws DataSetException, SQLException {
+		myConfigService.removeKeyVersion(1, "1.0", "jdbc.xxx");
+	}
+	
+	@Test
+	public void version_key_remove_none () throws DataSetException, SQLException {
+		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and key = 'jdbc.url'");
+		Ack ack = myConfigService.removeKeyVersion(1, "1.1", "jdbc.url");
+		assertFalse (ack.isSuccess());
+	}
+	
+	private <T> void assertJSONEquals (T a, T b) throws JsonGenerationException, JsonMappingException, IOException {
+		String ja = toJSON (a);
+		String jb = toJSON (b);
+		assertEquals (ja, jb);
+	}
+	
+	private String toJSON (Object o) throws JsonGenerationException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+		return writer.writeValueAsString(o);
 	}
 
 	private void assertKeySummary(String name, String description, int versionNumber, KeySummary keySummary) {

@@ -24,6 +24,7 @@ import net.myconfig.service.exception.CoreException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
+import net.myconfig.service.exception.KeyAlreadyInVersionException;
 import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
@@ -264,14 +265,18 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		checkApplication(application);
 		checkVersion(application, version);
 		checkKey(application, key);
-		int count = getNamedParameterJdbcTemplate().update(
-				SQL.VERSION_KEY_ADD,
-				new MapSqlParameterSource()
-					.addValue(APPLICATION, application)
-					.addValue(VERSION, version)
-					.addValue(KEY, key)
-				);
-		return Ack.one(count);
+		try {
+			int count = getNamedParameterJdbcTemplate().update(
+					SQL.VERSION_KEY_ADD,
+					new MapSqlParameterSource()
+						.addValue(APPLICATION, application)
+						.addValue(VERSION, version)
+						.addValue(KEY, key)
+					);
+			return Ack.one(count);
+		} catch (DuplicateKeyException ex) {
+			throw new KeyAlreadyInVersionException(version, key);
+		}
 	}
 	
 	@Override
