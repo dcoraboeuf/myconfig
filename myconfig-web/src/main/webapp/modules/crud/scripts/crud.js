@@ -11,7 +11,7 @@ var CRUD = function () {
 			if (value.trim() != "") {
 				return true;
 			} else {
-				$(htmlID).addClass("crud-invalid");
+				$(htmlID).addClass("invalid");
 				return false;
 			}
 		}
