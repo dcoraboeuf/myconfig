@@ -25,9 +25,9 @@
 				<@crud_column property="name" key="model.key.name" />
 				<@crud_column property="description" key="model.key.description" />
 				<@crud_column property="versionNumber" key="configuration.key.versionNumber" class="crud-number" />
-				<@crud_delete action="gui/key/delete/${application.id}" field="name" promptKey="key.delete" />
+				<@crud_delete action="gui/application/${application.id}/key/delete" field="name" promptKey="key.delete" />
 				<@crud_general_action>
-					<@key_create formClass="crud" action="gui/key/create/${application.id}" />
+					<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
 				</@crud_general_action>
 			</@crud_table>
 		</section>

@@ -275,7 +275,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 					);
 			return Ack.one(count);
 		} catch (DuplicateKeyException ex) {
-			throw new KeyAlreadyInVersionException(version, key);
+			throw new KeyAlreadyInVersionException(application, version, key);
 		}
 	}
 	

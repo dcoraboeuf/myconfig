@@ -1,9 +1,9 @@
 package net.myconfig.service.exception;
 
-public class KeyAlreadyInVersionException extends InputException {
+public class KeyAlreadyInVersionException extends KeyInputException {
 	
-	public KeyAlreadyInVersionException(String version, String key) {
-		super (version, key);
+	public KeyAlreadyInVersionException(int id, String version, String key) {
+		super (id, version, key);
 	}
 
 }
