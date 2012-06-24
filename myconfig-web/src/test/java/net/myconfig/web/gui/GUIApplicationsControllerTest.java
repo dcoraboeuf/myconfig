@@ -51,7 +51,7 @@ public class GUIApplicationsControllerTest extends AbstractConfigurationTest {
 	public void applicationCreate_ok () throws Exception {
 		ModelAndView mav = applicationCreate(helper.generateName("applicationCreate_ok_"));
 		assertNotNull (mav);
-		assertEquals ("redirect:/gui/", mav.getViewName());
+		assertEquals ("redirect:/gui/applications", mav.getViewName());
 	}
 	
 	@Test
@@ -69,13 +69,13 @@ public class GUIApplicationsControllerTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void application_delete () throws Exception {
-		ModelAndView mav = helper.run("POST", "/gui/application/delete", "id", "0");
+		ModelAndView mav = helper.run("POST", "/gui/applications/delete", "id", "0");
 		assertNotNull (mav);
-		assertEquals ("redirect:/gui/", mav.getViewName());
+		assertEquals ("redirect:/gui/applications", mav.getViewName());
 	}
 
 	protected ModelAndView applicationCreate(String appName) throws Exception {
-		return helper.run("POST", "/gui/application/create", "name", appName);
+		return helper.run("POST", "/gui/applications/create", "name", appName);
 	}
 
 }
