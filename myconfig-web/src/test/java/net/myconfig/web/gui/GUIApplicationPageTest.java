@@ -108,5 +108,70 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
 		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
 	}
+	
+	@Test
+	public void environment_create () throws Exception {
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("environmentCreate_"));
+		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/environment/create", "name", "1.0");
+		assertNotNull (mav);
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
+	}
+	
+	@Test
+	public void environment_create_already_exists () throws Exception {
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("environmentCreate_"));
+		helper.run ("POST", "/gui/application/ " + app.getId() + "/environment/create", "name", "1.0");
+		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/environment/create", "name", "1.0");
+		assertNotNull (mav);
+		assertEquals ("application", mav.getViewName());
+		ApplicationConfiguration configuration = (ApplicationConfiguration) mav.getModel().get("application");
+		assertNotNull(configuration);
+		assertEquals (app.getId(), configuration.getId());
+		assertEquals(app.getName(), configuration.getName());
+		helper.assertErrorMessage (mav, "environment_error", "[S-007] The environment \"1.0\" is already defined.");
+	}
+	
+	@Test
+	public void environment_create_noapp () throws Exception {
+		ModelAndView mav = helper.run ("POST", "/gui/application/0/environment/create", "name", "1.0");
+		assertNotNull (mav);
+		assertEquals ("error", mav.getViewName());
+		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
+		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
+	}
+	
+	@Test
+	public void environment_delete() throws Exception {
+		// Test data
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("environment_delete_"));
+		ui.environmentCreate(app.getId(), "1.0");
+		ui.environmentCreate(app.getId(), "1.1");
+		ui.environmentCreate(app.getId(), "1.2");
+		// Deletes one environment
+		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/environment/delete", "name", "1.1");
+		assertNotNull (mav);
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
+	}
+	
+	@Test
+	public void environment_delete_none() throws Exception {
+		// Test data
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("environment_delete_none_"));
+		ui.environmentCreate(app.getId(), "1.0");
+		ui.environmentCreate(app.getId(), "1.1");
+		// Deletes one environment
+		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/environment/delete", "name", "1.2");
+		assertNotNull (mav);
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
+	}
+	
+	@Test
+	public void environment_delete_noapp() throws Exception {
+		ModelAndView mav = helper.run("POST", "/gui/application/0/environment/delete", "name", "1.1");
+		assertNotNull (mav);
+		assertEquals ("error", mav.getViewName());
+		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
+		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
+	}
 
 }
