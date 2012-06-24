@@ -41,8 +41,7 @@
 						</#if>
 						<#if edition.defined>
 							<#assign editionField = item[edition.field] />
-							<form class="crud-action crud-edit" action="${edition.action} " method="get">
-								<input type="hidden" name="${edition.field}" value="${ editionField }" />
+							<form class="crud-action crud-edit" action="${edition.action}/${editionField}" method="get">
 								<input class="crud-action crud-edit" type="image" src="modules/crud/images/edit.png" />
 							</form>
 						</#if>

@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.common.collect.Iterables;
 
 @ActiveProfiles(MyConfigProfiles.TEST)
-public class GUIApplicationsControllerTest extends AbstractConfigurationTest {
+public class GUIApplicationsPageTest extends AbstractConfigurationTest {
 	
 	@Autowired
 	private GUITestHelper helper;

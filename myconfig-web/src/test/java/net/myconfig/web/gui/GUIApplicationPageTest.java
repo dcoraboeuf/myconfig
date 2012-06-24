@@ -15,7 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.servlet.ModelAndView;
 
 @ActiveProfiles(MyConfigProfiles.TEST)
-public class GUIApplicationConfigurationControllerTest extends AbstractConfigurationTest {
+public class GUIApplicationPageTest extends AbstractConfigurationTest {
 
 	@Autowired
 	private GUITestHelper helper;
@@ -26,9 +26,9 @@ public class GUIApplicationConfigurationControllerTest extends AbstractConfigura
 	@Test
 	public void application_configuration() throws Exception {
 		ApplicationSummary summary = ui.applicationCreate(helper.generateName("app_config_"));
-		ModelAndView mav = helper.run("GET", "/gui/application/configure", "id", summary.getId());
+		ModelAndView mav = helper.run("GET", "/gui/application/"+ summary.getId(), null, null);
 		assertNotNull (mav);
-		assertEquals ("configuration", mav.getViewName());
+		assertEquals ("application", mav.getViewName());
 		ApplicationConfiguration app = (ApplicationConfiguration) mav.getModel().get("application");
 		assertNotNull (app);
 		assertEquals (summary.getId(), app.getId());
@@ -37,11 +37,11 @@ public class GUIApplicationConfigurationControllerTest extends AbstractConfigura
 	
 	@Test
 	public void application_configuration_not_there() throws Exception {
-		ModelAndView mav = helper.run("GET", "/gui/application/configure", "id", -1);
+		ModelAndView mav = helper.run("GET", "/gui/application/0", null, null);
 		assertNotNull (mav);
 		assertEquals ("error", mav.getViewName());
 		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
-		assertEquals ("[S-004] Cannot find application -1", error.getMessage());
+		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
 	}
 
 }

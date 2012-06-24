@@ -22,6 +22,7 @@ public class FnLocLinkTest {
 	
 	@Before
 	public void before() {
+		Locale.setDefault(Locale.ENGLISH);
 		Strings strings = new Strings("META-INF.resources.web-labels");
 		CurrentLocale currentLocale = mock(CurrentLocale.class);
 		when(currentLocale.getCurrentLocale()).thenReturn(Locale.ENGLISH);

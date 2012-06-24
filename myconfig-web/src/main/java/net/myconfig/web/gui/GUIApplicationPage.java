@@ -1,0 +1,29 @@
+package net.myconfig.web.gui;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import net.myconfig.web.rest.UIInterface;
+import net.myconfig.web.support.ErrorHandler;
+
+@Controller
+@RequestMapping("/gui/application")
+public class GUIApplicationPage extends AbstractGUIApplicationPage {
+
+	@Autowired
+	public GUIApplicationPage(UIInterface ui, ErrorHandler errorHandler) {
+		super(ui, errorHandler);
+	}
+
+	@Override
+	@RequestMapping(value = "/{application:\\d+}", method = RequestMethod.GET)
+	public String page(@PathVariable int application, Model model) {
+		model.addAttribute("application", ui.applicationConfiguration(application));
+		return "application";
+	}
+
+}
