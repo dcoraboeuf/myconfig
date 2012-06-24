@@ -55,10 +55,10 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	@Test
 	public void version_create_already_exists () throws Exception {
 		ApplicationSummary app = ui.applicationCreate(helper.generateName("versionCreate_"));
-		helper.run ("POST", "/gui/version/create/" + app.getId(), "name", "1.0");
-		ModelAndView mav = helper.run ("POST", "/gui/version/create/" + app.getId(), "name", "1.0");
+		helper.run ("POST", "/gui/application/" + app.getId() + "/version/create", "name", "1.0");
+		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/version/create", "name", "1.0");
 		assertNotNull (mav);
-		assertEquals ("configuration", mav.getViewName());
+		assertEquals ("application", mav.getViewName());
 		ApplicationConfiguration configuration = (ApplicationConfiguration) mav.getModel().get("application");
 		assertNotNull(configuration);
 		assertEquals (app.getId(), configuration.getId());
@@ -68,11 +68,11 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void version_create_noapp () throws Exception {
-		ModelAndView mav = helper.run ("POST", "/gui/version/create/-1", "name", "1.0");
+		ModelAndView mav = helper.run ("POST", "/gui/application/0/version/create", "name", "1.0");
 		assertNotNull (mav);
 		assertEquals ("error", mav.getViewName());
 		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
-		assertEquals ("[S-004] Cannot find application -1", error.getMessage());
+		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
 	}
 	
 	@Test
@@ -83,9 +83,9 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 		ui.versionCreate(app.getId(), "1.1");
 		ui.versionCreate(app.getId(), "1.2");
 		// Deletes one version
-		ModelAndView mav = helper.run("POST", "/gui/version/delete/" + app.getId(), "name", "1.1");
+		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/version/delete", "name", "1.1");
 		assertNotNull (mav);
-		assertEquals ("redirect:/gui/application/configure?id=" +  app.getId(), mav.getViewName());
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
 	}
 	
 	@Test
@@ -95,18 +95,18 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 		ui.versionCreate(app.getId(), "1.0");
 		ui.versionCreate(app.getId(), "1.1");
 		// Deletes one version
-		ModelAndView mav = helper.run("POST", "/gui/version/delete/" + app.getId(), "name", "1.2");
+		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/version/delete", "name", "1.2");
 		assertNotNull (mav);
-		assertEquals ("redirect:/gui/application/configure?id=" +  app.getId(), mav.getViewName());
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
 	}
 	
 	@Test
 	public void version_delete_noapp() throws Exception {
-		ModelAndView mav = helper.run("POST", "/gui/version/delete/-1", "name", "1.1");
+		ModelAndView mav = helper.run("POST", "/gui/application/0/version/delete", "name", "1.1");
 		assertNotNull (mav);
 		assertEquals ("error", mav.getViewName());
 		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
-		assertEquals ("[S-004] Cannot find application -1", error.getMessage());
+		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
 	}
 
 }

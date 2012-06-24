@@ -11,6 +11,10 @@ import net.myconfig.web.support.ErrorMessage;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * @deprecated
+ */
+@Deprecated
 public abstract class AbstractGUIController {
 	
 	protected final UIInterface ui;
