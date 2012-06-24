@@ -25,5 +25,10 @@ public class GUIApplicationPage extends AbstractGUIApplicationPage {
 		model.addAttribute("application", ui.applicationConfiguration(application));
 		return "application";
 	}
+	
+	@Override
+	protected String pagePath(int application) {
+		return "application/" + application;
+	}
 
 }
