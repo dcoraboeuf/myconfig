@@ -27,6 +27,13 @@
 					<textarea id="key-description" name="description" rows="2" cols="20"></textarea>
 				</td>
 			</tr>
+			<#if .data_model["key_error"]??>
+				<tr>
+					<td colspan="2" class="error">
+						${.data_model["key_error"]}
+					</td>
+				</tr>
+			</#if>
 		</table>
 	</form> 
 </#macro>

@@ -72,7 +72,7 @@
 			</#list>
 			<#if errorKey != "" && .data_model[errorKey]??>
 				<tr>
-					<td colspan="${ columns?size + 1 }" class="crud-error">
+					<td colspan="${ columns?size + 1 }" class="error">
 						${.data_model[errorKey]}
 					</td>
 				</tr>
