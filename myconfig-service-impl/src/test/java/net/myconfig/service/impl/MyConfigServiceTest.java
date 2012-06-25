@@ -42,11 +42,20 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Autowired
 	private MyConfigService myConfigService;
+	
+	@Value("${app.version}")
+	private String appVersion;
+	
+	@Test
+	public void version() {
+		assertEquals (appVersion, myConfigService.getVersion());
+	}
 	
 	@Test
 	public void get_key_ok() {
