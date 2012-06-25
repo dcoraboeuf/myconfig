@@ -173,5 +173,70 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
 		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
 	}
+	
+	@Test
+	public void key_create () throws Exception {
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("keyCreate_"));
+		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/key/create", "name", "mykey");
+		assertNotNull (mav);
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
+	}
+	
+	@Test
+	public void key_create_already_exists () throws Exception {
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("keyCreate_"));
+		helper.run ("POST", "/gui/application/" + app.getId() + "/key/create", "name", "mykey");
+		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/key/create", "name", "mykey");
+		assertNotNull (mav);
+		assertEquals ("application", mav.getViewName());
+		ApplicationConfiguration configuration = (ApplicationConfiguration) mav.getModel().get("application");
+		assertNotNull(configuration);
+		assertEquals (app.getId(), configuration.getId());
+		assertEquals(app.getName(), configuration.getName());
+		helper.assertErrorMessage (mav, "key_error", "[S-008] The key \"mykey\" is already defined.");
+	}
+	
+	@Test
+	public void key_create_noapp () throws Exception {
+		ModelAndView mav = helper.run ("POST", "/gui/application/0/key/create", "name", "mykey");
+		assertNotNull (mav);
+		assertEquals ("error", mav.getViewName());
+		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
+		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
+	}
+	
+	@Test
+	public void key_delete() throws Exception {
+		// Test data
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("key_delete_"));
+		ui.keyCreate(app.getId(), "key1", "Key 1");
+		ui.keyCreate(app.getId(), "key2", "Key 2");
+		ui.keyCreate(app.getId(), "key3", "Key 3");
+		// Deletes one key
+		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/key/delete", "name", "key2");
+		assertNotNull (mav);
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
+	}
+	
+	@Test
+	public void key_delete_none() throws Exception {
+		// Test data
+		ApplicationSummary app = ui.applicationCreate(helper.generateName("key_delete_none_"));
+		ui.keyCreate(app.getId(), "key1", "Key 1");
+		ui.keyCreate(app.getId(), "key2", "Key 2");
+		// Deletes one key
+		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/key/delete", "name", "key3");
+		assertNotNull (mav);
+		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
+	}
+	
+	@Test
+	public void key_delete_noapp() throws Exception {
+		ModelAndView mav = helper.run("POST", "/gui/application/0/key/delete", "name", "key1");
+		assertNotNull (mav);
+		assertEquals ("error", mav.getViewName());
+		ErrorMessage error = (ErrorMessage) mav.getModel().get("error");
+		assertEquals ("[S-004] Cannot find application 0", error.getMessage());
+	}
 
 }
