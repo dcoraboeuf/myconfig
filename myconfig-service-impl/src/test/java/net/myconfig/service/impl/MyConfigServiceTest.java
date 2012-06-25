@@ -50,10 +50,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 public class MyConfigServiceTest extends AbstractIntegrationTest {
-	
-	private static final String V002 = "[S-012] Validation [V-002] Version name must be filled in and its size must be between 1 and 80 characters.";
-
-	private static final String V001 = "[S-012] Validation [V-001] Application name must be filled in and its size must be between 1 and 80 characters.";
 
 	@Autowired
 	private MyConfigService myConfigService;
@@ -165,7 +161,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					V001,
+					"[S-012] [V-001] Application name is invalid: may not be null",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
@@ -177,7 +173,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					V001,
+					"[S-012] [V-001] Application name is invalid: size must be between 1 and 80",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
@@ -189,7 +185,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					V001,
+					"[S-012] [V-001] Application name is invalid: size must be between 1 and 80",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
@@ -265,7 +261,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					V002,
+					"[S-012] [V-002] Version name is invalid: may not be null",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}	
@@ -277,7 +273,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					V002,
+					"[S-012] [V-002] Version name is invalid: size must be between 1 and 80",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}	
@@ -289,7 +285,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					V002,
+					"[S-012] [V-002] Version name is invalid: size must be between 1 and 80",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}	

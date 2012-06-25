@@ -22,10 +22,12 @@ public abstract class AbstractDaoService extends NamedParameterJdbcDaoSupport {
 	
 	protected <T> ValidationException validationException (Set<ConstraintViolation<T>> violations) {
 		ConstraintViolation<T> violation = violations.iterator().next();
+		// Message code
 		String code = String.format("%s.%s",
 				violation.getRootBeanClass().getName(),
 				violation.getPropertyPath());
-		return new ValidationException(new LocalizableMessage(code, violation.getInvalidValue()));
+		// Exception
+		return new ValidationException(new LocalizableMessage(code), violation.getMessage(), violation.getInvalidValue());
 	}
 
 	protected <T> void validate(Class<T> validationClass, String propertyName, Object value) {

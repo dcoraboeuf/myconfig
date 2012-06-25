@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,7 +18,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 public class LocaleInterceptor extends LocaleChangeInterceptor implements CurrentLocale {
 	
 	private final Logger logger = LoggerFactory.getLogger(LocaleInterceptor.class);
-	private final ThreadLocal<Locale> currentLocale = new ThreadLocal<Locale>(); 
 	
 	public LocaleInterceptor() {
 		setParamName("language");
@@ -41,7 +41,7 @@ public class LocaleInterceptor extends LocaleChangeInterceptor implements Curren
 			// Sets the locale in the model
 			modelAndView.addObject("locale", locale.toString());
 			// Sets the locale in the context
-			currentLocale.set(locale);
+			LocaleContextHolder.setLocale(locale, true);
 			logger.debug("Setting the locale to " + locale);
 		}
 		// Default
@@ -50,7 +50,7 @@ public class LocaleInterceptor extends LocaleChangeInterceptor implements Curren
 	
 	@Override
 	public Locale getCurrentLocale() {
-		Locale locale = currentLocale.get();
+		Locale locale = LocaleContextHolder.getLocale();
 		return locale != null ? locale : Locale.ENGLISH;
 	}
 
