@@ -4,11 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
@@ -19,6 +21,7 @@ import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
 import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.exception.ValidationException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
@@ -34,7 +37,9 @@ import net.myconfig.service.model.KeyVersionConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
+import net.sf.jstring.Strings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -46,11 +51,16 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
+	private static final String V001 = "[S-012] Validation [V-001] Application name must be filled in and its size must be between 1 and 80 characters.";
+
 	@Autowired
 	private MyConfigService myConfigService;
 	
 	@Value("${app.version}")
 	private String appVersion;
+	
+	@Autowired
+	private Strings strings;
 	
 	@Test
 	public void version() {
@@ -148,7 +158,38 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void applicationCreate_null () {
-		myConfigService.createApplication(null);
+		try {
+			myConfigService.createApplication(null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					V001,
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void applicationCreate_blank () {
+		try {
+			myConfigService.createApplication("");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					V001,
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void applicationCreate_too_long () {
+		try {
+			myConfigService.createApplication(StringUtils.repeat("x", 81));
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					V001,
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
 	}
 	
 	@Test(expected = ApplicationNameAlreadyDefinedException.class)
