@@ -164,6 +164,17 @@
                 <artifactId>spring-security-ldap</artifactId>
                 <version>${springSecurityVersion}</version>
             </dependency>
+            <!-- Validation -->
+            <dependency>
+			    <groupId>javax.validation</groupId>
+			    <artifactId>validation-api</artifactId>
+			    <version>1.0.0.GA</version>
+			</dependency>
+            <dependency>
+			    <groupId>org.hibernate</groupId>
+			    <artifactId>hibernate-validator</artifactId>
+			    <version>4.0.2.GA</version>
+			</dependency>            
 			<!-- Utilities -->
 			<dependency>
 			    <groupId>com.h2database</groupId>

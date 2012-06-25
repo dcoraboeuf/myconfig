@@ -146,6 +146,11 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		// TODO Assert stats
 	}
 	
+	@Test
+	public void applicationCreate_null () {
+		myConfigService.createApplication(null);
+	}
+	
 	@Test(expected = ApplicationNameAlreadyDefinedException.class)
 	public void applicationCreate_not_unique () {
 		myConfigService.createApplication("test2");

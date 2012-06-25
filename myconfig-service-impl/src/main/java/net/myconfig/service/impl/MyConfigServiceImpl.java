@@ -14,8 +14,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
@@ -27,6 +30,7 @@ import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
 import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.exception.ValidationException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
@@ -60,11 +64,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigService {
 
 	private final String versionNumber;
+	
+	private final Validator validator;
 
 	@Autowired
-	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource) {
+	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource, Validator validator) {
 		super(dataSource);
 		this.versionNumber = versionNumber;
+		this.validator = validator;
 	}
 	
 	@Override
@@ -129,9 +136,17 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		return name;
 	}
 	
+	public static <T> ValidationException validationException (Set<ConstraintViolation<T>> violations) {
+		
+	}
+	
 	@Override
 	@Transactional
 	public ApplicationSummary createApplication(String name) {
+		Set<ConstraintViolation<ApplicationValidation>> violations = validator.validateValue(ApplicationValidation.class, "name", name);
+		if (!violations.isEmpty()) {
+			throw new ValidationException(violations);
+		}
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		try {
 			getNamedParameterJdbcTemplate().update(

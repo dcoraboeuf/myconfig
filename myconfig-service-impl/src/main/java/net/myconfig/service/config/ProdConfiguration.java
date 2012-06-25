@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile(MyConfigProfiles.PROD)
-public class ProdConfiguration implements GeneralConfiguration {
+public class ProdConfiguration extends CommonConfiguration {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(ProdConfiguration.class);

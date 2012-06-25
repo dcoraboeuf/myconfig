@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile(MyConfigProfiles.DEV)
-public class DevConfiguration implements GeneralConfiguration {
+public class DevConfiguration extends CommonConfiguration {
 	
 	@Override
 	@Bean
