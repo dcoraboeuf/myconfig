@@ -157,6 +157,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional
 	public Ack createVersion(int id, String name) {
+		validate(VersionValidation.class, "name", name);
 		checkApplication(id);
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_CREATE,

@@ -51,6 +51,8 @@ import org.springframework.beans.factory.annotation.Value;
 
 public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
+	private static final String V002 = "[S-012] Validation [V-002] Version name must be filled in and its size must be between 1 and 80 characters.";
+
 	private static final String V001 = "[S-012] Validation [V-001] Application name must be filled in and its size must be between 1 and 80 characters.";
 
 	@Autowired
@@ -255,6 +257,42 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		// Checks the table
 		assertRecordExists ("select * from version where application = 1 and name = '1.3'");
 	}
+
+	@Test
+	public void version_create_null () {
+		try {
+			myConfigService.createVersion(1, null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					V002,
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
+
+	@Test
+	public void version_create_blank () {
+		try {
+			myConfigService.createVersion(1, "");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					V002,
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
+
+	@Test
+	public void version_create_too_long () {
+		try {
+			myConfigService.createVersion(1, StringUtils.repeat("x", 81));
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					V002,
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_create_noapp () {
