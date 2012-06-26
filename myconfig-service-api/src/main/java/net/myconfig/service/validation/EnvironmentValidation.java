@@ -7,6 +7,7 @@ public class EnvironmentValidation {
 
 	@NotNull
 	@NotBlank
+	@Trimmed
 	@Size(min = 1, max = 80)
 	public String name;
 

@@ -191,6 +191,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
+	public void applicationCreate_trim () {
+		try {
+			myConfigService.createApplication("  myapp   ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-001] Application name is invalid: may not have leading or trailing blanks",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
 	public void applicationCreate_too_long () {
 		try {
 			myConfigService.createApplication(StringUtils.repeat("x", 81));
@@ -288,6 +300,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 					"[S-012] [V-002] Version name is invalid: may not be blank",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
+	}		
+
+	@Test
+	public void version_create_trim () {
+		try {
+			myConfigService.createVersion(1, " myversion ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-002] Version name is invalid: may not have leading or trailing blanks",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
 	}	
 
 	@Test
@@ -377,6 +401,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}	
 
 	@Test
+	public void environment_create_trim () {
+		try {
+			myConfigService.createEnvironment(1, " myenv  ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-005] Environment name is invalid: may not have leading or trailing blanks",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
+
+	@Test
 	public void environment_create_blank () {
 		try {
 			myConfigService.createEnvironment(1, "");
@@ -458,6 +494,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		} catch (ValidationException ex) {
 			assertEquals (
 					"[S-012] [V-003] Key name is invalid: may not be blank",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void key_create_trim () {
+		try {
+			myConfigService.createKey(1, " mykey  ", null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-003] Key name is invalid: may not have leading or trailing blanks",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
