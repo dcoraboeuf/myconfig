@@ -6,14 +6,7 @@ var CRUD = function () {
 			return confirm (value);
 		},
 		validateCreate: function (id) {
-			var htmlID = "#crud-create-text-" + id;
-			var value = $(htmlID).val();
-			if (value.trim() != "") {
-				return true;
-			} else {
-				$(htmlID).addClass("invalid");
-				return false;
-			}
+			return myconfig.validateTextAsName ("#crud-create-text-" + id);
 		}
 	};
 	

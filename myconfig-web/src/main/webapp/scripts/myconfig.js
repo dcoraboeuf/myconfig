@@ -22,6 +22,17 @@ var myconfig = function () {
 		displayError(text);
 	}
 	
+
+	function validate (selector, test) {
+		if (test) {
+			$(selector).removeClass("invalid");
+			return true;
+		} else {
+			$(selector).addClass("invalid");
+			return false;
+		}
+	}
+	
 	return {
 		changeLanguage: function (lang) {
 			if (location.search.indexOf("language") > -1) {
@@ -50,6 +61,16 @@ var myconfig = function () {
 				.error(function (jqXHR, textStatus, errorThrown) {
 					displayAjaxError ('TODO Error', jqXHR, textStatus, errorThrown);
 				});
+		},
+		validateTextAsName: function (selector) {
+			var value = $(selector).val();
+			var trimmedValue = value.trim();
+			return validate (selector, trimmedValue == value && trimmedValue != "");
+		},
+		validateTextAsTrimmed: function (selector) {
+			var value = $(selector).val();
+			var trimmedValue = value.trim();
+			return validate (selector, trimmedValue == value);
 		}
 	};
 	
