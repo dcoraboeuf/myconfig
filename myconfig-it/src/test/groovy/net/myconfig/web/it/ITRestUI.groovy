@@ -74,6 +74,19 @@ class ITRestUI {
 		assertNull (summary);
 	}
 	
+	@Test
+	void application_no_name() {
+		http.request ( Method.PUT, ContentType.JSON ) {
+			uri.path = "application/%20"
+			response.success = { resp, json ->
+				fail("Application creation with an empty name should have failed")
+			}
+			response.failure = {resp, reader ->
+				println("Response status : $resp.status")
+			}
+		}
+	}
+	
 	def application_summary (int id) {
 		http.request ( Method.GET, ContentType.JSON ) {
 			uri.path = "applications"

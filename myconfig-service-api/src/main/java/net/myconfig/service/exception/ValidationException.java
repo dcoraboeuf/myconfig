@@ -4,7 +4,7 @@ import net.sf.jstring.Localizable;
 
 public class ValidationException extends InputException {
 
-	public ValidationException(Localizable field, String message, Object value) {
+	public ValidationException(Localizable field, Object message, Object value) {
 		super(field, message, value);
 	}
 

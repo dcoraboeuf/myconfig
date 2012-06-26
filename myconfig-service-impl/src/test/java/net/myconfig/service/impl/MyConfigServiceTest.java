@@ -179,6 +179,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
+	public void applicationCreate_spaces () {
+		try {
+			myConfigService.createApplication("     ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-001] Application name is invalid: may not be blank",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
 	public void applicationCreate_too_long () {
 		try {
 			myConfigService.createApplication(StringUtils.repeat("x", 81));
@@ -267,6 +279,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}	
 
 	@Test
+	public void version_create_spaces () {
+		try {
+			myConfigService.createVersion(1, " ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-002] Version name is invalid: may not be blank",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
+
+	@Test
 	public void version_create_blank () {
 		try {
 			myConfigService.createVersion(1, "");
@@ -341,6 +365,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}	
 
 	@Test
+	public void environment_create_spaces () {
+		try {
+			myConfigService.createEnvironment(1, "  ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-005] Environment name is invalid: may not be blank",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
+
+	@Test
 	public void environment_create_blank () {
 		try {
 			myConfigService.createEnvironment(1, "");
@@ -410,6 +446,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		} catch (ValidationException ex) {
 			assertEquals (
 					"[S-012] [V-003] Key name is invalid: may not be null",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void key_create_spaces () {
+		try {
+			myConfigService.createKey(1, "  ", null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-003] Key name is invalid: may not be blank",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}

@@ -9,6 +9,7 @@ import javax.validation.Validator;
 import net.myconfig.service.exception.ValidationException;
 import net.sf.jstring.LocalizableMessage;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
 public abstract class AbstractDaoService extends NamedParameterJdbcDaoSupport {
@@ -26,8 +27,17 @@ public abstract class AbstractDaoService extends NamedParameterJdbcDaoSupport {
 		String code = String.format("%s.%s",
 				violation.getRootBeanClass().getName(),
 				violation.getPropertyPath());
+		// Message
+		Object oMessage;
+		String message = violation.getMessage();
+		if (StringUtils.startsWith(message, "{net.myconfig")) {
+			String key = StringUtils.strip(message, "{}");
+			oMessage = new LocalizableMessage(key);
+		} else {
+			oMessage = message;
+		}
 		// Exception
-		return new ValidationException(new LocalizableMessage(code), violation.getMessage(), violation.getInvalidValue());
+		return new ValidationException(new LocalizableMessage(code), oMessage, violation.getInvalidValue());
 	}
 
 	protected <T> void validate(Class<T> validationClass, String propertyName, Object value) {

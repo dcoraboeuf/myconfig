@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 public class ApplicationValidation {
 	
 	@NotNull
+	@NotBlank
 	@Size(min = 1, max = 80)
 	public String name;
 
