@@ -366,6 +366,54 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertRecordExists("select * from key where application = 1 and name = 'key1' and description = 'Description for key 1'");
 	}
 	
+	@Test
+	public void key_create_null () {
+		try {
+			myConfigService.createKey(1, null, null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-003] Key name is invalid: may not be null",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void key_create_blank () {
+		try {
+			myConfigService.createKey(1, "", null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-003] Key name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void key_create_too_long () {
+		try {
+			myConfigService.createKey(1, StringUtils.repeat("x", 81), null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-003] Key name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void key_create_description_too_long () {
+		try {
+			myConfigService.createKey(1, StringUtils.repeat("x", 80), StringUtils.repeat("x", 501));
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-004] Key description is invalid: size must be between 0 and 500",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void key_create_noapp () {
 		myConfigService.createKey(10, "key2", "Description for key 2");

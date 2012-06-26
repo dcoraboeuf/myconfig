@@ -44,6 +44,7 @@ import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
+import net.myconfig.service.validation.KeyValidation;
 import net.myconfig.service.validation.VersionValidation;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +136,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional
 	public ApplicationSummary createApplication(String name) {
-		validate(ApplicationValidation.class, "name", name);
+		validate(ApplicationValidation.class, NAME, name);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		try {
 			getNamedParameterJdbcTemplate().update(
@@ -159,7 +160,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional
 	public Ack createVersion(int id, String name) {
-		validate(VersionValidation.class, "name", name);
+		validate(VersionValidation.class, NAME, name);
 		checkApplication(id);
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_CREATE,
@@ -208,6 +209,8 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional
 	public Ack createKey(int id, String name, String description) {
+		validate(KeyValidation.class, NAME, name);
+		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(id);
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.KEY_CREATE,
