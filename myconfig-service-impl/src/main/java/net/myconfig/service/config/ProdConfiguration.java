@@ -10,9 +10,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
 import net.myconfig.core.MyConfigProfiles;
 import net.myconfig.service.api.ConfigurationService;
 
+import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -28,11 +31,11 @@ public class ProdConfiguration extends CommonConfiguration {
 	private static final Logger log = LoggerFactory
 			.getLogger(ProdConfiguration.class);
 	
-	private File home;
+	private final File home;
+	private final String logPath;
+	private final Properties properties;
 	
-	@Override
-	@Bean
-	public ConfigurationService configurationService() throws Exception {
+	public ProdConfiguration() throws IOException {
 		// Gets the home directory
 		home = HomeSupport.home();
 		// Checks for the home
@@ -42,20 +45,34 @@ public class ProdConfiguration extends CommonConfiguration {
 		// System configuration
 		System.setProperty(HomeSupport.SYSTEM_HOME, home.getAbsolutePath());
 		// Path to the log configuration
-		String logPath = initLoggingConfiguration (home);
+		logPath = initLoggingConfiguration (home);
 		// Gets the configuration
-		Properties properties = initConfiguration (home);
+		properties = initConfiguration (home);
+	}
+	
+	@Override
+	@Bean
+	public ConfigurationService configurationService() throws Exception {
 		// OK
 		return new DefaultConfigurationService (
 				MyConfigProfiles.PROD,
-				logPath,
-				getProperty (properties, "db.driver"),
-				getProperty (properties, "db.url"),
-				getProperty (properties, "db.user"),
-				getProperty (properties, "db.password"),
-				getIntProperty (properties, "db.pool.initial"),
-				getIntProperty (properties, "db.pool.max")
-				);
+				logPath);
+	}
+
+	@Override
+	@Bean
+	public DataSource dataSource() {
+		String dbURL = getProperty (properties, "db.url");
+		log.info("Using database at {}", dbURL);
+		BasicDataSource ds = new BasicDataSource();
+		ds.setDriverClassName(getProperty (properties, "db.driver"));
+		ds.setUrl(dbURL);
+		ds.setUsername(getProperty (properties, "db.user"));
+		ds.setPassword(getProperty (properties, "db.password"));
+		ds.setDefaultAutoCommit(false);
+		ds.setInitialSize(getIntProperty (properties, "db.pool.initial"));
+		ds.setMaxActive(getIntProperty (properties, "db.pool.max"));
+		return ds;
 	}
 
 	private int getIntProperty(Properties properties, String name) {
