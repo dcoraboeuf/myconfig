@@ -44,6 +44,7 @@ import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
+import net.myconfig.service.validation.EnvironmentValidation;
 import net.myconfig.service.validation.KeyValidation;
 import net.myconfig.service.validation.VersionValidation;
 
@@ -188,6 +189,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional
 	public Ack createEnvironment(int id, String name) {
+		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_CREATE,

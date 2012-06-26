@@ -327,6 +327,42 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		// Checks the table
 		assertRecordExists ("select * from environment where application = 1 and name = 'TEST'");
 	}
+
+	@Test
+	public void environment_create_null () {
+		try {
+			myConfigService.createEnvironment(1, null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-005] Environment name is invalid: may not be null",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
+
+	@Test
+	public void environment_create_blank () {
+		try {
+			myConfigService.createEnvironment(1, "");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-005] Environment name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
+
+	@Test
+	public void environment_create_too_long () {
+		try {
+			myConfigService.createEnvironment(1, StringUtils.repeat("x", 81));
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-005] Environment name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}	
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void environment_create_noapp () {
