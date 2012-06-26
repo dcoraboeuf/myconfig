@@ -43,6 +43,8 @@ import net.myconfig.service.model.KeyVersionConfiguration;
 import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
+import net.myconfig.service.validation.ApplicationValidation;
+import net.myconfig.service.validation.VersionValidation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
