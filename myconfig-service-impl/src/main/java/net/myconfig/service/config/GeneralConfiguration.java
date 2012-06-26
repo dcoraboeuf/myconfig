@@ -9,7 +9,7 @@ public interface GeneralConfiguration {
 	
 	ConfigurationService configurationService() throws Exception;
 	
-	DataSource dataSource();
+	DataSource dataSource() throws Exception;
 	
 	Validator validator();
 

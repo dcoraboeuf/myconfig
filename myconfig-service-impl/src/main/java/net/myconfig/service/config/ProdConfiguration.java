@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import net.myconfig.core.MyConfigProfiles;
@@ -27,6 +29,12 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile(MyConfigProfiles.PROD)
 public class ProdConfiguration extends CommonConfiguration {
+	
+	private static final String DB_MODE = "db.mode";
+
+	private static enum Mode {
+		dbcp, jndi;
+	}
 
 	private static final Logger log = LoggerFactory
 			.getLogger(ProdConfiguration.class);
@@ -61,18 +69,37 @@ public class ProdConfiguration extends CommonConfiguration {
 
 	@Override
 	@Bean
-	public DataSource dataSource() {
-		String dbURL = getProperty (properties, "db.url");
-		log.info("Using database at {}", dbURL);
-		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName(getProperty (properties, "db.driver"));
-		ds.setUrl(dbURL);
-		ds.setUsername(getProperty (properties, "db.user"));
-		ds.setPassword(getProperty (properties, "db.password"));
-		ds.setDefaultAutoCommit(false);
-		ds.setInitialSize(getIntProperty (properties, "db.pool.initial"));
-		ds.setMaxActive(getIntProperty (properties, "db.pool.max"));
-		return ds;
+	public DataSource dataSource() throws Exception {
+		// Data source mode
+		Mode mode = getEnumProperty(Mode.class, properties, DB_MODE);
+		log.info("[db] Mode = {}", mode);
+		// DBCP mode
+		if (mode == Mode.dbcp) {
+			String dbURL = getProperty (properties, "db.url");
+			log.info("[db] Using database at URL {}", dbURL);
+			BasicDataSource ds = new BasicDataSource();
+			ds.setDriverClassName(getProperty (properties, "db.driver"));
+			ds.setUrl(dbURL);
+			ds.setUsername(getProperty (properties, "db.user"));
+			ds.setPassword(getProperty (properties, "db.password"));
+			ds.setDefaultAutoCommit(false);
+			ds.setInitialSize(getIntProperty (properties, "db.pool.initial"));
+			ds.setMaxActive(getIntProperty (properties, "db.pool.max"));
+			return ds;
+		}
+		// JNDI mode
+		else if (mode == Mode.jndi) {
+			String dbJndi = getProperty(properties, "db.jndi");
+			log.info("[db] Using database at JNDI {}", dbJndi);
+			// Creates the JNDI naming context
+			Context ctx = new InitialContext();
+			// Look-up
+			return (DataSource) ctx.lookup(dbJndi);
+		}
+		// Unknown?
+		else {
+			throw new IllegalStateException(String.format("The database connection mode [%s] is not managed.", mode));
+		}
 	}
 
 	private int getIntProperty(Properties properties, String name) {
@@ -82,6 +109,11 @@ public class ProdConfiguration extends CommonConfiguration {
 		} catch (NumberFormatException ex) {
 			throw new IllegalStateException(String.format("Cannot get integer value from configuration property: %s = %s", name, value));
 		}
+	}
+
+	private <E extends Enum<E>> E getEnumProperty(Class<E> enumClass, Properties properties, String name) {
+		String value = getProperty(properties, name);
+		return Enum.valueOf(enumClass, value);
 	}
 
 	private String getProperty(Properties properties, String name) {

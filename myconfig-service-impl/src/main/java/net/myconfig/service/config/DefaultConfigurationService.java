@@ -29,12 +29,12 @@ public class DefaultConfigurationService implements ConfigurationService {
 	}
 
 	protected void initLogging() throws FileNotFoundException {
-		logger.info("Initializing logging from '{}'", loggingPath);
+		logger.info("[config] Initializing logging from '{}'", loggingPath);
 		Log4jConfigurer.initLogging(loggingPath);
 	}
 
 	protected void initGeneral() {
-		logger.info("Using {} profile", profile);
+		logger.info("[config] Using {} profile", profile);
 	}
 
 }

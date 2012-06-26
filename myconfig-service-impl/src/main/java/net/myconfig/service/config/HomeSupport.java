@@ -21,17 +21,17 @@ public abstract class HomeSupport {
 		String sysHome = System.getProperty(SYSTEM_HOME);
 		String envHome = System.getenv(ENV_HOME);
 		if (StringUtils.isNotBlank(sysHome)) {
-			log.info("Getting home directory from system property");
+			log.info("[home] Getting home directory from system property");
 			home = new File(sysHome).getAbsoluteFile();
 		} else if (StringUtils.isNotBlank(envHome)) {
-			log.info("Getting home directory from environment variable");
+			log.info("[home] Getting home directory from environment variable");
 			home = new File(envHome).getAbsoluteFile();
 		} else {
-			log.info("Getting home directory from user home");
+			log.info("[home] Getting home directory from user home");
 			home = new File(System.getProperty("user.home"), HOME_DIRECTORY)
 					.getAbsoluteFile();
 		}
-		log.info("Home at {}", home);
+		log.info("[home] Home at {}", home);
 		return home;
 	}
 	
