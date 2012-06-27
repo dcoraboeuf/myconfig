@@ -28,7 +28,7 @@ public interface SQL {
 	
 	String VERSIONS = "select * from version where application = :application order by name";
 	
-	String VERSION_SUMMARIES = "select v.name, count (vk.appkey) as keyNumber " +
+	String VERSION_SUMMARIES = "select v.name, COUNT(vk.appkey) as keyNumber " +
 			"from version v " +
 			"left join version_key vk " +
 			"on vk.application = v.application " + 
@@ -52,7 +52,7 @@ public interface SQL {
 
 	String KEYS = "select * from appkey where application = :application order by name";
 
-	String KEY_SUMMARIES = "select k.name, k.description, count (vk.version) as versionNumber " +
+	String KEY_SUMMARIES = "select k.name, k.description, COUNT(vk.version) as versionNumber " +
 			"from appkey k " +
 			"left join version_key vk " +
 			"on vk.application = k.application " + 
