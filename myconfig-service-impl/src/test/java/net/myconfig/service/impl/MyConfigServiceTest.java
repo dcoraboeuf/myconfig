@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -639,6 +640,37 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 									map (
 											"jdbc.password", "1.1 jdbc.password UAT",
 											"jdbc.user", "1.1 jdbc.user UAT"))
+							)
+					),
+				configuration);
+	}
+	
+	/**
+	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
+	 * has been added yet.
+	 */
+	@Test
+	public void configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(2, "1.0.1");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new VersionConfiguration(2, "anotherapp", "1.0.1", "1.0.0", null,
+					Arrays.asList(
+							new Key("key1", "Key 1"),
+							new Key("key2", "Key 2")),
+					Arrays.asList(
+							new EnvironmentConfiguration(
+									"ACC",
+									Collections.<String,String>emptyMap()),
+							new EnvironmentConfiguration(
+									"DEV",
+									Collections.<String,String>emptyMap()),
+							new EnvironmentConfiguration(
+									"PROD",
+									Collections.<String,String>emptyMap()),
+							new EnvironmentConfiguration(
+									"UAT",
+									Collections.<String,String>emptyMap())
 							)
 					),
 				configuration);

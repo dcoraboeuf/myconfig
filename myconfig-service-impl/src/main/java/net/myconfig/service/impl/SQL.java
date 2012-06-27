@@ -41,6 +41,11 @@ public interface SQL {
 
 	String VERSION_DELETE = "delete from version where application = :id and name = :name";
 	
+	String ENVIRONMENTS = "select e.name " +
+			"from environment e " + 
+			"where e.application = :application " +
+			"order by e.name";
+	
 	String ENVIRONMENT_SUMMARIES = "select e.name " +
 			"from environment e " + 
 			"where e.application = :id " +

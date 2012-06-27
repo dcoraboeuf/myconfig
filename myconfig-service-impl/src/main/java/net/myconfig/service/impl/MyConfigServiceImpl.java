@@ -13,9 +13,9 @@ import static net.myconfig.service.impl.SQLColumns.VERSION;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.sql.DataSource;
@@ -39,6 +39,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.service.model.Environment;
 import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
@@ -67,8 +68,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 @Service
 public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigService {
@@ -287,6 +287,13 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource("application", application);
 		MapSqlParameterSource versionCriteria = applicationCriteria.addValue(VERSION, version);
 		String name = getApplicationName(application);
+		// List of environments
+		List<Environment> environments = getNamedParameterJdbcTemplate().query(SQL.ENVIRONMENTS, applicationCriteria, new RowMapper<Environment>() {
+			@Override
+			public Environment mapRow(ResultSet rs, int i) throws SQLException {
+				return new Environment(rs.getString(NAME));
+			}
+		});
 		// List of keys for the version
 		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_VERSION, versionCriteria, new RowMapper<Key>() {
 			@Override
@@ -296,7 +303,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		});
 		// Gets the list of values per version x application
 		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_VERSION, applicationCriteria);
-		Map<String,Map<String,String>> environmentValues = new TreeMap<String, Map<String,String>>();
+		final Map<String,Map<String,String>> environmentValues = new TreeMap<String, Map<String,String>>();
 		for (Map<String, Object> values : valuesMaps) {
 			String environment = (String) values.get(ENVIRONMENT);
 			String key = (String) values.get(KEY);
@@ -309,14 +316,18 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			environmentConfiguration.put(key, value);
 		}
 		// List of values per environment x key x version
-		List<EnvironmentConfiguration> environmentConfigurationList = ImmutableList.copyOf(
-				Iterables.transform(environmentValues.entrySet(), new Function<Map.Entry<String,Map<String,String>>, EnvironmentConfiguration>() {
-					@Override
-					public EnvironmentConfiguration apply(Entry<String, Map<String, String>> entry) {
-						return new EnvironmentConfiguration(entry.getKey(), entry.getValue());
-					}
-				})
-			);
+		List<EnvironmentConfiguration> environmentConfigurationList = Lists.transform(environments, new Function<Environment, EnvironmentConfiguration>() {
+
+			@Override
+			public EnvironmentConfiguration apply(Environment environment) {
+				String name = environment.getName();
+				Map<String, String> values = environmentValues.get(name);
+				if (values == null) {
+					values = Collections.emptyMap();
+				}
+				return new EnvironmentConfiguration(name, values);
+			}
+		});
 		// Previous & next version
 		String previousVersion = getFirstItem(SQL.VERSION_PREVIOUS, versionCriteria, String.class);
 		String nextVersion = getFirstItem(SQL.VERSION_NEXT, versionCriteria, String.class);

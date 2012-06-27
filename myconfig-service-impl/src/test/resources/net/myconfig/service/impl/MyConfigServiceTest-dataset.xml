@@ -22,6 +22,9 @@
 	<APPKEY application="1" name="jdbc.password" description="Password used to connect to the database" />
 	<APPKEY application="1" name="jdbc.url" description="URL used to connect to the database" />
 	
+	<APPKEY application="2" name="key1" description="Key 1" />
+	<APPKEY application="2" name="key2" description="Key 2" />
+	
 	<VERSION_KEY application="1" version="1.0" appkey="jdbc.user" />
 	<VERSION_KEY application="1" version="1.0" appkey="jdbc.password" />
 	<VERSION_KEY application="1" version="1.1" appkey="jdbc.user" />
@@ -29,6 +32,10 @@
 	<VERSION_KEY application="1" version="1.2" appkey="jdbc.user" />
 	<VERSION_KEY application="1" version="1.2" appkey="jdbc.password" />
 	<VERSION_KEY application="1" version="1.2" appkey="jdbc.url" />
+	
+	<VERSION_KEY application="2" version="1.0.0" appkey="key1" />
+	<VERSION_KEY application="2" version="1.0.1" appkey="key1" />
+	<VERSION_KEY application="2" version="1.0.1" appkey="key2" />
 	
 	<CONFIG application="1" version="1.0" appkey="jdbc.user" environment="DEV" value="1.0 jdbc.user DEV" />
 	<CONFIG application="1" version="1.0" appkey="jdbc.user" environment="ACC" value="1.0 jdbc.user ACC" />
