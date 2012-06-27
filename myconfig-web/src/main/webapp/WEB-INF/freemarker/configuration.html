@@ -1,10 +1,8 @@
 <#include "/lib/layout.html">
 
-<#macro configuration_version value class>
-	<#if value??>
-		<a class="version ${class}">${value?html}</a>
-	<#else>
-		<span class="version ${class} na">${value?html}</span>
+<#macro configuration_version class="" value="">
+	<#if value != "">
+		<a href="gui/configuration/${configuration.id}/${value}" class="version ${class}">${value?html}</a>
 	</#if>
 </#macro>
 
@@ -53,4 +51,7 @@
 			</tbody>
 		</table>
 	</article>
+	<@layout_std_nav href="gui/" key="applications" />
+	<@layout_std_nav href="gui/application/${configuration.id}" key="configuration" />
+	<@layout_std_nav href="gui/matrix/${configuration.id}" key="matrix" />
 </@layout_std>
