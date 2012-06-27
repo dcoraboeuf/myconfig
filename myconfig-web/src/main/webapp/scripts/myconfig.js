@@ -71,6 +71,15 @@ var myconfig = function () {
 			var value = $(selector).val();
 			var trimmedValue = value.trim();
 			return validate (selector, trimmedValue == value);
+		},
+		updateConfigurationValue: function (input) {
+			var value = input.value;
+			var oldvalue = input.getAttribute('oldvalue');
+			if (value != oldvalue) {
+				$(input).addClass('changed');
+			} else {
+				$(input).removeClass('changed');
+			}
 		}
 	};
 	

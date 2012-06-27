@@ -7,10 +7,23 @@
 </#macro>
 
 <#macro configuration_value value key environment version>
-	${value?html}
+	<input
+		class="value"
+		id="value_${key.name?html}_${environment?html}_${version?html}"
+		name="value_${key.name?html}_${environment?html}_${version?html}"
+		oldvalue="${value?html}"
+		value="${value?html}"
+		maxlength="500"
+		size="30"
+		application="${configuration.id}"
+		key="${key.name?html}"
+		environment="${environment?html}"
+		version="${version?html}"
+		onchange="myconfig.updateConfigurationValue(this)"
+		/>
 </#macro>
 
-<@layout_std pageId="configuration" style=false modules=[]>
+<@layout_std pageId="configuration" style=true modules=[]>
 	<article class="configuration">
 		<table>
 			<thead>
