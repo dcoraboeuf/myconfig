@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 
 import net.myconfig.service.model.Key;
-import net.myconfig.service.model.KeyVersionConfiguration;
-import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.MatrixConfiguration;
+import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.web.rest.UIInterface;
 
 import org.junit.Before;
@@ -34,9 +34,9 @@ public class GUIMatrixPageTest {
 	
 	@Test
 	public void page() {
-		KeyVersionConfiguration configuration = new KeyVersionConfiguration(
+		MatrixConfiguration configuration = new MatrixConfiguration(
 				10, "myapp",
-				Collections.<VersionConfiguration>emptyList(),
+				Collections.<MatrixVersionConfiguration>emptyList(),
 				Collections.<Key>emptyList());
 		when(ui.keyVersionConfiguration(10)).thenReturn(
 				configuration);

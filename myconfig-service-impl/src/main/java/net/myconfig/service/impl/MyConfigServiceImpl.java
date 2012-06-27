@@ -39,9 +39,9 @@ import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
-import net.myconfig.service.model.KeyVersionConfiguration;
+import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.Version;
-import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
@@ -233,7 +233,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
-	public KeyVersionConfiguration keyVersionConfiguration(int id) {
+	public MatrixConfiguration keyVersionConfiguration(int id) {
 		checkApplication(id);
 		// Criteria
 		MapSqlParameterSource idCriteria = new MapSqlParameterSource("application", id);
@@ -253,7 +253,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			}
 		});
 		// Configuration list for versions
-		List<VersionConfiguration> versionConfigurationList = new ArrayList<VersionConfiguration>();
+		List<MatrixVersionConfiguration> versionConfigurationList = new ArrayList<MatrixVersionConfiguration>();
 		for (Version version : versionList) {
 			// Gets the list of keys for this version
 			List<String> keys = getNamedParameterJdbcTemplate().queryForList(
@@ -261,12 +261,12 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 					idCriteria.addValue(VERSION, version.getName()),
 					String.class);
 			// Version configuration
-			VersionConfiguration versionConfiguration = new VersionConfiguration(version.getName(), keys);
+			MatrixVersionConfiguration versionConfiguration = new MatrixVersionConfiguration(version.getName(), keys);
 			// Adds to the list
 			versionConfigurationList.add(versionConfiguration);
 		}
 		// OK
-		return new KeyVersionConfiguration(id, name, versionConfigurationList, keyList);
+		return new MatrixConfiguration(id, name, versionConfigurationList, keyList);
 	}
 	
 	@Override

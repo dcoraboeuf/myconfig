@@ -33,8 +33,8 @@ import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
-import net.myconfig.service.model.KeyVersionConfiguration;
-import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.MatrixConfiguration;
+import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
 import net.sf.jstring.Strings;
@@ -578,18 +578,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void version_configuration () throws JsonGenerationException, JsonMappingException, IOException {
-		KeyVersionConfiguration configuration = myConfigService.keyVersionConfiguration(1);
+		MatrixConfiguration configuration = myConfigService.keyVersionConfiguration(1);
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new KeyVersionConfiguration(1, "myapp",
+				new MatrixConfiguration(1, "myapp",
 					Arrays.asList(
-							new VersionConfiguration(
+							new MatrixVersionConfiguration(
 									"1.0",
 									Arrays.asList("jdbc.password", "jdbc.user")),
-							new VersionConfiguration(
+							new MatrixVersionConfiguration(
 									"1.1",
 									Arrays.asList("jdbc.password", "jdbc.user")),
-							new VersionConfiguration(
+							new MatrixVersionConfiguration(
 									"1.2",
 									Arrays.asList("jdbc.password", "jdbc.url", "jdbc.user"))),
 					Arrays.asList(

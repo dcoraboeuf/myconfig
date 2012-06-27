@@ -1,6 +1,6 @@
 package net.myconfig.web.gui;
 
-import net.myconfig.service.model.KeyVersionConfiguration;
+import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 
@@ -24,7 +24,7 @@ public class GUIMatrixPage extends AbstractGUIApplicationPage {
 	@RequestMapping(value = "/{application:\\d+}", method = RequestMethod.GET)
 	public String page(@PathVariable int application, Model model) {
 		// Loads the key x version
-		KeyVersionConfiguration configuration = ui.keyVersionConfiguration (application);
+		MatrixConfiguration configuration = ui.keyVersionConfiguration (application);
 		model.addAttribute("configuration", configuration);
 		// OK
 		return "matrix";

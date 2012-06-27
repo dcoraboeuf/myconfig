@@ -5,12 +5,12 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
-public class VersionConfiguration {
+public class MatrixVersionConfiguration {
 
 	private final String name;
 	private final Set<String> keys;
 
-	public VersionConfiguration(String name, Collection<String> keys) {
+	public MatrixVersionConfiguration(String name, Collection<String> keys) {
 		this.name = name;
 		this.keys = ImmutableSet.copyOf(keys);
 	}

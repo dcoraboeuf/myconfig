@@ -5,7 +5,7 @@ import java.util.List;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.KeyVersionConfiguration;
+import net.myconfig.service.model.MatrixConfiguration;
 
 public interface UIInterface {
 
@@ -29,7 +29,7 @@ public interface UIInterface {
 
 	Ack keyCreate(int id, String name, String description);
 
-	KeyVersionConfiguration keyVersionConfiguration(int id);
+	MatrixConfiguration keyVersionConfiguration(int id);
 
 	Ack keyVersionAdd(int application, String version, String key);
 
