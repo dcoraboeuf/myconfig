@@ -1,5 +1,33 @@
 <#include "/lib/layout.html">
+
+<#macro configuration_version value class>
+	<#if value??>
+		<a class="version ${class}">${value?html}</a>
+	<#else>
+		<span class="version ${class} na">${value?html}</span>
+	</#if>
+</#macro>
+
 <@layout_std pageId="configuration" style=false modules=[]>
 	<article class="configuration">
+		<table>
+			<thead>
+				<tr class="version">
+					<th>
+						<@configuration_version value=configuration.previousVersion class="previous" />
+						<span class="version current">${configuration.version?html}</span>
+						<@configuration_version value=configuration.nextVersion class="next" />
+					</th>
+				</tr>
+				<tr>
+					<th><@lh key="model.key.name" /></th>
+					<#list configuration.environmentConfigurationList as environmentConfiguration>
+						<th>
+							${environmentConfiguration.name?html}
+						</th>
+					</#list>
+				</tr>
+			</thead>
+		</table>
 	</article>
 </@layout_std>
