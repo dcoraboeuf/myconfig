@@ -133,12 +133,12 @@ public class ProdConfiguration extends CommonConfiguration {
 		// Configuration file
 		File configFile = new File (home, "config.properties");
 		String configFilePath = configFile.getAbsolutePath();
-		log.info("Initializing configuration for file {}", configFilePath);
+		log.info("[config] Initializing configuration for file {}", configFilePath);
 		// File already there, does not touch
 		if (configFile.exists()) {
-			log.info("Configuration already initialized at {}", configFilePath);
+			log.info("[config] Configuration already initialized at {}", configFilePath);
 		} else {
-			log.info("Creating the configuration at {}", configFilePath);
+			log.info("[config] Creating the configuration at {}", configFilePath);
 			InputStream in = getClass().getResourceAsStream("/META-INF/config/config-default.properties");
 			if (in == null) {
 				throw new IllegalStateException("Cannot find the default production configuration");
@@ -170,12 +170,12 @@ public class ProdConfiguration extends CommonConfiguration {
 		// Logging configuration file
 		File logConfigFile = new File (home, "log4j.properties");
 		String logConfigFilePath = logConfigFile.getAbsolutePath();
-		log.info("Initializing logging for file {}", logConfigFilePath);
+		log.info("[logging] Initializing logging for file {}", logConfigFilePath);
 		// File already there, does not touch
 		if (logConfigFile.exists()) {
-			log.info("Logging already initialized at {}", logConfigFilePath);
+			log.info("[logging] Logging already initialized at {}", logConfigFilePath);
 		} else {
-			log.info("Creating the logging configuration at {}", logConfigFilePath);
+			log.info("[logging] Creating the logging configuration at {}", logConfigFilePath);
 			InputStream in = getClass().getResourceAsStream("/log4j_prod.properties");
 			if (in == null) {
 				throw new IllegalStateException("Cannot find the default production logging configuration");
