@@ -2,15 +2,21 @@ package net.myconfig.service.impl;
 
 public interface SQL {
 
-	String GET_KEY = "select c.value from config c, application a where a.name = :application and a.id = c.application and c.version = :version and c.environment = :environment and c.key = :key";
-	
-	String GET_ENV = "select c.key, k.description, c.value " +
-			"from config c, application a, appkey k " +
-			"where a.name = :application and a.id = c.application " +
-			"and k.application = c.application and k.name = c.key " +
+	String GET_KEY = "select c.value " +
+			"from config c, application a " +
+			"where a.name = :application " +
+			"and a.id = c.application " +
 			"and c.version = :version " +
 			"and c.environment = :environment " +
-			"order by c.key";
+			"and c.appkey = :appkey";
+	
+	String GET_ENV = "select c.appkey, k.description, c.value " +
+			"from config c, application a, appkey k " +
+			"where a.name = :application and a.id = c.application " +
+			"and k.application = c.application and k.name = c.appkey " +
+			"and c.version = :version " +
+			"and c.environment = :environment " +
+			"order by c.appkey";
 
 	String APPLICATIONS = "select a.id, a.name from application a order by a.name";
 	
@@ -22,7 +28,7 @@ public interface SQL {
 	
 	String VERSIONS = "select * from version where application = :application order by name";
 	
-	String VERSION_SUMMARIES = "select v.name, count (vk.key) as keyNumber " +
+	String VERSION_SUMMARIES = "select v.name, count (vk.appkey) as keyNumber " +
 			"from version v " +
 			"left join version_key vk " +
 			"on vk.application = v.application " + 
@@ -50,7 +56,7 @@ public interface SQL {
 			"from appkey k " +
 			"left join version_key vk " +
 			"on vk.application = k.application " + 
-			"and vk.key = k.name " + 
+			"and vk.appkey = k.name " + 
 			"where k.application = :id " +
 			"group by k.name " +
 			"order by k.name";
@@ -59,17 +65,17 @@ public interface SQL {
 
 	String KEY_DELETE = "delete from appkey where application = :id and name = :name";
 	
-	String VERSION_KEYS = "select key " +
+	String VERSION_KEYS = "select appkey " +
 			"from version_key " +
 			"where application = :application " +
 			"and version = :version " +
-			"order by key";
+			"order by appkey";
 
-	String VERSION_KEY_ADD = "insert into version_key (application, version, key) " +
-			"values (:application, :version, :key)";
+	String VERSION_KEY_ADD = "insert into version_key (application, version, appkey) " +
+			"values (:application, :version, :appkey)";
 
 	String VERSION_KEY_REMOVE = "delete from version_key " +
-			"where application = :application and version = :version and key = :key";
+			"where application = :application and version = :version and appkey = :appkey";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 

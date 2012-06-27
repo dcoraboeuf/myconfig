@@ -320,7 +320,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 					.addValue(APPLICATION, application)
 					.addValue(VERSION, version)
 					.addValue(ENVIRONMENT, environment)
-					.addValue("key", key),
+					.addValue(KEY, key),
 				String.class
 				);
 		} catch (EmptyResultDataAccessException ex) {

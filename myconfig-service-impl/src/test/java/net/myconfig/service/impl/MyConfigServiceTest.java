@@ -607,10 +607,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void version_key_add () throws DataSetException, SQLException {
-		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and key = 'jdbc.url'");
+		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and appkey = 'jdbc.url'");
 		Ack ack = myConfigService.addKeyVersion(1, "1.1", "jdbc.url");
 		assertTrue (ack.isSuccess());
-		assertRecordExists("select * from version_key where application = 1 and version = '1.1' and key = 'jdbc.url'");
+		assertRecordExists("select * from version_key where application = 1 and version = '1.1' and appkey = 'jdbc.url'");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
@@ -630,16 +630,16 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = KeyAlreadyInVersionException.class)
 	public void version_key_add_duplicate () throws DataSetException, SQLException {
-		assertRecordExists("select * from version_key where application = 1 and version = '1.2' and key = 'jdbc.url'");
+		assertRecordExists("select * from version_key where application = 1 and version = '1.2' and appkey = 'jdbc.url'");
 		myConfigService.addKeyVersion(1, "1.2", "jdbc.url");
 	}
 	
 	@Test
 	public void version_key_remove () throws DataSetException, SQLException {
-		assertRecordExists("select * from version_key where application = 1 and version = '1.0' and key = 'jdbc.password'");
+		assertRecordExists("select * from version_key where application = 1 and version = '1.0' and appkey = 'jdbc.password'");
 		Ack ack = myConfigService.removeKeyVersion(1, "1.0", "jdbc.password");
 		assertTrue (ack.isSuccess());
-		assertRecordNotExists("select * from version_key where application = 1 and version = '1.0' and key = 'jdbc.password'");
+		assertRecordNotExists("select * from version_key where application = 1 and version = '1.0' and appkey = 'jdbc.password'");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
@@ -659,7 +659,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void version_key_remove_none () throws DataSetException, SQLException {
-		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and key = 'jdbc.url'");
+		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and appkey = 'jdbc.url'");
 		Ack ack = myConfigService.removeKeyVersion(1, "1.1", "jdbc.url");
 		assertFalse (ack.isSuccess());
 	}
