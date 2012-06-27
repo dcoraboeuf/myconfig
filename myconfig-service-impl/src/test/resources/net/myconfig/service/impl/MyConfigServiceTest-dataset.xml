@@ -18,9 +18,9 @@
 	<ENVIRONMENT application="2" name="UAT" />
 	<ENVIRONMENT application="2" name="PROD" />
 	
-	<KEY application="1" name="jdbc.user" description="User used to connect to the database" />
-	<KEY application="1" name="jdbc.password" description="Password used to connect to the database" />
-	<KEY application="1" name="jdbc.url" description="URL used to connect to the database" />
+	<APPKEY application="1" name="jdbc.user" description="User used to connect to the database" />
+	<APPKEY application="1" name="jdbc.password" description="Password used to connect to the database" />
+	<APPKEY application="1" name="jdbc.url" description="URL used to connect to the database" />
 	
 	<VERSION_KEY application="1" version="1.0" key="jdbc.user" />
 	<VERSION_KEY application="1" version="1.0" key="jdbc.password" />

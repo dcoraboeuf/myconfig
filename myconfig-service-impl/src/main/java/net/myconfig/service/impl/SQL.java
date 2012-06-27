@@ -5,7 +5,7 @@ public interface SQL {
 	String GET_KEY = "select c.value from config c, application a where a.name = :application and a.id = c.application and c.version = :version and c.environment = :environment and c.key = :key";
 	
 	String GET_ENV = "select c.key, k.description, c.value " +
-			"from config c, application a, key k " +
+			"from config c, application a, appkey k " +
 			"where a.name = :application and a.id = c.application " +
 			"and k.application = c.application and k.name = c.key " +
 			"and c.version = :version " +
@@ -44,10 +44,10 @@ public interface SQL {
 
 	String ENVIRONMENT_DELETE = "delete from environment where application = :id and name = :name";
 
-	String KEYS = "select * from key where application = :application order by name";
+	String KEYS = "select * from appkey where application = :application order by name";
 
 	String KEY_SUMMARIES = "select k.name, k.description, count (vk.version) as versionNumber " +
-			"from key k " +
+			"from appkey k " +
 			"left join version_key vk " +
 			"on vk.application = k.application " + 
 			"and vk.key = k.name " + 
@@ -55,9 +55,9 @@ public interface SQL {
 			"group by k.name " +
 			"order by k.name";
 
-	String KEY_CREATE = "insert into key (application, name, description) values (:id, :name, :description)";
+	String KEY_CREATE = "insert into appkey (application, name, description) values (:id, :name, :description)";
 
-	String KEY_DELETE = "delete from key where application = :id and name = :name";
+	String KEY_DELETE = "delete from appkey where application = :id and name = :name";
 	
 	String VERSION_KEYS = "select key " +
 			"from version_key " +
@@ -85,7 +85,7 @@ public interface SQL {
 			"and a.name = :application";
 
 	String KEY_EXISTS_BY_ID = "select name " +
-			"from key " +
+			"from appkey " +
 			"where name = :name " +
 			"and application = :application";
 

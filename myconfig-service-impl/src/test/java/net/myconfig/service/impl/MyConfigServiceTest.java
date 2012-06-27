@@ -471,7 +471,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		Ack ack = myConfigService.createKey(1, "key1", "Description for key 1");
 		assertTrue (ack.isSuccess());
 		// Checks the table
-		assertRecordExists("select * from key where application = 1 and name = 'key1' and description = 'Description for key 1'");
+		assertRecordExists("select * from appkey where application = 1 and name = 'key1' and description = 'Description for key 1'");
 	}
 	
 	@Test
@@ -559,10 +559,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_delete () throws DataSetException, SQLException {
 		myConfigService.createKey(1, "key3", "Description for key 3");
-		assertRecordExists("select * from key where application = 1 and name = 'key3' and description = 'Description for key 3'");
+		assertRecordExists("select * from appkey where application = 1 and name = 'key3' and description = 'Description for key 3'");
 		Ack ack = myConfigService.deleteKey(1, "key3");
 		assertTrue (ack.isSuccess());
-		assertRecordNotExists("select * from key where application = 1 and name = 'key3' and description = 'Description for key 3'");
+		assertRecordNotExists("select * from appkey where application = 1 and name = 'key3' and description = 'Description for key 3'");
 	}
 	
 	@Test
