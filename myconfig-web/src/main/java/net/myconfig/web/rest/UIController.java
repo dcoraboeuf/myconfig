@@ -15,6 +15,7 @@ import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.MatrixConfiguration;
+import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
@@ -47,8 +48,14 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/application/{id}", method = RequestMethod.GET)
-	public ApplicationConfiguration applicationConfiguration(int id) {
+	public ApplicationConfiguration applicationConfiguration(@PathVariable int id) {
 		return getMyConfigService().getApplicationConfiguration (id);
+	}
+	
+	@Override
+	@RequestMapping(value = "/configuration/{id}/{version}", method = RequestMethod.GET)
+	public VersionConfiguration versionConfiguration(@PathVariable int application, @PathVariable  String version) {
+		return getMyConfigService().getVersionConfiguration (application, version);
 	}
 	
 	@Override
@@ -89,7 +96,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/application/{id}/key_version", method = RequestMethod.DELETE)
-	public MatrixConfiguration keyVersionConfiguration(int id) {
+	public MatrixConfiguration keyVersionConfiguration(@PathVariable int id) {
 		return getMyConfigService().keyVersionConfiguration(id);
 	}
 

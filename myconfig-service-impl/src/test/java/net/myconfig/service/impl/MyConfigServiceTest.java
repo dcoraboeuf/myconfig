@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
@@ -30,11 +32,13 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
+import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
 import net.sf.jstring.Strings;
@@ -241,7 +245,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 		
 	@Test
-	public void configuration () {
+	public void application_configuration () {
 		ApplicationConfiguration app = myConfigService.getApplicationConfiguration(1);
 		assertNotNull (app);
 		assertEquals (1, app.getId());
@@ -577,7 +581,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	public void version_configuration () throws JsonGenerationException, JsonMappingException, IOException {
+	public void matrix () throws JsonGenerationException, JsonMappingException, IOException {
 		MatrixConfiguration configuration = myConfigService.keyVersionConfiguration(1);
 		assertNotNull (configuration);
 		assertJSONEquals (
@@ -601,8 +605,144 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
-	public void version_configuration_no_app () {
+	public void matrix_no_app () {
 		myConfigService.keyVersionConfiguration(-1);
+	}
+	
+	@Test
+	public void configuration() throws JsonGenerationException, JsonMappingException, IOException {
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.1");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new VersionConfiguration(1, "myapp", "1.1", "1.0", "1.2",
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.user", "User used to connect to the database")),
+					Arrays.asList(
+							new EnvironmentConfiguration(
+									"ACC",
+									map (
+											"jdbc.password", "1.1 jdbc.password ACC",
+											"jdbc.user", "1.1 jdbc.user ACC")),
+							new EnvironmentConfiguration(
+									"DEV",
+									map (
+											"jdbc.password", "1.1 jdbc.password DEV",
+											"jdbc.user", "1.1 jdbc.user DEV")),
+							new EnvironmentConfiguration(
+									"PROD",
+									map (
+											"jdbc.password", "1.1 jdbc.password PROD",
+											"jdbc.user", "1.1 jdbc.user PROD")),
+							new EnvironmentConfiguration(
+									"UAT",
+									map (
+											"jdbc.password", "1.1 jdbc.password UAT",
+											"jdbc.user", "1.1 jdbc.user UAT"))
+							)
+					),
+				configuration);
+	}
+	
+	@Test
+	public void configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.2");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new VersionConfiguration(1, "myapp", "1.2", "1.1", null,
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.url", "URL used to connect to the database"),
+							new Key("jdbc.user", "User used to connect to the database")),
+					Arrays.asList(
+							new EnvironmentConfiguration(
+									"ACC",
+									map (
+											"jdbc.password", "1.2 jdbc.password ACC",
+											"jdbc.url", "1.2 jdbc.url ACC",
+											"jdbc.user", "1.2 jdbc.user ACC")),
+							new EnvironmentConfiguration(
+									"DEV",
+									map (
+											"jdbc.password", "1.2 jdbc.password DEV",
+											"jdbc.url", "1.2 jdbc.url DEV",
+											"jdbc.user", "1.2 jdbc.user DEV")),
+							new EnvironmentConfiguration(
+									"PROD",
+									map (
+											"jdbc.password", "1.2 jdbc.password PROD",
+											"jdbc.url", "1.2 jdbc.url PROD",
+											"jdbc.user", "1.2 jdbc.user PROD")),
+							new EnvironmentConfiguration(
+									"UAT",
+									map (
+											"jdbc.password", "1.2 jdbc.password UAT",
+											"jdbc.url", "1.2 jdbc.url UAT",
+											"jdbc.user", "1.2 jdbc.user UAT"))
+							)
+					),
+				configuration);
+	}
+	
+	@Test
+	public void configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.0");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new VersionConfiguration(1, "myapp", "1.0", null, "1.1",
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.user", "User used to connect to the database")),
+					Arrays.asList(
+							new EnvironmentConfiguration(
+									"ACC",
+									map (
+											"jdbc.password", "1.0 jdbc.password ACC",
+											"jdbc.user", "1.0 jdbc.user ACC")),
+							new EnvironmentConfiguration(
+									"DEV",
+									map (
+											"jdbc.password", "1.0 jdbc.password DEV",
+											"jdbc.user", "1.0 jdbc.user DEV")),
+							new EnvironmentConfiguration(
+									"PROD",
+									map (
+											"jdbc.password", "1.0 jdbc.password PROD",
+											"jdbc.user", "1.0 jdbc.user PROD")),
+							new EnvironmentConfiguration(
+									"UAT",
+									map (
+											"jdbc.password", "1.0 jdbc.password UAT",
+											"jdbc.user", "1.0 jdbc.user UAT"))
+							)
+					),
+				configuration);
+	}
+	
+	protected Map<String, String> map(String... args) {
+		Map<String, String> map = new TreeMap<String, String>();
+		String key = null;
+		String value = null;
+		for (int i = 0; i < args.length; i++) {
+			String arg = args[i];
+			if (i % 2 == 0) {
+				key = arg;
+			} else {
+				value = arg;
+				map.put(key, value);
+			}
+		}
+		return map;
+	}
+
+	@Test(expected = ApplicationNotFoundException.class)
+	public void configuration_no_app() {
+		myConfigService.getVersionConfiguration(0, "");
+	}
+	
+	@Test(expected = VersionNotDefinedException.class)
+	public void configuration_no_version() {
+		myConfigService.getVersionConfiguration(1, "1.x");
 	}
 	
 	@Test

@@ -7,6 +7,7 @@ import static net.myconfig.service.impl.SQLColumns.ID;
 import static net.myconfig.service.impl.SQLColumns.KEY;
 import static net.myconfig.service.impl.SQLColumns.KEY_NUMBER;
 import static net.myconfig.service.impl.SQLColumns.NAME;
+import static net.myconfig.service.impl.SQLColumns.VALUE;
 import static net.myconfig.service.impl.SQLColumns.VERSION;
 
 import java.sql.ResultSet;
@@ -14,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
@@ -36,12 +39,14 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.Version;
 import net.myconfig.service.model.MatrixVersionConfiguration;
+import net.myconfig.service.model.Version;
+import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
@@ -60,6 +65,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 @Service
 public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigService {
@@ -267,6 +276,52 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		}
 		// OK
 		return new MatrixConfiguration(id, name, versionConfigurationList, keyList);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public VersionConfiguration getVersionConfiguration(int application, String version) {
+		checkApplication(application);
+		checkVersion(application, version);
+		// Application name
+		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource("application", application);
+		MapSqlParameterSource versionCriteria = applicationCriteria.addValue(VERSION, version);
+		String name = getApplicationName(application);
+		// List of keys for the version
+		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_VERSION, versionCriteria, new RowMapper<Key>() {
+			@Override
+			public Key mapRow(ResultSet rs, int i) throws SQLException {
+				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
+			}
+		});
+		// Gets the list of values per version x application
+		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_VERSION, applicationCriteria);
+		Map<String,Map<String,String>> environmentValues = new TreeMap<String, Map<String,String>>();
+		for (Map<String, Object> values : valuesMaps) {
+			String environment = (String) values.get(ENVIRONMENT);
+			String key = (String) values.get(KEY);
+			String value = (String) values.get(VALUE);
+			Map<String, String> environmentConfiguration = environmentValues.get(environment);
+			if (environmentConfiguration == null) {
+				environmentConfiguration = new TreeMap<String, String>();
+				environmentValues.put(environment, environmentConfiguration);
+			}
+			environmentConfiguration.put(key, value);
+		}
+		// List of values per environment x key x version
+		List<EnvironmentConfiguration> environmentConfigurationList = ImmutableList.copyOf(
+				Iterables.transform(environmentValues.entrySet(), new Function<Map.Entry<String,Map<String,String>>, EnvironmentConfiguration>() {
+					@Override
+					public EnvironmentConfiguration apply(Entry<String, Map<String, String>> entry) {
+						return new EnvironmentConfiguration(entry.getKey(), entry.getValue());
+					}
+				})
+			);
+		// Previous & next version
+		String previousVersion = getFirstItem(SQL.VERSION_PREVIOUS, versionCriteria, String.class);
+		String nextVersion = getFirstItem(SQL.VERSION_NEXT, versionCriteria, String.class);
+		// OK
+		return new VersionConfiguration(application, name, version, previousVersion, nextVersion, keyList, environmentConfigurationList);
 	}
 	
 	@Override

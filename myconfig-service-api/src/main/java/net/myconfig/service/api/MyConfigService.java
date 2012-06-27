@@ -7,6 +7,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.MatrixConfiguration;
+import net.myconfig.service.model.VersionConfiguration;
 
 public interface MyConfigService {
 
@@ -41,5 +42,7 @@ public interface MyConfigService {
 	Ack addKeyVersion(int application, String version, String key);
 
 	Ack removeKeyVersion(int application, String version, String key);
+
+	VersionConfiguration getVersionConfiguration(int application, String version);
 
 }

@@ -1,5 +1,6 @@
 package net.myconfig.web.gui;
 
+import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 
@@ -23,7 +24,9 @@ public class GUIConfigurationPage extends AbstractGUIPage {
 
 	@RequestMapping(value = "/{application:\\d+}/{version:.*}", method = RequestMethod.GET)
 	public String page(@PathVariable int application, @PathVariable String version, Model model) {
-		// FIXME Loads the configuration
+		// Loads the configuration
+		VersionConfiguration configuration = ui.versionConfiguration (application, version);
+		model.addAttribute("configuration", configuration);
 		// OK
 		return "configuration";
 	}

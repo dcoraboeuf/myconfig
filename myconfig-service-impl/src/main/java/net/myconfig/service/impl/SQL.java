@@ -70,12 +70,29 @@ public interface SQL {
 			"where application = :application " +
 			"and version = :version " +
 			"order by appkey";
+	
+	String KEYS_FOR_VERSION = "select k.* " +
+			"from version_key vk, appkey k " +
+			"where vk.application = :application " +
+			"and vk.version = :version " +
+			"and k.application = vk.application " +
+			"and k.name = vk.appkey " +
+			"order by k.name";
 
 	String VERSION_KEY_ADD = "insert into version_key (application, version, appkey) " +
 			"values (:application, :version, :appkey)";
 
 	String VERSION_KEY_REMOVE = "delete from version_key " +
 			"where application = :application and version = :version and appkey = :appkey";
+	
+	String CONFIG_FOR_VERSION = "select * " +
+			"from config " +
+			"where application = :application " +
+			"and version = :version " +
+			"order by environment, appkey";
+
+	String VERSION_PREVIOUS = "select name from version where application = :application and name < :version order by name desc";
+	String VERSION_NEXT = "select name from version where application = :application and name > :version order by name asc";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 
