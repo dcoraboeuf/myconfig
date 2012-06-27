@@ -8,6 +8,10 @@
 	</#if>
 </#macro>
 
+<#macro configuration_value value key environment version>
+	${value?html}
+</#macro>
+
 <@layout_std pageId="configuration" style=false modules=[]>
 	<article class="configuration">
 		<table>
@@ -20,14 +24,33 @@
 					</th>
 				</tr>
 				<tr>
-					<th><@lh key="model.key.name" /></th>
+					<th class="key-title"><@lh key="model.key.name" /></th>
 					<#list configuration.environmentConfigurationList as environmentConfiguration>
-						<th>
+						<th class="environment">
 							${environmentConfiguration.name?html}
 						</th>
 					</#list>
 				</tr>
 			</thead>
+			<tbody>
+				<#list configuration.keyList as key>
+					<tr>
+						<td class="key">
+							${key.name?html}
+						</td>
+						<#list configuration.environmentConfigurationList as environmentConfiguration>
+							<td class="key-value">
+								<#if environmentConfiguration.values[key.name]??>
+									<#assign value = environmentConfiguration.values[key.name] />
+								<#else>
+									<#assign value = "" />
+								</#if>
+								<@configuration_value value=value key=key environment=environmentConfiguration.name version=configuration.version />
+							</td>
+						</#list>
+					</tr>
+				</#list>
+			</tbody>
 		</table>
 	</article>
 </@layout_std>
