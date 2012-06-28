@@ -1,12 +1,16 @@
 package net.myconfig.service.model;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class VersionConfigurationUpdate {
 
 	private final String environment;
 	private final String key;
 	private final String value;
 
-	public VersionConfigurationUpdate(String environment, String key, String value) {
+	@JsonCreator
+	public VersionConfigurationUpdate( @JsonProperty("environment") String environment, @JsonProperty("key") String key, @JsonProperty("value") String value) {
 		this.environment = environment;
 		this.key = key;
 		this.value = value;

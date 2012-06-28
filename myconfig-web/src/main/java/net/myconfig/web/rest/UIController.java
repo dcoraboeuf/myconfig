@@ -2,6 +2,16 @@ package net.myconfig.web.rest;
 
 import java.util.List;
 
+import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.model.Ack;
+import net.myconfig.service.model.ApplicationConfiguration;
+import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.MatrixConfiguration;
+import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.VersionConfigurationUpdates;
+import net.myconfig.web.support.ErrorHandler;
+import net.sf.jstring.Strings;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,16 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import net.myconfig.service.api.MyConfigService;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.ApplicationConfiguration;
-import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.VersionConfigurationUpdate;
-import net.myconfig.web.support.ErrorHandler;
-import net.sf.jstring.Strings;
 
 @Controller
 @RequestMapping("/ui")
@@ -62,7 +62,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/configuration/{id}/{version}", method = RequestMethod.POST)
-	public @ResponseBody Ack updateVersionConfiguration(@PathVariable int application, @PathVariable  String version, @RequestBody List<VersionConfigurationUpdate> updates) {
+	public @ResponseBody Ack updateVersionConfiguration(@PathVariable int application, @PathVariable  String version, @RequestBody VersionConfigurationUpdates updates) {
 		return getMyConfigService().updateVersionConfiguration (application, version, updates);
 	}
 	

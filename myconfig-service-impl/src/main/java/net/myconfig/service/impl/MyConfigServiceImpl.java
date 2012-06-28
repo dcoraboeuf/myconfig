@@ -49,6 +49,7 @@ import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionConfigurationUpdate;
+import net.myconfig.service.model.VersionConfigurationUpdates;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
@@ -338,7 +339,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
-	public Ack updateVersionConfiguration(int application, String version, List<VersionConfigurationUpdate> updates) {
+	public Ack updateVersionConfiguration(int application, String version, VersionConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
 		checkApplication(application);
@@ -348,7 +349,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			.addValue(APPLICATION, application)
 			.addValue(VERSION, version);
 		// Updates
-		for (VersionConfigurationUpdate update : updates) {
+		for (VersionConfigurationUpdate update : updates.getUpdates()) {
 			String environment = update.getEnvironment();
 			String key = update.getKey();
 			String value = update.getValue();

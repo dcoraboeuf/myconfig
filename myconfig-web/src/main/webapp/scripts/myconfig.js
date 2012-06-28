@@ -40,15 +40,15 @@ var myconfig = function () {
 		var application = $('#application').val();
 		var version = $('#version').val();
 		var url = 'ui/configuration/{0}/{1}'.format(application, version);
-		// Data
-		var data = [];
+		// Data		
+		var data = {updates: []};
 		for (var i in configurationChanges) {
 			var id = configurationChanges[i];
 			var input = document.getElementById(id);
 			var key = input.getAttribute('key');
 			var environment = input.getAttribute('environment');
 			var value = input.value;
-			data.push({
+			data.updates.push({
 				environment: environment,
 				key: key,
 				value: value
