@@ -54,10 +54,6 @@ var myconfig = function () {
 				html += '<td class="change-new">{0}</td>'.format(value);
 			html += '</tr>';
 		}
-		html += '<tbody>';
-		html += '<tfoot><tr><td colspan="4">';
-		html += '</td></tr></tfoot>';
-		html += '</table>';
 		// Check
 		if (count > 0) {
 			// Generates the content of the dialog
@@ -125,7 +121,6 @@ var myconfig = function () {
 				$('#configuration-changes-submit').addClass('configuration-command-disabled');
 				$('#configuration-changes-reset').addClass('configuration-command-disabled');
 			}
-			// TODO Changes the status of the reset/submit buttons
 		},
 		controlConfigurationChanges: controlConfigurationChanges
 	};
