@@ -11,6 +11,8 @@ String.prototype.format = function() {
 	});
 };
 
+var configurationChanges = {};
+
 var myconfig = function () {
 	
 	function displayError (text) {
@@ -73,12 +75,15 @@ var myconfig = function () {
 			return validate (selector, trimmedValue == value);
 		},
 		updateConfigurationValue: function (input) {
+			var id = input.getAttribute('id');
 			var value = input.value;
 			var oldvalue = input.getAttribute('oldvalue');
 			if (value != oldvalue) {
 				$(input).addClass('changed');
+				configurationChanges[id] = id;
 			} else {
 				$(input).removeClass('changed');
+				delete configurationChanges[id];
 			}
 		}
 	};
