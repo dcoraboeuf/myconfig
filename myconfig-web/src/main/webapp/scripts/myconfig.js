@@ -38,7 +38,9 @@ var myconfig = function () {
 	function controlConfigurationChanges () {
 		// HTML for the changes
 		var html = '';
+		var count = 0;
 		for (var i in configurationChanges) {
+			count++;
 			var id = configurationChanges[i];
 			var input = document.getElementById(id);
 			var key = input.getAttribute('key');
@@ -56,14 +58,17 @@ var myconfig = function () {
 		html += '<tfoot><tr><td colspan="4">';
 		html += '</td></tr></tfoot>';
 		html += '</table>';
-		// Generates the content of the dialog
-		$('#configuration-changes').empty();
-		$('#configuration-changes').append(html);
-		// Shows the dialog
-		$('#dialog-changes').dialog({
-			title: 'TODO Confirmation of changes',
-			width: '50%'
-		});
+		// Check
+		if (count > 0) {
+			// Generates the content of the dialog
+			$('#configuration-changes').empty();
+			$('#configuration-changes').append(html);
+			// Shows the dialog
+			$('#dialog-changes').dialog({
+				title: 'TODO Confirmation of changes',
+				width: '50%'
+			});
+		}
 	}
 	
 	return {
@@ -112,9 +117,13 @@ var myconfig = function () {
 			if (value != oldvalue) {
 				$(input).addClass('changed');
 				configurationChanges[id] = id;
+				$('#configuration-changes-submit').removeClass('configuration-command-disabled');
+				$('#configuration-changes-reset').removeClass('configuration-command-disabled');
 			} else {
 				$(input).removeClass('changed');
 				delete configurationChanges[id];
+				$('#configuration-changes-submit').addClass('configuration-command-disabled');
+				$('#configuration-changes-reset').addClass('configuration-command-disabled');
 			}
 			// TODO Changes the status of the reset/submit buttons
 		},
