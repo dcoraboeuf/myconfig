@@ -24,6 +24,8 @@
 </#macro>
 
 <@layout_std pageId="configuration" style=true modules=[]>
+	<input id="application" type="hidden" value="${configuration.id}" />
+	<input id="version" type="hidden" value="${configuration.version}" />
 	<article class="configuration">
 		<table>
 			<thead>

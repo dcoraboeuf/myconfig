@@ -35,6 +35,39 @@ var myconfig = function () {
 		}
 	}
 	
+	function submitConfigurationChanges () {
+		// URL
+		var application = $('#application').val();
+		var version = $('#version').val();
+		var url = 'ui/configuration/{0}/{1}'.format(application, version);
+		// Data
+		var data = [];
+		for (var i in configurationChanges) {
+			var id = configurationChanges[i];
+			var input = document.getElementById(id);
+			var key = input.getAttribute('key');
+			var environment = input.getAttribute('environment');
+			var value = input.value;
+			data.push({
+				environment: environment,
+				key: key,
+				value: value
+			});
+		}
+		// TODO Waiting mask
+		// FIXME JSON call
+		$.post (url, data, function (data) {
+			if (data.success) {
+				alert('TODO Success');
+			} else {
+				displayError ('TODO Could not update the configuration');
+			}
+		})
+		.error(function (jqXHR, textStatus, errorThrown) {
+			displayAjaxError ('TODO Could not update the configuration', jqXHR, textStatus, errorThrown);
+		});
+	}
+	
 	function controlConfigurationChanges () {
 		// HTML for the changes
 		var html = '';
@@ -122,7 +155,8 @@ var myconfig = function () {
 				$('#configuration-changes-reset').addClass('configuration-command-disabled');
 			}
 		},
-		controlConfigurationChanges: controlConfigurationChanges
+		controlConfigurationChanges: controlConfigurationChanges,
+		submitConfigurationChanges: submitConfigurationChanges
 	};
 	
 } ();
