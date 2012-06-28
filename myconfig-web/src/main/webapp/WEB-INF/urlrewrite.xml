@@ -14,8 +14,8 @@
 		<to>/scripts/$1</to>
 	</rule>
 	<rule>
-		<from>/extjs/**</from>
-		<to>/extjs/$1</to>
+		<from>/styles/**</from>
+		<to>/styles/$1</to>
 	</rule>
 	<rule>
 		<from>/less/**</from>

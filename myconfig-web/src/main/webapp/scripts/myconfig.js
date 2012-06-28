@@ -35,6 +35,38 @@ var myconfig = function () {
 		}
 	}
 	
+	function controlConfigurationChanges () {
+		// HTML for the changes
+		var html = '<table class="configuration-changes">';
+		html += '<thead><tr><th>TODO</th></tr></thead>';
+		html += '<tbody>';
+		for (var i in configurationChanges) {
+			var id = configurationChanges[i];
+			var input = document.getElementById(id);
+			var key = input.getAttribute('key');
+			var environment = input.getAttribute('environment');
+			var oldValue = input.getAttribute('oldvalue');
+			var value = input.value;
+			html += '<tr id="{0}">'.format(id);
+				html += '<td class="change-environment">{0}</td>'.format(environment);
+				html += '<td class="change-key">{0}</td>'.format(key);
+				html += '<td class="change-old">{0}</td>'.format(oldValue);
+				html += '<td class="change-new">{0}</td>'.format(value);
+			html += '</tr>';
+		}
+		html += '<tbody>';
+		html += '<tfoot><tr><td colspan="4">';
+		html += '<div class="configuration-command-submit onclick="myconfig.submitConfigurationChanges()">TODO configuration.changes.submit</div>';
+		html += '<div class="configuration-command-cancel onclick="alert(\'TODO Leaves this dialog\')">TODO general.cancel</div>';
+		html += '</td></tr></tfoot>';
+		html += '</table>';
+		// Generates the content of the dialog
+		$('#dialog-changes').empty();
+		$('#dialog-changes').append(html);
+		// Shows the dialog
+		$('#dialog-changes').dialog();
+	}
+	
 	return {
 		changeLanguage: function (lang) {
 			if (location.search.indexOf("language") > -1) {
@@ -85,7 +117,9 @@ var myconfig = function () {
 				$(input).removeClass('changed');
 				delete configurationChanges[id];
 			}
-		}
+			// TODO Changes the status of the reset/submit buttons
+		},
+		controlConfigurationChanges: controlConfigurationChanges
 	};
 	
 } ();

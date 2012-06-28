@@ -28,7 +28,7 @@
 		<table>
 			<thead>
 				<tr class="version">
-					<th>
+					<th colspan="${ configuration.environmentConfigurationList?size + 1 }">
 						<@configuration_version value=configuration.previousVersion class="previous" />
 						<span class="version current">${configuration.version?html}</span>
 						<@configuration_version value=configuration.nextVersion class="next" />
@@ -62,9 +62,18 @@
 					</tr>
 				</#list>
 			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="${ configuration.environmentConfigurationList?size + 1 }" class="configuration-commands">
+						<div id="configuration-changes-submit" class="configuration-command configuration-command-disabled" onclick="myconfig.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+						<div id="configuration-changes-reset" class="configuration-command configuration-command-disabled" onclick="myconfig.resetConfigurationChanges()">TODO <@lh key="configuration.changes.reset" /></div>
+					</td>
+				</tr>
+			</tfoot>
 		</table>
 	</article>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${configuration.id}" key="configuration" />
 	<@layout_std_nav href="gui/matrix/${configuration.id}" key="matrix" />
+	<div id="dialog-changes"></div>
 </@layout_std>
