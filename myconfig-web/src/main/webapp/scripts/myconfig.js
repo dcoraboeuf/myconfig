@@ -37,9 +37,7 @@ var myconfig = function () {
 	
 	function controlConfigurationChanges () {
 		// HTML for the changes
-		var html = '<table class="configuration-changes">';
-		html += '<thead><tr><th>TODO</th></tr></thead>';
-		html += '<tbody>';
+		var html = '';
 		for (var i in configurationChanges) {
 			var id = configurationChanges[i];
 			var input = document.getElementById(id);
@@ -56,15 +54,16 @@ var myconfig = function () {
 		}
 		html += '<tbody>';
 		html += '<tfoot><tr><td colspan="4">';
-		html += '<div class="configuration-command-submit onclick="myconfig.submitConfigurationChanges()">TODO configuration.changes.submit</div>';
-		html += '<div class="configuration-command-cancel onclick="alert(\'TODO Leaves this dialog\')">TODO general.cancel</div>';
 		html += '</td></tr></tfoot>';
 		html += '</table>';
 		// Generates the content of the dialog
-		$('#dialog-changes').empty();
-		$('#dialog-changes').append(html);
+		$('#configuration-changes').empty();
+		$('#configuration-changes').append(html);
 		// Shows the dialog
-		$('#dialog-changes').dialog();
+		$('#dialog-changes').dialog({
+			title: 'TODO Confirmation of changes',
+			width: '50%'
+		});
 	}
 	
 	return {

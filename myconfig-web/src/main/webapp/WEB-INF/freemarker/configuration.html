@@ -65,8 +65,8 @@
 			<tfoot>
 				<tr>
 					<td colspan="${ configuration.environmentConfigurationList?size + 1 }" class="configuration-commands">
-						<div id="configuration-changes-submit" class="configuration-command configuration-command-disabled" onclick="myconfig.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-						<div id="configuration-changes-reset" class="configuration-command configuration-command-disabled" onclick="myconfig.resetConfigurationChanges()">TODO <@lh key="configuration.changes.reset" /></div>
+						<div id="configuration-changes-submit" class="configuration-command-submit configuration-command-disabled" onclick="myconfig.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+						<div id="configuration-changes-reset" class="configuration-command-cancel configuration-command-disabled" onclick="myconfig.resetConfigurationChanges()">TODO <@lh key="configuration.changes.reset" /></div>
 					</td>
 				</tr>
 			</tfoot>
@@ -75,5 +75,26 @@
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${configuration.id}" key="configuration" />
 	<@layout_std_nav href="gui/matrix/${configuration.id}" key="matrix" />
-	<div id="dialog-changes"></div>
+	<div id="dialog-changes" style="display:none;">
+		<table class="configuration-changes">
+			<thead>
+				<tr>
+					<th><@lh key="configuration.change.environment" /></th>
+					<th><@lh key="configuration.change.key" /></th>
+					<th><@lh key="configuration.change.oldvalue" /></th>
+					<th><@lh key="configuration.change.value" /></th>
+				</tr>
+			</thead>
+			<tbody id="configuration-changes">
+			</tbody>
+			<tfoot>
+				<tr>
+					<td colspan="4">
+						<div class="configuration-command-submit" onclick="myconfig.submitConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+						<div class="configuration-command-cancel" onclick="$('#dialog-changes').dialog('close')"><@lh key="general.cancel" /></div>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
 </@layout_std>
