@@ -55,17 +55,23 @@ var myconfig = function () {
 			});
 		}
 		// TODO Waiting mask
-		// FIXME JSON call
-		$.post (url, data, function (data) {
-			if (data.success) {
-				alert('TODO Success');
-			} else {
-				displayError ('TODO Could not update the configuration');
-			}
-		})
-		.error(function (jqXHR, textStatus, errorThrown) {
-			displayAjaxError ('TODO Could not update the configuration', jqXHR, textStatus, errorThrown);
-		});
+		$.ajax({
+			  type: 'POST',
+			  url: url,
+			  contentType: 'application/json',
+			  data: JSON.stringify(data),
+			  dataType: 'json',
+			  success: function (data) {
+				if (data.success) {
+					alert('TODO Success');
+				} else {
+					displayError ('TODO Could not update the configuration');
+				}
+			  },
+			  error: function (jqXHR, textStatus, errorThrown) {
+					displayAjaxError ('TODO Could not update the configuration', jqXHR, textStatus, errorThrown);
+			  }
+			});
 	}
 	
 	function controlConfigurationChanges () {
