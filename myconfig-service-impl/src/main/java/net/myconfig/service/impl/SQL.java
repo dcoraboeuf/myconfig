@@ -96,6 +96,10 @@ public interface SQL {
 			"and version = :version " +
 			"order by environment, appkey";
 
+	String CONFIG_REMOVE_VALUE = "delete from config where application = :application and version = :version and environment = :environment and appkey = :appkey";
+
+	String CONFIG_INSERT_VALUE = "insert into config (application, version, environment, appkey, value) values (:application, :version, :environment, :appkey, :value)";
+
 	String VERSION_PREVIOUS = "select name from version where application = :application and name < :version order by name desc";
 	String VERSION_NEXT = "select name from version where application = :application and name > :version order by name asc";
 

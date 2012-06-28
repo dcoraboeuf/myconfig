@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.VersionConfigurationUpdate;
 import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
@@ -48,14 +50,20 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/application/{id}", method = RequestMethod.GET)
-	public ApplicationConfiguration applicationConfiguration(@PathVariable int id) {
+	public @ResponseBody ApplicationConfiguration applicationConfiguration(@PathVariable int id) {
 		return getMyConfigService().getApplicationConfiguration (id);
 	}
 	
 	@Override
 	@RequestMapping(value = "/configuration/{id}/{version}", method = RequestMethod.GET)
-	public VersionConfiguration versionConfiguration(@PathVariable int application, @PathVariable  String version) {
+	public @ResponseBody VersionConfiguration versionConfiguration(@PathVariable int application, @PathVariable  String version) {
 		return getMyConfigService().getVersionConfiguration (application, version);
+	}
+	
+	@Override
+	@RequestMapping(value = "/configuration/{id}/{version}", method = RequestMethod.POST)
+	public @ResponseBody Ack updateVersionConfiguration(@PathVariable int application, @PathVariable  String version, @RequestBody List<VersionConfigurationUpdate> updates) {
+		return getMyConfigService().updateVersionConfiguration (application, version, updates);
 	}
 	
 	@Override

@@ -7,6 +7,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.VersionConfigurationUpdate;
 
 public interface UIInterface {
 
@@ -37,5 +38,7 @@ public interface UIInterface {
 	Ack keyVersionRemove(int application, String version, String key);
 
 	VersionConfiguration versionConfiguration(int application, String version);
+
+	Ack updateVersionConfiguration(int application, String version, List<VersionConfigurationUpdate> updates);
 
 }

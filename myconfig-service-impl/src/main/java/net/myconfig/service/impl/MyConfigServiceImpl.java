@@ -48,6 +48,7 @@ import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.VersionConfigurationUpdate;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
@@ -333,6 +334,39 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		String nextVersion = getFirstItem(SQL.VERSION_NEXT, versionCriteria, String.class);
 		// OK
 		return new VersionConfiguration(application, name, version, previousVersion, nextVersion, keyList, environmentConfigurationList);
+	}
+	
+	@Override
+	@Transactional
+	public Ack updateVersionConfiguration(int application, String version, List<VersionConfigurationUpdate> updates) {
+		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		// Checks
+		checkApplication(application);
+		checkVersion(application, version);
+		// Main criteria
+		MapSqlParameterSource appVerCriteria = new MapSqlParameterSource()
+			.addValue(APPLICATION, application)
+			.addValue(VERSION, version);
+		// Updates
+		for (VersionConfigurationUpdate update : updates) {
+			String environment = update.getEnvironment();
+			String key = update.getKey();
+			String value = update.getValue();
+			// FIXME Value controls
+			// FIXME checkEnvironment(application, environment)
+			checkKey(application, key);
+			// FIXME checkMatrix(application, version, key);
+			// Criteria
+			MapSqlParameterSource criteria = appVerCriteria
+					.addValue(ENVIRONMENT, environment)
+					.addValue(KEY, key);
+			// Deletion
+			t.update(SQL.CONFIG_REMOVE_VALUE, criteria);
+			// Update
+			t.update(SQL.CONFIG_INSERT_VALUE, criteria.addValue(VALUE, value));
+		}
+		// OK
+		return Ack.OK;
 	}
 	
 	@Override
