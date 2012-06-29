@@ -40,6 +40,8 @@ import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.service.model.VersionConfigurationUpdate;
+import net.myconfig.service.model.VersionConfigurationUpdates;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
 import net.sf.jstring.Strings;
@@ -775,6 +777,43 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test(expected = VersionNotDefinedException.class)
 	public void configuration_no_version() {
 		myConfigService.getVersionConfiguration(1, "1.x");
+	}
+	
+	@Test(expected = ApplicationNotFoundException.class)
+	public void configuration_update_no_app () {
+		myConfigService.updateVersionConfiguration(0, "1.0", null);
+	}
+	
+	@Test(expected = VersionNotDefinedException.class)
+	public void configuration_update_no_version () {
+		myConfigService.updateVersionConfiguration(1, "1.x", null);
+	}
+	
+	@Test
+	public void configuration_update_none () throws DataSetException, SQLException {
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
+		Ack ack = myConfigService.updateVersionConfiguration(1, "1.0", new VersionConfigurationUpdates(
+			Arrays.<VersionConfigurationUpdate>asList()
+		));
+		assertTrue (ack.isSuccess());
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
+	}
+	
+	@Test
+	public void configuration_update_several () throws DataSetException, SQLException {
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
+		assertRecordValue ("1.1 jdbc.password UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
+		assertRecordValue ("1.1 jdbc.user UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
+		Ack ack = myConfigService.updateVersionConfiguration(1, "1.1", new VersionConfigurationUpdates(
+			Arrays.asList(
+				new VersionConfigurationUpdate ("UAT", "jdbc.user", "x1"),
+				new VersionConfigurationUpdate ("UAT", "jdbc.password", "x2")
+			)
+		));
+		assertTrue (ack.isSuccess());
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
+		assertRecordValue ("x2", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
+		assertRecordValue ("x1", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
 	}
 	
 	@Test

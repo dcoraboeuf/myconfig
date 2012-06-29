@@ -45,6 +45,12 @@ public abstract class AbstractIntegrationTest extends AbstractJUnit4SpringContex
 		return results;
 	}
 	
+	protected void assertRecordValue (String value, String column, String sql, Object... parameters) throws DataSetException, SQLException {
+		ITable table = getTable("test", sql, parameters);
+		assertEquals(1, table.getRowCount());
+		assertEquals(value, table.getValue(0, column));
+	}
+	
 	protected void assertRecordExists (String sql, Object... parameters) throws DataSetException, SQLException {
 		ITable table = getTable("test", sql, parameters);
 		assertEquals(1, table.getRowCount());
@@ -53,6 +59,11 @@ public abstract class AbstractIntegrationTest extends AbstractJUnit4SpringContex
 	protected void assertRecordNotExists (String sql, Object... parameters) throws DataSetException, SQLException {
 		ITable table = getTable("test", sql, parameters);
 		assertEquals(0, table.getRowCount());
+	}
+	
+	protected void assertRecordCount (int count, String sql, Object... parameters) throws DataSetException, SQLException {
+		ITable table = getTable("test", sql, parameters);
+		assertEquals(count, table.getRowCount());
 	}
 	
 }
