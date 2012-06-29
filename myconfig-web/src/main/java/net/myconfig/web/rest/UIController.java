@@ -37,63 +37,63 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{name}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/application/{name:.*}", method = RequestMethod.PUT)
 	public @ResponseBody ApplicationSummary applicationCreate(@PathVariable String name) {
 		return getMyConfigService().createApplication (name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{id}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack applicationDelete(@PathVariable int id) {
-		return getMyConfigService().deleteApplication (id);
+	@RequestMapping(value = "/application/{application}", method = RequestMethod.DELETE)
+	public @ResponseBody Ack applicationDelete(@PathVariable int application) {
+		return getMyConfigService().deleteApplication (application);
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{id}", method = RequestMethod.GET)
-	public @ResponseBody ApplicationConfiguration applicationConfiguration(@PathVariable int id) {
-		return getMyConfigService().getApplicationConfiguration (id);
+	@RequestMapping(value = "/application/{application}", method = RequestMethod.GET)
+	public @ResponseBody ApplicationConfiguration applicationConfiguration(@PathVariable int application) {
+		return getMyConfigService().getApplicationConfiguration (application);
 	}
 	
 	@Override
-	@RequestMapping(value = "/configuration/{id}/{version}", method = RequestMethod.GET)
+	@RequestMapping(value = "/configuration/{application}/{version:.*}", method = RequestMethod.GET)
 	public @ResponseBody VersionConfiguration versionConfiguration(@PathVariable int application, @PathVariable  String version) {
 		return getMyConfigService().getVersionConfiguration (application, version);
 	}
 	
 	@Override
-	@RequestMapping(value = "/configuration/{id}/{version}", method = RequestMethod.POST)
+	@RequestMapping(value = "/configuration/{application}/{version:.*}", method = RequestMethod.POST)
 	public @ResponseBody Ack updateVersionConfiguration(@PathVariable int application, @PathVariable  String version, @RequestBody VersionConfigurationUpdates updates) {
 		return getMyConfigService().updateVersionConfiguration (application, version, updates);
 	}
 	
 	@Override
-	@RequestMapping(value = "/version/{id}/{name}", method = RequestMethod.PUT)
-	public @ResponseBody Ack versionCreate(@PathVariable int id, @PathVariable String name) {
-		return getMyConfigService().createVersion (id, name);
+	@RequestMapping(value = "/version/{application}/{name:.*}", method = RequestMethod.PUT)
+	public @ResponseBody Ack versionCreate(@PathVariable int application, @PathVariable String name) {
+		return getMyConfigService().createVersion (application, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/version/{id}/{name}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack versionDelete(@PathVariable int id, @PathVariable String name) {
-		return getMyConfigService().deleteVersion (id, name);
+	@RequestMapping(value = "/version/{application}/{name:.*}", method = RequestMethod.DELETE)
+	public @ResponseBody Ack versionDelete(@PathVariable int application, @PathVariable String name) {
+		return getMyConfigService().deleteVersion (application, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/environment/{id}/{name}", method = RequestMethod.PUT)
-	public @ResponseBody Ack environmentCreate(@PathVariable int id, @PathVariable String name) {
-		return getMyConfigService().createEnvironment (id, name);
+	@RequestMapping(value = "/environment/{application}/{name:.*}", method = RequestMethod.PUT)
+	public @ResponseBody Ack environmentCreate(@PathVariable int application, @PathVariable String name) {
+		return getMyConfigService().createEnvironment (application, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/environment/{id}/{name}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack environmentDelete(@PathVariable int id, @PathVariable String name) {
-		return getMyConfigService().deleteEnvironment (id, name);
+	@RequestMapping(value = "/environment/{application}/{name}", method = RequestMethod.DELETE)
+	public @ResponseBody Ack environmentDelete(@PathVariable int application, @PathVariable String name) {
+		return getMyConfigService().deleteEnvironment (application, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/key/{id}/{name}", method = RequestMethod.PUT)
-	public @ResponseBody Ack keyCreate(@PathVariable int id, @PathVariable String name, @RequestParam String description) {
-		return getMyConfigService().createKey (id, name, description);
+	@RequestMapping(value = "/key/{application}/{name}", method = RequestMethod.PUT)
+	public @ResponseBody Ack keyCreate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
+		return getMyConfigService().createKey (application, name, description);
 	}
 	
 	@Override
