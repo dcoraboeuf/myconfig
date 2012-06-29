@@ -1,19 +1,6 @@
-String.prototype.format = function() {
-	var args = arguments;
-	return this.replace(/\{\{|\}\}|\{(\d+)\}/g, function(m, n) {
-		if (m == "{{") {
-			return "{";
-		}
-		if (m == "}}") {
-			return "}";
-		}
-		return args[n];
-	});
-};
-
-var configurationChanges = {};
-
 var myconfig = function () {
+	
+	var configurationChanges = {};
 	
 	function displayConfirmation (text) {
 		return confirm (text);
@@ -69,12 +56,12 @@ var myconfig = function () {
 				if (data.success) {
 					location.reload();
 				} else {
-					displayError ('I18N Could not update the configuration');
+					displayError (loc('configuration.changes.submit.error'));
 					$('#dialog-changes').dialog('close');
 				}
 			  },
 			  error: function (jqXHR, textStatus, errorThrown) {
-					displayAjaxError ('I18N Could not update the configuration', jqXHR, textStatus, errorThrown);
+					displayAjaxError (loc('configuration.changes.submit.error'), jqXHR, textStatus, errorThrown);
 					$('#dialog-changes').dialog('close');
 			  }
 			});
@@ -106,7 +93,7 @@ var myconfig = function () {
 			$('#configuration-changes').append(html);
 			// Shows the dialog
 			$('#dialog-changes').dialog({
-				title: 'I18N Confirmation of changes',
+				title: loc('configuration.changes.confirm'),
 				width: '50%'
 			});
 		}
@@ -135,11 +122,11 @@ var myconfig = function () {
 					if (data.success) {
 						img.setAttribute('set', set);
 					} else {
-						displayError ('I18N Could not update the key x version');
+						displayError (loc('matrix.submit.error'));
 					}
 				})
 				.error(function (jqXHR, textStatus, errorThrown) {
-					displayAjaxError ('I18N Error', jqXHR, textStatus, errorThrown);
+					displayAjaxError (loc('matrix.submit.error'), jqXHR, textStatus, errorThrown);
 				});
 		},
 		validateTextAsName: function (selector) {
@@ -171,7 +158,7 @@ var myconfig = function () {
 		controlConfigurationChanges: controlConfigurationChanges,
 		submitConfigurationChanges: submitConfigurationChanges,
 		resetConfigurationChanges: function () {
-			if (displayConfirmation('I18N Do you want to reset all changes?')) {
+			if (displayConfirmation(loc('configuration.changes.reset.prompt'))) {
 				location.reload();
 			}
 		}
