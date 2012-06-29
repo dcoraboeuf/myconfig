@@ -68,27 +68,51 @@ article.configuration {
 			vertical-align: top;
 		}
 	}
-	tfoot {
-		td.configuration-commands {
-			.rounded;
-			.action;
-			background-color: @table-foot-bg;
-			div.configuration-command {
-				border-radius: 5px;
-				padding: 2px 5px 2px 5px;
-				margin-top: 2px;
-				margin-bottom: 2px;
-				display: inline;
-				&.configuration-command-submit {
-					background-color: white;
-					border: solid 1px blue;
-					font-weight: bold;
-					color: black;
-				}
-				&.configuration-command-cancel {
-					text-decoration: underline;
-					color: blue;
-				}
+}
+
+table.configuration-changes {
+	th {
+		.rounded;
+		background-color: @table-head-bg;
+	}
+	td {
+		.rounded;
+		background-color: lightgray;
+		&.change-environment, &.change-key {
+		}
+		&.change-old, &.change-new {
+			background-color: white;
+			border: solid 1px gray;
+		}
+		&.change-new {
+			background-image: url('../images/next.png');
+			background-repeat: no-repeat;
+			background-position: 5px center;
+			padding-left: 25px;
+		}
+	}
+}
+
+tfoot {
+	td.configuration-commands {
+		.rounded;
+		.action;
+		background-color: @table-foot-bg;
+		div.configuration-command {
+			border-radius: 5px;
+			padding: 2px 5px 2px 5px;
+			margin-top: 2px;
+			margin-bottom: 2px;
+			display: inline;
+			&.configuration-command-submit {
+				background-color: white;
+				border: solid 1px blue;
+				font-weight: bold;
+				color: black;
+			}
+			&.configuration-command-cancel {
+				text-decoration: underline;
+				color: blue;
 			}
 		}
 	}
