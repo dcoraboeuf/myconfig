@@ -65,12 +65,12 @@ var myconfig = function () {
 				if (data.success) {
 					location.reload();
 				} else {
-					displayError ('TODO Could not update the configuration');
+					displayError ('I18N Could not update the configuration');
 					$('#dialog-changes').dialog('close');
 				}
 			  },
 			  error: function (jqXHR, textStatus, errorThrown) {
-					displayAjaxError ('TODO Could not update the configuration', jqXHR, textStatus, errorThrown);
+					displayAjaxError ('I18N Could not update the configuration', jqXHR, textStatus, errorThrown);
 					$('#dialog-changes').dialog('close');
 			  }
 			});
@@ -102,7 +102,7 @@ var myconfig = function () {
 			$('#configuration-changes').append(html);
 			// Shows the dialog
 			$('#dialog-changes').dialog({
-				title: 'TODO Confirmation of changes',
+				title: 'I18N Confirmation of changes',
 				width: '50%'
 			});
 		}
@@ -130,11 +130,11 @@ var myconfig = function () {
 					if (data.success) {
 						img.setAttribute('set', set);
 					} else {
-						displayError ('TODO Could not update the key x version');
+						displayError ('I18N Could not update the key x version');
 					}
 				})
 				.error(function (jqXHR, textStatus, errorThrown) {
-					displayAjaxError ('TODO Error', jqXHR, textStatus, errorThrown);
+					displayAjaxError ('I18N Error', jqXHR, textStatus, errorThrown);
 				});
 		},
 		validateTextAsName: function (selector) {
