@@ -109,10 +109,20 @@ tfoot {
 				border: solid 1px blue;
 				font-weight: bold;
 				color: black;
+				&.configuration-command-disabled {
+					border: solid 1px lightgray;
+					color: lightgray;
+					.noaction;
+				}
 			}
 			&.configuration-command-cancel {
 				text-decoration: underline;
 				color: blue;
+				&.configuration-command-disabled {
+					text-decoration: none;
+					color: lightgray;
+					.noaction;
+				}
 			}
 		}
 	}
