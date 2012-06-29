@@ -1,7 +1,45 @@
+@import "general";
+
 article.configuration {
 	input.value {
 		&.changed {
 			border: solid 2px red;
+		}
+	}
+	table {
+		tr.version th {
+			.rounded;
+			background-color: @table-head-bg;
+			.version.current {
+				font-size: 150%;
+				.rounded;
+				background-color: white;
+				padding-top: 1px;
+				padding-bottom: 1px;
+			}
+			a {
+				display: block;
+				margin-top: 5px;
+				.rounded;
+				text-decoration: none;
+				color: blue;
+				padding-top: 1px;
+				padding-bottom: 1px;
+				&.previous {
+					float: left;
+					background-image: url('../images/previous.png');
+					background-repeat: no-repeat;
+					background-position: left center;
+					padding-left: 25px;
+				}
+				&.next {
+					float: right;
+					background-image: url('../images/next.png');
+					background-repeat: no-repeat;
+					background-position: right center;
+					padding-right: 25px;
+				}
+			}
 		}
 	}
 }
