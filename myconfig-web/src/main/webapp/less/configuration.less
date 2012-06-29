@@ -7,6 +7,7 @@ article.configuration {
 		}
 	}
 	table {
+		margin-bottom: 20px;
 		tr.version th {
 			.rounded;
 			background-color: @table-head-bg;
@@ -65,6 +66,30 @@ article.configuration {
 		}
 		td.key-value {
 			vertical-align: top;
+		}
+	}
+	tfoot {
+		td.configuration-commands {
+			.rounded;
+			.action;
+			background-color: @table-foot-bg;
+			div.configuration-command {
+				border-radius: 5px;
+				padding: 2px 5px 2px 5px;
+				margin-top: 2px;
+				margin-bottom: 2px;
+				display: inline;
+				&.configuration-command-submit {
+					background-color: white;
+					border: solid 1px blue;
+					font-weight: bold;
+					color: black;
+				}
+				&.configuration-command-cancel {
+					text-decoration: underline;
+					color: blue;
+				}
+			}
 		}
 	}
 }
