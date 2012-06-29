@@ -3,12 +3,17 @@
 	<@crud_table id="applications" items = applications>
 		<@crud_column property="id" key="model.application.id" />
 		<@crud_column property="name" key="model.application.name" />
-		<@crud_column property="name" key="model.application.name" />
 		<@crud_column property="versionCount" key="applications.versionCount" class="crud-number" />
 		<@crud_column property="keyCount" key="applications.keyCount" class="crud-number" />
 		<@crud_column property="environmentCount" key="applications.environmentCount" class="crud-number" />
 		
-		
+		<@crud_column key="applications.missingValuesCount">
+			TTTT
+			<#--
+			<#assign missingCount = item.configCount - item.valueCount />
+			<span>${missingCount}</span>
+			-->
+		</@crud_column>
 		
 		<@crud_create action="gui/applications/create" label="applications.new" />
 		<@crud_delete action="gui/applications/delete" promptKey="application.delete" />

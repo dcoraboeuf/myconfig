@@ -25,9 +25,13 @@
 			<#list items as item>
 				<tr>
 					<#list columns as column>
-						<td class="crud-column-${column.property} ${column.class}">
-							${item[column.property]?html}
-						</td>
+						<#if column.property != "" >
+							<td class="crud-column-${column.property} ${column.class}">
+								${item[column.property]?html}
+							</td>
+						<#elseif column.template != "">
+							<td>TODO EVALUATE TEMPLATE</td>
+						</#if>
 					</#list>
 					<td>
 						<#if deletion.defined>
@@ -81,9 +85,11 @@
 	</table>
 </#macro>
 
-<#macro crud_column property key class="">
+<#macro crud_column key property="" class="">
+	<#assign template><#nested/></#assign>
 	<#assign columns = columns + [{
 		"property": property,
+		"template": template,
 		"key": key,
 		"class": class
 	}] >
