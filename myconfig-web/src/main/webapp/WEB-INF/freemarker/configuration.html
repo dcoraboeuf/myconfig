@@ -49,7 +49,8 @@
 				<#list configuration.keyList as key>
 					<tr>
 						<td class="key">
-							${key.name?html}
+							<div class="key-name">${key.name?html}</div>
+							<div class="key-description"><@ellipsis value=key.description maxlength=30 /></div>
 						</td>
 						<#list configuration.environmentConfigurationList as environmentConfiguration>
 							<td class="key-value">
