@@ -15,6 +15,10 @@ var configurationChanges = {};
 
 var myconfig = function () {
 	
+	function displayConfirmation (text) {
+		return confirm (text);
+	}
+	
 	function displayError (text) {
 		alert(text);
 	}
@@ -109,6 +113,7 @@ var myconfig = function () {
 	}
 	
 	return {
+		displayConfirmation: displayConfirmation,
 		changeLanguage: function (lang) {
 			if (location.search.indexOf("language") > -1) {
 		      location.search = location.search.replace(/language=[a-z][a-z]/, "language=" + lang);
@@ -164,7 +169,12 @@ var myconfig = function () {
 			}
 		},
 		controlConfigurationChanges: controlConfigurationChanges,
-		submitConfigurationChanges: submitConfigurationChanges
+		submitConfigurationChanges: submitConfigurationChanges,
+		resetConfigurationChanges: function () {
+			if (displayConfirmation('I18N Do you want to reset all changes?')) {
+				location.reload();
+			}
+		}
 	};
 	
 } ();
