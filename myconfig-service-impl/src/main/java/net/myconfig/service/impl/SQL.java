@@ -18,7 +18,17 @@ public interface SQL {
 			"and c.environment = :environment " +
 			"order by c.appkey";
 
-	String APPLICATIONS = "select a.id, a.name from application a order by a.name";
+	String APPLICATIONS = "select a.id, a.name, " +
+			"(select COUNT(*) from version v where v.application = a.id) as versionCount, " + 
+			"(select COUNT(*) from appkey k where k.application = a.id) as keyCount,  " +
+			"(select COUNT(*) from environment e where e.application = a.id) as environmentCount, " +
+			"(select COUNT(*) " +
+			"	from environment e, version_key vk " +
+			"	where e.application = a.id " +
+			"	and vk.application = a.id) as configCount, " +
+			"(select COUNT(*) from config where application = a.id) as valueCount " +
+			"from application a  " +
+			"order by a.name";
 	
 	String APPLICATION_CREATE = "insert into application (name) values (:name)";
 
@@ -28,7 +38,7 @@ public interface SQL {
 	
 	String VERSIONS = "select * from version where application = :application order by name";
 	
-	String VERSION_SUMMARIES = "select v.name, COUNT(vk.appkey) as keyNumber " +
+	String VERSION_SUMMARIES = "select v.name, COUNT(vk.appkey) as keyCount " +
 			"from version v " +
 			"left join version_key vk " +
 			"on vk.application = v.application " + 
@@ -57,7 +67,7 @@ public interface SQL {
 
 	String KEYS = "select * from appkey where application = :application order by name";
 
-	String KEY_SUMMARIES = "select k.name, k.description, COUNT(vk.version) as versionNumber " +
+	String KEY_SUMMARIES = "select k.name, k.description, COUNT(vk.version) as versionCount " +
 			"from appkey k " +
 			"left join version_key vk " +
 			"on vk.application = k.application " + 

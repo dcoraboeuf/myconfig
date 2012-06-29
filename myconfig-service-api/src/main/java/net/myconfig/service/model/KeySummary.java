@@ -2,15 +2,15 @@ package net.myconfig.service.model;
 
 public class KeySummary extends Key {
 
-	private final int versionNumber;
+	private final int versionCount;
 
-	public KeySummary(String name, String description, int versionNumber) {
+	public KeySummary(String name, String description, int versionCount) {
 		super(name, description);
-		this.versionNumber = versionNumber;
+		this.versionCount = versionCount;
 	}
 
-	public int getVersionNumber() {
-		return versionNumber;
+	public int getVersionCount() {
+		return versionCount;
 	}
 
 }

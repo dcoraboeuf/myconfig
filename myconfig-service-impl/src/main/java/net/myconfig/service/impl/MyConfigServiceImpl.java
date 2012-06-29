@@ -1,11 +1,11 @@
 package net.myconfig.service.impl;
 
-import static net.myconfig.service.impl.SQLColumns.APPLICATION;
+import static net.myconfig.service.impl.SQLColumns.*;
 import static net.myconfig.service.impl.SQLColumns.DESCRIPTION;
 import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT;
 import static net.myconfig.service.impl.SQLColumns.ID;
 import static net.myconfig.service.impl.SQLColumns.KEY;
-import static net.myconfig.service.impl.SQLColumns.KEY_NUMBER;
+import static net.myconfig.service.impl.SQLColumns.KEY_COUNT;
 import static net.myconfig.service.impl.SQLColumns.NAME;
 import static net.myconfig.service.impl.SQLColumns.VALUE;
 import static net.myconfig.service.impl.SQLColumns.VERSION;
@@ -96,7 +96,14 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			@Override
 			public ApplicationSummary mapRow(ResultSet rs, int i)
 					throws SQLException {
-				return new ApplicationSummary(rs.getInt(ID), rs.getString(NAME));
+				return new ApplicationSummary(
+						rs.getInt(ID),
+						rs.getString(NAME),
+						rs.getInt(VERSION_COUNT),
+						rs.getInt(KEY_COUNT),
+						rs.getInt(ENVIRONMENT_COUNT),
+						rs.getInt(CONFIG_COUNT),
+						rs.getInt(VALUE_COUNT));
 			}
 		});
 	}
@@ -113,7 +120,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		List<VersionSummary> versionSummaryList = t.query(SQL.VERSION_SUMMARIES, idCriteria, new RowMapper<VersionSummary>(){
 			@Override
 			public VersionSummary mapRow(ResultSet rs, int i) throws SQLException {
-				return new VersionSummary(rs.getString(NAME), rs.getInt(KEY_NUMBER));
+				return new VersionSummary(rs.getString(NAME), rs.getInt(KEY_COUNT));
 			}
 		});
 		// Environments
@@ -127,7 +134,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		List<KeySummary> keySummaryList = t.query(SQL.KEY_SUMMARIES, idCriteria, new RowMapper<KeySummary>(){
 			@Override
 			public KeySummary mapRow(ResultSet rs, int i) throws SQLException {
-				return new KeySummary(rs.getString(NAME), rs.getString(SQLColumns.DESCRIPTION), rs.getInt(SQLColumns.VERSION_NUMBER));
+				return new KeySummary(rs.getString(NAME), rs.getString(SQLColumns.DESCRIPTION), rs.getInt(SQLColumns.VERSION_COUNT));
 			}
 		});
 		// OK
@@ -159,7 +166,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			throw new ApplicationNameAlreadyDefinedException (name);
 		}
 		int id = keyHolder.getKey().intValue();
-		return new ApplicationSummary(id, name);
+		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0);
 	}
 	
 	@Override

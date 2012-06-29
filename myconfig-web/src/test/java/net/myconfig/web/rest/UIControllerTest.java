@@ -17,6 +17,7 @@ import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.web.support.ErrorHandler;
+import net.myconfig.web.test.support.ApplicationSummaryBuilder;
 import net.sf.jstring.Strings;
 
 import org.junit.Before;
@@ -47,7 +48,9 @@ public class UIControllerTest {
 
 	@Test
 	public void application_list() {
-		List<ApplicationSummary> expectedApplications = Arrays.asList(new ApplicationSummary(1, "app1"), new ApplicationSummary(2, "app2"));
+		List<ApplicationSummary> expectedApplications = Arrays.asList(
+				ApplicationSummaryBuilder.create(1, "app1").build(),
+				ApplicationSummaryBuilder.create(2, "app2").build());
 		when(service.getApplications()).thenReturn(expectedApplications);
 		List<ApplicationSummary> actualApplications = ui.applications();
 		assertSame(expectedApplications, actualApplications);
@@ -55,7 +58,7 @@ public class UIControllerTest {
 
 	@Test
 	public void application_create() {
-		ApplicationSummary expectedApp = new ApplicationSummary(1, APP);
+		ApplicationSummary expectedApp = ApplicationSummaryBuilder.create(1, APP).build();
 		when(service.createApplication(APP)).thenReturn(expectedApp);
 		ApplicationSummary actualApp = ui.applicationCreate(APP);
 		assertSame(expectedApp, actualApp);

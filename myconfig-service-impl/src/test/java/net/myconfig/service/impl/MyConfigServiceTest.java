@@ -142,13 +142,21 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			ApplicationSummary app = applications.get(0);
 			assertEquals (2, app.getId());
 			assertEquals ("anotherapp", app.getName());
-			// TODO Assert stats
+			assertEquals (2, app.getVersionCount());
+			assertEquals (2, app.getKeyCount());
+			assertEquals (4, app.getEnvironmentCount());
+			assertEquals (12, app.getConfigCount());
+			assertEquals (0, app.getValueCount());
 		}
 		{
 			ApplicationSummary app = applications.get(1);
 			assertEquals (1, app.getId());
 			assertEquals ("myapp", app.getName());
-			// TODO Assert stats
+			assertEquals (3, app.getVersionCount());
+			assertEquals (3, app.getKeyCount());
+			assertEquals (4, app.getEnvironmentCount());
+			assertEquals (28, app.getConfigCount());
+			assertEquals (28, app.getValueCount());
 		}
 	}
 	
@@ -158,7 +166,11 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertNotNull (summary);
 		assertEquals ("test", summary.getName());
 		assertTrue (summary.getId() > 0);
-		// TODO Assert stats
+		assertEquals (0, summary.getVersionCount());
+		assertEquals (0, summary.getKeyCount());
+		assertEquals (0, summary.getEnvironmentCount());
+		assertEquals (0, summary.getConfigCount());
+		assertEquals (0, summary.getValueCount());
 	}
 	
 	@Test
@@ -891,7 +903,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertNotNull (keySummary);
 		assertEquals (name, keySummary.getName());
 		assertEquals (description, keySummary.getDescription());
-		assertEquals (versionNumber, keySummary.getVersionNumber());
+		assertEquals (versionNumber, keySummary.getVersionCount());
 	}
 
 	private void assertEnvironmentSummary(String name,
@@ -904,7 +916,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			VersionSummary versionSummary) {
 		assertNotNull (versionSummary);
 		assertEquals (name, versionSummary.getName());
-		assertEquals (keyNumber, versionSummary.getKeyNumber());
+		assertEquals (keyNumber, versionSummary.getKeyCount());
 	}
 
 }

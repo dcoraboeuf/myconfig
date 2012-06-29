@@ -7,10 +7,13 @@ public interface SQLColumns {
 	String KEY = "appkey";
 	String VALUE = "value";
 	String APPLICATION = "application";
-	String KEY_NUMBER = "keyNumber";
 	String NAME = "name";
 	String ID = "id";
 	String DESCRIPTION = "description";
-	String VERSION_NUMBER = "versionNumber";
+	String VERSION_COUNT = "versionCount";
+	String ENVIRONMENT_COUNT = "environmentCount";
+	String KEY_COUNT = "keyCount";
+	String CONFIG_COUNT = "configCount";
+	String VALUE_COUNT = "valueCount";
 
 }
