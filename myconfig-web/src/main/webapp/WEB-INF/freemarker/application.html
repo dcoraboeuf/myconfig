@@ -1,31 +1,31 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="configuration" style=false modules=["crud","key"]>
-	<article class="configuration">
+<@layout_std pageId="application" style=false modules=["crud","key"]>
+	<article class="application">
 		<h1>${application.name?html}</h1>
 		<section id="app-versions">
-			<h1><@lh key="configuration.versions" /></h1>
+			<h1><@lh key="application.versions" /></h1>
 			<@crud_table items = application.versionSummaryList errorKey = "version_error">
 				<@crud_column property="name" key="model.version.name" />
-				<@crud_column property="keyNumber" key="configuration.version.keyNumber" class="crud-number" />
-				<@crud_create id="version" action="gui/application/${application.id}/version/create" label="configuration.version.new" />
+				<@crud_column property="keyNumber" key="application.version.keyNumber" class="crud-number" />
+				<@crud_create id="version" action="gui/application/${application.id}/version/create" label="application.version.new" />
 				<@crud_delete action="gui/application/${application.id}/version/delete" field="name" promptKey="version.delete" />
 				<@crud_edit action="gui/configuration/${application.id}" field="name" />
 			</@crud_table>
 		</section>
 		<section id="app-environments">
-			<h1><@lh key="configuration.environments" /></h1>
+			<h1><@lh key="application.environments" /></h1>
 			<@crud_table items = application.environmentSummaryList errorKey = "environment_error">
 				<@crud_column property="name" key="model.environment.name" />
-				<@crud_create id="environment" action="gui/application/${application.id}/environment/create" label="configuration.environment.new" />
+				<@crud_create id="environment" action="gui/application/${application.id}/environment/create" label="application.environment.new" />
 				<@crud_delete action="gui/application/${application.id}/environment/delete" field="name" promptKey="environment.delete" />
 			</@crud_table>
 		</section>
 		<section id="app-keys">
-			<h1><@lh key="configuration.keys" /></h1>
+			<h1><@lh key="application.keys" /></h1>
 			<@crud_table items = application.keySummaryList errorKey = "key_error">
 				<@crud_column property="name" key="model.key.name" />
 				<@crud_column property="description" key="model.key.description" />
-				<@crud_column property="versionNumber" key="configuration.key.versionNumber" class="crud-number" />
+				<@crud_column property="versionNumber" key="application.key.versionNumber" class="crud-number" />
 				<@crud_delete action="gui/application/${application.id}/key/delete" field="name" promptKey="key.delete" />
 				<@crud_general_action>
 					<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
