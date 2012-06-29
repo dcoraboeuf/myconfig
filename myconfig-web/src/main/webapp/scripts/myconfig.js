@@ -63,13 +63,15 @@ var myconfig = function () {
 			  dataType: 'json',
 			  success: function (data) {
 				if (data.success) {
-					alert('TODO Success');
+					location.reload();
 				} else {
 					displayError ('TODO Could not update the configuration');
+					$('#dialog-changes').dialog('close');
 				}
 			  },
 			  error: function (jqXHR, textStatus, errorThrown) {
 					displayAjaxError ('TODO Could not update the configuration', jqXHR, textStatus, errorThrown);
+					$('#dialog-changes').dialog('close');
 			  }
 			});
 	}
