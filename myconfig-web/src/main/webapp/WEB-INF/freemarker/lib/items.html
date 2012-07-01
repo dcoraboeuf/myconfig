@@ -33,20 +33,30 @@
 	<tfoot>
 		<tr>
 			<td colspan="${columnCount}">
-				<#nested>
+				<#nested columnCount>
 			</td>
 		</tr>
 	</tfoot>
 </#macro>
 
 <#macro item_create id action field="name" label="general.create.label" submit="general.create" maxlength=80 size=20 autofocus="">
-	<form action="${action}" method="post" onsubmit="return myconfig.validateTextAsName('#${id}-${field}')">
-		<label>
-			<@lh key=label />
-			<input id="${id}-${field}" name="${field}" type="text" maxlength="${maxlength}" size="${size}" autofocus="${autofocus}" />
-			<input id="${id}-submit" type="submit" value="<@lh key='${submit}' />" />
-		</label>
-	</form>
+	<div class="item-command">
+		<form class="item-command" action="${action}" method="post" onsubmit="return myconfig.validateTextAsName('#${id}-${field}')">
+			<label>
+				<@lh key=label />
+				<input id="${id}-${field}" name="${field}" type="text" maxlength="${maxlength}" size="${size}" autofocus="${autofocus}" />
+				<input id="${id}-submit" type="submit" value="<@lh key='${submit}' />" />
+			</label>
+		</form>
+	</div>
+</#macro>
+
+<#macro item_error key="error">	
+	<#if .data_model[key]??>
+		<div class="item-command error">
+			${.data_model[key]}
+		</div>
+	</#if>
 </#macro>
 
 <#macro item_column field item class="">
