@@ -12,12 +12,12 @@
 		<@items items = applications ; item>
 			<@item_column field="id" item=item />
 			<@item_column field="name" item=item />
-			<@item_column field="versionCount" item=item />
-			<@item_column field="keyCount" item=item />
-			<@item_column field="environmentCount" item=item />
+			<@item_column field="versionCount" item=item class="item-column-type-number" />
+			<@item_column field="keyCount" item=item class="item-column-type-number" />
+			<@item_column field="environmentCount" item=item class="item-column-type-number" />
 			
 			<#assign missingCount = item.configCount - item.valueCount />
-			<td class="item-column item-column-missingValuesCount">
+			<td class="item-column item-column-missingValuesCount item-column-type-number">
 				${missingCount}
 			</td>
 			

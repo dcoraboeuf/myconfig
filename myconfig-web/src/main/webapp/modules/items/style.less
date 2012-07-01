@@ -1,0 +1,32 @@
+@import "../../less/general.less";
+
+table.items {
+	thead {
+		th {
+			.rounded;
+			background-color: #95B3CC;
+		}
+	}
+	tbody {
+		td {
+			&.item-column, &.item-actions {
+				.rounded;
+				background-color: #A8CAE6;
+			}
+			&.item-column-type-number {
+				text-align: center;
+			}
+		}
+	}
+	tfoot {
+		td {
+			.rounded;
+			background-color: #95B3CC;
+		}
+	}
+}
+
+
+form.item-action {
+	display: inline;
+}

@@ -1,4 +1,5 @@
 <#-- Resources -->
+<link rel="stylesheet/less" type="text/css" href="modules/items/style.less" />
 
 <#macro items_table id headers actions=false class="">
 	<#assign columnCount = headers?size />
@@ -13,6 +14,9 @@
 						<@lh key = header />
 					</th>
 				</#list>
+				<#if actions>
+					<th>-</th>
+				</#if>
 			</tr>
 		</thead>
 		<#nested columnCount>
