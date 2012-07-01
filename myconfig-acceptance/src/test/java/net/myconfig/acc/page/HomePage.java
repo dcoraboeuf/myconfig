@@ -22,7 +22,7 @@ public class HomePage extends Page {
 
 	public ApplicationsPage ui() {
 		driver.findElement(By.id("home-ui-button")).click();
-		driver.findElement(By.id("crud-table-applications"));
+		driver.findElement(By.id("applications"));
 		return new ApplicationsPage(driver);
 	}
 	

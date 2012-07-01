@@ -13,15 +13,15 @@ public class ApplicationsPage extends Page {
 
 	public void createApplication(String name) {
 		// Creates the application with its name
-		id("crud-create-text-").sendKeys(name);
-		id("crud-create-submit-").click();
+		id("application-create-name").sendKeys(name);
+		id("application-create-submit").click();
 		// Waits for the name to appear
 		driver.findElement(byApplicationName(name));
 	}
 
 	public void deleteApplication(String name) {
 		// Gets the delete button for this application
-		WebElement deleteButton = xpath("//td[contains(@class,'crud-column-name') and contains(text(), '%s')]/parent::tr//input[contains(@class,'crud-delete')]", name);
+		WebElement deleteButton = xpath("//td[contains(@class,'item-column-name') and contains(text(), '%s')]/parent::tr//input[contains(@class,'item-action-delete')]", name);
 		// Clicks it
 		deleteButton.click();
 		// Waits for the confirmation
@@ -30,14 +30,14 @@ public class ApplicationsPage extends Page {
 		// OK
 		alert.accept();
 		// Waits for the application list to be reloaded
-		id("crud-table-applications");
+		id("applications");
 		// TODO Checks the application is not there any longer
 		// WebDriverWait wait = new WebDriverWait(driver, 2);
 		// wait.until(ExpectedConditions.presenceOfElementLocated(byApplicationName(name)));
 	}
 
 	protected By byApplicationName(String name) {
-		return byElement("td", "crud-column-name", name);
+		return byElement("td", "item-column-name", name);
 	}
 	
 
