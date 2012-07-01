@@ -1,0 +1,79 @@
+<#-- Resources -->
+
+<#macro items_table id headers actions=false class="">
+	<#assign columnCount = headers?size />
+	<#if actions>
+		<#assign columnCount = columnCount + 1 />
+	</#if>
+	<table id="${id}" class="items ${class}">
+		<thead>
+			<tr colspan="${columnCount}">
+				<#list headers as header>
+					<th class="item-header">
+						<@lh key = header />
+					</th>
+				</#list>
+			</tr>
+		</thead>
+		<#nested columnCount>
+	</table>
+</#macro>
+
+<#macro items items>
+	<tbody>
+		<#list items as item>
+			<tr class="item">
+				<#nested item />
+			</tr>
+		</#list>
+	</tbody>
+</#macro>
+
+<#macro items_commands>
+	<tfoot>
+		<tr>
+			<td colspan="${columnCount}">
+				<#nested>
+			</td>
+		</tr>
+	</tfoot>
+</#macro>
+
+<#macro item_create id action field="name" label="general.create.label" submit="general.create" maxlength=80 size=20 autofocus="">
+	<form action="${action}" method="post" onsubmit="return myconfig.validateTextAsName('#${id}-${field}')">
+		<label>
+			<@lh key=label />
+			<input id="${id}-${field}" name="${field}" type="text" maxlength="${maxlength}" size="${size}" autofocus="${autofocus}" />
+			<input id="${id}-submit" type="submit" value="<@lh key='${submit}' />" />
+		</label>
+	</form>
+</#macro>
+
+<#macro item_column field item class="">
+	<td class="item-column item-column-${field} ${class}">
+		${item[field]}
+	</td>
+</#macro>
+
+<#macro item_actions item>
+	<td class="item-actions">
+		<#nested item />
+	</td>
+</#macro>
+
+<#macro item_delete item action formField="id" promptKey="general.delete" promptField="name">
+	<#assign itemField = item[formField] />
+	<#assign itemPromptField = item[promptField] />
+	<#assign itemPrompt = loc (promptKey, itemPromptField) />
+	<form class="item-action item-action-delete" action="${action}" method="post" onsubmit="return myconfig.displayConfirmationID ('item-action-delete-${itemField}-prompt');">
+		<input id="item-action-delete-${itemField}-prompt" type="hidden" value="${itemPrompt?html}" />
+		<input type="hidden" name="${formField}" value="${itemField}" />
+		<input class="item-action item-action-delete" type="image" src="images/delete.png" />
+	</form>
+</#macro>
+
+<#macro item_edit action>
+	<form class="item-action item-action-edit" action="${action}" method="get">
+		<input class="item-action item-action-edit" type="image" src="images/edit.png" />
+	</form>
+</#macro>

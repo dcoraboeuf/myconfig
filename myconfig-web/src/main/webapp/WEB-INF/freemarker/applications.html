@@ -1,53 +1,40 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="applications" style=false modules=[]>
+<@layout_std pageId="applications" style=false modules=["items"]>
 
+	<@items_table id="applications" actions=true headers=[
+				"model.application.id",
+				"model.application.name",
+				"applications.versionCount",
+				"applications.keyCount",
+				"applications.environmentCount",
+				"applications.missingValuesCount"
+			]>
+		<@items items = applications ; item>
+			<@item_column field="id" item=item />
+			<@item_column field="name" item=item />
+			<@item_column field="versionCount" item=item />
+			<@item_column field="keyCount" item=item />
+			<@item_column field="environmentCount" item=item />
+			
+			<#assign missingCount = item.configCount - item.valueCount />
+			<td class="item-column item-column-missingValuesCount">
+				${missingCount}
+			</td>
+			
+			<@item_actions item=item>
+				<@item_delete item=item action="gui/applications/delete" promptKey="application.delete" />
+				<@item_edit action="gui/application/${item.id}" />
+			</@item_actions>
+			
+		</@items>
+		
+		<@items_commands>
+			<@item_create id="application-create" action="gui/applications/create" label="applications.new" />
+		</@items_commands>
+	</@items_table>
+
+	<#--
 	<table id="applications" class="items">
-		<thead>
-			<tr>
-				<th><@lh key="model.application.id" /></th>
-				<th><@lh key="model.application.name" /></th>
-				<th><@lh key="applications.versionCount" /></th>
-				<th><@lh key="applications.keyCount" /></th>
-				<th><@lh key="applications.environmentCount" /></th>
-				<th><@lh key="applications.missingValuesCount" /></th>
-			</tr>
-		</thead>
-		<tbody>
-			<#list applications as application>
-				<tr class="item">
-					<td class="item-column item-column-id">
-						${application.id}
-					</td>
-					<td class="item-column item-column-name">
-						${application.name}
-					</td>
-					<td class="item-column item-column-versionCount">
-						${application.versionCount}
-					</td>
-					<td class="item-column item-column-keyCount">
-						${application.keyCount}
-					</td>
-					<td class="item-column item-column-environmentCount">
-						${application.environmentCount}
-					</td>
-					<#assign missingCount = application.configCount - application.valueCount />
-					<td class="item-column item-column-missingValuesCount">
-						${missingCount}
-					</td>
-					<td class="item-actions">
-						<#assign deletePrompt = loc ('application.delete', application.name) />
-						<form class="item-action item-action-delete" action="gui/applications/delete" method="post" onsubmit="return myconfig.displayConfirmationID ('item-action-delete-${application.id}-prompt');">
-							<input id="item-action-delete-${application.id}-prompt" type="hidden" value="${deletePrompt?html}" />
-							<input type="hidden" name="id" value="${application.id}" />
-							<input class="item-action item-action-delete" type="image" src="images/delete.png" />
-						</form>
-						<form class="item-action item-action-edit" action="gui/application/${application.id}" method="get">
-							<input class="item-action item-action-edit" type="image" src="images/edit.png" />
-						</form>
-					</td>
-				</tr>
-			</#list>
-		</tbody>
 		<tfoot>
 			<tr>
 				<td colspan="7">
@@ -69,4 +56,5 @@
 			</#if>
 		</tfoot>
 	</table>
+	-->
 </@layout_std>
