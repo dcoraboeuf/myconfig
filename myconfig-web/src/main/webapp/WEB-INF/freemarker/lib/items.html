@@ -97,13 +97,13 @@
 	columns
 	list
 	deleteAction
-	createAction
 	id="crud"
 	deleteField="id"
 	deletePromptKey="general.delete"
 	deletePromptField="name"
 	editAction=""
 	editField="id"
+	createAction=""
 	createId="create"
 	createLabel="general.create.label"
 	createMaxlength=80
@@ -129,7 +129,10 @@
 			</@item_actions>
 		</@items>
 		<@items_commands>
-			<@item_create id=createId action=createAction label=createLabel maxlength=createMaxlength size=createSize submit=createSubmit />
+			<#if createAction != "">
+				<@item_create id=createId action=createAction label=createLabel maxlength=createMaxlength size=createSize submit=createSubmit />
+			</#if>
+			<#nested>
 			<@item_error key=errorKey />
 		</@items_commands>
 	</@items_table>

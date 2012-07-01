@@ -1,5 +1,5 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="application" style=false modules=["crud","items","key"]>
+<@layout_std pageId="application" style=false modules=["items","key"]>
 	<article class="application">
 		<h1>${application.name?html}</h1>
 		<section id="app-versions">
@@ -43,15 +43,22 @@
 		</section>
 		<section id="app-keys">
 			<h1><@lh key="application.keys" /></h1>
-			<@crud_table items = application.keySummaryList errorKey = "key_error">
-				<@crud_column property="name" key="model.key.name" />
-				<@crud_column property="description" key="model.key.description" />
-				<@crud_column property="versionCount" key="application.key.versionCount" class="crud-number" />
-				<@crud_delete action="gui/application/${application.id}/key/delete" field="name" promptKey="key.delete" />
-				<@crud_general_action>
-					<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
-				</@crud_general_action>
-			</@crud_table>
+			<@items_crud
+				id="keys"
+				columns=[{
+					"header": "model.key.name",
+					"field": "name"
+					}, {
+					"header": "model.key.description",
+					"field": "description"
+					}]
+				list=application.keySummaryList
+				deleteAction="gui/application/${application.id}/key/delete"
+				deleteField="name"
+				deletePromptKey="key.delete"
+				errorKey="key_error">
+				<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
+			</@items_crud>
 		</section>
 	</article>
 	<@layout_std_nav href="gui/" key="applications" />
