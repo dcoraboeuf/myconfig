@@ -1,22 +1,72 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="applications" style=false modules=["crud"]>
-	<@crud_table id="applications" items = applications>
-		<@crud_column property="id" key="model.application.id" />
-		<@crud_column property="name" key="model.application.name" />
-		<@crud_column property="versionCount" key="applications.versionCount" class="crud-number" />
-		<@crud_column property="keyCount" key="applications.keyCount" class="crud-number" />
-		<@crud_column property="environmentCount" key="applications.environmentCount" class="crud-number" />
-		
-		<@crud_column key="applications.missingValuesCount">
-			TTTT
-			<#--
-			<#assign missingCount = item.configCount - item.valueCount />
-			<span>${missingCount}</span>
-			-->
-		</@crud_column>
-		
-		<@crud_create action="gui/applications/create" label="applications.new" />
-		<@crud_delete action="gui/applications/delete" promptKey="application.delete" />
-		<@crud_edit action="gui/application" />
-	</@crud_table>
+<@layout_std pageId="applications" style=false modules=[]>
+
+	<table id="applications" class="items">
+		<thead>
+			<tr>
+				<th><@lh key="model.application.id" /></th>
+				<th><@lh key="model.application.name" /></th>
+				<th><@lh key="applications.versionCount" /></th>
+				<th><@lh key="applications.keyCount" /></th>
+				<th><@lh key="applications.environmentCount" /></th>
+				<th><@lh key="applications.missingValuesCount" /></th>
+			</tr>
+		</thead>
+		<tbody>
+			<#list applications as application>
+				<tr class="item">
+					<td class="item-column item-column-id">
+						${application.id}
+					</td>
+					<td class="item-column item-column-name">
+						${application.name}
+					</td>
+					<td class="item-column item-column-versionCount">
+						${application.versionCount}
+					</td>
+					<td class="item-column item-column-keyCount">
+						${application.keyCount}
+					</td>
+					<td class="item-column item-column-environmentCount">
+						${application.environmentCount}
+					</td>
+					<#assign missingCount = application.configCount - application.valueCount />
+					<td class="item-column item-column-missingValuesCount">
+						${missingCount}
+					</td>
+					<td class="item-actions">
+						<#assign deletePrompt = loc ('application.delete', application.name) />
+						<form class="item-action item-action-delete" action="gui/applications/delete" method="post" onsubmit="return myconfig.displayConfirmationID ('item-action-delete-${application.id}-prompt');">
+							<input id="item-action-delete-${application.id}-prompt" type="hidden" value="${deletePrompt?html}" />
+							<input type="hidden" name="id" value="${application.id}" />
+							<input class="item-action item-action-delete" type="image" src="images/delete.png" />
+						</form>
+						<form class="item-action item-action-edit" action="gui/application/${application.id}" method="get">
+							<input class="item-action item-action-edit" type="image" src="images/edit.png" />
+						</form>
+					</td>
+				</tr>
+			</#list>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="7">
+					<form action="gui/applications/create" method="post" onsubmit="return myconfig.validateTextAsName('#application-create-name')">
+						<label>
+							<@lh key="applications.new" />
+							<input id="application-create-name" name="name" type="text" maxlength="80" size="20" autofocus="autofocus" />
+							<input id="application-create-submit" type="submit" value="<@lh key='general.create' />" />
+						</label>
+					</form>
+				</td>
+			</tr>
+			<#if .data_model["error"]??>
+				<tr>
+					<td colspan="7" class="error">
+						${.data_model["error"]}
+					</td>
+				</tr>
+			</#if>
+		</tfoot>
+	</table>
 </@layout_std>

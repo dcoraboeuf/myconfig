@@ -6,6 +6,11 @@ var myconfig = function () {
 		return confirm (text);
 	}
 	
+	function displayConfirmationID (id) {
+		var text = document.getElementById(id).value;
+		return displayConfirmation(text);
+	}
+	
 	function displayError (text) {
 		alert(text);
 	}
@@ -101,6 +106,7 @@ var myconfig = function () {
 	
 	return {
 		displayConfirmation: displayConfirmation,
+		displayConfirmationID: displayConfirmationID,
 		changeLanguage: function (lang) {
 			if (location.search.indexOf("language") > -1) {
 		      location.search = location.search.replace(/language=[a-z][a-z]/, "language=" + lang);
