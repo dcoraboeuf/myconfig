@@ -4,28 +4,42 @@
 		<h1>${application.name?html}</h1>
 		<section id="app-versions">
 			<h1><@lh key="application.versions" /></h1>
-			<@items_table id="versions" headers=["model.version.name","application.version.keyCount"] actions=true>
-				<@items items=application.versionSummaryList ; item>
-					<@item_column field="name" item=item />
-					<@item_column field="keyCount" item=item />			
-					<@item_actions item=item>
-						<@item_delete item=item action="gui/application/${application.id}/version/delete" formField="name" promptKey="version.delete" />
-						<@item_edit action="gui/configuration/${application.id}/${item.name}" />
-					</@item_actions>
-				</@items>
-				<@items_commands>
-					<@item_create id="version-create" action="gui/application/${application.id}/version/create" label="application.version.new" />
-					<@item_error key="version_error" />
-				</@items_commands>
-			</@items_table>
+			<@items_crud
+				id="versions"
+				columns=[{
+					"header": "model.version.name",
+					"field": "name"
+					}, {
+					"header": "application.version.keyCount",
+					"field": "keyCount"
+					}]
+				list=application.versionSummaryList
+				deleteAction="gui/application/${application.id}/version/delete"
+				deleteField="name"
+				deletePromptKey="version.delete"
+				editAction="gui/configuration/${application.id}"
+				editField="name"
+				createId="version-create"
+				createAction="gui/application/${application.id}/version/create"
+				errorKey="version_error"
+				/>
 		</section>
 		<section id="app-environments">
 			<h1><@lh key="application.environments" /></h1>
-			<@crud_table items = application.environmentSummaryList errorKey = "environment_error">
-				<@crud_column property="name" key="model.environment.name" />
-				<@crud_create id="environment" action="gui/application/${application.id}/environment/create" label="application.environment.new" />
-				<@crud_delete action="gui/application/${application.id}/environment/delete" field="name" promptKey="environment.delete" />
-			</@crud_table>
+			<@items_crud
+				id="environments"
+				columns=[{
+					"header": "model.environment.name",
+					"field": "name"
+					}]
+				list=application.environmentSummaryList
+				deleteAction="gui/application/${application.id}/environment/delete"
+				deleteField="name"
+				deletePromptKey="environment.delete"
+				createId="environment-create"
+				createAction="gui/application/${application.id}/environment/create"
+				errorKey="environment_error"
+				/>
 		</section>
 		<section id="app-keys">
 			<h1><@lh key="application.keys" /></h1>

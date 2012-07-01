@@ -23,7 +23,7 @@
 			
 			<@item_actions item=item>
 				<@item_delete item=item action="gui/applications/delete" promptKey="application.delete" />
-				<@item_edit action="gui/application/${item.id}" />
+				<@item_edit item=item action="gui/application" />
 			</@item_actions>
 			
 		</@items>
