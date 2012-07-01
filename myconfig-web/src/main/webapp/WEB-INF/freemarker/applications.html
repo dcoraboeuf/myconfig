@@ -33,29 +33,5 @@
 			<@item_error />
 		</@items_commands>
 	</@items_table>
-
-	<#--
-	<table id="applications" class="items">
-		<tfoot>
-			<tr>
-				<td colspan="7">
-					<form action="gui/applications/create" method="post" onsubmit="return myconfig.validateTextAsName('#application-create-name')">
-						<label>
-							<@lh key="applications.new" />
-							<input id="application-create-name" name="name" type="text" maxlength="80" size="20" autofocus="autofocus" />
-							<input id="application-create-submit" type="submit" value="<@lh key='general.create' />" />
-						</label>
-					</form>
-				</td>
-			</tr>
-			<#if .data_model["error"]??>
-				<tr>
-					<td colspan="7" class="error">
-						${.data_model["error"]}
-					</td>
-				</tr>
-			</#if>
-		</tfoot>
-	</table>
-	-->
+	
 </@layout_std>
