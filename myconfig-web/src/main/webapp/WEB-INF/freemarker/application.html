@@ -12,6 +12,11 @@
 					}, {
 					"header": "application.version.keyCount",
 					"field": "keyCount"
+					}, {
+					"header": "application.version.missingCount",
+					"special": "missing_count",
+					"action": "gui/configuration/${application.id}",
+					"actionItemField": "name"
 					}]
 				list=application.versionSummaryList
 				deleteAction="gui/application/${application.id}/version/delete"
