@@ -18,7 +18,11 @@
 			
 			<#assign missingCount = item.configCount - item.valueCount />
 			<td class="item-column item-column-missingValuesCount item-column-type-number">
-				${missingCount}
+				<#if missingCount gt 0>
+					<a href="gui/application/${item.id}">${missingCount}</a>
+				<#else>
+					${missingCount}
+				</#if>
 			</td>
 			
 			<@item_actions item=item>
