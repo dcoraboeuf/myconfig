@@ -113,14 +113,23 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	public ApplicationConfiguration getApplicationConfiguration(int id) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// ID
-		MapSqlParameterSource idCriteria = new MapSqlParameterSource(ID, id);
+		MapSqlParameterSource idCriteria = new MapSqlParameterSource(APPLICATION, id);
 		// Gets the name
 		String name = getApplicationName(id);
 		// Versions	
 		List<VersionSummary> versionSummaryList = t.query(SQL.VERSION_SUMMARIES, idCriteria, new RowMapper<VersionSummary>(){
 			@Override
 			public VersionSummary mapRow(ResultSet rs, int i) throws SQLException {
-				return new VersionSummary(rs.getString(NAME), rs.getInt(KEY_COUNT));
+				String version = rs.getString(NAME);
+				int keyCount = rs.getInt(KEY_COUNT);
+				int valueCount = rs.getInt(VALUE_COUNT);
+				int environmentCount = rs.getInt(ENVIRONMENT_COUNT);
+				int configCount = keyCount * environmentCount;
+				return new VersionSummary(
+						version,
+						keyCount,
+						configCount,
+						valueCount);
 			}
 		});
 		// Environments

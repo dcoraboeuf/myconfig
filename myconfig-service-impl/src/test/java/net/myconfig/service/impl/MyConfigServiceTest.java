@@ -269,9 +269,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		List<VersionSummary> versions = app.getVersionSummaryList();
 		assertNotNull (versions);
 		assertEquals (3, versions.size());
-		assertVersionSummary ("1.0", 2, versions.get(0));
-		assertVersionSummary ("1.1", 2, versions.get(1));
-		assertVersionSummary ("1.2", 3, versions.get(2));
+		assertVersionSummary ("1.0", 2, 8, 8, versions.get(0));
+		assertVersionSummary ("1.1", 2, 8, 8, versions.get(1));
+		assertVersionSummary ("1.2", 3, 12, 12, versions.get(2));
 		// Environments
 		List<EnvironmentSummary> environments = app.getEnvironmentSummaryList();
 		assertNotNull (environments);
@@ -912,11 +912,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertEquals (name, environmentSummary.getName());		
 	}
 
-	private void assertVersionSummary(String name, int keyNumber,
+	private void assertVersionSummary(String name, int keyCount, int configCount, int valuesCount,
 			VersionSummary versionSummary) {
 		assertNotNull (versionSummary);
 		assertEquals (name, versionSummary.getName());
-		assertEquals (keyNumber, versionSummary.getKeyCount());
+		assertEquals (keyCount, versionSummary.getKeyCount());
+		assertEquals (configCount, versionSummary.getConfigCount());
+		assertEquals (valuesCount, versionSummary.getValueCount());
 	}
 
 }

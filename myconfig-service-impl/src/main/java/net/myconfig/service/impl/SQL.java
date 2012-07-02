@@ -38,13 +38,12 @@ public interface SQL {
 	
 	String VERSIONS = "select * from version where application = :application order by name";
 	
-	String VERSION_SUMMARIES = "select v.name, COUNT(vk.appkey) as keyCount " +
+	String VERSION_SUMMARIES = "select v.name, " + 
+			"(select COUNT(vk.appkey) from version_key vk where vk.application = v.application and vk.version = v.name) as keyCount, " +
+			"(select COUNT(*) from config c where c.application = v.application and c.version = v.name) as valueCount, " +
+			"(select COUNT(*) from environment e where e.application = v.application) as environmentCount " +
 			"from version v " +
-			"left join version_key vk " +
-			"on vk.application = v.application " + 
-			"and vk.version = v.name " + 
-			"where v.application = :id " +
-			"group by v.name " +
+			"where v.application = :application " +
 			"order by v.name";
 
 	String VERSION_CREATE = "insert into version (application, name) values (:id, :name)";
@@ -58,7 +57,7 @@ public interface SQL {
 	
 	String ENVIRONMENT_SUMMARIES = "select e.name " +
 			"from environment e " + 
-			"where e.application = :id " +
+			"where e.application = :application " +
 			"order by e.name";
 
 	String ENVIRONMENT_CREATE = "insert into environment (application, name) values (:id, :name)";
@@ -72,7 +71,7 @@ public interface SQL {
 			"left join version_key vk " +
 			"on vk.application = k.application " + 
 			"and vk.appkey = k.name " + 
-			"where k.application = :id " +
+			"where k.application = :application " +
 			"group by k.name " +
 			"order by k.name";
 
