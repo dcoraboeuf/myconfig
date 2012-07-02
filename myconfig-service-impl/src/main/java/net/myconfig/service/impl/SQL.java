@@ -55,7 +55,9 @@ public interface SQL {
 			"where e.application = :application " +
 			"order by e.name";
 	
-	String ENVIRONMENT_SUMMARIES = "select e.name " +
+	String ENVIRONMENT_SUMMARIES = "select e.name, " +
+			"(select COUNT(*) from version_key vk where vk.application = e.application) as keyCount, " +
+			"(select COUNT(*) from config c where c.application = e.application and c.environment = e.name) as valueCount " +
 			"from environment e " + 
 			"where e.application = :application " +
 			"order by e.name";

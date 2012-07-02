@@ -110,14 +110,14 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
-	public ApplicationConfiguration getApplicationConfiguration(int id) {
+	public ApplicationConfiguration getApplicationConfiguration(int application) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// ID
-		MapSqlParameterSource idCriteria = new MapSqlParameterSource(APPLICATION, id);
+		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource(APPLICATION, application);
 		// Gets the name
-		String name = getApplicationName(id);
+		String name = getApplicationName(application);
 		// Versions	
-		List<VersionSummary> versionSummaryList = t.query(SQL.VERSION_SUMMARIES, idCriteria, new RowMapper<VersionSummary>(){
+		List<VersionSummary> versionSummaryList = t.query(SQL.VERSION_SUMMARIES, applicationCriteria, new RowMapper<VersionSummary>(){
 			@Override
 			public VersionSummary mapRow(ResultSet rs, int i) throws SQLException {
 				String version = rs.getString(NAME);
@@ -133,21 +133,24 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			}
 		});
 		// Environments
-		List<EnvironmentSummary> environmentSummaryList = t.query(SQL.ENVIRONMENT_SUMMARIES, idCriteria, new RowMapper<EnvironmentSummary>(){
+		List<EnvironmentSummary> environmentSummaryList = t.query(SQL.ENVIRONMENT_SUMMARIES, applicationCriteria, new RowMapper<EnvironmentSummary>(){
 			@Override
 			public EnvironmentSummary mapRow(ResultSet rs, int i) throws SQLException {
-				return new EnvironmentSummary(rs.getString(NAME));
+				String environment = rs.getString(NAME);
+				int configCount = rs.getInt(KEY_COUNT);
+				int valueCount = rs.getInt(VALUE_COUNT);
+				return new EnvironmentSummary(environment, configCount, valueCount);
 			}
 		});
 		// Keys
-		List<KeySummary> keySummaryList = t.query(SQL.KEY_SUMMARIES, idCriteria, new RowMapper<KeySummary>(){
+		List<KeySummary> keySummaryList = t.query(SQL.KEY_SUMMARIES, applicationCriteria, new RowMapper<KeySummary>(){
 			@Override
 			public KeySummary mapRow(ResultSet rs, int i) throws SQLException {
 				return new KeySummary(rs.getString(NAME), rs.getString(SQLColumns.DESCRIPTION), rs.getInt(SQLColumns.VERSION_COUNT));
 			}
 		});
 		// OK
-		return new ApplicationConfiguration(id, name,
+		return new ApplicationConfiguration(application, name,
 				versionSummaryList, environmentSummaryList, keySummaryList);
 	}
 

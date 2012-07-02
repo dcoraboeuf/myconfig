@@ -276,10 +276,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		List<EnvironmentSummary> environments = app.getEnvironmentSummaryList();
 		assertNotNull (environments);
 		assertEquals (4, environments.size());
-		assertEnvironmentSummary ("ACC", environments.get(0));
-		assertEnvironmentSummary ("DEV", environments.get(1));
-		assertEnvironmentSummary ("PROD", environments.get(2));
-		assertEnvironmentSummary ("UAT", environments.get(3));
+		assertEnvironmentSummary ("ACC", 7, 7, environments.get(0));
+		assertEnvironmentSummary ("DEV", 7, 7, environments.get(1));
+		assertEnvironmentSummary ("PROD", 7, 7, environments.get(2));
+		assertEnvironmentSummary ("UAT", 7, 7, environments.get(3));
 		// Keys
 		List<KeySummary> keys = app.getKeySummaryList();
 		assertNotNull (keys);
@@ -906,19 +906,21 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertEquals (versionNumber, keySummary.getVersionCount());
 	}
 
-	private void assertEnvironmentSummary(String name,
+	private void assertEnvironmentSummary(String name, int configCount, int valueCount,
 			EnvironmentSummary environmentSummary) {
 		assertNotNull(environmentSummary);
 		assertEquals (name, environmentSummary.getName());		
+		assertEquals (configCount, environmentSummary.getConfigCount());
+		assertEquals (valueCount, environmentSummary.getValueCount());		
 	}
 
-	private void assertVersionSummary(String name, int keyCount, int configCount, int valuesCount,
+	private void assertVersionSummary(String name, int keyCount, int configCount, int valueCount,
 			VersionSummary versionSummary) {
 		assertNotNull (versionSummary);
 		assertEquals (name, versionSummary.getName());
 		assertEquals (keyCount, versionSummary.getKeyCount());
 		assertEquals (configCount, versionSummary.getConfigCount());
-		assertEquals (valuesCount, versionSummary.getValueCount());
+		assertEquals (valueCount, versionSummary.getValueCount());
 	}
 
 }
