@@ -118,13 +118,20 @@ a.app-menu {
 	color: @app-menu-color-fg;
 }
 
-article.std-page nav {
-	margin-top: 10px;
-	a {
-		text-decoration: none;
-		color: @std-nav-box-color-fg;
-		background-color: @std-nav-box-color-bg;
-		border-radius: 5px;
-		padding: 2px 5px 2px 5px;
+article.std-page {
+	> h1 {
+		.rounded;
+		margin-top: 1px;
+		background-color: @app-title-color-bg;
+	}
+	nav {
+		margin-top: 10px;
+		a {
+			text-decoration: none;
+			color: @std-nav-box-color-fg;
+			background-color: @std-nav-box-color-bg;
+			border-radius: 5px;
+			padding: 2px 5px 2px 5px;
+		}
 	}
 }

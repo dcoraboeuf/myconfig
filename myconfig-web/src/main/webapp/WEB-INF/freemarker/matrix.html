@@ -1,7 +1,7 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="matrix" style=true modules=["key"] title=loc("matrix.title", configuration.name)>
+<@layout_std pageId="matrix" style=true modules=["key","items"] title=loc("matrix.title", configuration.name)>
 	<article class="matrix">
-		<table border="1">
+		<table class="items">
 			<thead>
 				<tr>
 					<th>
@@ -17,12 +17,12 @@
 			<tbody>
 				<#list configuration.keyList as key>
 					<tr>
-						<td class="key">
+						<td class="key item-column">
 							<div class="key-name">${key.name?html}</div>
 							<div class="key-description">${key.description?html}</div>
 						</td>
 						<#list configuration.versionConfigurationList as versionConfiguration>
-							<td class="key-flag">
+							<td class="key-flag item-column">
 								<#if versionConfiguration.keys?seq_contains(key.name)>
 									<#assign setValue = "yes" />
 								<#else>
