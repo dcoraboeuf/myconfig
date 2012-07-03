@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/gui/configuration")
-public class GUIConfigurationPage extends AbstractGUIPage {
+@RequestMapping("/gui/configuration/version")
+public class GUIVersionConfigurationPage extends AbstractGUIPage {
 
 	@Autowired
-	public GUIConfigurationPage(UIInterface ui, ErrorHandler errorHandler) {
+	public GUIVersionConfigurationPage(UIInterface ui, ErrorHandler errorHandler) {
 		super(ui, errorHandler);
 	}
 	
@@ -25,10 +25,10 @@ public class GUIConfigurationPage extends AbstractGUIPage {
 	@RequestMapping(value = "/{application:\\d+}/{version:.*}", method = RequestMethod.GET)
 	public String page(@PathVariable int application, @PathVariable String version, Model model) {
 		// Loads the configuration
-		VersionConfiguration configuration = ui.versionConfiguration (application, version);
-		model.addAttribute("configuration", configuration);
+		VersionConfiguration versionConfiguration = ui.versionConfiguration (application, version);
+		model.addAttribute("versionConfiguration", versionConfiguration);
 		// OK
-		return "configuration";
+		return "versionConfiguration";
 	}
 
 }
