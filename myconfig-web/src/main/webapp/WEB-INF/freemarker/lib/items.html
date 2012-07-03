@@ -72,7 +72,7 @@
 <#macro item_missing_count item action actionItemField>
 	<#assign missingCount = item.configCount - item.valueCount />
 	<td class="item-column item-column-missingValuesCount item-column-type-number">
-		<#if missingCount gt 0>
+		<#if (missingCount gt 0) && (action != "")>
 			<a href="${action}/${item[actionItemField]}">${missingCount}</a>
 		<#else>
 			${missingCount}
@@ -134,7 +134,7 @@
 					<@item_column field=column.field item=item />
 				<#elseif column.special??>
 					<#if column.special == "missing_count">
-						<@item_missing_count item=item action=column.action actionItemField=column.actionItemField />
+						<@item_missing_count item=item action=column.action!"" actionItemField=column.actionItemField!"" />
 					</#if>
 				</#if>
 			</#list>		

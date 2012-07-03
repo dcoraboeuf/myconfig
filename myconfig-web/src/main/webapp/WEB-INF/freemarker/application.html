@@ -36,6 +36,9 @@
 				columns=[{
 					"header": "model.environment.name",
 					"field": "name"
+					}, {
+					"header": "application.environment.missingCount",
+					"special": "missing_count"
 					}]
 				list=application.environmentSummaryList
 				deleteAction="gui/application/${application.id}/environment/delete"
