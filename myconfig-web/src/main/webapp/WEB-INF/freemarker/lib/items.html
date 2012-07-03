@@ -131,7 +131,7 @@
 		<@items items=list ; item>
 			<#list columns as column>
 				<#if column.field??>
-					<@item_column field=column.field item=item />
+					<@item_column field=column.field item=item class=column.class!"" />
 				<#elseif column.special??>
 					<#if column.special == "missing_count">
 						<@item_missing_count item=item action=column.action!"" actionItemField=column.actionItemField!"" />
