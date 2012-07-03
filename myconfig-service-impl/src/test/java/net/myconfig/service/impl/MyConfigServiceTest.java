@@ -284,9 +284,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		List<KeySummary> keys = app.getKeySummaryList();
 		assertNotNull (keys);
 		assertEquals (3, keys.size());
-		assertKeySummary ("jdbc.password", "Password used to connect to the database", 3, keys.get(0));
-		assertKeySummary ("jdbc.url", "URL used to connect to the database", 1, keys.get(1));
-		assertKeySummary ("jdbc.user", "User used to connect to the database", 3, keys.get(2));
+		assertKeySummary ("jdbc.password", "Password used to connect to the database", 3, 12, 12, keys.get(0));
+		assertKeySummary ("jdbc.url", "URL used to connect to the database", 1, 4, 4, keys.get(1));
+		assertKeySummary ("jdbc.user", "User used to connect to the database", 3, 12, 12, keys.get(2));
 	}
 	
 	@Test
@@ -899,11 +899,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		return writer.writeValueAsString(o);
 	}
 
-	private void assertKeySummary(String name, String description, int versionNumber, KeySummary keySummary) {
+	private void assertKeySummary(String name, String description, int versionCount, int configCount, int valueCount, KeySummary keySummary) {
 		assertNotNull (keySummary);
 		assertEquals (name, keySummary.getName());
 		assertEquals (description, keySummary.getDescription());
-		assertEquals (versionNumber, keySummary.getVersionCount());
+		assertEquals (versionCount, keySummary.getVersionCount());
+		assertEquals (configCount, keySummary.getConfigCount());
+		assertEquals (valueCount, keySummary.getValueCount());
 	}
 
 	private void assertEnvironmentSummary(String name, int configCount, int valueCount,

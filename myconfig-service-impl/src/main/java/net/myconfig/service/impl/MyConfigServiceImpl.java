@@ -146,7 +146,13 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		List<KeySummary> keySummaryList = t.query(SQL.KEY_SUMMARIES, applicationCriteria, new RowMapper<KeySummary>(){
 			@Override
 			public KeySummary mapRow(ResultSet rs, int i) throws SQLException {
-				return new KeySummary(rs.getString(NAME), rs.getString(SQLColumns.DESCRIPTION), rs.getInt(SQLColumns.VERSION_COUNT));
+				String key = rs.getString(NAME);
+				String description = rs.getString(SQLColumns.DESCRIPTION);
+				int versionCount = rs.getInt(SQLColumns.VERSION_COUNT);
+				int environmentCount = rs.getInt(SQLColumns.ENVIRONMENT_COUNT);
+				int valueCount = rs.getInt(SQLColumns.VALUE_COUNT);
+				int configCount = versionCount * environmentCount;
+				return new KeySummary(key, description, versionCount, configCount, valueCount);
 			}
 		});
 		// OK
