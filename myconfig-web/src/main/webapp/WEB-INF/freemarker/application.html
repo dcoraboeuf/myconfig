@@ -1,7 +1,6 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="application" style=false modules=["items","key"]>
+<@layout_std pageId="application" style=false modules=["items","key"] title=loc("application.title", application.name)>
 	<article class="application">
-		<h1>${application.name?html}</h1>
 		<section id="app-versions">
 			<h1><@lh key="application.versions" /></h1>
 			<@items_crud
