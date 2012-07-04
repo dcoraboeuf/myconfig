@@ -18,11 +18,15 @@ public class ApplicationsPage extends Page {
 	}
 
 	public void createApplication(String name) {
+		doCreateApplication(name);
+		// Waits for the name to appear
+		driver.findElement(byApplicationName(name));
+	}
+
+	public void doCreateApplication(String name) {
 		// Creates the application with its name
 		id("application-create-name").sendKeys(name);
 		id("application-create-submit").click();
-		// Waits for the name to appear
-		driver.findElement(byApplicationName(name));
 	}
 
 	public void deleteApplication(String name) {
