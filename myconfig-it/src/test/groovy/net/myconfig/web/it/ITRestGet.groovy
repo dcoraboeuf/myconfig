@@ -190,6 +190,92 @@ Reference: """
 	}
 	
 	@Test
+	void get_env_xml_unknown_variant () {
+		http.request ( Method.GET, ContentType.TEXT ) {
+			uri.path = "env/myapp/UAT/1.2/xml/xxxx"
+			response.failure = { resp, reader ->
+				def content = reader.text
+				println("Response status : $resp.status")
+				println("Response content: $content")
+				assertEquals(500, resp.status);
+				def expectedMessage = """\
+An error has occurred.
+Message: [W-004] "xxxx" variant is not supported for rendering a configuration as XML.
+Reference: """
+				// Removes the last 36 characters of the content
+				def modifiedContent = content[0..-37]
+				// Comparison
+				assertEquals (expectedMessage, modifiedContent); 
+			}
+			response.success = { resp ->
+				fail("Should have failed")
+			}
+		}
+	}
+	
+	@Test
+	void get_env_xml_attributesOnly () {
+		http.get ( path: "env/myapp/UAT/1.2/xml/attributesOnly") { resp, xml ->
+			println("Response status : $resp.status")
+			assertEquals ("myapp", xml.@application.text())
+			assertEquals ("UAT", xml.@environment.text())
+			assertEquals ("1.2", xml.@version.text())
+			assertEquals ("jdbc.password", xml.param[0].@name.text())
+			assertEquals ("1.2 UAT jdbc.password", xml.param[0].@value.text())
+			assertEquals ("Password used to connect to the database", xml.param[0].@description.text())
+			assertEquals ("jdbc.user", xml.param[1].@name.text())
+			assertEquals ("1.2 UAT jdbc.user", xml.param[1].@value.text())
+			assertEquals ("User used to connect to the database", xml.param[1].@description.text())
+		}
+	}
+	
+	@Test
+	void get_env_xml_default () {
+		http.get ( path: "env/myapp/UAT/1.2/xml") { resp, xml ->
+			println("Response status : $resp.status")
+			assertEquals ("myapp", xml.@application.text())
+			assertEquals ("UAT", xml.@environment.text())
+			assertEquals ("1.2", xml.@version.text())
+			assertEquals ("jdbc.password", xml.param[0].@name.text())
+			assertEquals ("1.2 UAT jdbc.password", xml.param[0].@value.text())
+			assertEquals ("Password used to connect to the database", xml.param[0].@description.text())
+			assertEquals ("jdbc.user", xml.param[1].@name.text())
+			assertEquals ("1.2 UAT jdbc.user", xml.param[1].@value.text())
+			assertEquals ("User used to connect to the database", xml.param[1].@description.text())
+		}
+	}
+	
+	@Test
+	void get_env_xml_mixed () {
+		http.get ( path: "env/myapp/UAT/1.2/xml/mixed") { resp, xml ->
+			println("Response status : $resp.status")
+			assertEquals ("myapp", xml.@application.text())
+			assertEquals ("UAT", xml.@environment.text())
+			assertEquals ("1.2", xml.@version.text())
+			assertEquals ("jdbc.password", xml.param[0].@name.text())
+			assertEquals ("1.2 UAT jdbc.password", xml.param[0].text())
+			assertEquals ("jdbc.user", xml.param[1].@name.text())
+			assertEquals ("1.2 UAT jdbc.user", xml.param[1].text())
+		}
+	}
+	
+	@Test
+	void get_env_xml_tagsOnly () {
+		http.get ( path: "env/myapp/UAT/1.2/xml/tagsOnly") { resp, xml ->
+			println("Response status : $resp.status")
+			assertEquals ("myapp", xml.application.text())
+			assertEquals ("UAT", xml.environment.text())
+			assertEquals ("1.2", xml.version.text())
+			assertEquals ("jdbc.password", xml.param[0].name.text())
+			assertEquals ("1.2 UAT jdbc.password", xml.param[0].value.text())
+			assertEquals ("Password used to connect to the database", xml.param[0].description.text())
+			assertEquals ("jdbc.user", xml.param[1].name.text())
+			assertEquals ("1.2 UAT jdbc.user", xml.param[1].value.text())
+			assertEquals ("User used to connect to the database", xml.param[1].description.text())
+		}
+	}
+	
+	@Test
 	void get_env_unknown_mode () {
 		http.request ( Method.GET, ContentType.TEXT ) {
 			uri.path = "env/myapp/UAT/1.2/xxx"
