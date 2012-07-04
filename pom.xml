@@ -63,7 +63,6 @@
 		<module>myconfig-service-impl</module>
 		<module>myconfig-test</module>
 		<module>myconfig-core</module>
-		<module>myconfig-it</module>
 		<module>myconfig-acceptance</module>
 	</modules>
 
@@ -215,6 +214,11 @@
 			    <groupId>cglib</groupId>
 			    <artifactId>cglib</artifactId>
 			    <version>2.2.2</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.apache.httpcomponents</groupId>
+			    <artifactId>httpclient</artifactId>
+			    <version>4.2.1</version>
 			</dependency>
 			<dependency>
 			    <groupId>org.codehaus.groovy</groupId>
