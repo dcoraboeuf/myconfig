@@ -1,5 +1,7 @@
 package net.myconfig.acc.page;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -26,7 +28,12 @@ public class ApplicationsPage extends Page {
 		deleteButton.click();
 		// Waits for the confirmation
 		Alert alert = driver.switchTo().alert();
-		// TODO Confirms the text (code + app name)
+		// Confirms the text (code + app name)
+		assertEquals (
+				String.format(
+					"[M-001-C] Do you want to delete the \"%s\" application and all its associated configuration?",
+					name),
+				alert.getText());
 		// OK
 		alert.accept();
 		// Waits for the application list to be reloaded
