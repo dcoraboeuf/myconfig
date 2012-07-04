@@ -32,12 +32,12 @@ var versionConfiguration = function () {
 				if (data.success) {
 					location.reload();
 				} else {
-					displayError (loc('configuration.changes.submit.error'));
+					displayError (loc('versionConfiguration.changes.submit.error'));
 					$('#dialog-changes').dialog('close');
 				}
 			  },
 			  error: function (jqXHR, textStatus, errorThrown) {
-					displayAjaxError (loc('configuration.changes.submit.error'), jqXHR, textStatus, errorThrown);
+					displayAjaxError (loc('versionConfiguration.changes.submit.error'), jqXHR, textStatus, errorThrown);
 					$('#dialog-changes').dialog('close');
 			  }
 			});
@@ -69,7 +69,7 @@ var versionConfiguration = function () {
 			$('#configuration-changes').append(html);
 			// Shows the dialog
 			$('#dialog-changes').dialog({
-				title: loc('configuration.changes.confirm'),
+				title: loc('versionConfiguration.changes.confirm'),
 				width: '50%'
 			});
 		}
@@ -93,7 +93,7 @@ var versionConfiguration = function () {
 	}
 	
 	function resetConfigurationChanges () {
-		if (myconfig.displayConfirmation(loc('configuration.changes.reset.prompt'))) {
+		if (myconfig.displayConfirmation(loc('versionConfiguration.changes.reset.prompt'))) {
 			location.reload();
 		}
 	}
