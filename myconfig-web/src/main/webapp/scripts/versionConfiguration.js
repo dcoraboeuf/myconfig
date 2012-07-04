@@ -56,10 +56,10 @@ var versionConfiguration = function () {
 			var oldValue = input.getAttribute('oldvalue');
 			var value = input.value;
 			html += '<tr id="{0}">'.format(id);
-				html += '<td class="change-environment">{0}</td>'.format(environment);
-				html += '<td class="change-key">{0}</td>'.format(key);
-				html += '<td class="change-old">{0}</td>'.format(oldValue);
-				html += '<td class="change-new">{0}</td>'.format(value);
+				html += '<td class="change-environment">{0}</td>'.format(environment.html());
+				html += '<td class="change-key">{0}</td>'.format(key.html());
+				html += '<td class="change-old">{0}</td>'.format(oldValue.html());
+				html += '<td class="change-new">{0}</td>'.format(value.html());
 			html += '</tr>';
 		}
 		// Check

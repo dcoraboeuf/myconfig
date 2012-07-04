@@ -11,6 +11,10 @@ String.prototype.format = function() {
 	});
 };
 
+String.prototype.html = function() {
+	return $('<i></i>').text(this).html();
+};
+
 function loc () {
 	var code = arguments[0];
 	var text = l[code];
