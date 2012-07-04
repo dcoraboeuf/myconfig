@@ -19,8 +19,6 @@ public class GUIVersionConfigurationPage extends AbstractGUIPage {
 	public GUIVersionConfigurationPage(UIInterface ui, ErrorHandler errorHandler) {
 		super(ui, errorHandler);
 	}
-	
-	// FIXME Error management of the configuration page
 
 	@RequestMapping(value = "/{application:\\d+}/{version:.*}", method = RequestMethod.GET)
 	public String page(@PathVariable int application, @PathVariable String version, Model model) {
