@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<application>${model.application?xml}</application>
+	<environment>${model.environment?xml}</environment>
+	<version>${model.version?xml}</version>
+	<#list model.values as value>
+		<param>
+			<name>${value.key?xml}</name>
+			<value>${value.value?xml}</value>
+			<description>${value.description?xml}</description>
+		</param>
+	</#list>
+</configuration>

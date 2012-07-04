@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<application>myapp</application>
+	<environment>UAT</environment>
+	<version>1.2</version>
+		<param>
+			<name>aaa</name>
+			<value>a1</value>
+			<description>aaa description</description>
+		</param>
+		<param>
+			<name>bbb</name>
+			<value>b2</value>
+			<description>bbb description</description>
+		</param>
+		<param>
+			<name>ccc</name>
+			<value>cçc</value>
+			<description>ccc &lt;accentuée&gt;</description>
+		</param>
+</configuration>

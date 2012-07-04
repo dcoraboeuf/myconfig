@@ -20,6 +20,12 @@ public class HttpRendererServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
+	public void xmlAvailable() {
+		HttpRenderer<ConfigurationSet> renderer = httpRendererService.getRenderer(ConfigurationSet.class, "xml");
+		assertNotNull (renderer);
+	}
+	
+	@Test
 	public void propertiesAvailable() {
 		HttpRenderer<ConfigurationSet> renderer = httpRendererService.getRenderer(ConfigurationSet.class, "properties");
 		assertNotNull (renderer);

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration application="myapp" environment="UAT" version="1.2">
+		<param name="aaa" value="a1" description="aaa description" />
+		<param name="bbb" value="b2" description="bbb description" />
+		<param name="ccc" value="cçc" description="ccc &lt;accentuée&gt;" />
+</configuration>
