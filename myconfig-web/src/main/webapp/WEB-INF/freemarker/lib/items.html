@@ -58,14 +58,14 @@
 <#macro item_error key="error">	
 	<#if .data_model[key]??>
 		<div class="item-command error">
-			${.data_model[key]}
+			${.data_model[key]?html}
 		</div>
 	</#if>
 </#macro>
 
 <#macro item_column field item class="">
 	<td class="item-column item-column-${field} ${class}">
-		${item[field]}
+		${item[field]?html}
 	</td>
 </#macro>
 
@@ -73,7 +73,7 @@
 	<#assign missingCount = item.configCount - item.valueCount />
 	<td class="item-column item-column-missingValuesCount item-column-type-number">
 		<#if (missingCount gt 0) && (action != "")>
-			<a href="${action}/${item[actionItemField]}">${missingCount}</a>
+			<a href="${action}/${item[actionItemField]?html}">${missingCount}</a>
 		<#else>
 			${missingCount}
 		</#if>
@@ -92,13 +92,13 @@
 	<#assign itemPrompt = loc (promptKey, itemPromptField) />
 	<form class="item-action item-action-delete" action="${action}" method="post" onsubmit="return myconfig.displayConfirmationID ('item-action-delete-${itemField}-prompt');">
 		<input id="item-action-delete-${itemField}-prompt" type="hidden" value="${itemPrompt?html}" />
-		<input type="hidden" name="${formField}" value="${itemField}" />
+		<input type="hidden" name="${formField}" value="${itemField?html}" />
 		<input class="item-action item-action-delete" type="image" src="images/delete.png" />
 	</form>
 </#macro>
 
 <#macro item_edit item action itemField="id">
-	<form class="item-action item-action-edit" action="${action}/${item[itemField]}" method="get">
+	<form class="item-action item-action-edit" action="${action}/${item[itemField]?html}" method="get">
 		<input class="item-action item-action-edit" type="image" src="images/edit.png" />
 	</form>
 </#macro>
