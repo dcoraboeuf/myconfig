@@ -4,7 +4,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.google.common.base.Function;
+
 public abstract class Page {
+	
+	public static final Function<WebElement,String> webElementTextFn = new WebElementTextFn();
+	
+	private static class WebElementTextFn implements Function<WebElement,String> {
+		@Override
+		public String apply(WebElement e) {
+			return e.getText();
+		}
+	}
 
 	protected final WebDriver driver;
 

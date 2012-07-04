@@ -1,11 +1,15 @@
 package net.myconfig.acc.page;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+
+import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import com.google.common.collect.Lists;
 
 public class ApplicationsPage extends Page {
 
@@ -29,23 +33,24 @@ public class ApplicationsPage extends Page {
 		// Waits for the confirmation
 		Alert alert = driver.switchTo().alert();
 		// Confirms the text (code + app name)
-		assertEquals (
-				String.format(
-					"[M-001-C] Do you want to delete the \"%s\" application and all its associated configuration?",
-					name),
-				alert.getText());
+		assertEquals(String.format("[M-001-C] Do you want to delete the \"%s\" application and all its associated configuration?", name), alert.getText());
 		// OK
 		alert.accept();
 		// Waits for the application list to be reloaded
 		id("applications");
-		// TODO Checks the application is not there any longer
-		// WebDriverWait wait = new WebDriverWait(driver, 2);
-		// wait.until(ExpectedConditions.presenceOfElementLocated(byApplicationName(name)));
+		// Checks the application is not there any longer
+		List<String> appNames = getApplicationNames();
+		assertFalse(String.format("%s application has not been deleted", name), appNames.contains(name));
 	}
 
-	protected By byApplicationName(String name) {
+	public List<String> getApplicationNames() {
+		List<WebElement> tds = driver.findElements(byXpath("//td[contains(@class, 'item-column-name')]"));
+		List<String> appNames = Lists.transform(tds, webElementTextFn);
+		return appNames;
+	}
+
+	public By byApplicationName(String name) {
 		return byElement("td", "item-column-name", name);
 	}
-	
 
 }
