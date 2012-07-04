@@ -9,6 +9,7 @@ import net.myconfig.service.exception.CoreException;
 import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,20 +33,25 @@ public class DefaultErrorHandler implements ErrorHandler {
 		// Generates a UUID
 		String uuid = UUID.randomUUID().toString();
 		// Error message
-		String message;
+		String displayMessage;
+		String loggedMessage;
 		if (ex instanceof LocalizableException) {
-			message = ((LocalizableException)ex).getLocalizedMessage(strings, Locale.ENGLISH);
+			loggedMessage = ((LocalizableException)ex).getLocalizedMessage(strings, Locale.ENGLISH);
+			displayMessage = ((LocalizableException)ex).getLocalizedMessage(strings, locale);
 		} else {
-			// FIXME Better management of generic messages
-			message = ex.getMessage();
+			loggedMessage = ex.getMessage();
+			// Gets a display message for this exception class
+			displayMessage = strings.get(Locale.ENGLISH, ex.getClass().getName(), false);
+			if (StringUtils.isBlank(displayMessage)) {
+				displayMessage = strings.get(Locale.ENGLISH, "general.error.message");
+			}
 		}
 		// Traces the error
 		// TODO Adds request information
 		// TODO Adds authentication information
-		// TODO Custom logging for Prod
-		errors.error(String.format("[%s] %s", uuid, message));
+		errors.error(String.format("[%s] %s", uuid, loggedMessage));
 		// OK
-		return new ErrorMessage(uuid, message);
+		return new ErrorMessage(uuid, displayMessage);
 	}
 	
 	@Override
