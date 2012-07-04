@@ -162,9 +162,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void applicationCreate () {
-		ApplicationSummary summary = myConfigService.createApplication("test");
+		doApplicationCreate("test");
+	}
+	
+	@Test
+	public void applicationCreate_special_characters () {
+		doApplicationCreate("te - _ s.t");
+	}
+
+	protected void doApplicationCreate(String name) {
+		ApplicationSummary summary = myConfigService.createApplication(name);
 		assertNotNull (summary);
-		assertEquals ("test", summary.getName());
+		assertEquals (name, summary.getName());
 		assertTrue (summary.getId() > 0);
 		assertEquals (0, summary.getVersionCount());
 		assertEquals (0, summary.getKeyCount());
@@ -205,6 +214,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		} catch (ValidationException ex) {
 			assertEquals (
 					"[S-012] [V-001] Application name is invalid: may not be blank",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void applicationCreate_unrecognized_characters () {
+		try {
+			myConfigService.createApplication("<te/st\u00E9>");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-001] Application name is invalid: must be sequence of ASCII letters, dash(-), underscore(_) and/or spaces ( )",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
