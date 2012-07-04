@@ -8,7 +8,7 @@
 	</#if>
 </#macro>
 
-<#macro layout_root pageId style=false modules=[] title="">
+<#macro layout_root pageId style=false script=false modules=[] title="">
 	<!DOCTYPE html>
 	<#-- TODO Language -->
 	<html lang="en">
@@ -32,6 +32,9 @@
 			<script src="localization" type="text/javascript"></script>
 			<script src="scripts/common.js" type="text/javascript"></script>	
 			<script src="scripts/myconfig.js" type="text/javascript"></script>	
+			<#if script>
+				<script src="scripts/${pageId}.js" type="text/javascript"></script>
+			</#if>
 			<title><@lh key="app.title" /> - <@lh key="app.version" /> - <@layout_title pageId=pageId title=title /></title>
 	    </head>
 		<body>
@@ -40,8 +43,8 @@
 	</html>
 </#macro>
 
-<#macro layout_basic pageId style=false modules=[] title="">
-	<@layout_root pageId=pageId style=style modules=modules title=title>
+<#macro layout_basic pageId style=false script=false modules=[] title="">
+	<@layout_root pageId=pageId style=style script=script modules=modules title=title>
 		<section class="app-title">
 			<span class="app-title"><@lh key="app.title" /></span>
 			<div class="app-meta">
@@ -58,9 +61,9 @@
 	</@layout_root>
 </#macro>
 
-<#macro layout_std pageId style=false modules=[] title="">
+<#macro layout_std pageId style=false script=true modules=[] title="">
 	<#assign navItems = [] />
-	<@layout_basic pageId=pageId style=style modules=modules title=title>
+	<@layout_basic pageId=pageId style=style script=script modules=modules title=title>
 		<article class="std-page">
 			<h1><@layout_title pageId=pageId title=title /></h1>
 			<div class="std-content">
