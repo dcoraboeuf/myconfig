@@ -19,6 +19,7 @@ import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
+import net.myconfig.service.exception.EnvironmentNotDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
@@ -688,14 +689,14 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	/**
-	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
+	 * FIXME Test for an application where environments, keys, versions and matrix have been configured, but where no value
 	 * has been added yet.
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
 	@Ignore
 	public void environment_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(2, "1.0.1");
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(2, "DEV");
 		assertNotNull (configuration);
 		assertJSONEquals (
 				new VersionConfiguration(2, "anotherapp", "1.0.1", "1.0.0", null,
@@ -722,105 +723,100 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	@Ignore
 	public void environment_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.2");
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(1, "UAT");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(1, "myapp", "1.2", "1.1", null,
+				new EnvironmentConfiguration(1, "myapp", "UAT", "PROD", null,
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.url", "URL used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new IndexedValues<String>(
-									"ACC",
-									map (
-											"jdbc.password", "1.2 jdbc.password ACC",
-											"jdbc.url", "1.2 jdbc.url ACC",
-											"jdbc.user", "1.2 jdbc.user ACC")),
-							new IndexedValues<String>(
-									"DEV",
-									map (
-											"jdbc.password", "1.2 jdbc.password DEV",
-											"jdbc.url", "1.2 jdbc.url DEV",
-											"jdbc.user", "1.2 jdbc.user DEV")),
-							new IndexedValues<String>(
-									"PROD",
-									map (
-											"jdbc.password", "1.2 jdbc.password PROD",
-											"jdbc.url", "1.2 jdbc.url PROD",
-											"jdbc.user", "1.2 jdbc.user PROD")),
-							new IndexedValues<String>(
-									"UAT",
-									map (
-											"jdbc.password", "1.2 jdbc.password UAT",
-											"jdbc.url", "1.2 jdbc.url UAT",
-											"jdbc.user", "1.2 jdbc.user UAT"))
-							)
-					),
+							new IndexedValues<ConditionalValue>(
+									"1.0",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.0 jdbc.password UAT"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.0 jdbc.user UAT"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.1",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.1 jdbc.password UAT"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.1 jdbc.user UAT"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.2",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password UAT"))
+									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url UAT"))
+									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user UAT"))
+									.build())
+					)
+				),
 				configuration);
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	@Ignore
 	public void environment_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.0");
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(1, "ACC");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(1, "myapp", "1.0", null, "1.1",
+				new EnvironmentConfiguration(1, "myapp", "ACC", null, "DEV",
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.url", "URL used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new IndexedValues<String>(
-									"ACC",
-									map (
-											"jdbc.password", "1.0 jdbc.password ACC",
-											"jdbc.user", "1.0 jdbc.user ACC")),
-							new IndexedValues<String>(
-									"DEV",
-									map (
-											"jdbc.password", "1.0 jdbc.password DEV",
-											"jdbc.user", "1.0 jdbc.user DEV")),
-							new IndexedValues<String>(
-									"PROD",
-									map (
-											"jdbc.password", "1.0 jdbc.password PROD",
-											"jdbc.user", "1.0 jdbc.user PROD")),
-							new IndexedValues<String>(
-									"UAT",
-									map (
-											"jdbc.password", "1.0 jdbc.password UAT",
-											"jdbc.user", "1.0 jdbc.user UAT"))
-							)
-					),
+							new IndexedValues<ConditionalValue>(
+									"1.0",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.0 jdbc.password ACC"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.0 jdbc.user ACC"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.1",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.1 jdbc.password ACC"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.1 jdbc.user ACC"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.2",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password ACC"))
+									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url ACC"))
+									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user ACC"))
+									.build())
+					)
+				),
 				configuration);
 	}
 
 	@Test(expected = ApplicationNotFoundException.class)
-	@Ignore
 	public void environment_configuration_no_app() {
-		myConfigService.getVersionConfiguration(0, "");
+		myConfigService.getEnvironmentConfiguration(0, "");
 	}
 	
-	@Test(expected = VersionNotDefinedException.class)
-	@Ignore
+	@Test(expected = EnvironmentNotDefinedException.class)
 	public void environment_configuration_no_version() {
-		myConfigService.getVersionConfiguration(1, "1.x");
+		myConfigService.getEnvironmentConfiguration(1, "xxx");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	@Ignore
 	public void environment_configuration_update_no_app () {
-		myConfigService.updateVersionConfiguration(0, "1.0", null);
+		// FIXME myConfigService.updateEnvironmentConfiguration(0, "1.0", null);
 	}
 	
 	@Test(expected = VersionNotDefinedException.class)
 	@Ignore
 	public void environment_configuration_update_no_version () {
-		myConfigService.updateVersionConfiguration(1, "1.x", null);
+		// FIXME myConfigService.updateEnvironmentConfiguration(1, "1.x", null);
 	}
 	
 	@Test
