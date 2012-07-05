@@ -21,14 +21,14 @@
 			key="${key.name?html}"
 			environment="${environment?html}"
 			version="${version?html}"
-			onchange="versionConfiguration.updateConfigurationValue(this)"
+			onchange="configuration.updateConfigurationValue(this)"
 			/>
 	<#else>
 		<a href="gui/matrix/${environmentConfiguration.id}" title="${loc('environmentConfiguration.na.tip',key,version)?html}"><@lh key="environmentConfiguration.na" /></a>
 	</#if>
 </#macro>
 
-<@layout_std pageId="environmentConfiguration" style=true script=true modules=[] title=loc('environmentConfiguration', environmentConfiguration.environment)>
+<@layout_std pageId="environmentConfiguration" style=true script=false scripts=["configuration.js"] modules=[] title=loc('environmentConfiguration', environmentConfiguration.environment)>
 	<input id="application" type="hidden" value="${environmentConfiguration.id}" />
 	<input id="environment" type="hidden" value="${environmentConfiguration.environment?html}" />
 	<article class="configuration">
@@ -68,8 +68,8 @@
 			<tfoot>
 				<tr>
 					<td colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }" class="configuration-commands">
-						<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="environmentConfiguration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-						<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="environmentConfiguration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
+						<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="configuration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+						<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
 					</td>
 				</tr>
 			</tfoot>
@@ -82,6 +82,7 @@
 		<table class="configuration-changes">
 			<thead>
 				<tr>
+					<th><@lh key="configuration.change.environment" /></th>
 					<th><@lh key="configuration.change.version" /></th>
 					<th><@lh key="configuration.change.key" /></th>
 					<th><@lh key="configuration.change.oldvalue" /></th>
@@ -93,7 +94,7 @@
 			<tfoot>
 				<tr>
 					<td colspan="4" class="configuration-commands">
-						<div class="configuration-command configuration-command-submit" onclick="environmentConfiguration.submitConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+						<div class="configuration-command configuration-command-submit" onclick="configuration.submitConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
 						<div class="configuration-command configuration-command-cancel" onclick="$('#dialog-changes').dialog('close')"><@lh key="general.cancel" /></div>
 					</td>
 				</tr>
