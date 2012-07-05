@@ -6,7 +6,7 @@ var versionConfiguration = function () {
 		// URL
 		var application = $('#application').val();
 		var version = $('#version').val();
-		var url = 'ui/configuration/{0}/{1}'.format(application, version);
+		var url = 'ui/configuration/{0}'.format(application);
 		// Data		
 		var data = {updates: []};
 		for (var i in configurationChanges) {
@@ -17,6 +17,7 @@ var versionConfiguration = function () {
 			var value = input.value;
 			data.updates.push({
 				environment: environment,
+				version: version,
 				key: key,
 				value: value
 			});
