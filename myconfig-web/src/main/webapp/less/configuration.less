@@ -1,0 +1,129 @@
+@import "general";
+
+article.configuration {
+	input.value {
+		&.changed {
+			border: solid 2px red;
+		}
+	}
+	table {
+		margin-bottom: 20px;
+		thead tr.navigation th {
+			.rounded;
+			background-color: @table-head-bg;
+			.current {
+				font-size: 150%;
+				.rounded;
+				background-color: white;
+				padding-top: 1px;
+				padding-bottom: 1px;
+			}
+			a {
+				display: block;
+				margin-top: 5px;
+				.rounded;
+				text-decoration: none;
+				color: blue;
+				padding-top: 1px;
+				padding-bottom: 1px;
+				&.previous {
+					float: left;
+					background-image: url('../images/previous.png');
+					background-repeat: no-repeat;
+					background-position: left center;
+					padding-left: 25px;
+				}
+				&.next {
+					float: right;
+					background-image: url('../images/next.png');
+					background-repeat: no-repeat;
+					background-position: right center;
+					padding-right: 25px;
+				}
+			}
+		}
+		tr.columns {
+			th {
+				.rounded;
+				&.key-title {
+					background-color: gray;
+				}
+				&.column-title {
+					background-color: lightgray;
+				}
+			}
+		}
+		td.key {
+			.rounded;
+			background-color: lightgray;
+			.key-name {
+				font-weight: bold;
+			}
+			.key-description {
+				font-size: 75%;
+				font-style: italic;
+			}
+		}
+		td.key-value {
+			vertical-align: top;
+		}
+	}
+}
+
+table.configuration-changes {
+	th {
+		.rounded;
+		background-color: @table-head-bg;
+	}
+	td {
+		.rounded;
+		background-color: lightgray;
+		&.change-environment, &.change-key {
+		}
+		&.change-old, &.change-new {
+			background-color: white;
+			border: solid 1px gray;
+		}
+		&.change-new {
+			background-image: url('../images/next.png');
+			background-repeat: no-repeat;
+			background-position: 5px center;
+			padding-left: 25px;
+		}
+	}
+}
+
+tfoot {
+	td.configuration-commands {
+		.rounded;
+		.action;
+		background-color: @table-foot-bg;
+		div.configuration-command {
+			border-radius: 5px;
+			padding: 2px 5px 2px 5px;
+			margin-top: 2px;
+			margin-bottom: 2px;
+			display: inline;
+			&.configuration-command-submit {
+				background-color: white;
+				border: solid 1px blue;
+				font-weight: bold;
+				color: black;
+				&.configuration-command-disabled {
+					border: solid 1px lightgray;
+					color: lightgray;
+					.noaction;
+				}
+			}
+			&.configuration-command-cancel {
+				text-decoration: underline;
+				color: blue;
+				&.configuration-command-disabled {
+					text-decoration: none;
+					color: lightgray;
+					.noaction;
+				}
+			}
+		}
+	}
+}

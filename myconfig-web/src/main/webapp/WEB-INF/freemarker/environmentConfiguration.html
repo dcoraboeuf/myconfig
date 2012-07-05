@@ -34,7 +34,7 @@
 	<article class="configuration">
 		<table>
 			<thead>
-				<tr class="environment">
+				<tr class="navigation">
 					<th colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }">
 						<@configuration_environment value=environmentConfiguration.previousVersion class="previous" />
 						<span class="environment current">${environmentConfiguration.environment?html}</span>
@@ -44,7 +44,7 @@
 				<tr class="columns">
 					<th class="key-title"><@lh key="model.key.name" /></th>
 					<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
-						<th class="version">
+						<th class="column-title">
 							<a href="gui/configuration/version/${environmentConfiguration.id}/${versionConfiguration.name?html}">${versionConfiguration.name?html}</a>
 						</th>
 					</#list>
