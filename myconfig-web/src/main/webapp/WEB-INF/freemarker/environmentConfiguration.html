@@ -1,65 +1,65 @@
 <#include "/lib/layout.html">
 
-<#macro configuration_version class="" value="">
+<#macro configuration_environment class="" value="">
 	<#if value != "">
-		<a href="gui/configuration/version/${versionConfiguration.id}/${value}" class="version ${class}">${value?html}</a>
+		<a href="gui/configuration/environment/${versionConfiguration.id}/${value?html}" class="environment ${class}">${value?html}</a>
 	</#if>
 </#macro>
 
 <#macro configuration_value value key environment version>
-	<input
-		class="value"
-		id="value_${key.name?html}_${environment?html}_${version?html}"
-		name="value_${key.name?html}_${environment?html}_${version?html}"
-		oldvalue="${value?html}"
-		value="${value?html}"
-		maxlength="500"
-		size="30"
-		application="${versionConfiguration.id}"
-		key="${key.name?html}"
-		environment="${environment?html}"
-		version="${version?html}"
-		onchange="versionConfiguration.updateConfigurationValue(this)"
-		/>
+	<#if value.enabled>
+		<#assign textValue = value.value />
+		<input
+			class="value"
+			id="value_${key.name?html}_${environment?html}_${version?html}"
+			name="value_${key.name?html}_${environment?html}_${version?html}"
+			oldvalue="${textValue?html}"
+			value="${textValue?html}"
+			maxlength="500"
+			size="30"
+			application="${environmentConfiguration.id}"
+			key="${key.name?html}"
+			environment="${environment?html}"
+			version="${version?html}"
+			onchange="versionConfiguration.updateConfigurationValue(this)"
+			/>
+	<#else>
+		<a href="gui/matrix/${environmentConfiguration.id}" title="${loc('environmentConfiguration.na.tip',key,version)?html}"><@lh key="environmentConfiguration.na" /></a>
+	</#if>
 </#macro>
 
-<@layout_std pageId="versionConfiguration" style=true script=true modules=[]>
-	<input id="application" type="hidden" value="${versionConfiguration.id}" />
-	<input id="version" type="hidden" value="${versionConfiguration.version?html}" />
+<@layout_std pageId="environmentConfiguration" style=true script=true modules=[] title=loc('environmentConfiguration', environmentConfiguration.environment)>
+	<input id="application" type="hidden" value="${environmentConfiguration.id}" />
+	<input id="environment" type="hidden" value="${environmentConfiguration.environment?html}" />
 	<article class="configuration">
 		<table>
 			<thead>
-				<tr class="version">
-					<th colspan="${ versionConfiguration.environmentValuesPerKeyList?size + 1 }">
-						<@configuration_version value=versionConfiguration.previousVersion class="previous" />
-						<span class="version current">${versionConfiguration.version?html}</span>
-						<@configuration_version value=versionConfiguration.nextVersion class="next" />
+				<tr class="environment">
+					<th colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }">
+						<@configuration_environment value=environmentConfiguration.previousVersion class="previous" />
+						<span class="environment current">${environmentConfiguration.environment?html}</span>
+						<@configuration_environment value=environmentConfiguration.nextVersion class="next" />
 					</th>
 				</tr>
 				<tr class="columns">
 					<th class="key-title"><@lh key="model.key.name" /></th>
-					<#list versionConfiguration.environmentValuesPerKeyList as environmentConfiguration>
-						<th class="environment">
-							<a href="gui/configuration/environment/${versionConfiguration.id}/${environmentConfiguration.name?html}">${environmentConfiguration.name?html}</a>
+					<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
+						<th class="version">
+							<a href="gui/configuration/version/${environmentConfiguration.id}/${versionConfiguration.name?html}">${versionConfiguration.name?html}</a>
 						</th>
 					</#list>
 				</tr>
 			</thead>
 			<tbody>
-				<#list versionConfiguration.keyList as key>
+				<#list environmentConfiguration.keyList as key>
 					<tr>
 						<td class="key">
 							<div class="key-name">${key.name?html}</div>
 							<div class="key-description"><@ellipsis value=key.description maxlength=30 /></div>
 						</td>
-						<#list versionConfiguration.environmentValuesPerKeyList as environmentConfiguration>
+						<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
 							<td class="key-value">
-								<#if environmentConfiguration.values[key.name]??>
-									<#assign value = environmentConfiguration.values[key.name] />
-								<#else>
-									<#assign value = "" />
-								</#if>
-								<@configuration_value value=value key=key environment=environmentConfiguration.name version=versionConfiguration.version />
+								<@configuration_value value=versionConfiguration.values[key.name] key=key environment=environmentConfiguration.environment version=versionConfiguration.name />
 							</td>
 						</#list>
 					</tr>
