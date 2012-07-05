@@ -158,9 +158,9 @@ public class ProdConfiguration extends CommonConfiguration {
 		// Loads the properties
 		InputStream in = new BufferedInputStream(new FileInputStream(configFile));
 		try {
-			Properties properties = new Properties();
-			properties.load(in);
-			return properties;
+			Properties props = new Properties();
+			props.load(in);
+			return props;
 		} finally {
 			in.close();
 		}
