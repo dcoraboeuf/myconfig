@@ -33,7 +33,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
-import net.myconfig.service.model.EnvironmentConfiguration;
+import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
@@ -655,22 +655,22 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"ACC",
 									map (
 											"jdbc.password", "1.1 jdbc.password ACC",
 											"jdbc.user", "1.1 jdbc.user ACC")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"DEV",
 									map (
 											"jdbc.password", "1.1 jdbc.password DEV",
 											"jdbc.user", "1.1 jdbc.user DEV")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"PROD",
 									map (
 											"jdbc.password", "1.1 jdbc.password PROD",
 											"jdbc.user", "1.1 jdbc.user PROD")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"UAT",
 									map (
 											"jdbc.password", "1.1 jdbc.password UAT",
@@ -694,16 +694,16 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("key1", "Key 1"),
 							new Key("key2", "Key 2")),
 					Arrays.asList(
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"ACC",
 									Collections.<String,String>emptyMap()),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"DEV",
 									Collections.<String,String>emptyMap()),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"PROD",
 									Collections.<String,String>emptyMap()),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"UAT",
 									Collections.<String,String>emptyMap())
 							)
@@ -722,25 +722,25 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.url", "URL used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"ACC",
 									map (
 											"jdbc.password", "1.2 jdbc.password ACC",
 											"jdbc.url", "1.2 jdbc.url ACC",
 											"jdbc.user", "1.2 jdbc.user ACC")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"DEV",
 									map (
 											"jdbc.password", "1.2 jdbc.password DEV",
 											"jdbc.url", "1.2 jdbc.url DEV",
 											"jdbc.user", "1.2 jdbc.user DEV")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"PROD",
 									map (
 											"jdbc.password", "1.2 jdbc.password PROD",
 											"jdbc.url", "1.2 jdbc.url PROD",
 											"jdbc.user", "1.2 jdbc.user PROD")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"UAT",
 									map (
 											"jdbc.password", "1.2 jdbc.password UAT",
@@ -761,22 +761,22 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"ACC",
 									map (
 											"jdbc.password", "1.0 jdbc.password ACC",
 											"jdbc.user", "1.0 jdbc.user ACC")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"DEV",
 									map (
 											"jdbc.password", "1.0 jdbc.password DEV",
 											"jdbc.user", "1.0 jdbc.user DEV")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"PROD",
 									map (
 											"jdbc.password", "1.0 jdbc.password PROD",
 											"jdbc.user", "1.0 jdbc.user PROD")),
-							new EnvironmentConfiguration(
+							new IndexedValues(
 									"UAT",
 									map (
 											"jdbc.password", "1.0 jdbc.password UAT",

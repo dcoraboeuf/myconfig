@@ -4,12 +4,12 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-public class EnvironmentConfiguration {
+public class IndexedValues {
 
 	private final String name;
 	private final Map<String, String> values;
 
-	public EnvironmentConfiguration(String name, Map<String, String> values) {
+	public IndexedValues(String name, Map<String, String> values) {
 		this.name = name;
 		this.values = ImmutableMap.copyOf(values);
 	}

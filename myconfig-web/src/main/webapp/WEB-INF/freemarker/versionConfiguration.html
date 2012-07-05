@@ -30,7 +30,7 @@
 		<table>
 			<thead>
 				<tr class="version">
-					<th colspan="${ versionConfiguration.environmentConfigurationList?size + 1 }">
+					<th colspan="${ versionConfiguration.environmentValuesPerKeyList?size + 1 }">
 						<@configuration_version value=versionConfiguration.previousVersion class="previous" />
 						<span class="version current">${versionConfiguration.version?html}</span>
 						<@configuration_version value=versionConfiguration.nextVersion class="next" />
@@ -38,7 +38,7 @@
 				</tr>
 				<tr class="columns">
 					<th class="key-title"><@lh key="model.key.name" /></th>
-					<#list versionConfiguration.environmentConfigurationList as environmentConfiguration>
+					<#list versionConfiguration.environmentValuesPerKeyList as environmentConfiguration>
 						<th class="environment">
 							${environmentConfiguration.name?html}
 						</th>
@@ -52,7 +52,7 @@
 							<div class="key-name">${key.name?html}</div>
 							<div class="key-description"><@ellipsis value=key.description maxlength=30 /></div>
 						</td>
-						<#list versionConfiguration.environmentConfigurationList as environmentConfiguration>
+						<#list versionConfiguration.environmentValuesPerKeyList as environmentConfiguration>
 							<td class="key-value">
 								<#if environmentConfiguration.values[key.name]??>
 									<#assign value = environmentConfiguration.values[key.name] />
@@ -67,7 +67,7 @@
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="${ versionConfiguration.environmentConfigurationList?size + 1 }" class="configuration-commands">
+					<td colspan="${ versionConfiguration.environmentValuesPerKeyList?size + 1 }" class="configuration-commands">
 						<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="versionConfiguration.controlConfigurationChanges()"><@lh key="versionConfiguration.changes.submit" /></div>
 						<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="versionConfiguration.resetConfigurationChanges()"><@lh key="versionConfiguration.changes.reset" /></div>
 					</td>

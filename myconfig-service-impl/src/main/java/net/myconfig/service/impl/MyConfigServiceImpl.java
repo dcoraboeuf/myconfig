@@ -40,7 +40,7 @@ import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.Environment;
-import net.myconfig.service.model.EnvironmentConfiguration;
+import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
@@ -343,16 +343,16 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			environmentConfiguration.put(key, value);
 		}
 		// List of values per environment x key x version
-		List<EnvironmentConfiguration> environmentConfigurationList = Lists.transform(environments, new Function<Environment, EnvironmentConfiguration>() {
+		List<IndexedValues> environmentConfigurationList = Lists.transform(environments, new Function<Environment, IndexedValues>() {
 
 			@Override
-			public EnvironmentConfiguration apply(Environment environment) {
+			public IndexedValues apply(Environment environment) {
 				String name = environment.getName();
 				Map<String, String> values = environmentValues.get(name);
 				if (values == null) {
 					values = Collections.emptyMap();
 				}
-				return new EnvironmentConfiguration(name, values);
+				return new IndexedValues(name, values);
 			}
 		});
 		// Previous & next version

@@ -12,16 +12,16 @@ public class VersionConfiguration {
 	private final String previousVersion;
 	private final String nextVersion;
 	private final List<Key> keyList;
-	private final List<EnvironmentConfiguration> environmentConfigurationList;
+	private final List<IndexedValues> environmentValuesPerKeyList;
 
-	public VersionConfiguration(int id, String name, String version, String previousVersion, String nextVersion, List<Key> keyList, List<EnvironmentConfiguration> environmentConfigurationList) {
+	public VersionConfiguration(int id, String name, String version, String previousVersion, String nextVersion, List<Key> keyList, List<IndexedValues> environmentValuesPerKeyList) {
 		this.id = id;
 		this.name = name;
 		this.version = version;
 		this.previousVersion = previousVersion;
 		this.nextVersion = nextVersion;
 		this.keyList = ImmutableList.copyOf(keyList);
-		this.environmentConfigurationList = ImmutableList.copyOf(environmentConfigurationList);
+		this.environmentValuesPerKeyList = ImmutableList.copyOf(environmentValuesPerKeyList);
 	}
 
 	public int getId() {
@@ -48,8 +48,8 @@ public class VersionConfiguration {
 		return nextVersion;
 	}
 
-	public List<EnvironmentConfiguration> getEnvironmentConfigurationList() {
-		return environmentConfigurationList;
+	public List<IndexedValues> getEnvironmentValuesPerKeyList() {
+		return environmentValuesPerKeyList;
 	}
 
 }
