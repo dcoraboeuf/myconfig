@@ -61,9 +61,9 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/configuration/{application}/{version:.*}", method = RequestMethod.POST)
-	public @ResponseBody Ack updateVersionConfiguration(@PathVariable int application, @PathVariable  String version, @RequestBody ConfigurationUpdates updates) {
-		return getMyConfigService().updateConfiguration (application, version, updates);
+	@RequestMapping(value = "/configuration/{application:\\d+}", method = RequestMethod.POST)
+	public @ResponseBody Ack updateConfiguration(@PathVariable int application, @RequestBody ConfigurationUpdates updates) {
+		return getMyConfigService().updateConfiguration (application, updates);
 	}
 	
 	@Override

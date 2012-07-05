@@ -39,6 +39,6 @@ public interface UIInterface {
 
 	VersionConfiguration versionConfiguration(int application, String version);
 
-	Ack updateVersionConfiguration(int application, String version, ConfigurationUpdates updates);
+	Ack updateConfiguration(int application, ConfigurationUpdates updates);
 
 }
