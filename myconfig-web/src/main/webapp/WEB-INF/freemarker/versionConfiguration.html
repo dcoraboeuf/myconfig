@@ -23,7 +23,7 @@
 		/>
 </#macro>
 
-<@layout_std pageId="versionConfiguration" style=true script=true modules=[]>
+<@layout_std pageId="versionConfiguration" style=true script=true modules=[] title=loc('versionConfiguration', versionConfiguration.version)>
 	<input id="application" type="hidden" value="${versionConfiguration.id}" />
 	<input id="version" type="hidden" value="${versionConfiguration.version?html}" />
 	<article class="configuration">
