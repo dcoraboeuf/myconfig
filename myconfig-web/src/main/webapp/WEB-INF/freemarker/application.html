@@ -38,12 +38,16 @@
 					"field": "name"
 					}, {
 					"header": "application.environment.missingCount",
-					"special": "missing_count"
+					"special": "missing_count",
+					"action": "gui/configuration/environment/${application.id}",
+					"actionItemField": "name"
 					}]
 				list=application.environmentSummaryList
 				deleteAction="gui/application/${application.id}/environment/delete"
 				deleteField="name"
 				deletePromptKey="environment.delete"
+				editAction="gui/configuration/environment/${application.id}"
+				editField="name"
 				createId="environment-create"
 				createAction="gui/application/${application.id}/environment/create"
 				errorKey="environment_error"
