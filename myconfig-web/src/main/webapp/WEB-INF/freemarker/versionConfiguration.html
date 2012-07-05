@@ -68,8 +68,8 @@
 			<tfoot>
 				<tr>
 					<td colspan="${ versionConfiguration.environmentValuesPerKeyList?size + 1 }" class="configuration-commands">
-						<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="versionConfiguration.controlConfigurationChanges()"><@lh key="versionConfiguration.changes.submit" /></div>
-						<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="versionConfiguration.resetConfigurationChanges()"><@lh key="versionConfiguration.changes.reset" /></div>
+						<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="versionConfiguration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+						<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="versionConfiguration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
 					</td>
 				</tr>
 			</tfoot>
@@ -82,10 +82,10 @@
 		<table class="configuration-changes">
 			<thead>
 				<tr>
-					<th><@lh key="versionConfiguration.change.environment" /></th>
-					<th><@lh key="versionConfiguration.change.key" /></th>
-					<th><@lh key="versionConfiguration.change.oldvalue" /></th>
-					<th><@lh key="versionConfiguration.change.value" /></th>
+					<th><@lh key="configuration.change.environment" /></th>
+					<th><@lh key="configuration.change.key" /></th>
+					<th><@lh key="configuration.change.oldvalue" /></th>
+					<th><@lh key="configuration.change.value" /></th>
 				</tr>
 			</thead>
 			<tbody id="configuration-changes">
@@ -93,7 +93,7 @@
 			<tfoot>
 				<tr>
 					<td colspan="4" class="configuration-commands">
-						<div class="configuration-command configuration-command-submit" onclick="versionConfiguration.submitConfigurationChanges()"><@lh key="versionConfiguration.changes.submit" /></div>
+						<div class="configuration-command configuration-command-submit" onclick="versionConfiguration.submitConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
 						<div class="configuration-command configuration-command-cancel" onclick="$('#dialog-changes').dialog('close')"><@lh key="general.cancel" /></div>
 					</td>
 				</tr>
