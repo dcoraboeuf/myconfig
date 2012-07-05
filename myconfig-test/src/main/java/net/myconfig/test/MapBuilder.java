@@ -5,7 +5,7 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-public class MapBuilder<K, V> {
+public final class MapBuilder<K, V> {
 
 	public static <K, V> MapBuilder<K, V> create() {
 		return new MapBuilder<K, V>();
