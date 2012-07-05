@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.myconfig.core.MyConfigProfiles;
+
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
@@ -22,8 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 @TestExecutionListeners(CleanInsertTestExecutionListener.class)
 @Transactional
 @ContextConfiguration({ "classpath*:META-INF/spring/*.xml" })
-@ActiveProfiles(profiles = { "test" })
+@ActiveProfiles(profiles = { MyConfigProfiles.TEST })
 public abstract class AbstractIntegrationTest extends AbstractJUnit4SpringContextTests {
+
+	private static final String TABLE_TEST = "test";
 
 	protected ITable getTable(String name, String sql, Object... parameters) throws DataSetException, SQLException {
 		IDatabaseConnection databaseConnection = DBUnitHelper.getConnection();
@@ -46,23 +50,23 @@ public abstract class AbstractIntegrationTest extends AbstractJUnit4SpringContex
 	}
 	
 	protected void assertRecordValue (String value, String column, String sql, Object... parameters) throws DataSetException, SQLException {
-		ITable table = getTable("test", sql, parameters);
+		ITable table = getTable(TABLE_TEST, sql, parameters);
 		assertEquals(1, table.getRowCount());
 		assertEquals(value, table.getValue(0, column));
 	}
 	
 	protected void assertRecordExists (String sql, Object... parameters) throws DataSetException, SQLException {
-		ITable table = getTable("test", sql, parameters);
+		ITable table = getTable(TABLE_TEST, sql, parameters);
 		assertEquals(1, table.getRowCount());
 	}
 	
 	protected void assertRecordNotExists (String sql, Object... parameters) throws DataSetException, SQLException {
-		ITable table = getTable("test", sql, parameters);
+		ITable table = getTable(TABLE_TEST, sql, parameters);
 		assertEquals(0, table.getRowCount());
 	}
 	
 	protected void assertRecordCount (int count, String sql, Object... parameters) throws DataSetException, SQLException {
-		ITable table = getTable("test", sql, parameters);
+		ITable table = getTable(TABLE_TEST, sql, parameters);
 		assertEquals(count, table.getRowCount());
 	}
 	
