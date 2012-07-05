@@ -8,27 +8,18 @@
 
 <#macro configuration_value value key environment version>
 	<#if value.enabled>
-		<#assign textValue = value.value />
-		<input
-			class="value"
-			id="value_${key.name?html}_${environment?html}_${version?html}"
-			name="value_${key.name?html}_${environment?html}_${version?html}"
-			oldvalue="${textValue?html}"
-			value="${textValue?html}"
-			maxlength="500"
-			size="30"
-			application="${environmentConfiguration.id}"
-			key="${key.name?html}"
-			environment="${environment?html}"
-			version="${version?html}"
-			onchange="configuration.updateConfigurationValue(this)"
-			/>
+		<@configuration_input_value
+			application=environmentConfiguration.id
+			value=value.value
+			key=key
+			environment=environment
+			version=version />
 	<#else>
 		<a href="gui/matrix/${environmentConfiguration.id}" title="${loc('environmentConfiguration.na.tip',key,version)?html}"><@lh key="environmentConfiguration.na" /></a>
 	</#if>
 </#macro>
 
-<@layout_std pageId="environmentConfiguration" style=true script=false scripts=["configuration.js"] modules=[] title=loc('environmentConfiguration', environmentConfiguration.environment)>
+<@layout_std pageId="environmentConfiguration" style=true script=false modules=["configuration"] title=loc('environmentConfiguration', environmentConfiguration.environment)>
 	<input id="application" type="hidden" value="${environmentConfiguration.id}" />
 	<article class="configuration">
 		<table>
@@ -77,27 +68,7 @@
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${environmentConfiguration.id}" key="application" />
 	<@layout_std_nav href="gui/matrix/${environmentConfiguration.id}" key="matrix" />
-	<div id="dialog-changes" style="display:none;">
-		<table class="configuration-changes">
-			<thead>
-				<tr>
-					<th><@lh key="configuration.change.environment" /></th>
-					<th><@lh key="configuration.change.version" /></th>
-					<th><@lh key="configuration.change.key" /></th>
-					<th><@lh key="configuration.change.oldvalue" /></th>
-					<th><@lh key="configuration.change.value" /></th>
-				</tr>
-			</thead>
-			<tbody id="configuration-changes">
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="4" class="configuration-commands">
-						<div class="configuration-command configuration-command-submit" onclick="configuration.submitConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-						<div class="configuration-command configuration-command-cancel" onclick="$('#dialog-changes').dialog('close')"><@lh key="general.cancel" /></div>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
-	</div>
+	
+	<@configuration_dialog />
+	
 </@layout_std>

@@ -7,23 +7,15 @@
 </#macro>
 
 <#macro configuration_value value key environment version>
-	<input
-		class="value"
-		id="value_${key.name?html}_${environment?html}_${version?html}"
-		name="value_${key.name?html}_${environment?html}_${version?html}"
-		oldvalue="${value?html}"
-		value="${value?html}"
-		maxlength="500"
-		size="30"
-		application="${versionConfiguration.id}"
-		key="${key.name?html}"
-		environment="${environment?html}"
-		version="${version?html}"
-		onchange="configuration.updateConfigurationValue(this)"
-		/>
+	<@configuration_input_value
+		application=versionConfiguration.id
+		value=value
+		key=key
+		environment=environment
+		version=version />
 </#macro>
 
-<@layout_std pageId="versionConfiguration" style=true script=false scripts=["configuration.js"] modules=[] title=loc('versionConfiguration', versionConfiguration.version)>
+<@layout_std pageId="versionConfiguration" style=true script=false modules=["configuration"] title=loc('versionConfiguration', versionConfiguration.version)>
 	<input id="application" type="hidden" value="${versionConfiguration.id}" />
 	<article class="configuration">
 		<table>
@@ -77,27 +69,7 @@
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${versionConfiguration.id}" key="application" />
 	<@layout_std_nav href="gui/matrix/${versionConfiguration.id}" key="matrix" />
-	<div id="dialog-changes" style="display:none;">
-		<table class="configuration-changes">
-			<thead>
-				<tr>
-					<th><@lh key="configuration.change.environment" /></th>
-					<th><@lh key="configuration.change.version" /></th>
-					<th><@lh key="configuration.change.key" /></th>
-					<th><@lh key="configuration.change.oldvalue" /></th>
-					<th><@lh key="configuration.change.value" /></th>
-				</tr>
-			</thead>
-			<tbody id="configuration-changes">
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="4" class="configuration-commands">
-						<div class="configuration-command configuration-command-submit" onclick="configuration.submitConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-						<div class="configuration-command configuration-command-cancel" onclick="$('#dialog-changes').dialog('close')"><@lh key="general.cancel" /></div>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
-	</div>
+	
+	<@configuration_dialog />
+	
 </@layout_std>
