@@ -8,7 +8,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.VersionConfigurationUpdates;
+import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
@@ -62,8 +62,8 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/configuration/{application}/{version:.*}", method = RequestMethod.POST)
-	public @ResponseBody Ack updateVersionConfiguration(@PathVariable int application, @PathVariable  String version, @RequestBody VersionConfigurationUpdates updates) {
-		return getMyConfigService().updateVersionConfiguration (application, version, updates);
+	public @ResponseBody Ack updateVersionConfiguration(@PathVariable int application, @PathVariable  String version, @RequestBody ConfigurationUpdates updates) {
+		return getMyConfigService().updateConfiguration (application, version, updates);
 	}
 	
 	@Override

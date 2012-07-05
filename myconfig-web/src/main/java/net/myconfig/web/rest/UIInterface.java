@@ -7,7 +7,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.VersionConfigurationUpdates;
+import net.myconfig.service.model.ConfigurationUpdates;
 
 public interface UIInterface {
 
@@ -39,6 +39,6 @@ public interface UIInterface {
 
 	VersionConfiguration versionConfiguration(int application, String version);
 
-	Ack updateVersionConfiguration(int application, String version, VersionConfigurationUpdates updates);
+	Ack updateVersionConfiguration(int application, String version, ConfigurationUpdates updates);
 
 }

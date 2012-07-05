@@ -22,9 +22,9 @@ public class VersionConfigurationUpdateTest {
 		String json = "{\"updates\":[{\"environment\":\"DEV\",\"key\":\"a\",\"value\":\"dev a\"},{\"environment\":\"DEV\",\"key\":\"b\",\"value\":\"dev b\"}]}";
 
 		ObjectMapper mapper = new ObjectMapper();
-		VersionConfigurationUpdates updates = mapper.readValue(json, VersionConfigurationUpdates.class);
+		ConfigurationUpdates updates = mapper.readValue(json, ConfigurationUpdates.class);
 		assertNotNull (updates);
-		List<VersionConfigurationUpdate> list = updates.getUpdates();
+		List<ConfigurationUpdate> list = updates.getUpdates();
 		assertNotNull (list);
 		assertEquals (2, list.size());
 		{
@@ -62,9 +62,9 @@ public class VersionConfigurationUpdateTest {
 		// As JSON string
 		String json = mapper.writeValueAsString(root);
 		// Tries to parse
-		VersionConfigurationUpdates updates = mapper.readValue(json, VersionConfigurationUpdates.class);
+		ConfigurationUpdates updates = mapper.readValue(json, ConfigurationUpdates.class);
 		assertNotNull (updates);
-		List<VersionConfigurationUpdate> list = updates.getUpdates();
+		List<ConfigurationUpdate> list = updates.getUpdates();
 		assertNotNull (list);
 		assertEquals (2, list.size());
 		{

@@ -34,17 +34,17 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConditionalValue;
 import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.service.model.ConfigurationUpdate;
+import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.EnvironmentSummary;
+import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.VersionConfigurationUpdate;
-import net.myconfig.service.model.VersionConfigurationUpdates;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
 import net.myconfig.test.MapBuilder;
@@ -56,7 +56,6 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.dbunit.dataset.DataSetException;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -702,33 +701,32 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	/**
-	 * FIXME Test for an application where environments, keys, versions and matrix have been configured, but where no value
+	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
 	 * has been added yet.
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	@Ignore
 	public void environment_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
 		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(2, "DEV");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(2, "anotherapp", "1.0.1", "1.0.0", null,
+				new EnvironmentConfiguration(2, "anotherapp", "DEV", "ACC", "PROD",
 					Arrays.asList(
 							new Key("key1", "Key 1"),
 							new Key("key2", "Key 2")),
 					Arrays.asList(
-							new IndexedValues<String>(
-									"ACC",
-									Collections.<String,String>emptyMap()),
-							new IndexedValues<String>(
-									"DEV",
-									Collections.<String,String>emptyMap()),
-							new IndexedValues<String>(
-									"PROD",
-									Collections.<String,String>emptyMap()),
-							new IndexedValues<String>(
-									"UAT",
-									Collections.<String,String>emptyMap())
+							new IndexedValues<ConditionalValue>(
+									"1.0.0",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("key1", new ConditionalValue(true, ""))
+									.put("key2", new ConditionalValue(false, ""))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.0.1",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("key1", new ConditionalValue(true, ""))
+									.put("key2", new ConditionalValue(true, ""))
+									.build())
 							)
 					),
 				configuration);
@@ -832,47 +830,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test(expected = EnvironmentNotDefinedException.class)
 	public void environment_configuration_no_version() {
 		myConfigService.getEnvironmentConfiguration(1, "xxx");
-	}
-	
-	@Test(expected = ApplicationNotFoundException.class)
-	@Ignore
-	public void environment_configuration_update_no_app () {
-		// FIXME myConfigService.updateEnvironmentConfiguration(0, "1.0", null);
-	}
-	
-	@Test(expected = VersionNotDefinedException.class)
-	@Ignore
-	public void environment_configuration_update_no_version () {
-		// FIXME myConfigService.updateEnvironmentConfiguration(1, "1.x", null);
-	}
-	
-	@Test
-	@Ignore
-	public void environment_configuration_update_none () throws DataSetException, SQLException {
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
-		Ack ack = myConfigService.updateVersionConfiguration(1, "1.0", new VersionConfigurationUpdates(
-			Arrays.<VersionConfigurationUpdate>asList()
-		));
-		assertTrue (ack.isSuccess());
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
-	}
-	
-	@Test
-	@Ignore
-	public void environment_configuration_update_several () throws DataSetException, SQLException {
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
-		assertRecordValue ("1.1 jdbc.password UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
-		assertRecordValue ("1.1 jdbc.user UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
-		Ack ack = myConfigService.updateVersionConfiguration(1, "1.1", new VersionConfigurationUpdates(
-			Arrays.asList(
-				new VersionConfigurationUpdate ("UAT", "jdbc.user", "x1"),
-				new VersionConfigurationUpdate ("UAT", "jdbc.password", "x2")
-			)
-		));
-		assertTrue (ack.isSuccess());
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
-		assertRecordValue ("x2", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
-		assertRecordValue ("x1", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -1020,33 +977,49 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_configuration_update_no_app () {
-		myConfigService.updateVersionConfiguration(0, "1.0", null);
+		myConfigService.updateConfiguration(0, null);
 	}
 	
 	@Test(expected = VersionNotDefinedException.class)
-	public void version_configuration_update_no_version () {
-		myConfigService.updateVersionConfiguration(1, "1.x", null);
+	public void configuration_update_no_version () {
+		myConfigService.updateConfiguration(1, new ConfigurationUpdates(Arrays.asList(
+				new ConfigurationUpdate("UAT", "1.x", "jdbc.user", "xxx")
+				)));
+	}
+	
+	@Test(expected = EnvironmentNotDefinedException.class)
+	public void configuration_update_no_environment () {
+		myConfigService.updateConfiguration(1, new ConfigurationUpdates(Arrays.asList(
+				new ConfigurationUpdate("XXX", "1.0", "jdbc.user", "xxx")
+				)));
+	}
+	
+	@Test(expected = KeyNotDefinedException.class)
+	public void configuration_update_no_key () {
+		myConfigService.updateConfiguration(1, new ConfigurationUpdates(Arrays.asList(
+				new ConfigurationUpdate("UAT", "1.0", "jdbc.xxx", "xxx")
+				)));
 	}
 	
 	@Test
-	public void version_configuration_update_none () throws DataSetException, SQLException {
+	public void configuration_update_none () throws DataSetException, SQLException {
 		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
-		Ack ack = myConfigService.updateVersionConfiguration(1, "1.0", new VersionConfigurationUpdates(
-			Arrays.<VersionConfigurationUpdate>asList()
+		Ack ack = myConfigService.updateConfiguration(1, new ConfigurationUpdates(
+			Arrays.<ConfigurationUpdate>asList()
 		));
 		assertTrue (ack.isSuccess());
 		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
 	}
 	
 	@Test
-	public void version_configuration_update_several () throws DataSetException, SQLException {
+	public void configuration_update_several () throws DataSetException, SQLException {
 		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
 		assertRecordValue ("1.1 jdbc.password UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
 		assertRecordValue ("1.1 jdbc.user UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
-		Ack ack = myConfigService.updateVersionConfiguration(1, "1.1", new VersionConfigurationUpdates(
+		Ack ack = myConfigService.updateConfiguration(1, new ConfigurationUpdates(
 			Arrays.asList(
-				new VersionConfigurationUpdate ("UAT", "jdbc.user", "x1"),
-				new VersionConfigurationUpdate ("UAT", "jdbc.password", "x2")
+				new ConfigurationUpdate ("UAT", "1.1", "jdbc.user", "x1"),
+				new ConfigurationUpdate ("UAT", "1.1", "jdbc.password", "x2")
 			)
 		));
 		assertTrue (ack.isSuccess());

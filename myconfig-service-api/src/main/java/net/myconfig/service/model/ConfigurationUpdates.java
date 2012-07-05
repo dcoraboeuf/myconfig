@@ -7,16 +7,16 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.google.common.collect.ImmutableList;
 
-public class VersionConfigurationUpdates {
+public class ConfigurationUpdates {
 
-	private final List<VersionConfigurationUpdate> updates;
+	private final List<ConfigurationUpdate> updates;
 
 	@JsonCreator
-	public VersionConfigurationUpdates(@JsonProperty("updates") List<VersionConfigurationUpdate> updates) {
+	public ConfigurationUpdates(@JsonProperty("updates") List<ConfigurationUpdate> updates) {
 		this.updates = ImmutableList.copyOf(updates);
 	}
 
-	public List<VersionConfigurationUpdate> getUpdates() {
+	public List<ConfigurationUpdate> getUpdates() {
 		return updates;
 	}
 

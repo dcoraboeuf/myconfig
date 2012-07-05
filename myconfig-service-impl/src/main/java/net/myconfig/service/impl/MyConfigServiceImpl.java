@@ -51,8 +51,8 @@ import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.VersionConfigurationUpdate;
-import net.myconfig.service.model.VersionConfigurationUpdates;
+import net.myconfig.service.model.ConfigurationUpdate;
+import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
@@ -445,27 +445,27 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
-	public Ack updateVersionConfiguration(int application, String version, VersionConfigurationUpdates updates) {
+	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
 		checkApplication(application);
-		checkVersion(application, version);
 		// Main criteria
-		MapSqlParameterSource appVerCriteria = new MapSqlParameterSource()
-			.addValue(APPLICATION, application)
-			.addValue(VERSION, version);
+		MapSqlParameterSource appCriteria = new MapSqlParameterSource(APPLICATION, application);
 		// Updates
-		for (VersionConfigurationUpdate update : updates.getUpdates()) {
+		for (ConfigurationUpdate update : updates.getUpdates()) {
 			String environment = update.getEnvironment();
+			String version = update.getVersion();
 			String key = update.getKey();
 			String value = update.getValue();
-			// FIXME Value controls
-			// FIXME checkEnvironment(application, environment)
+			// Value controls
+			checkEnvironment(application, environment);
+			checkVersion(application, version);
 			checkKey(application, key);
 			// FIXME checkMatrix(application, version, key);
 			// Criteria
-			MapSqlParameterSource criteria = appVerCriteria
+			MapSqlParameterSource criteria = appCriteria
 					.addValue(ENVIRONMENT, environment)
+					.addValue(VERSION, version)
 					.addValue(KEY, key);
 			// Deletion
 			t.update(SQL.CONFIG_REMOVE_VALUE, criteria);
