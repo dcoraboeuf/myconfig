@@ -31,8 +31,10 @@ import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.ConditionalValue;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
@@ -44,6 +46,7 @@ import net.myconfig.service.model.VersionConfigurationUpdate;
 import net.myconfig.service.model.VersionConfigurationUpdates;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
+import net.myconfig.test.MapBuilder;
 import net.sf.jstring.Strings;
 
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +55,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.dbunit.dataset.DataSetException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -643,6 +647,209 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test(expected = ApplicationNotFoundException.class)
 	public void matrix_no_app () {
 		myConfigService.keyVersionConfiguration(-1);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void environment_configuration() throws JsonGenerationException, JsonMappingException, IOException {
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(1, "DEV");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new EnvironmentConfiguration(1, "myapp", "DEV", "ACC", "PROD",
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.url", "URL used to connect to the database"),
+							new Key("jdbc.user", "User used to connect to the database")),
+					Arrays.asList(
+							new IndexedValues<ConditionalValue>(
+									"1.0",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.0 jdbc.password DEV"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.0 jdbc.user DEV"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.1",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.1 jdbc.password DEV"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.1 jdbc.user DEV"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.2",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password DEV"))
+									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url DEV"))
+									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user DEV"))
+									.build())
+							)
+					),
+				configuration);
+	}
+	
+	/**
+	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
+	 * has been added yet.
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	@Ignore
+	public void environment_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(2, "1.0.1");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new VersionConfiguration(2, "anotherapp", "1.0.1", "1.0.0", null,
+					Arrays.asList(
+							new Key("key1", "Key 1"),
+							new Key("key2", "Key 2")),
+					Arrays.asList(
+							new IndexedValues<String>(
+									"ACC",
+									Collections.<String,String>emptyMap()),
+							new IndexedValues<String>(
+									"DEV",
+									Collections.<String,String>emptyMap()),
+							new IndexedValues<String>(
+									"PROD",
+									Collections.<String,String>emptyMap()),
+							new IndexedValues<String>(
+									"UAT",
+									Collections.<String,String>emptyMap())
+							)
+					),
+				configuration);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	@Ignore
+	public void environment_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.2");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new VersionConfiguration(1, "myapp", "1.2", "1.1", null,
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.url", "URL used to connect to the database"),
+							new Key("jdbc.user", "User used to connect to the database")),
+					Arrays.asList(
+							new IndexedValues<String>(
+									"ACC",
+									map (
+											"jdbc.password", "1.2 jdbc.password ACC",
+											"jdbc.url", "1.2 jdbc.url ACC",
+											"jdbc.user", "1.2 jdbc.user ACC")),
+							new IndexedValues<String>(
+									"DEV",
+									map (
+											"jdbc.password", "1.2 jdbc.password DEV",
+											"jdbc.url", "1.2 jdbc.url DEV",
+											"jdbc.user", "1.2 jdbc.user DEV")),
+							new IndexedValues<String>(
+									"PROD",
+									map (
+											"jdbc.password", "1.2 jdbc.password PROD",
+											"jdbc.url", "1.2 jdbc.url PROD",
+											"jdbc.user", "1.2 jdbc.user PROD")),
+							new IndexedValues<String>(
+									"UAT",
+									map (
+											"jdbc.password", "1.2 jdbc.password UAT",
+											"jdbc.url", "1.2 jdbc.url UAT",
+											"jdbc.user", "1.2 jdbc.user UAT"))
+							)
+					),
+				configuration);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	@Ignore
+	public void environment_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.0");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new VersionConfiguration(1, "myapp", "1.0", null, "1.1",
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database"),
+							new Key("jdbc.user", "User used to connect to the database")),
+					Arrays.asList(
+							new IndexedValues<String>(
+									"ACC",
+									map (
+											"jdbc.password", "1.0 jdbc.password ACC",
+											"jdbc.user", "1.0 jdbc.user ACC")),
+							new IndexedValues<String>(
+									"DEV",
+									map (
+											"jdbc.password", "1.0 jdbc.password DEV",
+											"jdbc.user", "1.0 jdbc.user DEV")),
+							new IndexedValues<String>(
+									"PROD",
+									map (
+											"jdbc.password", "1.0 jdbc.password PROD",
+											"jdbc.user", "1.0 jdbc.user PROD")),
+							new IndexedValues<String>(
+									"UAT",
+									map (
+											"jdbc.password", "1.0 jdbc.password UAT",
+											"jdbc.user", "1.0 jdbc.user UAT"))
+							)
+					),
+				configuration);
+	}
+
+	@Test(expected = ApplicationNotFoundException.class)
+	@Ignore
+	public void environment_configuration_no_app() {
+		myConfigService.getVersionConfiguration(0, "");
+	}
+	
+	@Test(expected = VersionNotDefinedException.class)
+	@Ignore
+	public void environment_configuration_no_version() {
+		myConfigService.getVersionConfiguration(1, "1.x");
+	}
+	
+	@Test(expected = ApplicationNotFoundException.class)
+	@Ignore
+	public void environment_configuration_update_no_app () {
+		myConfigService.updateVersionConfiguration(0, "1.0", null);
+	}
+	
+	@Test(expected = VersionNotDefinedException.class)
+	@Ignore
+	public void environment_configuration_update_no_version () {
+		myConfigService.updateVersionConfiguration(1, "1.x", null);
+	}
+	
+	@Test
+	@Ignore
+	public void environment_configuration_update_none () throws DataSetException, SQLException {
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
+		Ack ack = myConfigService.updateVersionConfiguration(1, "1.0", new VersionConfigurationUpdates(
+			Arrays.<VersionConfigurationUpdate>asList()
+		));
+		assertTrue (ack.isSuccess());
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
+	}
+	
+	@Test
+	@Ignore
+	public void environment_configuration_update_several () throws DataSetException, SQLException {
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
+		assertRecordValue ("1.1 jdbc.password UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
+		assertRecordValue ("1.1 jdbc.user UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
+		Ack ack = myConfigService.updateVersionConfiguration(1, "1.1", new VersionConfigurationUpdates(
+			Arrays.asList(
+				new VersionConfigurationUpdate ("UAT", "jdbc.user", "x1"),
+				new VersionConfigurationUpdate ("UAT", "jdbc.password", "x2")
+			)
+		));
+		assertTrue (ack.isSuccess());
+		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
+		assertRecordValue ("x2", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
+		assertRecordValue ("x1", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
 	}
 	
 	@SuppressWarnings("unchecked")

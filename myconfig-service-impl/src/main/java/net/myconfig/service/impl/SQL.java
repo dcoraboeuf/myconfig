@@ -117,7 +117,7 @@ public interface SQL {
 	String CONFIG_FOR_ENVIRONMENT = "select * " +
 			"from config " +
 			"where application = :application " +
-			"and environment = :environment" +
+			"and environment = :environment " +
 			"order by version, appkey";
 
 	String CONFIG_REMOVE_VALUE = "delete from config where application = :application and version = :version and environment = :environment and appkey = :appkey";
