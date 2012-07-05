@@ -157,10 +157,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			ApplicationSummary app = applications.get(1);
 			assertEquals (1, app.getId());
 			assertEquals ("myapp", app.getName());
-			assertEquals (3, app.getVersionCount());
+			assertEquals (4, app.getVersionCount());
 			assertEquals (3, app.getKeyCount());
 			assertEquals (4, app.getEnvironmentCount());
-			assertEquals (28, app.getConfigCount());
+			assertEquals (40, app.getConfigCount());
 			assertEquals (28, app.getValueCount());
 		}
 	}
@@ -294,33 +294,36 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		// Versions
 		List<VersionSummary> versions = app.getVersionSummaryList();
 		assertNotNull (versions);
-		assertEquals (3, versions.size());
+		assertEquals (4, versions.size());
 		assertVersionSummary ("1.0", 2, 8, 8, versions.get(0));
 		assertVersionSummary ("1.1", 2, 8, 8, versions.get(1));
 		assertVersionSummary ("1.2", 3, 12, 12, versions.get(2));
+		assertVersionSummary ("1.3", 3, 12, 0, versions.get(3));
 		// Environments
 		List<EnvironmentSummary> environments = app.getEnvironmentSummaryList();
 		assertNotNull (environments);
 		assertEquals (4, environments.size());
-		assertEnvironmentSummary ("ACC", 7, 7, environments.get(0));
-		assertEnvironmentSummary ("DEV", 7, 7, environments.get(1));
-		assertEnvironmentSummary ("PROD", 7, 7, environments.get(2));
-		assertEnvironmentSummary ("UAT", 7, 7, environments.get(3));
+		assertEnvironmentSummary ("ACC", 10, 7, environments.get(0));
+		assertEnvironmentSummary ("DEV", 10, 7, environments.get(1));
+		assertEnvironmentSummary ("PROD", 10, 7, environments.get(2));
+		assertEnvironmentSummary ("UAT", 10, 7, environments.get(3));
 		// Keys
 		List<KeySummary> keys = app.getKeySummaryList();
 		assertNotNull (keys);
 		assertEquals (3, keys.size());
-		assertKeySummary ("jdbc.password", "Password used to connect to the database", 3, 12, 12, keys.get(0));
-		assertKeySummary ("jdbc.url", "URL used to connect to the database", 1, 4, 4, keys.get(1));
-		assertKeySummary ("jdbc.user", "User used to connect to the database", 3, 12, 12, keys.get(2));
+		assertKeySummary ("jdbc.password", "Password used to connect to the database", 4, 16, 12, keys.get(0));
+		assertKeySummary ("jdbc.url", "URL used to connect to the database", 2, 8, 4, keys.get(1));
+		assertKeySummary ("jdbc.user", "User used to connect to the database", 4, 16, 12, keys.get(2));
 	}
 	
 	@Test
 	public void version_create () throws DataSetException, SQLException {
-		Ack ack = myConfigService.createVersion(1, "1.3");
+		// Checks the table
+		assertRecordNotExists ("select * from version where application = 1 and name = '1.4'");
+		Ack ack = myConfigService.createVersion(1, "1.4");
 		assertTrue (ack.isSuccess());
 		// Checks the table
-		assertRecordExists ("select * from version where application = 1 and name = '1.3'");
+		assertRecordExists ("select * from version where application = 1 and name = '1.4'");
 	}
 
 	@Test
@@ -636,6 +639,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 									Arrays.asList("jdbc.password", "jdbc.user")),
 							new MatrixVersionConfiguration(
 									"1.2",
+									Arrays.asList("jdbc.password", "jdbc.url", "jdbc.user")),
+							new MatrixVersionConfiguration(
+									"1.3",
 									Arrays.asList("jdbc.password", "jdbc.url", "jdbc.user"))),
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
@@ -682,6 +688,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password DEV"))
 									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url DEV"))
 									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user DEV"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.3",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, ""))
+									.put("jdbc.url", new ConditionalValue(true, ""))
+									.put("jdbc.user", new ConditionalValue(true, ""))
 									.build())
 							)
 					),
@@ -753,6 +766,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password UAT"))
 									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url UAT"))
 									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user UAT"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.3",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, ""))
+									.put("jdbc.url", new ConditionalValue(true, ""))
+									.put("jdbc.user", new ConditionalValue(true, ""))
 									.build())
 					)
 				),
@@ -791,6 +811,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password ACC"))
 									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url ACC"))
 									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user ACC"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.3",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, ""))
+									.put("jdbc.url", new ConditionalValue(true, ""))
+									.put("jdbc.user", new ConditionalValue(true, ""))
 									.build())
 					)
 				),
@@ -919,10 +946,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.2");
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.3");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(1, "myapp", "1.2", "1.1", null,
+				new VersionConfiguration(1, "myapp", "1.3", "1.2", null,
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.url", "URL used to connect to the database"),
@@ -930,28 +957,16 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 					Arrays.asList(
 							new IndexedValues<String>(
 									"ACC",
-									map (
-											"jdbc.password", "1.2 jdbc.password ACC",
-											"jdbc.url", "1.2 jdbc.url ACC",
-											"jdbc.user", "1.2 jdbc.user ACC")),
+									map ()),
 							new IndexedValues<String>(
 									"DEV",
-									map (
-											"jdbc.password", "1.2 jdbc.password DEV",
-											"jdbc.url", "1.2 jdbc.url DEV",
-											"jdbc.user", "1.2 jdbc.user DEV")),
+									map ()),
 							new IndexedValues<String>(
 									"PROD",
-									map (
-											"jdbc.password", "1.2 jdbc.password PROD",
-											"jdbc.url", "1.2 jdbc.url PROD",
-											"jdbc.user", "1.2 jdbc.user PROD")),
+									map ()),
 							new IndexedValues<String>(
 									"UAT",
-									map (
-											"jdbc.password", "1.2 jdbc.password UAT",
-											"jdbc.url", "1.2 jdbc.url UAT",
-											"jdbc.user", "1.2 jdbc.user UAT"))
+									map ())
 							)
 					),
 				configuration);
