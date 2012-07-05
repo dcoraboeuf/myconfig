@@ -26,6 +26,7 @@ import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.CoreException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
+import net.myconfig.service.exception.EnvironmentNotDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
@@ -37,9 +38,11 @@ import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.ConditionalValue;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.Environment;
+import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
@@ -311,7 +314,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		checkApplication(application);
 		checkVersion(application, version);
 		// Application name
-		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource("application", application);
+		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource(APPLICATION, application);
 		MapSqlParameterSource versionCriteria = applicationCriteria.addValue(VERSION, version);
 		String name = getApplicationName(application);
 		// List of environments
@@ -343,16 +346,16 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			environmentConfiguration.put(key, value);
 		}
 		// List of values per environment x key x version
-		List<IndexedValues> environmentConfigurationList = Lists.transform(environments, new Function<Environment, IndexedValues>() {
+		List<IndexedValues<String>> environmentConfigurationList = Lists.transform(environments, new Function<Environment, IndexedValues<String>>() {
 
 			@Override
-			public IndexedValues apply(Environment environment) {
+			public IndexedValues<String> apply(Environment environment) {
 				String name = environment.getName();
 				Map<String, String> values = environmentValues.get(name);
 				if (values == null) {
 					values = Collections.emptyMap();
 				}
-				return new IndexedValues(name, values);
+				return new IndexedValues<String>(name, values);
 			}
 		});
 		// Previous & next version
@@ -360,6 +363,84 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		String nextVersion = getFirstItem(SQL.VERSION_NEXT, versionCriteria, String.class);
 		// OK
 		return new VersionConfiguration(application, name, version, previousVersion, nextVersion, keyList, environmentConfigurationList);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public EnvironmentConfiguration getEnvironmentConfiguration(int application, String environment) {
+		checkApplication(application);
+		checkEnvironment(application, environment);
+		// Application name
+		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource(APPLICATION, application);
+		MapSqlParameterSource environmentCriteria = applicationCriteria.addValue(ENVIRONMENT, environment);
+		String name = getApplicationName(application);
+		// List of version
+		List<Version> versions = getNamedParameterJdbcTemplate().query(SQL.VERSIONS, applicationCriteria, new RowMapper<Version>() {
+			@Override
+			public Version mapRow(ResultSet rs, int i) throws SQLException {
+				return new Version(rs.getString(NAME));
+			}
+		});
+		// List of keys for the environment
+		/*
+		 * The query does not depend on the environment.
+		 */
+		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_ENVIRONMENT, environmentCriteria, new RowMapper<Key>() {
+			@Override
+			public Key mapRow(ResultSet rs, int i) throws SQLException {
+				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
+			}
+		});
+		// Gets the matrix of key x version
+		MatrixConfiguration matrix = keyVersionConfiguration(application);
+		// Gets the list of values per environment x application
+		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_ENVIRONMENT, applicationCriteria);
+		final Map<String,Map<String,String>> versionValues = new TreeMap<String, Map<String,String>>();
+		for (Map<String, Object> values : valuesMaps) {
+			String version = (String) values.get(VERSION);
+			String key = (String) values.get(KEY);
+			String value = (String) values.get(VALUE);
+			Map<String, String> versionConfiguration = versionValues.get(version);
+			if (versionConfiguration == null) {
+				versionConfiguration = new TreeMap<String, String>();
+				versionValues.put(version, versionConfiguration);
+			}
+			versionConfiguration.put(key, value);
+		}
+		
+		// List of conditional values per key x version
+		List<IndexedValues<ConditionalValue>> versionConfigurationList = new ArrayList<IndexedValues<ConditionalValue>>();
+		// .. for each version
+		for (Version version: versions) {
+			String versionName = version.getName();
+			Map<String, ConditionalValue> cValues = new TreeMap<String, ConditionalValue>();
+			// ... for each key
+			for (Key key: keyList) {
+				String keyName = key.getName();
+				// Is the key activated for this version?
+				boolean enabled = matrix.isEnabled (versionName, keyName);
+				// Gets the value for an enabled key
+				String value = "";
+				if (enabled) {
+					Map<String, String> valuePerKey = versionValues.get(versionName);
+					if (valuePerKey != null && valuePerKey.containsKey(keyName)) {
+						value = valuePerKey.get(keyName);
+					}
+				}
+				// Conditional value
+				ConditionalValue cValue = new ConditionalValue(enabled, value);
+				cValues.put(keyName, cValue);
+			}
+			// OK for this version
+			IndexedValues<ConditionalValue> versionConditionalValues = new IndexedValues<ConditionalValue>(versionName, cValues);
+			versionConfigurationList.add(versionConditionalValues);
+		}
+		
+		// Previous & next version
+		String previousEnvironment = getFirstItem(SQL.ENVIRONMENT_PREVIOUS, environmentCriteria, String.class);
+		String nextEnvironment = getFirstItem(SQL.ENVIRONMENT_NEXT, environmentCriteria, String.class);
+		// OK
+		return new EnvironmentConfiguration(application, name, environment, previousEnvironment, nextEnvironment, keyList, versionConfigurationList);
 	}
 	
 	@Override
@@ -520,6 +601,13 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 				SQL.ENVIRONMENT_EXISTS,
 				new MapSqlParameterSource(NAME, environment).addValue(APPLICATION, application),
 				new EnvironmentNotFoundException(application, environment));
+	}
+
+	protected void checkEnvironment(int application, String environment) {
+		check (
+				SQL.ENVIRONMENT_EXISTS_BY_ID,
+				new MapSqlParameterSource(NAME, environment).addValue(APPLICATION, application),
+				new EnvironmentNotDefinedException(application, environment));
 	}
 
 	protected void check(String sql,

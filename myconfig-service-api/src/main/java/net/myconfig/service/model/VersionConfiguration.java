@@ -12,9 +12,9 @@ public class VersionConfiguration {
 	private final String previousVersion;
 	private final String nextVersion;
 	private final List<Key> keyList;
-	private final List<IndexedValues> environmentValuesPerKeyList;
+	private final List<IndexedValues<String>> environmentValuesPerKeyList;
 
-	public VersionConfiguration(int id, String name, String version, String previousVersion, String nextVersion, List<Key> keyList, List<IndexedValues> environmentValuesPerKeyList) {
+	public VersionConfiguration(int id, String name, String version, String previousVersion, String nextVersion, List<Key> keyList, List<IndexedValues<String>> environmentValuesPerKeyList) {
 		this.id = id;
 		this.name = name;
 		this.version = version;
@@ -48,7 +48,7 @@ public class VersionConfiguration {
 		return nextVersion;
 	}
 
-	public List<IndexedValues> getEnvironmentValuesPerKeyList() {
+	public List<IndexedValues<String>> getEnvironmentValuesPerKeyList() {
 		return environmentValuesPerKeyList;
 	}
 

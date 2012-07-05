@@ -2,6 +2,8 @@ package net.myconfig.service.model;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.google.common.collect.ImmutableList;
 
 public class MatrixConfiguration {
@@ -32,6 +34,17 @@ public class MatrixConfiguration {
 
 	public List<Key> getKeyList() {
 		return keyList;
+	}
+
+	public boolean isEnabled(String version, String key) {
+		for (MatrixVersionConfiguration matrixVersionConfiguration : versionConfigurationList) {
+			if (StringUtils.equals(version, matrixVersionConfiguration.getName())) {
+				if (matrixVersionConfiguration.getKeys().contains(key)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

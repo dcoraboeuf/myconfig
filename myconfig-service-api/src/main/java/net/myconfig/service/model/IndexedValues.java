@@ -4,12 +4,12 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
-public class IndexedValues {
+public class IndexedValues<T> {
 
 	private final String name;
-	private final Map<String, String> values;
+	private final Map<String, T> values;
 
-	public IndexedValues(String name, Map<String, String> values) {
+	public IndexedValues(String name, Map<String, T> values) {
 		this.name = name;
 		this.values = ImmutableMap.copyOf(values);
 	}
@@ -18,7 +18,7 @@ public class IndexedValues {
 		return name;
 	}
 
-	public Map<String, String> getValues() {
+	public Map<String, T> getValues() {
 		return values;
 	}
 

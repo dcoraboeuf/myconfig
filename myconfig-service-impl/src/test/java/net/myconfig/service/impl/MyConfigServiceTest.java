@@ -645,6 +645,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		myConfigService.keyVersionConfiguration(-1);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void configuration() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.1");
@@ -655,22 +656,22 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new IndexedValues(
+							new IndexedValues<String>(
 									"ACC",
 									map (
 											"jdbc.password", "1.1 jdbc.password ACC",
 											"jdbc.user", "1.1 jdbc.user ACC")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"DEV",
 									map (
 											"jdbc.password", "1.1 jdbc.password DEV",
 											"jdbc.user", "1.1 jdbc.user DEV")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"PROD",
 									map (
 											"jdbc.password", "1.1 jdbc.password PROD",
 											"jdbc.user", "1.1 jdbc.user PROD")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"UAT",
 									map (
 											"jdbc.password", "1.1 jdbc.password UAT",
@@ -684,6 +685,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
 	 * has been added yet.
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(2, "1.0.1");
@@ -694,23 +696,24 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("key1", "Key 1"),
 							new Key("key2", "Key 2")),
 					Arrays.asList(
-							new IndexedValues(
+							new IndexedValues<String>(
 									"ACC",
 									Collections.<String,String>emptyMap()),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"DEV",
 									Collections.<String,String>emptyMap()),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"PROD",
 									Collections.<String,String>emptyMap()),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"UAT",
 									Collections.<String,String>emptyMap())
 							)
 					),
 				configuration);
 	}
-	
+
+	@SuppressWarnings("unchecked")
 	@Test
 	public void configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.2");
@@ -722,25 +725,25 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.url", "URL used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new IndexedValues(
+							new IndexedValues<String>(
 									"ACC",
 									map (
 											"jdbc.password", "1.2 jdbc.password ACC",
 											"jdbc.url", "1.2 jdbc.url ACC",
 											"jdbc.user", "1.2 jdbc.user ACC")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"DEV",
 									map (
 											"jdbc.password", "1.2 jdbc.password DEV",
 											"jdbc.url", "1.2 jdbc.url DEV",
 											"jdbc.user", "1.2 jdbc.user DEV")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"PROD",
 									map (
 											"jdbc.password", "1.2 jdbc.password PROD",
 											"jdbc.url", "1.2 jdbc.url PROD",
 											"jdbc.user", "1.2 jdbc.user PROD")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"UAT",
 									map (
 											"jdbc.password", "1.2 jdbc.password UAT",
@@ -751,6 +754,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 				configuration);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.0");
@@ -761,22 +765,22 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
 					Arrays.asList(
-							new IndexedValues(
+							new IndexedValues<String>(
 									"ACC",
 									map (
 											"jdbc.password", "1.0 jdbc.password ACC",
 											"jdbc.user", "1.0 jdbc.user ACC")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"DEV",
 									map (
 											"jdbc.password", "1.0 jdbc.password DEV",
 											"jdbc.user", "1.0 jdbc.user DEV")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"PROD",
 									map (
 											"jdbc.password", "1.0 jdbc.password PROD",
 											"jdbc.user", "1.0 jdbc.user PROD")),
-							new IndexedValues(
+							new IndexedValues<String>(
 									"UAT",
 									map (
 											"jdbc.password", "1.0 jdbc.password UAT",
