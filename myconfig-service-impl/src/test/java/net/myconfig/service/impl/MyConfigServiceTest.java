@@ -276,7 +276,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
-	public void configuration_noapp () {
+	public void version_configuration_noapp () {
 		myConfigService.getApplicationConfiguration(10);
 	}
 		
@@ -647,7 +647,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void configuration() throws JsonGenerationException, JsonMappingException, IOException {
+	public void version_configuration() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.1");
 		assertNotNull (configuration);
 		assertJSONEquals (
@@ -687,7 +687,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	 */
 	@SuppressWarnings("unchecked")
 	@Test
-	public void configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
+	public void version_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(2, "1.0.1");
 		assertNotNull (configuration);
 		assertJSONEquals (
@@ -715,7 +715,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
+	public void version_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.2");
 		assertNotNull (configuration);
 		assertJSONEquals (
@@ -756,7 +756,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
+	public void version_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.0");
 		assertNotNull (configuration);
 		assertJSONEquals (
@@ -789,45 +789,29 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 					),
 				configuration);
 	}
-	
-	protected Map<String, String> map(String... args) {
-		Map<String, String> map = new TreeMap<String, String>();
-		String key = null;
-		String value = null;
-		for (int i = 0; i < args.length; i++) {
-			String arg = args[i];
-			if (i % 2 == 0) {
-				key = arg;
-			} else {
-				value = arg;
-				map.put(key, value);
-			}
-		}
-		return map;
-	}
 
 	@Test(expected = ApplicationNotFoundException.class)
-	public void configuration_no_app() {
+	public void version_configuration_no_app() {
 		myConfigService.getVersionConfiguration(0, "");
 	}
 	
 	@Test(expected = VersionNotDefinedException.class)
-	public void configuration_no_version() {
+	public void version_configuration_no_version() {
 		myConfigService.getVersionConfiguration(1, "1.x");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
-	public void configuration_update_no_app () {
+	public void version_configuration_update_no_app () {
 		myConfigService.updateVersionConfiguration(0, "1.0", null);
 	}
 	
 	@Test(expected = VersionNotDefinedException.class)
-	public void configuration_update_no_version () {
+	public void version_configuration_update_no_version () {
 		myConfigService.updateVersionConfiguration(1, "1.x", null);
 	}
 	
 	@Test
-	public void configuration_update_none () throws DataSetException, SQLException {
+	public void version_configuration_update_none () throws DataSetException, SQLException {
 		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
 		Ack ack = myConfigService.updateVersionConfiguration(1, "1.0", new VersionConfigurationUpdates(
 			Arrays.<VersionConfigurationUpdate>asList()
@@ -837,7 +821,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
-	public void configuration_update_several () throws DataSetException, SQLException {
+	public void version_configuration_update_several () throws DataSetException, SQLException {
 		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
 		assertRecordValue ("1.1 jdbc.password UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
 		assertRecordValue ("1.1 jdbc.user UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
@@ -910,6 +894,22 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and appkey = 'jdbc.url'");
 		Ack ack = myConfigService.removeKeyVersion(1, "1.1", "jdbc.url");
 		assertFalse (ack.isSuccess());
+	}
+	
+	private Map<String, String> map(String... args) {
+		Map<String, String> map = new TreeMap<String, String>();
+		String key = null;
+		String value = null;
+		for (int i = 0; i < args.length; i++) {
+			String arg = args[i];
+			if (i % 2 == 0) {
+				key = arg;
+			} else {
+				value = arg;
+				map.put(key, value);
+			}
+		}
+		return map;
 	}
 	
 	private <T> void assertJSONEquals (T a, T b) throws JsonGenerationException, JsonMappingException, IOException {
