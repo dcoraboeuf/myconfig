@@ -18,6 +18,9 @@ import net.myconfig.web.support.ErrorHandler;
 @Controller
 public class GUIApplicationsPage extends AbstractGUIPage {
 
+	private static final String VIEW_APPLICATIONS = "applications";
+	private static final String MODEL_APPLICATIONS = VIEW_APPLICATIONS;
+
 	@Autowired
 	public GUIApplicationsPage(UIInterface ui, ErrorHandler errorHandler) {
 		super(ui, errorHandler);
@@ -32,20 +35,20 @@ public class GUIApplicationsPage extends AbstractGUIPage {
 	
 	@RequestMapping({"/gui/applications", "/gui/"})
 	public String applications (Model model) {
-		model.addAttribute("applications", ui.applications());
-		return "applications";
+		model.addAttribute(MODEL_APPLICATIONS, ui.applications());
+		return VIEW_APPLICATIONS;
 	}
 	
 	@RequestMapping(value = "/gui/applications/create", method = RequestMethod.POST)
 	public String applicationCreate (String name) {
 		ui.applicationCreate (name);
-		return redirect("applications");
+		return redirect(VIEW_APPLICATIONS);
 	}
 	
 	@RequestMapping(value = "/gui/applications/delete", method = RequestMethod.POST)
 	public String applicationDelete (int id) {
 		ui.applicationDelete (id);
-		return redirect("applications");
+		return redirect(VIEW_APPLICATIONS);
 	}
 
 }
