@@ -5,6 +5,7 @@ import java.util.List;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.ConfigurationUpdates;
@@ -38,6 +39,8 @@ public interface UIInterface {
 	Ack keyVersionRemove(int application, String version, String key);
 
 	VersionConfiguration versionConfiguration(int application, String version);
+
+	EnvironmentConfiguration environmentConfiguration(int application, String environment);
 
 	Ack updateConfiguration(int application, ConfigurationUpdates updates);
 
