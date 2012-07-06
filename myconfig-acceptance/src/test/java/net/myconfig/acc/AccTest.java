@@ -24,7 +24,8 @@ public abstract class AccTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
-		driver = createDriver();
+		WebDriver aDriver = createDriver();
+		driver = aDriver;
 	}
 
 	protected static WebDriver createDriver() {
@@ -39,7 +40,7 @@ public abstract class AccTest {
 		} else {
 			aDriver = new FirefoxDriver();
 		}
-		aDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		aDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		return aDriver;
 	}
 

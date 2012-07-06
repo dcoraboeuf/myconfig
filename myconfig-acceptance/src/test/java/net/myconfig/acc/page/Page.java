@@ -46,11 +46,11 @@ public abstract class Page {
 	}
 
 	public void takeScreenshot(Alert alert, String name) {
-		try {
-			takeScreenshot((TakesScreenshot) alert, name);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		// try {
+		// takeScreenshot((TakesScreenshot) alert, name);
+		// } catch (Exception ex) {
+		// ex.printStackTrace();
+		// }
 	}
 
 	protected void takeScreenshot(TakesScreenshot takeScreenshot, String name) {
