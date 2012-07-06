@@ -5,6 +5,8 @@ import org.openqa.selenium.WebDriver;
 
 public class HomePage extends Page {
 
+	private static final String ID_HOME_UI_BUTTON = "home-ui-button";
+
 	public static HomePage start(WebDriver driver) {
 		HomePage home = new HomePage(driver);
 		home.start();
@@ -18,10 +20,12 @@ public class HomePage extends Page {
 	protected void start() {
 		// FIXME Configuration: home page
 		driver.get("http://localhost:9999/myconfig");
+		// Waits for the content
+		driver.findElement(By.id(ID_HOME_UI_BUTTON));
 	}
 
 	public ApplicationsPage ui() {
-		driver.findElement(By.id("home-ui-button")).click();
+		driver.findElement(By.id(ID_HOME_UI_BUTTON)).click();
 		driver.findElement(By.id("applications"));
 		return new ApplicationsPage(driver);
 	}
