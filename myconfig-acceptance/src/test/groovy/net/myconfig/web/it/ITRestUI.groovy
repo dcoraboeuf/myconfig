@@ -26,16 +26,13 @@ class ITRestUI {
 		if (itPort == null || itPort == "") {
 			itPort = "9999"
 		}
-		println ("it.port = $itPort")
 		def props = new Properties()
 		getClass().getResourceAsStream("/Project.properties").withStream {
 			stream -> props.load(stream)
 		}
 		version = props["project.version"]
-		println("Version = $version")
 		// URL of the server
 		def url = "http://localhost:$itPort/myconfig/ui/"
-		println ("URL = $url")
 		// Creates the HTTP client for the API
 		http = new HTTPBuilder(url)
 	}
@@ -46,8 +43,6 @@ class ITRestUI {
 			uri.path = "version"
 			response.success = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content")
 				if (version != content) {
 					fail("Expected version $version but was $content")
 				}
@@ -63,7 +58,6 @@ class ITRestUI {
 		int id = application_create (appName)
 		// Gets the application summary
 		def summary = application_summary (id)
-		println("Summary: $summary")
 		assertEquals (id, summary.id)
 		assertEquals (appName, summary.name)
 		// TODO Basic stats
@@ -78,8 +72,6 @@ class ITRestUI {
 		http.request ( Method.GET, ContentType.JSON ) {
 			uri.path = "applications"
 			response.success = { resp, json ->
-				println("Response status : $resp.status")
-				println("Response content: $json")
 				return json.find {
 					sum -> (sum.id == id) 
 				}
@@ -91,8 +83,6 @@ class ITRestUI {
 		http.request ( Method.PUT, ContentType.JSON ) {
 			uri.path = "application/" + name
 			response.success = { resp, json ->
-				println("Response status : $resp.status")
-				println("Response content: $json")
 				assertEquals (name, json.name)
 				return json.id
 			}
@@ -100,12 +90,9 @@ class ITRestUI {
 	}
 	
 	private void application_delete (int id) {
-		println("Deleting application: id")
 		http.request ( Method.DELETE, ContentType.JSON ) {
 			uri.path = "application/" + id
 			response.success = { resp, json ->
-				println("Response status : $resp.status")
-				println("Response content: $json")
 				assertTrue (json.success)
 			}
 		}

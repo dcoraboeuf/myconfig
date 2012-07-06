@@ -26,16 +26,13 @@ class ITRestGet {
 		if (itPort == null || itPort == "") {
 			itPort = "9999"
 		}
-		println ("it.port = $itPort")
 		def props = new Properties()
 		getClass().getResourceAsStream("/Project.properties").withStream {
 			stream -> props.load(stream)
 		}
 		version = props["project.version"]
-		println("Version = $version")
 		// URL of the server
 		def url = "http://localhost:$itPort/myconfig/get/"
-		println ("URL = $url")
 		// Creates the HTTP client for the API
 		http = new HTTPBuilder(url)
 	}
@@ -46,8 +43,6 @@ class ITRestGet {
 			uri.path = "version"
 			response.success = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content")
 				if (version != content) {
 					fail("Expected version $version but was $content")
 				}
@@ -61,8 +56,6 @@ class ITRestGet {
 			uri.path = "key/myapp/UAT/1.2/jdbc.user"
 			response.success = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content")
 				assertEquals('1.2 UAT jdbc.user', content);
 			}
 		}
@@ -74,8 +67,6 @@ class ITRestGet {
 			uri.path = "key/myapp/UAT/1.2/jdbc.usr"
 			response.failure = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content")
 				assertEquals(500, resp.status);
 				def expectedMessage = """\
 An error has occurred.
@@ -97,8 +88,6 @@ Reference: """
 		http.request ( Method.GET, ContentType.JSON ) {
 			uri.path = "env/myapp/UAT/1.2/json/concise"
 			response.success = { resp, json ->
-				println("Response status : $resp.status")
-				println("Response content: $json")
 				assertEquals (2, json.size());
 				assertEquals ("1.2 UAT jdbc.user", json["jdbc.user"]); 
 				assertEquals ("1.2 UAT jdbc.password", json["jdbc.password"]); 
@@ -111,8 +100,6 @@ Reference: """
 		http.request ( Method.GET, ContentType.JSON ) {
 			uri.path = "env/myapp/UAT/1.2/json/complete"
 			response.success = { resp, json ->
-				println("Response status : $resp.status")
-				println("Response content: $json")
 				assertEquals (2, json.size());
 				assertEquals ("jdbc.password", json[0]["key"]);
 				assertEquals ("Password used to connect to the database", json[0]["description"]); 
@@ -129,8 +116,6 @@ Reference: """
 		http.request ( Method.GET, ContentType.JSON ) {
 			uri.path = "env/myapp/UAT/1.2/json"
 			response.success = { resp, json ->
-				println("Response status : $resp.status")
-				println("Response content: $json")
 				assertEquals (2, json.size());
 				assertEquals ("jdbc.password", json[0]["key"]);
 				assertEquals ("Password used to connect to the database", json[0]["description"]); 
@@ -148,8 +133,6 @@ Reference: """
 			uri.path = "env/myapp/UAT/1.2/properties"
 			response.success = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content") 
 				assertEquals ("""# Configuration properties for 'myapp'
 # Version: 1.2
 # Environment: UAT
@@ -171,8 +154,6 @@ jdbc.user = 1.2 UAT jdbc.user
 			uri.path = "env/myapp/UAT/1.2/json/xxxx"
 			response.failure = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content")
 				assertEquals(500, resp.status);
 				def expectedMessage = """\
 An error has occurred.
@@ -195,8 +176,6 @@ Reference: """
 			uri.path = "env/myapp/UAT/1.2/xml/xxxx"
 			response.failure = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content")
 				assertEquals(500, resp.status);
 				def expectedMessage = """\
 An error has occurred.
@@ -216,7 +195,6 @@ Reference: """
 	@Test
 	void get_env_xml_attributesOnly () {
 		http.get ( path: "env/myapp/UAT/1.2/xml/attributesOnly") { resp, xml ->
-			println("Response status : $resp.status")
 			assertEquals ("myapp", xml.@application.text())
 			assertEquals ("UAT", xml.@environment.text())
 			assertEquals ("1.2", xml.@version.text())
@@ -232,7 +210,6 @@ Reference: """
 	@Test
 	void get_env_xml_default () {
 		http.get ( path: "env/myapp/UAT/1.2/xml") { resp, xml ->
-			println("Response status : $resp.status")
 			assertEquals ("myapp", xml.@application.text())
 			assertEquals ("UAT", xml.@environment.text())
 			assertEquals ("1.2", xml.@version.text())
@@ -248,7 +225,6 @@ Reference: """
 	@Test
 	void get_env_xml_mixed () {
 		http.get ( path: "env/myapp/UAT/1.2/xml/mixed") { resp, xml ->
-			println("Response status : $resp.status")
 			assertEquals ("myapp", xml.@application.text())
 			assertEquals ("UAT", xml.@environment.text())
 			assertEquals ("1.2", xml.@version.text())
@@ -262,7 +238,6 @@ Reference: """
 	@Test
 	void get_env_xml_tagsOnly () {
 		http.get ( path: "env/myapp/UAT/1.2/xml/tagsOnly") { resp, xml ->
-			println("Response status : $resp.status")
 			assertEquals ("myapp", xml.application.text())
 			assertEquals ("UAT", xml.environment.text())
 			assertEquals ("1.2", xml.version.text())
@@ -281,8 +256,6 @@ Reference: """
 			uri.path = "env/myapp/UAT/1.2/xxx"
 			response.failure = { resp, reader ->
 				def content = reader.text
-				println("Response status : $resp.status")
-				println("Response content: $content")
 				assertEquals(500, resp.status);
 				def expectedMessage = """\
 An error has occurred.
