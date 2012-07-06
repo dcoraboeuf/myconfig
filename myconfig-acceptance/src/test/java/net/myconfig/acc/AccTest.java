@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -16,10 +16,10 @@ public abstract class AccTest {
 
 	private final SimpleDateFormat uidFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
-	protected WebDriver driver;
+	protected static WebDriver driver;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeClass
+	public static void setUp() throws Exception {
 		String xvfbDisplay = System.getProperty("xvfb.display");
 		if (StringUtils.isNotBlank(xvfbDisplay)) {
 			System.out.println("Setting the Firefox driver on display " + xvfbDisplay);
@@ -33,8 +33,8 @@ public abstract class AccTest {
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterClass
+	public static void tearDown() throws Exception {
 		// Configuration: exiting the driver
 		driver.quit();
 	}
