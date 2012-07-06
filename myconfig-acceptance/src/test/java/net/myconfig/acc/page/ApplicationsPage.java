@@ -15,6 +15,7 @@ public class ApplicationsPage extends Page {
 
 	public ApplicationsPage(WebDriver driver) {
 		super(driver);
+		driver.findElement(By.id("applications"));
 	}
 
 	public void createApplication(String name) {

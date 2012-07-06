@@ -26,7 +26,6 @@ public class HomePage extends Page {
 
 	public ApplicationsPage ui() {
 		driver.findElement(By.id(ID_HOME_UI_BUTTON)).click();
-		driver.findElement(By.id("applications"));
 		return new ApplicationsPage(driver);
 	}
 	
