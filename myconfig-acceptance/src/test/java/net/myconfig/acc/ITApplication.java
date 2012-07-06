@@ -13,7 +13,7 @@ public class ITApplication extends AccTest {
 	@Before
 	public void applications() {
 		// Goes to the applications page
-		HomePage home = HomePage.start(driver);
+		HomePage home = new HomePage(driver);
 		applications = home.ui();
 	}
 
