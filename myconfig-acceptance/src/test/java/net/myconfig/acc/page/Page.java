@@ -4,7 +4,9 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.Alert;
@@ -15,6 +17,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 public abstract class Page {
 
@@ -81,6 +84,22 @@ public abstract class Page {
 		takeScreenshot(alert, screenshotName);
 		// OK
 		alert.accept();
+	}
+
+	public Collection<String> getLanguages() {
+		List<WebElement> elements = driver.findElements(By.className("language"));
+		return Lists.transform(elements, webElementTextFn);
+	}
+
+	public void selectLanguage(String language) {
+		String id = "language_" + StringUtils.lowerCase(language);
+		id(id).click();
+		assertEquals("language selected", id(id).getAttribute("class"));
+		takeScreenshot("Language-" + language);
+	}
+
+	public String getPageTitle() {
+		return id("page-title").getText();
 	}
 
 	protected WebElement id(String id) {
