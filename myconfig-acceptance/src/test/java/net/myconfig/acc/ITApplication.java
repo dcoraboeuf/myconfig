@@ -41,7 +41,7 @@ public class ITApplication extends AccTest {
 	public void appCreateDelete() throws Exception {
 		// Creates the application
 		String appName = generateUniqueName("app");
-		applications.createApplication (appName);
+		applications.createApplicationOld (appName);
 		// Deletes the application
 		applications.deleteApplication (appName);
 	}
@@ -50,9 +50,9 @@ public class ITApplication extends AccTest {
 	public void appCreateError() throws Exception {
 		// Creates the application
 		String appName = generateUniqueName("app");
-		applications.createApplication (appName);
+		applications.createApplicationOld (appName);
 		// Creates this application a second time
-		applications.doCreateApplication(appName);
+		applications.createApplication(appName);
 		// Checks for the error
 		applications.checkForError("error", "[S-002] The application with name \"%s\" is already defined.", appName);
 	}

@@ -18,17 +18,22 @@ public class ApplicationsPage extends Page {
 		takeScreenshot("Applications");
 	}
 
-	public void createApplication(String name) {
-		doCreateApplication(name);
-		// Waits for the name to appear
-		driver.findElement(byApplicationName(name));
-		takeScreenshot("Application-Create-" + name);
+	@Deprecated
+	public void createApplicationOld(String name) {
+		createApplication(name);
+		checkForApplication(name);
 	}
 
-	public void doCreateApplication(String name) {
+	public void createApplication(String name) {
 		// Creates the application with its name
 		id("application-create-name").sendKeys(name);
 		id("application-create-submit").click();
+	}
+	
+	public void checkForApplication (String name) {
+		// Waits for the name to appear
+		driver.findElement(byApplicationName(name));
+		takeScreenshot("Application-" + name);
 	}
 
 	public void deleteApplication(String name) {
