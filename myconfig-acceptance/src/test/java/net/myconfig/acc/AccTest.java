@@ -4,8 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import net.myconfig.acc.page.DefaultPageContext;
+import net.myconfig.acc.page.PageContext;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxBinary;
@@ -20,23 +24,36 @@ public abstract class AccTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
+		driver = createDriver();
+	}
+
+	protected static WebDriver createDriver() {
+		WebDriver aDriver;
 		String xvfbDisplay = System.getProperty("xvfb.display");
 		if (StringUtils.isNotBlank(xvfbDisplay)) {
 			System.out.println("Setting the Firefox driver on display " + xvfbDisplay);
 			FirefoxBinary firefox = new FirefoxBinary();
 			firefox.setEnvironmentProperty("DISPLAY", xvfbDisplay);
 			FirefoxProfile firefoxProfile = new FirefoxProfile();
-			driver = new FirefoxDriver(firefox, firefoxProfile);
+			aDriver = new FirefoxDriver(firefox, firefoxProfile);
 		} else {
-			driver = new FirefoxDriver();
+			aDriver = new FirefoxDriver();
 		}
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		aDriver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		return aDriver;
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
 		// Configuration: exiting the driver
 		driver.quit();
+	}
+
+	protected PageContext pageContext;
+	
+	@Before
+	public void context() {
+		pageContext = new DefaultPageContext(getClass().getSimpleName());
 	}
 
 	protected String generateUniqueName(String prefix) {
