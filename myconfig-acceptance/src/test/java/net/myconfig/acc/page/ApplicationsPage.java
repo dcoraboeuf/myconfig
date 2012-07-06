@@ -18,12 +18,6 @@ public class ApplicationsPage extends Page {
 		takeScreenshot("Applications");
 	}
 
-	@Deprecated
-	public void createApplicationOld(String name) {
-		createApplication(name);
-		checkForApplication(name);
-	}
-
 	public void createApplication(String name) {
 		// Creates the application with its name
 		id("application-create-name").sendKeys(name);
