@@ -1,14 +1,11 @@
 package net.myconfig.acc;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Collection;
-
 import net.myconfig.acc.page.ApplicationsPage;
 import net.myconfig.acc.page.HomePage;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ITApplication extends AccTest {
@@ -23,12 +20,8 @@ public class ITApplication extends AccTest {
 	}
 	
 	@Test
+	@Ignore
 	public void appChangeLanguage() {
-		// Asserts the languages
-		Collection<String> languages = applications.getLanguages();
-		assertEquals (2, languages.size());
-		assertTrue (languages.contains("EN"));
-		assertTrue (languages.contains("FR"));
 		// Select French
 		applications.selectLanguage ("FR");
 		assertEquals("Applications configurées", applications.getPageTitle());

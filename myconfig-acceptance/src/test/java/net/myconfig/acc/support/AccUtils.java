@@ -12,6 +12,7 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class AccUtils {
 
+	private static final int TIMEOUT = 15;
 	private static final String UID_FORMAT = "yyyyMMddHHmmssSSS";
 
 	public static WebDriver createDriver() {
@@ -26,7 +27,7 @@ public class AccUtils {
 		} else {
 			aDriver = new FirefoxDriver();
 		}
-		aDriver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		aDriver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
 		return aDriver;
 	}
 

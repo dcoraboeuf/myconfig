@@ -1,8 +1,11 @@
 package net.myconfig.acc.cu;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.myconfig.acc.page.ApplicationsPage;
@@ -71,6 +74,13 @@ public class ApplicationsStepDefinitions {
 	public void application_delete() throws Throwable {
 		String name = getUniqueName(APPLICATION);
 		applications.deleteApplication(name);
+	}
+	
+	@Then("^I should see the following languages$")
+	public void general_languages(List<String> languages) throws Throwable {
+		// Asserts the languages
+		Collection<String> actualLanguages = applications.getLanguages();
+		assertEquals (languages, actualLanguages);
 	}
 
 	@Then("^I should see the application in the list$")
