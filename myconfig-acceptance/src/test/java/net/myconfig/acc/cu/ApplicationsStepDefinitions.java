@@ -69,18 +69,23 @@ public class ApplicationsStepDefinitions {
 		String name = getUniqueName(APPLICATION);
 		applications.createApplication(name);
 	}
-	
+
 	@When("^I delete the application$")
 	public void application_delete() throws Throwable {
 		String name = getUniqueName(APPLICATION);
 		applications.deleteApplication(name);
 	}
-	
+
 	@Then("^I should see the following languages$")
 	public void general_languages(List<String> languages) throws Throwable {
 		// Asserts the languages
 		Collection<String> actualLanguages = applications.getLanguages();
-		assertEquals (languages, actualLanguages);
+		assertEquals(languages, actualLanguages);
+	}
+
+	@When("^I select \"(\\w\\w)\" as a language$")
+	public void general_language_select(String language) throws Throwable {
+		applications.selectLanguage(language);
 	}
 
 	@Then("^I should see the application in the list$")
@@ -88,17 +93,22 @@ public class ApplicationsStepDefinitions {
 		String name = getUniqueName(APPLICATION);
 		applications.checkForApplication(name);
 	}
-	
+
 	@Then("^I should not see the application in the list any longer$")
 	public void not_application_name() throws Throwable {
 		String name = getUniqueName(APPLICATION);
 		applications.checkForApplicationNotPresent(name);
 	}
 
+	@Then("^the page title is \"(.*)\"$")
+	public void general_page_title(String title) throws Throwable {
+		assertEquals(title, applications.getPageTitle());
+	}
+
 	@Then("^I should see the \"(.*)\" (\\w+) error$")
 	public void error(String message, String category) throws Throwable {
 		String name = getUniqueName(category);
-		applications.checkForError("error", message, name); 
+		applications.checkForError("error", message, name);
 	}
 
 }
