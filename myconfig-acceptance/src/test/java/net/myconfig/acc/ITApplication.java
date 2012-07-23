@@ -47,16 +47,4 @@ public class ITApplication extends AccTest {
 		applications.deleteApplication (appName);
 	}
 	
-	@Test
-	public void appCreateError() throws Exception {
-		// Creates the application
-		String appName = generateUniqueName("app");
-		applications.createApplication (appName);
-		applications.checkForApplication (appName);
-		// Creates this application a second time
-		applications.createApplication(appName);
-		// Checks for the error
-		applications.checkForError("error", "[S-002] The application with name \"%s\" is already defined.", appName);
-	}
-	
 }
