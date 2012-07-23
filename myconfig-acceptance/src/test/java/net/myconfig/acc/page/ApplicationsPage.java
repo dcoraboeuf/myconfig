@@ -41,13 +41,8 @@ public class ApplicationsPage extends Page {
 		// Alert management
 		closeAlert ("Application-Delete-Alert", "[M-001-C] Do you want to delete the \"%s\" application and all its associated configuration?", name);
 		
-		// Waits for the application list to be reloaded
-		id("applications");
 		// Checks the application is not there any longer
-		List<String> appNames = getApplicationNames();
-		assertFalse(String.format("%s application has not been deleted", name), appNames.contains(name));
-		// Screenshot
-		takeScreenshot("Application-Delete-After-" + name);
+		checkForApplicationNotPresent(name);
 	}
 
 	public List<String> getApplicationNames() {
@@ -58,6 +53,16 @@ public class ApplicationsPage extends Page {
 
 	public By byApplicationName(String name) {
 		return byElement("td", "item-column-name", name);
+	}
+
+	public void checkForApplicationNotPresent(String name) {
+		// Waits for the application list to be reloaded
+		id("applications");
+		// Checks the application is not there any longer
+		List<String> appNames = getApplicationNames();
+		assertFalse(String.format("%s application is still present", name), appNames.contains(name));
+		// Screenshot
+		takeScreenshot("Application-NotPresent-" + name);
 	}
 
 }

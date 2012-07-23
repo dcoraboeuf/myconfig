@@ -36,15 +36,5 @@ public class ITApplication extends AccTest {
 		applications.selectLanguage ("EN");
 		assertEquals("Configured applications", applications.getPageTitle());
 	}
-
-	@Test
-	public void appCreateDelete() throws Exception {
-		// Creates the application
-		String appName = generateUniqueName("app");
-		applications.createApplication (appName);
-		applications.checkForApplication (appName);
-		// Deletes the application
-		applications.deleteApplication (appName);
-	}
 	
 }
