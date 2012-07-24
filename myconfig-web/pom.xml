@@ -139,7 +139,7 @@
 						<webApp>
 							<contextPath>/myconfig</contextPath>
 							<defaultsDescriptor>${project.basedir}/src/test/resources/jetty/webdefault.xml</defaultsDescriptor>
-							<jettyEnvXml>${project.basedir}/src/test/resources/jetty/jetty-env.xml</jettyEnvXml>
+							<jettyEnvXml>${project.basedir}/src/test/resources/jetty/jetty-env-dev.xml</jettyEnvXml>
 						</webApp>
 						<stopPort>9966</stopPort>
 						<stopKey>foo</stopKey>
@@ -166,5 +166,32 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>prod</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.mortbay.jetty</groupId>
+							<artifactId>jetty-maven-plugin</artifactId>
+							<configuration>
+								<webApp>
+									<jettyEnvXml>${project.basedir}/src/test/resources/jetty/jetty-env-prod.xml</jettyEnvXml>
+								</webApp>
+								<systemProperties>
+						            <systemProperty>
+							            <name>spring.profiles.active</name>
+							            <value>prod</value>
+						            </systemProperty>
+						        </systemProperties>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 	
 </project>
