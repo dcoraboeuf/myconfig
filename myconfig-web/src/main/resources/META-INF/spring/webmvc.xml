@@ -12,6 +12,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
 	<!--<task:annotation-driven /> -->
 	<mvc:annotation-driven />
+	
+	<!-- Static resources -->
+	<mvc:resources mapping="/static/**" location="/static/" />
 
 	<!-- Interceptors -->
 	<mvc:interceptors>

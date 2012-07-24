@@ -1,5 +1,5 @@
 <#-- Resources -->
-<link rel="stylesheet/less" type="text/css" href="less/items.less" />
+<link rel="stylesheet/less" type="text/css" href="static/less/items.less" />
 
 <#macro items_table id headers actions=false class="">
 	<#assign columnCount = headers?size />
@@ -93,13 +93,13 @@
 	<form class="item-action item-action-delete" action="${action}" method="post" onsubmit="return myconfig.displayConfirmationID ('item-action-delete-${itemField}-prompt');">
 		<input id="item-action-delete-${itemField}-prompt" type="hidden" value="${itemPrompt?html}" />
 		<input type="hidden" name="${formField}" value="${itemField?html}" />
-		<input class="item-action item-action-delete" type="image" src="images/delete.png" />
+		<input class="item-action item-action-delete" type="image" src="static/images/delete.png" />
 	</form>
 </#macro>
 
 <#macro item_edit item action itemField="id">
 	<form class="item-action item-action-edit" action="${action}/${item[itemField]?html}" method="get">
-		<input class="item-action item-action-edit" type="image" src="images/edit.png" />
+		<input class="item-action item-action-edit" type="image" src="static/images/edit.png" />
 	</form>
 </#macro>
 
