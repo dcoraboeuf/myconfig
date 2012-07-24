@@ -15,6 +15,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	
 	<!-- Static resources -->
 	<mvc:resources mapping="/static/**" location="/static/" />
+	
+	<!-- Default page -->
+	<mvc:default-servlet-handler/>
 
 	<!-- Interceptors -->
 	<mvc:interceptors>
