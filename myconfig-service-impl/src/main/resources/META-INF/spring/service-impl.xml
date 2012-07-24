@@ -16,12 +16,14 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
     <context:component-scan base-package="net.myconfig"/>
     <context:property-placeholder location="classpath:META-INF/resources/app.properties"/>
     
-    <jee:jndi-lookup id="dataSource" jndi-name="jdbc/myconfig" />
-    
     <tx:annotation-driven transaction-manager="txManager"/>
 
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
   		<property name="dataSource" ref="dataSource"/>
   	</bean>
+  	
+  	<beans profile="it,dev,prod">
+    	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/myconfig" />
+  	</beans>
 
 </beans>
