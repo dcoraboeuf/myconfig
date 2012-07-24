@@ -7,7 +7,7 @@
 		<Arg>
 			<New class="org.apache.commons.dbcp.BasicDataSource">
 				<Set name="DriverClassName">org.h2.Driver</Set>
-				<Set name="Url">jdbc:h2:file:~/myconfig-prod/db/data;AUTOCOMMIT=OFF;MVCC=true</Set>
+				<Set name="Url">jdbc:h2:file:myconfig-dev/db/data;AUTOCOMMIT=OFF;MVCC=true</Set>
 				<Set name="Username">sa</Set>
 				<Set name="Password"></Set>
 				<Set name="DefaultAutoCommit">false</Set>
