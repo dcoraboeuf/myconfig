@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<cloudbees-web-app xmlns="http://www.cloudbees.com/xml/webapp/1">
+
+  <!-- Application ID (formatted CB_ACCOUNT/APPNAME) -->
+  <appid>${myconfig.appid}</appid>
+
+  <!-- DataSources (use names refererenced via <resource-ref> in WEB-INF/web.xml) -->
+  <resource name="jdbc/myconfig" auth="Container" type="javax.sql.DataSource">
+    <param name="username" value="${myconfig.jdbc.user}" />
+    <param name="password" value="${myconfig.jdbc.password}" />
+    <param name="url" value="${myconfig.jdbc.url}" />
+  </resource>
+</cloudbees-web-app>
