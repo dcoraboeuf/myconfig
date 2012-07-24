@@ -3,7 +3,7 @@
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
 
 	<New id="myconfigDataSource" class="org.eclipse.jetty.plus.jndi.Resource">
-		<Arg>comp/env/jdbc/myconfig</Arg>
+		<Arg>java:comp/env/jdbc/myconfig</Arg>
 		<Arg>
 			<New class="org.apache.commons.dbcp.BasicDataSource">
 				<Set name="DriverClassName">org.h2.Driver</Set>
