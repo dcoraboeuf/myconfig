@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Profile;
 @Profile(MyConfigProfiles.PROD)
 public class ProdConfiguration extends CommonConfiguration {
 
-	private static final String JNDI_NAME = "java:comp/env/jdbc/myconfig";
+	private static final String JNDI_NAME = "jdbc/myconfig";
 	
 	private static final Logger log = LoggerFactory.getLogger(ProdConfiguration.class);
 
