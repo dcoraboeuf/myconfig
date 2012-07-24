@@ -12,10 +12,6 @@ import net.myconfig.acc.page.ApplicationsPage;
 import net.myconfig.acc.page.DefaultPageContext;
 import net.myconfig.acc.page.HomePage;
 import net.myconfig.acc.support.AccUtils;
-
-import org.openqa.selenium.WebDriver;
-
-import cucumber.annotation.After;
 import cucumber.annotation.Before;
 import cucumber.annotation.en.Given;
 import cucumber.annotation.en.Then;
@@ -25,7 +21,6 @@ public class ApplicationsStepDefinitions {
 
 	private static final String APPLICATION = "application";
 
-	protected WebDriver driver;
 	protected DefaultPageContext pageContext;
 	protected Map<String, String> names;
 
@@ -33,16 +28,8 @@ public class ApplicationsStepDefinitions {
 
 	@Before
 	public void setUp() throws Exception {
-		WebDriver aDriver = AccUtils.createDriver();
-		driver = aDriver;
 		pageContext = new DefaultPageContext(getClass().getSimpleName());
 		names = new HashMap<String, String>();
-	}
-
-	@After
-	public void tearDown() throws Exception {
-		// Configuration: exiting the driver
-		driver.quit();
 	}
 
 	protected String getUniqueName(String category) {
@@ -54,7 +41,7 @@ public class ApplicationsStepDefinitions {
 	@Given("^I am on the list of applications$")
 	public void applications() throws Throwable {
 		// Goes to the applications page
-		HomePage home = new HomePage(driver, pageContext);
+		HomePage home = new HomePage(ITCUApplications.getDriver(), pageContext);
 		applications = home.ui();
 	}
 
