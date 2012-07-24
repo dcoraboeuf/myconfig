@@ -159,6 +159,7 @@
 									<war>${basedir}/target/dependency/myconfig-web-${project.version}.war</war>
 									<webApp>
 										<contextPath>/myconfig</contextPath>
+										<jettyEnvXml>${project.basedir}/src/test/resources/it/jetty-env-it.xml</jettyEnvXml>
 									</webApp>
 									<daemon>true</daemon>
 									<systemProperties>
@@ -168,7 +169,7 @@
 							            </systemProperty>
 							            <systemProperty>
 							            	<name>it.db</name>
-							            	<value>${basedir}/src/test/resources/META-INF/it/db.sql</value>
+							            	<value>${basedir}/src/test/resources/it/db.sql</value>
 							            </systemProperty>
 									    <systemProperty>
 									    	<name>jetty.port</name>
