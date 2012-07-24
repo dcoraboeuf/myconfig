@@ -10,6 +10,7 @@
 		<param name="password" value="${myconfig.jdbc.password}" />
 		<param name="url" value="${myconfig.jdbc.url}" />
 		<param name="validationQuery" value="SELECT 1"/>
+		<param name="defaultAutoCommit" value="false" />
 		<param name="maxActive" value="10"/>
         <param name="maxIdle" value="3"/>
         <param name="maxWait" value="15000"/>
