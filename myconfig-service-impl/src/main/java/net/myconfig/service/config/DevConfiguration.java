@@ -1,11 +1,14 @@
 package net.myconfig.service.config;
 
+import java.io.File;
+
 import javax.sql.DataSource;
 
 import net.myconfig.core.MyConfigProfiles;
 import net.myconfig.service.api.ConfigurationService;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +32,19 @@ public class DevConfiguration extends CommonConfiguration {
 
 	@Override
 	@Bean
-	public DataSource dataSource() {
-		String dbURL = String.format("jdbc:h2:file:%s/myconfig-dev/db/data;AUTOCOMMIT=OFF;MVCC=true", System.getProperty("user.home"));
-		log.info("Using database at {}", dbURL);
+	public DataSource dataSource() throws Exception {
+		// Gets the home directory
+		File home = HomeSupport.home();
+		// Checks for the home
+		if (!home.exists()) {
+			FileUtils.forceMkdir(home);
+		} else if (!home.isDirectory() && !home.canWrite()) {
+			throw new IllegalStateException(String.format("The home directory at %s does not exist, is not a directory or cannot be written.", home.getAbsolutePath()));
+		}
+		// DB URL
+		String dbURL = String.format("jdbc:h2:file:%s/db/data;AUTOCOMMIT=OFF;MVCC=true", home.getAbsolutePath());
+		log.info("[config] Using database at {}", dbURL);
+		// Datasource
 		BasicDataSource ds = new BasicDataSource();
 		ds.setDriverClassName("org.h2.Driver");
 		ds.setUrl(dbURL);

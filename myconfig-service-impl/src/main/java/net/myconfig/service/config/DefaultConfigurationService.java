@@ -6,6 +6,7 @@ import javax.annotation.PostConstruct;
 
 import net.myconfig.service.api.ConfigurationService;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Log4jConfigurer;
@@ -29,8 +30,12 @@ public class DefaultConfigurationService implements ConfigurationService {
 	}
 
 	protected void initLogging() throws FileNotFoundException {
-		logger.info("[config] Initializing logging from '{}'", loggingPath);
-		Log4jConfigurer.initLogging(loggingPath);
+		if (StringUtils.isNotBlank(loggingPath)) {
+			logger.info("[config] Initializing logging from '{}'", loggingPath);
+			Log4jConfigurer.initLogging(loggingPath);
+		} else {
+			logger.info("[config] Not using any logging configuration file - relying on the container");
+		}
 	}
 
 	protected void initGeneral() {
