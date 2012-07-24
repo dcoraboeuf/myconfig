@@ -191,7 +191,7 @@
 						            </systemProperty>
 						            <systemProperty>
 							            <name>it.db</name>
-							            <value>src/test/resources/it/db.sql</value>
+							            <value>../myconfig-acceptance/src/test/resources/it/db.sql</value>
 						            </systemProperty>
 						        </systemProperties>
 							</configuration>
