@@ -65,6 +65,8 @@ public interface SQL {
 	String ENVIRONMENT_CREATE = "insert into environment (application, name) values (:id, :name)";
 
 	String ENVIRONMENT_DELETE = "delete from environment where application = :id and name = :name";
+	
+	String KEY = "select * from appkey where application = :application and name = :appkey";
 
 	String KEYS = "select * from appkey where application = :application order by name";
 
@@ -119,6 +121,12 @@ public interface SQL {
 			"where application = :application " +
 			"and environment = :environment " +
 			"order by version, appkey";
+	
+	String CONFIG_FOR_KEY = "select * " +
+			"from config " +
+			"where application = :application " +
+			"and appkey = :appkey " +
+			"order by version, environment";
 
 	String CONFIG_REMOVE_VALUE = "delete from config where application = :application and version = :version and environment = :environment and appkey = :appkey";
 
@@ -129,6 +137,9 @@ public interface SQL {
 
 	String ENVIRONMENT_PREVIOUS = "select name from environment where application = :application and name < :environment order by name desc";
 	String ENVIRONMENT_NEXT = "select name from environment where application = :application and name > :environment order by name asc";
+
+	String KEY_PREVIOUS = "select name from appkey  where application = :application and name < :appkey order by name desc";
+	String KEY_NEXT = "select name from appkey where application = :application and name > :appkey order by name asc";
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 

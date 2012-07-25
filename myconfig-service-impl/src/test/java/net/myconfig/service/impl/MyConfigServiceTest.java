@@ -41,9 +41,11 @@ import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.Key;
+import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
+import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
@@ -830,6 +832,166 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test(expected = EnvironmentNotDefinedException.class)
 	public void environment_configuration_no_version() {
 		myConfigService.getEnvironmentConfiguration(1, "xxx");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void key_configuration() throws JsonGenerationException, JsonMappingException, IOException {
+		KeyConfiguration configuration = myConfigService.getKeyConfiguration(1, "jdbc.url");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new KeyConfiguration(1, "myapp", new Key("jdbc.url", "URL used to connect to the database"), "jdbc.password", "jdbc.user",
+					Arrays.asList(
+							new Version("1.0"),
+							new Version("1.1"),
+							new Version("1.2"),
+							new Version("1.3")),
+					Arrays.asList(
+							new IndexedValues<ConditionalValue>(
+									"ACC",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(false, ""))
+										.put("1.1", new ConditionalValue(false, ""))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url ACC"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"DEV",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(false, ""))
+										.put("1.1", new ConditionalValue(false, ""))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url DEV"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"PROD",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(false, ""))
+										.put("1.1", new ConditionalValue(false, ""))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url PROD"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"UAT",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(false, ""))
+										.put("1.1", new ConditionalValue(false, ""))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url UAT"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build())
+							)
+					),
+				configuration);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void key_configuration_no_previous() throws JsonGenerationException, JsonMappingException, IOException {
+		KeyConfiguration configuration = myConfigService.getKeyConfiguration(1, "jdbc.password");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new KeyConfiguration(1, "myapp", new Key("jdbc.password", "Password used to connect to the database"), null, "jdbc.url",
+					Arrays.asList(
+							new Version("1.0"),
+							new Version("1.1"),
+							new Version("1.2"),
+							new Version("1.3")),
+					Arrays.asList(
+							new IndexedValues<ConditionalValue>(
+									"ACC",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password ACC"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password ACC"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password ACC"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"DEV",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password DEV"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password DEV"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password DEV"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"PROD",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password PROD"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password PROD"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password PROD"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"UAT",
+										MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password UAT"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password UAT"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password UAT"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build())
+							)
+					),
+				configuration);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void key_configuration_no_next() throws JsonGenerationException, JsonMappingException, IOException {
+		KeyConfiguration configuration = myConfigService.getKeyConfiguration(1, "jdbc.user");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new KeyConfiguration(1, "myapp", new Key("jdbc.user", "User used to connect to the database"), "jdbc.url", null,
+					Arrays.asList(
+							new Version("1.0"),
+							new Version("1.1"),
+							new Version("1.2"),
+							new Version("1.3")),
+					Arrays.asList(
+							new IndexedValues<ConditionalValue>(
+									"ACC",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user ACC"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user ACC"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user ACC"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"DEV",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user DEV"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user DEV"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user DEV"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"PROD",
+									MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user PROD"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user PROD"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user PROD"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build()),
+							new IndexedValues<ConditionalValue>(
+									"UAT",
+										MapBuilder.<String,ConditionalValue>create()
+										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user UAT"))
+										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user UAT"))
+										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user UAT"))
+										.put("1.3", new ConditionalValue(true, ""))
+										.build())
+							)
+					),
+				configuration);
+	}
+
+	@Test(expected = ApplicationNotFoundException.class)
+	public void key_configuration_no_app() {
+		myConfigService.getKeyConfiguration(0, "");
+	}
+	
+	@Test(expected = KeyNotDefinedException.class)
+	public void key_configuration_no_version() {
+		myConfigService.getKeyConfiguration(1, "xxx");
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -7,6 +7,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.service.model.EnvironmentConfiguration;
+import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.ConfigurationUpdates;
@@ -48,6 +49,8 @@ public interface MyConfigService {
 	VersionConfiguration getVersionConfiguration(int application, String version);
 
 	EnvironmentConfiguration getEnvironmentConfiguration(int application, String environment);
+	
+	KeyConfiguration getKeyConfiguration(int application, String key);
 
 	Ack updateConfiguration(int application, ConfigurationUpdates updates);
 

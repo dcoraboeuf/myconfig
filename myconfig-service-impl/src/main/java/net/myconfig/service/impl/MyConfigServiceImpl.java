@@ -46,6 +46,7 @@ import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.EnvironmentSummary;
 import net.myconfig.service.model.Key;
+import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
@@ -394,7 +395,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		// Gets the matrix of key x version
 		MatrixConfiguration matrix = keyVersionConfiguration(application);
 		// Gets the list of values per environment x application
-		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_ENVIRONMENT, applicationCriteria);
+		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_ENVIRONMENT, environmentCriteria);
 		final Map<String,Map<String,String>> versionValues = new TreeMap<String, Map<String,String>>();
 		for (Map<String, Object> values : valuesMaps) {
 			String version = (String) values.get(VERSION);
@@ -441,6 +442,92 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 		String nextEnvironment = getFirstItem(SQL.ENVIRONMENT_NEXT, environmentCriteria, String.class);
 		// OK
 		return new EnvironmentConfiguration(application, name, environment, previousEnvironment, nextEnvironment, keyList, versionConfigurationList);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public KeyConfiguration getKeyConfiguration(int application, String keyName) {
+		checkApplication(application);
+		checkKey(application, keyName);
+		// Application name
+		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource(APPLICATION, application);
+		MapSqlParameterSource keyCriteria = applicationCriteria.addValue(KEY, keyName);
+		String name = getApplicationName(application);
+		// List of version
+		List<Version> versionList = getNamedParameterJdbcTemplate().query(SQL.VERSIONS, applicationCriteria, new RowMapper<Version>() {
+			@Override
+			public Version mapRow(ResultSet rs, int i) throws SQLException {
+				return new Version(rs.getString(NAME));
+			}
+		});
+		// Key information
+		Key key = getNamedParameterJdbcTemplate().queryForObject(SQL.KEY, keyCriteria, new RowMapper<Key>() {
+			@Override
+			public Key mapRow(ResultSet rs, int index) throws SQLException {
+				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
+			}
+		});
+		// List of environments
+		/*
+		 * The query does not depend on the key.
+		 */
+		List<Environment> environmentList = getNamedParameterJdbcTemplate().query(SQL.ENVIRONMENTS, applicationCriteria, new RowMapper<Environment>() {
+			@Override
+			public Environment mapRow(ResultSet rs, int i) throws SQLException {
+				return new Environment(rs.getString(NAME));
+			}
+		});
+		// Gets the matrix of key x version
+		MatrixConfiguration matrix = keyVersionConfiguration(application);
+		// Gets the list of values per key x application
+		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_KEY, keyCriteria);
+		final Map<String,Map<String,String>> environmentValues = new TreeMap<String, Map<String,String>>();
+		for (Map<String, Object> values : valuesMaps) {
+			String version = (String) values.get(VERSION);
+			String environment = (String) values.get(ENVIRONMENT);
+			String value = (String) values.get(VALUE);
+			Map<String, String> environmentConfiguration = environmentValues.get(environment);
+			if (environmentConfiguration == null) {
+				environmentConfiguration = new TreeMap<String, String>();
+				environmentValues.put(environment, environmentConfiguration);
+			}
+			environmentConfiguration.put(version, value);
+		}
+		
+		// List of conditional values per environment x version
+		List<IndexedValues<ConditionalValue>> environmentValuesPerVersionList = new ArrayList<IndexedValues<ConditionalValue>>();
+		// .. for each environment
+		for (Environment environment: environmentList) {
+			String environmentName = environment.getName();
+			Map<String, ConditionalValue> cValues = new TreeMap<String, ConditionalValue>();
+			// ... for each version
+			for (Version version: versionList) {
+				String versionName = version.getName();
+				// Is the key activated for this version?
+				boolean enabled = matrix.isEnabled (versionName, keyName);
+				// Gets the value for an enabled key
+				String value = "";
+				if (enabled) {
+					Map<String, String> valuePerVersion = environmentValues.get(environmentName);
+					if (valuePerVersion != null && valuePerVersion.containsKey(versionName)) {
+						value = valuePerVersion.get(versionName);
+					}
+				}
+				// Conditional value
+				ConditionalValue cValue = new ConditionalValue(enabled, value);
+				cValues.put(versionName, cValue);
+			}
+			// OK for this environment
+			IndexedValues<ConditionalValue> environmentConditionalValues = new IndexedValues<ConditionalValue>(environmentName, cValues);
+			environmentValuesPerVersionList.add(environmentConditionalValues);
+		}
+		
+		// Previous & next version
+		String previousKey = getFirstItem(SQL.KEY_PREVIOUS, keyCriteria, String.class);
+		String nextKey= getFirstItem(SQL.KEY_NEXT, keyCriteria, String.class);
+		
+		// OK
+		return new KeyConfiguration(application, name, key, previousKey, nextKey, versionList, environmentValuesPerVersionList);
 	}
 	
 	@Override
