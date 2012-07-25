@@ -2,7 +2,7 @@
 
 <#macro configuration_environment class="" value="">
 	<#if value != "">
-		<a href="gui/configuration/environment/${versionConfiguration.id}/${value?html}" class="environment ${class}">${value?html}</a>
+		<a href="gui/configuration/environment/${environmentConfiguration.id}/${value?html}" class="environment ${class}">${value?html}</a>
 	</#if>
 </#macro>
 
@@ -26,9 +26,9 @@
 			<thead>
 				<tr class="navigation">
 					<th colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }">
-						<@configuration_environment value=environmentConfiguration.previousVersion class="previous" />
+						<@configuration_environment value=environmentConfiguration.previousEnvironment class="previous" />
 						<span class="environment current">${environmentConfiguration.environment?html}</span>
-						<@configuration_environment value=environmentConfiguration.nextVersion class="next" />
+						<@configuration_environment value=environmentConfiguration.nextEnvironment class="next" />
 					</th>
 				</tr>
 				<tr class="columns">
