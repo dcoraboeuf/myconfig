@@ -64,7 +64,7 @@
 	</@layout_root>
 </#macro>
 
-<#macro layout_std pageId style=false script=false scripts=[] modules=[] title="">
+<#macro layout_std pageId style=false script=false scripts=[] modules=[] title="" nav=true>
 	<#assign navItems = [] />
 	<@layout_basic pageId=pageId style=style script=script scripts=scripts modules=modules title=title>
 		<article class="std-page">
@@ -72,12 +72,14 @@
 			<div class="std-content">
 				<#nested>
 			</div>
-			<nav>
-				<a href="."><@lh key="home" /></a>
-				<#list navItems as navItem>
-					<a href="${navItem.href?html}"><@lh key=navItem.key /></a>
-				</#list>
-			</nav>
+			<#if nav>
+				<nav>
+					<a href="."><@lh key="home" /></a>
+					<#list navItems as navItem>
+						<a href="${navItem.href?html}"><@lh key=navItem.key /></a>
+					</#list>
+				</nav>
+			</#if>
 		</article>
 	</@layout_basic>
 </#macro>
