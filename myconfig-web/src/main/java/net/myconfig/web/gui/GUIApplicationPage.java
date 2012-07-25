@@ -30,5 +30,11 @@ public class GUIApplicationPage extends AbstractGUIApplicationPage {
 	protected String pagePath(int application) {
 		return "application/" + application;
 	}
+	
+	@RequestMapping(value = "/{application:\\d+}/key/update", method = RequestMethod.POST)
+	public String keyUpdate(Model model, @PathVariable int application, String name, String description) {
+		ui.keyUpdate (application, name, description);
+		return backToPage (application);
+	}
 
 }

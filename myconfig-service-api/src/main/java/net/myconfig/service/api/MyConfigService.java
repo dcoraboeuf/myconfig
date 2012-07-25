@@ -54,4 +54,6 @@ public interface MyConfigService {
 
 	Ack updateConfiguration(int application, ConfigurationUpdates updates);
 
+	Ack updateKey(int application, String name, String description);
+
 }

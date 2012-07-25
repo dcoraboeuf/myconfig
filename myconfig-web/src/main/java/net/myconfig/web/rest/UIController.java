@@ -111,6 +111,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
+	@RequestMapping(value = "/key/{application}/{name}", method = RequestMethod.POST)
+	public Ack keyUpdate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
+		return getMyConfigService().updateKey (application, name, description);
+	}
+	
+	@Override
 	@RequestMapping(value = "/key/{id}/{name}", method = RequestMethod.DELETE)
 	public @ResponseBody Ack keyDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteKey (id, name);
