@@ -40,7 +40,7 @@
 				<#list versionConfiguration.keyList as key>
 					<tr>
 						<td class="key">
-							<div class="key-name">${key.name?html}</div>
+							<div class="key-name"><a href="gui/configuration/key/${versionConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
 							<div class="key-description"><@ellipsis value=key.description maxlength=30 /></div>
 						</td>
 						<#list versionConfiguration.environmentValuesPerKeyList as environmentConfiguration>

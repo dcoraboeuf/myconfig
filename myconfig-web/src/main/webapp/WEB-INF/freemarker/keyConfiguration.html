@@ -43,7 +43,7 @@
 			<tbody>
 				<#list keyConfiguration.versionList as version>
 					<tr>
-						<td class="version">${version.name?html}</td>
+						<td class="version"><a href="gui/configuration/version/${keyConfiguration.id}/${version.name?html}">${version.name?html}</a></td>
 						<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
 							<td class="environment-value">
 								<@configuration_value value=environmentConfiguration.values[version.name] key=keyConfiguration.key environment=environmentConfiguration.name version=version.name />
