@@ -15,25 +15,25 @@
 </#macro>
 
 <@layout_std pageId="home" style=true title=loc("home.welcome")>
-	<section>
+	<section class="panel">
 		<h1><@lh key="home.ui" /></h1>
-		<p>
+		<div>
 			<a id="home-ui-button" class="app-menu" href="gui/"><@lh key="home.ui.button" /></a>
 			${loclink ("home.ui.message", '<a id="home-ui-link" href="gui/">')}
-		</p>
+		</div>
 	</section>
-	<section>
+	<section class="panel">
 		<h1><@lh key="home.get" /></h1>
-		<p>
+		<div>
 			<@lh key="home.get.message" />
 			<@restapi information = getInformation />
-		</p>
+		</div>
 	</section>
-	<section>
+	<section class="panel">
 		<h1><@lh key="home.api" /></h1>
-		<p>
+		<div>
 			<@lh key="home.api.message" />
 			<@restapi information = uiInformation />
-		</p>
+		</div>
 	</section>
 </@layout_std>

@@ -8,6 +8,10 @@
 
 @page-title-color: #D24939;
 
+@panel-border-color: #BBBBBB;
+@panel-border-radius: 4px;
+@panel-color: white;
+
 .action {
 	cursor: pointer;
 }
@@ -91,5 +95,20 @@ article.std-page {
 	> div.std-content {
 		margin-left: @body-margin;
 		margin-right: @body-margin;
+	}
+}
+
+// panel
+section.panel {
+	border: solid 1px @panel-border-color;
+	border-radius: @panel-border-radius;
+	margin-bottom: @body-margin;
+	background-color: @panel-color;
+	> h1 {
+		color: @page-title-color;
+		margin: @panel-border-radius;
+	}
+	> div {
+		padding: @panel-border-radius * 2;
 	}
 }
