@@ -7,6 +7,7 @@ import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.EnvironmentConfiguration;
+import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.ConfigurationUpdates;
@@ -65,6 +66,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/configuration/environment/{application}/{environment:.*}", method = RequestMethod.GET)
 	public @ResponseBody EnvironmentConfiguration environmentConfiguration(@PathVariable int application, @PathVariable  String environment) {
 		return getMyConfigService().getEnvironmentConfiguration (application, environment);
+	}
+	
+	@Override
+	@RequestMapping(value = "/configuration/key/{application}/{key:.*}", method = RequestMethod.GET)
+	public @ResponseBody KeyConfiguration keyConfiguration(@PathVariable int application, @PathVariable  String key) {
+		return getMyConfigService().getKeyConfiguration (application, key);
 	}
 	
 	@Override
