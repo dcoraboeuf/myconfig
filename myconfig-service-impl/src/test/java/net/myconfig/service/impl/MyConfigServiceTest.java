@@ -842,42 +842,28 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new KeyConfiguration(1, "myapp", new Key("jdbc.url", "URL used to connect to the database"), "jdbc.password", "jdbc.user",
 					Arrays.asList(
-							new Version("1.0"),
-							new Version("1.1"),
 							new Version("1.2"),
 							new Version("1.3")),
 					Arrays.asList(
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"ACC",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(false, ""))
-										.put("1.1", new ConditionalValue(false, ""))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url ACC"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.2", "1.2 jdbc.url ACC")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"DEV",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(false, ""))
-										.put("1.1", new ConditionalValue(false, ""))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url DEV"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.2", "1.2 jdbc.url DEV")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"PROD",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(false, ""))
-										.put("1.1", new ConditionalValue(false, ""))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url PROD"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.2", "1.2 jdbc.url PROD")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"UAT",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(false, ""))
-										.put("1.1", new ConditionalValue(false, ""))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.url UAT"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.2", "1.2 jdbc.url UAT")
 										.build())
 							)
 					),
@@ -897,37 +883,33 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Version("1.2"),
 							new Version("1.3")),
 					Arrays.asList(
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"ACC",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password ACC"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password ACC"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password ACC"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.password ACC")
+										.put("1.1", "1.1 jdbc.password ACC")
+										.put("1.2", "1.2 jdbc.password ACC")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"DEV",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password DEV"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password DEV"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password DEV"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.password DEV")
+										.put("1.1", "1.1 jdbc.password DEV")
+										.put("1.2", "1.2 jdbc.password DEV")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"PROD",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password PROD"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password PROD"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password PROD"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.password PROD")
+										.put("1.1", "1.1 jdbc.password PROD")
+										.put("1.2", "1.2 jdbc.password PROD")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"UAT",
-										MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.password UAT"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.password UAT"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.password UAT"))
-										.put("1.3", new ConditionalValue(true, ""))
+										MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.password UAT")
+										.put("1.1", "1.1 jdbc.password UAT")
+										.put("1.2", "1.2 jdbc.password UAT")
 										.build())
 							)
 					),
@@ -947,37 +929,33 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Version("1.2"),
 							new Version("1.3")),
 					Arrays.asList(
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"ACC",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user ACC"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user ACC"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user ACC"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.user ACC")
+										.put("1.1", "1.1 jdbc.user ACC")
+										.put("1.2", "1.2 jdbc.user ACC")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"DEV",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user DEV"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user DEV"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user DEV"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.user DEV")
+										.put("1.1", "1.1 jdbc.user DEV")
+										.put("1.2", "1.2 jdbc.user DEV")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"PROD",
-									MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user PROD"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user PROD"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user PROD"))
-										.put("1.3", new ConditionalValue(true, ""))
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.user PROD")
+										.put("1.1", "1.1 jdbc.user PROD")
+										.put("1.2", "1.2 jdbc.user PROD")
 										.build()),
-							new IndexedValues<ConditionalValue>(
+							new IndexedValues<String>(
 									"UAT",
-										MapBuilder.<String,ConditionalValue>create()
-										.put("1.0", new ConditionalValue(true, "1.0 jdbc.user UAT"))
-										.put("1.1", new ConditionalValue(true, "1.1 jdbc.user UAT"))
-										.put("1.2", new ConditionalValue(true, "1.2 jdbc.user UAT"))
-										.put("1.3", new ConditionalValue(true, ""))
+										MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.user UAT")
+										.put("1.1", "1.1 jdbc.user UAT")
+										.put("1.2", "1.2 jdbc.user UAT")
 										.build())
 							)
 					),

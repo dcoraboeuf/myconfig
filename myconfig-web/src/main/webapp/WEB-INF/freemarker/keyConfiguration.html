@@ -6,17 +6,13 @@
 	</#if>
 </#macro>
 
-<#macro configuration_value value key environment version>
-	<#if value.enabled>
-		<@configuration_input_value
-			application=keyConfiguration.id
-			value=value.value
-			key=key
-			environment=environment
-			version=version />
-	<#else>
-		<a href="gui/matrix/${keyConfiguration.id}" title="${loc('keyConfiguration.na.tip',key,version)?html}"><@lh key="keyConfiguration.na" /></a>
-	</#if>
+<#macro configuration_value key environment version value="">
+	<@configuration_input_value
+		application=keyConfiguration.id
+		value=value
+		key=key
+		environment=environment
+		version=version />
 </#macro>
 
 <@layout_std pageId="keyConfiguration" style=true script=false modules=["configuration"] title=loc('keyConfiguration', keyConfiguration.key.name)>

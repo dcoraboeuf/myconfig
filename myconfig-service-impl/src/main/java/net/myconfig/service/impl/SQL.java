@@ -99,6 +99,8 @@ public interface SQL {
 			"and k.name = vk.appkey " +
 			"order by k.name";
 	
+	String VERSIONS_FOR_KEY = "select version from version_key where application = :application and appkey = :appkey order by version";
+	
 	String KEYS_FOR_ENVIRONMENT = "select k.* " +
 			"from appkey k " +
 			"where k.application = :application " +

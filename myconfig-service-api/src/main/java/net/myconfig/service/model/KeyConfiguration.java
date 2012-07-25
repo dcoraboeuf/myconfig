@@ -12,9 +12,9 @@ public class KeyConfiguration {
 	private final String previousKey;
 	private final String nextKey;
 	private final List<Version> versionList;
-	private final List<IndexedValues<ConditionalValue>> environmentValuesPerVersionList;
+	private final List<IndexedValues<String>> environmentValuesPerVersionList;
 
-	public KeyConfiguration(int id, String name, Key key, String previousKey, String nextKey, List<Version> versionList, List<IndexedValues<ConditionalValue>> environmentValuesPerVersionList) {
+	public KeyConfiguration(int id, String name, Key key, String previousKey, String nextKey, List<Version> versionList, List<IndexedValues<String>> environmentValuesPerVersionList) {
 		this.id = id;
 		this.name = name;
 		this.key = key;
@@ -48,7 +48,7 @@ public class KeyConfiguration {
 		return versionList;
 	}
 
-	public List<IndexedValues<ConditionalValue>> getEnvironmentValuesPerVersionList() {
+	public List<IndexedValues<String>> getEnvironmentValuesPerVersionList() {
 		return environmentValuesPerVersionList;
 	}
 
