@@ -135,6 +135,8 @@
 				<#elseif column.special??>
 					<#if column.special == "missing_count">
 						<@item_missing_count item=item action=column.action!"" actionItemField=column.actionItemField!"" />
+					<#elseif column.special == "key_description">
+						<@key_description item=item />
 					</#if>
 				</#if>
 			</#list>		

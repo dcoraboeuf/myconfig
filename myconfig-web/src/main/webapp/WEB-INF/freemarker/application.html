@@ -1,5 +1,5 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="application" style=true modules=["items","key"] title=loc("application.title", application.name)>
+<@layout_std pageId="application" script=true style=true modules=["items","key"] title=loc("application.title", application.name)>
 	<article class="application">
 		<section id="app-versions">
 			<h1><@lh key="application.versions" /></h1>
@@ -62,7 +62,7 @@
 					"field": "name"
 					}, {
 					"header": "model.key.description",
-					"field": "description"
+					"special": "key_description"
 					}, {
 					"header": "application.key.versionCount",
 					"field": "versionCount",
@@ -82,8 +82,43 @@
 				errorKey="key_error">
 				<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
 			</@items_crud>
+			<div id="dialog-key-update" style="display:none;">
+				<form action="gui/application/${application.id}/key/update" method="POST">
+					<input id="dialog-key-name-value" name="key" type="hidden" value="" />
+					<table>
+						<tr>
+							<td>
+								<@lh key="model.key.name" />
+							</td>
+							<td id="dialog-key-name"></td>
+						</tr>
+						<tr>
+							<td>
+								<label for="dialog-key-description">
+									<@lh key="model.key.description" />
+								</label>
+							</td>
+							<td>
+								<textarea id="dialog-key-description" name="description" rows="2" cols="20"></textarea>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="right">
+								<input id="dialog-key-submit" type="submit" value="<@lh key='general.update' />" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
 		</section>
 	</article>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/matrix/${application.id}" key="matrix" />
 </@layout_std>
+
+<#macro key_description item>
+	<td id="key_${item.name?html}" description="${item.description?html}" class="item-column item-column-description">
+		${item.description?html}
+		<img class="action" src="static/images/edit.png" onclick="Application.editKeyDescription('${item.name?html}');" />
+	</td>
+</#macro>
