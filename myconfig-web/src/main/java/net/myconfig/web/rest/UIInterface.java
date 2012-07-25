@@ -33,6 +33,8 @@ public interface UIInterface {
 
 	Ack keyCreate(int id, String name, String description);
 
+	Ack keyUpdate(int id, String name, String description);
+
 	MatrixConfiguration keyVersionConfiguration(int id);
 
 	Ack keyVersionAdd(int application, String version, String key);

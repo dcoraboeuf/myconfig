@@ -604,6 +604,28 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	public void key_create_exists () {
 		myConfigService.createKey(1, "jdbc.user", "New description");
 	}
+
+	@Test(expected = ApplicationNotFoundException.class)
+	public void key_update_noapp() {
+		myConfigService.updateKey(10, "key1", "xxx");
+	}
+
+	@Test(expected = KeyNotDefinedException.class)
+	public void key_update_nokey() {
+		myConfigService.updateKey(2, "keyx", "xxx");
+	}
+
+	@Test(expected = ValidationException.class)
+	public void key_update_baddescription() {
+		myConfigService.updateKey(2, "key1", "    ");
+	}
+
+	@Test
+	public void key_update() throws DataSetException, SQLException {
+		assertRecordExists("select * from appkey where application = 2 and name = 'key1' and description = 'Key 1'");
+		myConfigService.updateKey(2, "key1", "xxx");
+		assertRecordExists("select * from appkey where application = 2 and name = 'key1' and description = 'xxx'");
+	}
 	
 	@Test
 	public void key_delete () throws DataSetException, SQLException {

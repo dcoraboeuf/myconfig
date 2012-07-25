@@ -265,6 +265,21 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	public Ack updateKey(int application, String name, String description) {
+		validate(KeyValidation.class, DESCRIPTION, description);
+		checkApplication(application);
+		checkKey(application, name);
+		getNamedParameterJdbcTemplate().update(
+				SQL.KEY_UPDATE,
+				new MapSqlParameterSource()
+					.addValue(APPLICATION, application)
+					.addValue(NAME, name)
+					.addValue(DESCRIPTION, description));
+		return Ack.OK;
+	}
+	
+	@Override
+	@Transactional
 	public Ack deleteKey(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));

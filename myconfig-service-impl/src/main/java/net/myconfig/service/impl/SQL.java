@@ -82,6 +82,8 @@ public interface SQL {
 			"order by k.name";
 
 	String KEY_CREATE = "insert into appkey (application, name, description) values (:id, :name, :description)";
+	
+	String KEY_UPDATE = "update appkey set description = :description where application = :application and name = :name";
 
 	String KEY_DELETE = "delete from appkey where application = :id and name = :name";
 	
