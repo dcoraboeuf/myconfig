@@ -8,3 +8,12 @@
 		${value?html}
 	</#if>
 </#macro>
+
+<#macro panel title>
+	<section class="panel">
+		<h1><@lh key=title /></h1>
+		<div>
+			<#nested/>
+		</div>
+	</section>
+</#macro>
