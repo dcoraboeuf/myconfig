@@ -7,6 +7,8 @@
 @app-title-color-fg: white;
 
 @page-title-color: #D24939;
+@page-nav-color-bg: #D9D8D6;
+@page-nav-color-fg: #333;
 
 @panel-border-color: #BBBBBB;
 @panel-border-radius: 4px;
@@ -97,6 +99,15 @@ section.app-title {
 
 // layout_std
 article.std-page {
+	> nav {
+		background-color: @page-nav-color-bg;
+		a {
+			text-decoration: none;
+			color: @page-nav-color-fg;
+			font-size: 75%;
+			margin: 3px 15px 3px 5px;
+		}
+	}
 	> h1 {
 		padding-left: @body-margin;
 		color: @page-title-color;
