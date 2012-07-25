@@ -69,12 +69,16 @@
 					"class": "item-column-type-number"
 					}, {
 					"header": "application.key.missingCount",
-					"special": "missing_count"
+					"special": "missing_count",
+					"action": "gui/configuration/key/${application.id}",
+					"actionItemField": "name"
 					}]
 				list=application.keySummaryList
 				deleteAction="gui/application/${application.id}/key/delete"
 				deleteField="name"
 				deletePromptKey="key.delete"
+				editAction="gui/configuration/key/${application.id}"
+				editField="name"
 				errorKey="key_error">
 				<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
 			</@items_crud>
