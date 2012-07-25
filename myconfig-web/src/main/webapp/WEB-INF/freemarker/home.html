@@ -14,29 +14,26 @@
 	</ul>
 </#macro>
 
-<@layout_basic pageId="home" style=true>
-	<article class="app-content">
-		<h1 id="page-title"><@lh key="home.welcome" /></h1>
-		<section>
-			<h1><@lh key="home.ui" /></h1>
-			<p>
-				<a id="home-ui-button" class="app-menu" href="gui/"><@lh key="home.ui.button" /></a>
-				${loclink ("home.ui.message", '<a id="home-ui-link" href="gui/">')}
-			</p>
-		</section>
-		<section>
-			<h1><@lh key="home.get" /></h1>
-			<p>
-				<@lh key="home.get.message" />
-				<@restapi information = getInformation />
-			</p>
-		</section>
-		<section>
-			<h1><@lh key="home.api" /></h1>
-			<p>
-				<@lh key="home.api.message" />
-				<@restapi information = uiInformation />
-			</p>
-		</section>
-	</article>
-</@layout_basic>
+<@layout_std pageId="home" style=true title=loc("home.welcome")>
+	<section>
+		<h1><@lh key="home.ui" /></h1>
+		<p>
+			<a id="home-ui-button" class="app-menu" href="gui/"><@lh key="home.ui.button" /></a>
+			${loclink ("home.ui.message", '<a id="home-ui-link" href="gui/">')}
+		</p>
+	</section>
+	<section>
+		<h1><@lh key="home.get" /></h1>
+		<p>
+			<@lh key="home.get.message" />
+			<@restapi information = getInformation />
+		</p>
+	</section>
+	<section>
+		<h1><@lh key="home.api" /></h1>
+		<p>
+			<@lh key="home.api.message" />
+			<@restapi information = uiInformation />
+		</p>
+	</section>
+</@layout_std>

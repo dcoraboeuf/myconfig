@@ -1,44 +1,12 @@
 /* Colors */
 
-@app-title-color-bg: lightgrey;
+@body-color-bg: #F0F0F0;
+@body-margin: 4px;
+
+@app-title-color-bg: black;
 @app-title-color-fg: white;
-@app-title-nav-color-fg: @app-title-color-fg;
 
-@app-menu-color-bg: lightgrey;
-@app-menu-color-fg: blue;
-
-@std-nav-box-color-bg: grey;
-@std-nav-box-color-fg: white;
-
-@table-head-bg: #F2DA79;
-@table-foot-bg: #F4DC81;
-
-/* Debug */
-
-div, section {
-	// border: dotted 1px red;
-}
-
-/* Commons */
-
-.rounded (@radius: 10px) {
-	border-radius: @radius;
-	padding: 5px @radius 5px @radius;
-}
-
-/* General: tags */
-
-body {
-	font-family: sans-serif;
-	background-color: white;
-}
-
-/* General: classes */
-
-.info {
-	color: gray;
-	font-style: italic;
-}
+@page-title-color: #D24939;
 
 .action {
 	cursor: pointer;
@@ -46,6 +14,11 @@ body {
 
 .noaction {
 	cursor: auto;
+}
+
+.info {
+	color: gray;
+	font-style: italic;
 }
 
 .action-hidden {
@@ -67,25 +40,29 @@ body {
 	background-position: right;
 }
 
-/* Macros */
+body {
+	font-family: sans-serif;
+	background-color: @body-color-bg;
+	margin: 0px;
+}
 
-/* Layout */
-
+// layout_basic
 section.app-title {
-	.rounded;
 	background-color: @app-title-color-bg;
 	color: @app-title-color-fg;
+	padding: @body-margin @body-margin * 2 @body-margin @body-margin *2;
 	span.app-title {
 		font-size: 200%;
 		font-weight: bold;
+		font-family: serif;
 	}
 	div.app-meta {
 		display: inline;
-		position: fixed;
-		top: 20px;
+		float: right;
+		position: relative;
+		top: 10px;
 		right: 15px;
 		.nav-item {
-			color: @app-title-nav-color-fg;
 			margin-right: 10px;
 		}
 		a {
@@ -105,33 +82,14 @@ section.app-title {
 	}
 }
 
-article.page-content {
-	> h1 {
-		font-size: 150%;
-	}
-}
-
-a.app-menu {
-	.rounded(5px);
-	text-decoration: none;
-	background-color: @app-menu-color-bg;
-	color: @app-menu-color-fg;
-}
-
+// layout_std
 article.std-page {
 	> h1 {
-		.rounded;
-		margin-top: 1px;
-		background-color: @app-title-color-bg;
+		padding-left: @body-margin;
+		color: @page-title-color;
 	}
-	nav {
-		margin-top: 10px;
-		a {
-			text-decoration: none;
-			color: @std-nav-box-color-fg;
-			background-color: @std-nav-box-color-bg;
-			border-radius: 5px;
-			padding: 2px 5px 2px 5px;
-		}
+	> div.std-content {
+		margin-left: @body-margin;
+		margin-right: @body-margin;
 	}
 }
