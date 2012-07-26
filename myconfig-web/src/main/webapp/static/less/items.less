@@ -11,6 +11,9 @@
 @items-cell-border-color: #DDD;
 @items-cell-border-width: 1px;
 
+@items-foot-color-bg: white;
+@items-foot-color-fg: @items-header-color-fg;
+
 table.items {
 	border-collapse: collapse;
 	td, th {
@@ -43,8 +46,9 @@ table.items {
 		}
 	}
 	tfoot {
-		td {
-			background-color: #95B3CC;
+		tr {
+			color: @items-foot-color-fg;
+			background-color: @items-foot-color-bg;
 		}
 	}
 }
