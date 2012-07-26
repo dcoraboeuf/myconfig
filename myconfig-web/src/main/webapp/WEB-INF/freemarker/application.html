@@ -77,7 +77,9 @@
 				editAction="gui/configuration/key/${application.id}"
 				editField="name"
 				errorKey="key_error">
-				<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
+				<@form>
+					<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
+				</@form>
 			</@items_crud>
 			<div id="dialog-key-update" style="display:none;">
 				<form action="gui/application/${application.id}/key/update" method="POST">

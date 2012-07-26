@@ -155,6 +155,27 @@ section.form {
 			padding-right: 0.5em;
 		}
 	}
-	> h1 {
+	form {
+		table {
+			border-collapse: collapse;
+			tfoot td {
+				text-align: right;
+			}
+		}
+	}
+}
+
+// Key form
+
+@key-field-width: 30em;
+form.key {
+	#key-name, #key-description {
+		width: @key-field-width;
+	}
+	td {
+		font-size: 85%;
+		&.form-label {
+			padding-right: 1em;
+		}
 	}
 }

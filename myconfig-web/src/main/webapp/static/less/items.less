@@ -20,7 +20,7 @@ table.items {
 		padding-left: @items-cell-padding;
 		padding-right: @items-cell-padding;
 	}
-	thead {
+	> thead {
 		th {
 			font-weight: normal;
 			text-align: left;
@@ -29,7 +29,7 @@ table.items {
 			border-bottom: solid @items-header-border-width @items-header-border-color;
 		}
 	}
-	tbody {
+	> tbody {
 		td {
 			border-bottom: solid @items-cell-border-width @items-cell-border-color;
 			&.item-column, &.item-actions {
@@ -45,8 +45,8 @@ table.items {
 			background-color: @items-cell-color-odd;
 		}
 	}
-	tfoot {
-		tr {
+	> tfoot {
+		> tr {
 			color: @items-foot-color-fg;
 			background-color: @items-foot-color-bg;
 		}
