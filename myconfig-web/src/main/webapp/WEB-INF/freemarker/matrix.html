@@ -1,6 +1,6 @@
 <#include "/lib/layout.html">
 <@layout_std pageId="matrix" style=true modules=["key","items"] title=loc("matrix.title", configuration.name)>
-	<article class="matrix">
+	<@panel>
 		<table class="items">
 			<thead>
 				<tr>
@@ -16,7 +16,7 @@
 			</thead>
 			<tbody>
 				<#list configuration.keyList as key>
-					<tr>
+					<tr class="<@item_row_class index=key_index />"">
 						<td class="key item-column">
 							<div class="key-name">${key.name?html}</div>
 							<div class="key-description">${key.description?html}</div>
@@ -48,7 +48,7 @@
 			<h1><@lh key="matrix.newKey" /></h1>
 			<@key_create action="gui/matrix/${configuration.id}/key/create" />
 		</section>
-	</article>
+	</@panel>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${configuration.id}" key="application" />
 </@layout_std>

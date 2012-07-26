@@ -1,6 +1,15 @@
 <#-- Resources -->
 <link rel="stylesheet/less" type="text/css" href="static/less/items.less" />
 
+<#macro item_row_class index>
+	<#if (index % 2) == 0>
+		<#assign itemClass = "item-even" />
+	<#else>
+		<#assign itemClass = "item-odd" />
+	</#if>
+	${itemClass}
+</#macro>
+
 <#macro items_table id headers actions=false class="">
 	<#assign columnCount = headers?size />
 	<#if actions>
@@ -31,7 +40,7 @@
 			<#else>
 				<#assign itemClass = "item-odd" />
 			</#if>
-			<tr class="item ${itemClass}">
+			<tr class="item <@item_row_class index=item_index />">
 				<#nested item />
 			</tr>
 		</#list>

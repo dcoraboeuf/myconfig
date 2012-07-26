@@ -1,41 +1,41 @@
 <#include "/lib/layout.html">
 <@layout_std pageId="applications" style=false modules=["items"]>
-
-	<@items_table id="applications" actions=true headers=[
-				"model.application.id",
-				"model.application.name",
-				"applications.versionCount",
-				"applications.keyCount",
-				"applications.environmentCount",
-				"applications.missingValuesCount"
-			]>
-		<@items items = applications ; item>
-			<@item_column field="id" item=item />
-			<@item_column field="name" item=item />
-			<@item_column field="versionCount" item=item class="item-column-type-number" />
-			<@item_column field="keyCount" item=item class="item-column-type-number" />
-			<@item_column field="environmentCount" item=item class="item-column-type-number" />
+	<@panel>
+		<@items_table id="applications" actions=true headers=[
+					"model.application.id",
+					"model.application.name",
+					"applications.versionCount",
+					"applications.keyCount",
+					"applications.environmentCount",
+					"applications.missingValuesCount"
+				]>
+			<@items items = applications ; item>
+				<@item_column field="id" item=item />
+				<@item_column field="name" item=item />
+				<@item_column field="versionCount" item=item class="item-column-type-number" />
+				<@item_column field="keyCount" item=item class="item-column-type-number" />
+				<@item_column field="environmentCount" item=item class="item-column-type-number" />
+				
+				<#assign missingCount = item.configCount - item.valueCount />
+				<td class="item-column item-column-missingValuesCount item-column-type-number">
+					<#if missingCount gt 0>
+						<a href="gui/application/${item.id}">${missingCount}</a>
+					<#else>
+						${missingCount}
+					</#if>
+				</td>
+				
+				<@item_actions item=item>
+					<@item_delete item=item action="gui/applications/delete" promptKey="application.delete" />
+					<@item_edit item=item action="gui/application" />
+				</@item_actions>
+				
+			</@items>
 			
-			<#assign missingCount = item.configCount - item.valueCount />
-			<td class="item-column item-column-missingValuesCount item-column-type-number">
-				<#if missingCount gt 0>
-					<a href="gui/application/${item.id}">${missingCount}</a>
-				<#else>
-					${missingCount}
-				</#if>
-			</td>
-			
-			<@item_actions item=item>
-				<@item_delete item=item action="gui/applications/delete" promptKey="application.delete" />
-				<@item_edit item=item action="gui/application" />
-			</@item_actions>
-			
-		</@items>
-		
-		<@items_commands>
-			<@item_create id="application-create" action="gui/applications/create" label="applications.new" />
-			<@item_error />
-		</@items_commands>
-	</@items_table>
-	
+			<@items_commands>
+				<@item_create id="application-create" action="gui/applications/create" label="applications.new" />
+				<@item_error />
+			</@items_commands>
+		</@items_table>
+	</@panel>
 </@layout_std>

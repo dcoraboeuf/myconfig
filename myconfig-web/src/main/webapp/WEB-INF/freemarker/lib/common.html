@@ -9,9 +9,11 @@
 	</#if>
 </#macro>
 
-<#macro panel title>
+<#macro panel title="">
 	<section class="panel">
-		<h1><@lh key=title /></h1>
+		<#if title != "">
+			<h1><@lh key=title /></h1>
+		</#if>
 		<div>
 			<#nested/>
 		</div>
