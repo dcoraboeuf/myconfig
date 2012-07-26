@@ -44,10 +44,9 @@
 				</#list>
 			</tbody>
 		</table>
-		<section>
-			<h1><@lh key="matrix.newKey" /></h1>
+		<@form title="matrix.newKey">
 			<@key_create action="gui/matrix/${configuration.id}/key/create" />
-		</section>
+		</@form>
 	</@panel>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${configuration.id}" key="application" />

@@ -19,3 +19,16 @@
 		</div>
 	</section>
 </#macro>
+
+<#macro form title="">
+	<section class="form">
+		<#if title != "">
+			<header>
+				<h1><@lh key=title /></h1>
+			</header>
+		</#if>
+		<div>
+			<#nested>
+		</div>
+	</section>
+</#macro>
