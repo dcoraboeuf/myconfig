@@ -8,6 +8,7 @@
 
 @page-title-color: #D24939;
 @page-nav-color-bg: #D9D8D6;
+@page-nav-color-hover: darken(@page-nav-color-bg, 10%);
 @page-nav-color-fg: #333;
 
 @panel-border-color: #BBBBBB;
@@ -105,7 +106,10 @@ article.std-page {
 			text-decoration: none;
 			color: @page-nav-color-fg;
 			font-size: 75%;
-			margin: 3px 15px 3px 5px;
+			padding: 3px 15px 1px 5px;
+			&:hover {
+				background-color: @page-nav-color-hover;
+			}
 		}
 	}
 	> h1 {
