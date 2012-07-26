@@ -26,7 +26,12 @@
 <#macro items items>
 	<tbody>
 		<#list items as item>
-			<tr class="item">
+			<#if (item_index % 2) == 0>
+				<#assign itemClass = "item-even" />
+			<#else>
+				<#assign itemClass = "item-odd" />
+			</#if>
+			<tr class="item ${itemClass}">
 				<#nested item />
 			</tr>
 		</#list>
