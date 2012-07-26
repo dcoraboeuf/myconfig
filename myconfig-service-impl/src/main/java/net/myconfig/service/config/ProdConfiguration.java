@@ -15,7 +15,7 @@ public class ProdConfiguration extends CommonConfiguration {
 	@Bean
 	public ConfigurationService configurationService() throws Exception {
 		// No logging file
-		return new DefaultConfigurationService(MyConfigProfiles.PROD, null);
+		return new DefaultConfigurationService(MyConfigProfiles.PROD);
 	}
 
 }

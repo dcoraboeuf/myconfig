@@ -10,13 +10,11 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile(MyConfigProfiles.IT)
 public class IntegrationTestConfiguration extends CommonConfiguration {
-	
+
 	@Override
 	@Bean
 	public ConfigurationService configurationService() {
-		return new DefaultConfigurationService(
-				MyConfigProfiles.IT,
-				"classpath:log4j_dev.properties");
+		return new DefaultConfigurationService(MyConfigProfiles.IT);
 	}
 
 }

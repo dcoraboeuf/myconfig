@@ -21,7 +21,7 @@ public class UnitTestConfiguration extends CommonConfiguration {
 	@Override
 	@Bean
 	public ConfigurationService configurationService() {
-		return new DefaultConfigurationService(MyConfigProfiles.TEST, "classpath:log4j_dev.properties");
+		return new DefaultConfigurationService(MyConfigProfiles.TEST);
 	}
 
 	@Bean

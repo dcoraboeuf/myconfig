@@ -10,13 +10,11 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile(MyConfigProfiles.DEV)
 public class DevConfiguration extends CommonConfiguration {
-	
+
 	@Override
 	@Bean
 	public ConfigurationService configurationService() {
-		return new DefaultConfigurationService(
-				MyConfigProfiles.DEV,
-				"classpath:log4j_dev.properties");
+		return new DefaultConfigurationService(MyConfigProfiles.DEV);
 	}
 
 }
