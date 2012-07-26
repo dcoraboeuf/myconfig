@@ -67,6 +67,7 @@
 <#macro layout_std pageId style=false script=false scripts=[] modules=[] title="" nav=true>
 	<#assign navItems = [] />
 	<@layout_basic pageId=pageId style=style script=script scripts=scripts modules=modules title=title>
+		<#local content><#nested></#local>
 		<article class="std-page">
 			<#if nav>
 				<nav>
@@ -78,7 +79,7 @@
 			</#if>
 			<h1 class="std-page" id="page-title"><@layout_title pageId=pageId title=title /></h1>
 			<div class="std-content">
-				<#nested>
+				${content}
 			</div>
 		</article>
 	</@layout_basic>
