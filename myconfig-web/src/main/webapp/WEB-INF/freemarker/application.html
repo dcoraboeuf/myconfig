@@ -1,8 +1,7 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="application" script=true style=true modules=["items","key"] title=loc("application.title", application.name)>
+<@layout_std pageId="application" script=true modules=["items","key"] title=loc("application.title", application.name)>
 	<article class="application">
-		<section id="app-versions">
-			<h1><@lh key="application.versions" /></h1>
+		<@panel title="application.versions">
 			<@items_crud
 				id="versions"
 				columns=[{
@@ -28,9 +27,8 @@
 				createAction="gui/application/${application.id}/version/create"
 				errorKey="version_error"
 				/>
-		</section>
-		<section id="app-environments">
-			<h1><@lh key="application.environments" /></h1>
+		</@panel>
+		<@panel title="application.environments">
 			<@items_crud
 				id="environments"
 				columns=[{
@@ -52,9 +50,8 @@
 				createAction="gui/application/${application.id}/environment/create"
 				errorKey="environment_error"
 				/>
-		</section>
-		<section id="app-keys">
-			<h1><@lh key="application.keys" /></h1>
+		</@panel>
+		<@panel title="application.keys">
 			<@items_crud
 				id="keys"
 				columns=[{
@@ -110,7 +107,7 @@
 					</table>
 				</form>
 			</div>
-		</section>
+		</@panel>
 	</article>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/matrix/${application.id}" key="matrix" />
