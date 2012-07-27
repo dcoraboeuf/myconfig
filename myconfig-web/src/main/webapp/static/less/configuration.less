@@ -6,35 +6,37 @@ article.configuration {
 			border: solid 2px red;
 		}
 	}
-	table {
-		margin-bottom: 20px;
-		thead tr.navigation th {
-			.current {
-				font-size: 150%;
-				background-color: white;
-				padding-top: 1px;
-				padding-bottom: 1px;
-			}
-			a {
-				display: block;
-				margin-top: 5px;
-				text-decoration: none;
-				color: blue;
-				padding-top: 1px;
-				padding-bottom: 1px;
-				&.previous {
-					float: left;
-					background-image: url('../images/previous.png');
-					background-repeat: no-repeat;
-					background-position: left center;
-					padding-left: 25px;
+	table.configuration {
+		table.navigation {
+			width: 100%;
+			td {
+				&.current {
+					width: 100%;
+					.trailing-line;
+					text-align: center;
+					span {
+						.panel-title;	
+						.trailing-line-fg;
+					}
 				}
-				&.next {
-					float: right;
-					background-image: url('../images/next.png');
-					background-repeat: no-repeat;
-					background-position: right center;
-					padding-right: 25px;
+				&.navigation a {
+					font-size: 75%;
+					text-decoration: none;
+					color: @page-nav-color-fg;
+					&.previous {
+						float: left;
+						background-image: url('../images/previous.png');
+						background-repeat: no-repeat;
+						background-position: left center;
+						padding-left: 25px;
+					}
+					&.next {
+						float: right;
+						background-image: url('../images/next.png');
+						background-repeat: no-repeat;
+						background-position: right center;
+						padding-right: 25px;
+					}
 				}
 			}
 		}

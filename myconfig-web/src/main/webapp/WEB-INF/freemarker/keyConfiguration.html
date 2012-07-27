@@ -15,54 +15,68 @@
 		version=version />
 </#macro>
 
-<@layout_std pageId="keyConfiguration" style=true script=false modules=["configuration"] title=loc('keyConfiguration', keyConfiguration.key.name)>
+<@layout_std pageId="keyConfiguration" style=true script=false modules=["configuration","items"] title=loc('keyConfiguration', keyConfiguration.key.name)>
 	<input id="application" type="hidden" value="${keyConfiguration.id}" />
-	<article class="configuration">
-		<table>
-			<thead>
-				<tr class="navigation">
-					<th colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }">
-						<@configuration_key value=keyConfiguration.previousKey class="previous" />
-						<span class="key current">${keyConfiguration.key.name?html}</span>
-						<@configuration_key value=keyConfiguration.nextKey class="next" />
-					</th>
-				</tr>
-				<tr class="key-description">
-					<th colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }">
-						${keyConfiguration.key.description?html}
-					</th>
-				</tr>
-				<tr class="columns">
-					<th class="version-title"><@lh key="model.version.name" /></th>
-					<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
-						<th class="column-title">
-							<a href="gui/configuration/environment/${keyConfiguration.id}/${environmentConfiguration.name?html}">${environmentConfiguration.name?html}</a>
+	<@panel>
+		<article class="configuration">
+			<table class="items configuration">
+				<thead>
+					<tr class="navigation">
+						<th colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }">
+							<table class="navigation">
+								<tbody>
+									<tr>
+										<td class="navigation">
+											<@configuration_key value=keyConfiguration.previousKey class="previous" />
+										</td>
+										<td class="current">
+											<span class="key current">${keyConfiguration.key.name?html}</span>
+										</td>
+										<td class="navigation">
+											<@configuration_key value=keyConfiguration.nextKey class="next" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
 						</th>
-					</#list>
-				</tr>
-			</thead>
-			<tbody>
-				<#list keyConfiguration.versionList as version>
-					<tr>
-						<td class="version"><a href="gui/configuration/version/${keyConfiguration.id}/${version.name?html}">${version.name?html}</a></td>
+					</tr>
+					<tr class="key-description">
+						<th colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }">
+							${keyConfiguration.key.description?html}
+						</th>
+					</tr>
+					<tr class="columns">
+						<th class="version-title"><@lh key="model.version.name" /></th>
 						<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
-							<td class="environment-value">
-								<@configuration_value value=environmentConfiguration.values[version.name] key=keyConfiguration.key environment=environmentConfiguration.name version=version.name />
-							</td>
+							<th class="column-title">
+								<a href="gui/configuration/environment/${keyConfiguration.id}/${environmentConfiguration.name?html}">${environmentConfiguration.name?html}</a>
+							</th>
 						</#list>
 					</tr>
-				</#list>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }" class="configuration-commands">
-						<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="configuration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-						<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
-	</article>
+				</thead>
+				<tbody>
+					<#list keyConfiguration.versionList as version>
+						<tr>
+							<td class="version"><a href="gui/configuration/version/${keyConfiguration.id}/${version.name?html}">${version.name?html}</a></td>
+							<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
+								<td class="environment-value">
+									<@configuration_value value=environmentConfiguration.values[version.name] key=keyConfiguration.key environment=environmentConfiguration.name version=version.name />
+								</td>
+							</#list>
+						</tr>
+					</#list>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }" class="configuration-commands">
+							<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="configuration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+							<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</article>
+	</@panel>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${keyConfiguration.id}" key="application" />
 	<@layout_std_nav href="gui/matrix/${keyConfiguration.id}" key="matrix" />

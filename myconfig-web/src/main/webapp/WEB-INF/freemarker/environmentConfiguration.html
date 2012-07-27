@@ -21,50 +21,64 @@
 
 <@layout_std pageId="environmentConfiguration" style=true script=false modules=["configuration"] title=loc('environmentConfiguration', environmentConfiguration.environment)>
 	<input id="application" type="hidden" value="${environmentConfiguration.id}" />
-	<article class="configuration">
-		<table>
-			<thead>
-				<tr class="navigation">
-					<th colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }">
-						<@configuration_environment value=environmentConfiguration.previousEnvironment class="previous" />
-						<span class="environment current">${environmentConfiguration.environment?html}</span>
-						<@configuration_environment value=environmentConfiguration.nextEnvironment class="next" />
-					</th>
-				</tr>
-				<tr class="columns">
-					<th class="key-title"><@lh key="model.key.name" /></th>
-					<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
-						<th class="column-title">
-							<a href="gui/configuration/version/${environmentConfiguration.id}/${versionConfiguration.name?html}">${versionConfiguration.name?html}</a>
+	<@panel>
+		<article class="configuration">
+			<table class="items configuration">
+				<thead>
+					<tr class="navigation">
+						<th colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }">
+								<table class="navigation">
+									<tbody>
+										<tr>
+											<td class="navigation">
+												<@configuration_environment value=environmentConfiguration.previousEnvironment class="previous" />
+											</td>
+											<td class="current">
+												<span class="environment current">${environmentConfiguration.environment?html}</span>
+											</td>
+											<td class="navigation">
+												<@configuration_environment value=environmentConfiguration.nextEnvironment class="next" />
+											</td>
+										</tr>
+									</tbody>
+								</table>
 						</th>
-					</#list>
-				</tr>
-			</thead>
-			<tbody>
-				<#list environmentConfiguration.keyList as key>
-					<tr>
-						<td class="key">
-							<div class="key-name"><a href="gui/configuration/key/${environmentConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
-							<div class="key-description">${ellipsis(key.description,30)?html}</div>
-						</td>
+					</tr>
+					<tr class="columns">
+						<th class="key-title"><@lh key="model.key.name" /></th>
 						<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
-							<td class="key-value">
-								<@configuration_value value=versionConfiguration.values[key.name] key=key environment=environmentConfiguration.environment version=versionConfiguration.name />
-							</td>
+							<th class="column-title">
+								<a href="gui/configuration/version/${environmentConfiguration.id}/${versionConfiguration.name?html}">${versionConfiguration.name?html}</a>
+							</th>
 						</#list>
 					</tr>
-				</#list>
-			</tbody>
-			<tfoot>
-				<tr>
-					<td colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }" class="configuration-commands">
-						<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="configuration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-						<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
-					</td>
-				</tr>
-			</tfoot>
-		</table>
-	</article>
+				</thead>
+				<tbody>
+					<#list environmentConfiguration.keyList as key>
+						<tr>
+							<td class="key">
+								<div class="key-name"><a href="gui/configuration/key/${environmentConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
+								<div class="key-description">${ellipsis(key.description,30)?html}</div>
+							</td>
+							<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
+								<td class="key-value">
+									<@configuration_value value=versionConfiguration.values[key.name] key=key environment=environmentConfiguration.environment version=versionConfiguration.name />
+								</td>
+							</#list>
+						</tr>
+					</#list>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }" class="configuration-commands">
+							<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="configuration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
+							<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</article>
+	</@panel>
 	<@layout_std_nav href="gui/" key="applications" />
 	<@layout_std_nav href="gui/application/${environmentConfiguration.id}" key="application" />
 	<@layout_std_nav href="gui/matrix/${environmentConfiguration.id}" key="matrix" />

@@ -123,15 +123,34 @@ article.std-page {
 }
 
 // panel
+
+.panel-title {
+	color: @page-title-color;
+	margin: @panel-border-radius;
+	font-size: 100%;
+}
+
+.trailing-line {
+	background-image: url('../images/header_bg.png');
+	background-repeat: repeat-x;
+	background-position: 0px center;
+}
+
+.trailing-line-fg {
+	display: inline;
+	color: @page-title-color;
+	background-color: white;
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+}
+
 section.panel {
 	border: solid 1px @panel-border-color;
 	border-radius: @panel-border-radius;
 	margin-bottom: @body-margin;
 	background-color: @panel-color;
 	> h1 {
-		color: @page-title-color;
-		margin: @panel-border-radius;
-		font-size: 100%;
+		.panel-title;
 	}
 	> div {
 		padding: @panel-border-radius * 2;
@@ -143,16 +162,11 @@ section.form {
 	> header {
 		margin-top: @body-margin * 3;
 		margin-bottom: @body-margin;
-		background-image: url('../images/header_bg.png');
-		background-repeat: repeat-x;
-		background-position: 0px center;
+		.trailing-line;
 		> h1 {
 			font-size: 90%;
 			margin: 0px;
-			color: @page-title-color;
-			background-color: white;
-			display: inline;
-			padding-right: 0.5em;
+			.trailing-line-fg;
 		}
 	}
 	form {
@@ -183,16 +197,10 @@ form.key {
 // Dialog
 .ui-dialog-titlebar {
 	background-color: transparent;
-	background-image: url('../images/header_bg.png');
-	background-repeat: repeat-x;
-	background-position: 0px center;
+	.trailing-line;
 	border: none;
 	.ui-dialog-title {
 		margin: 0px;
-		color: @page-title-color;
-		background-color: white;
-		display: inline;
-		padding-left: 0.5em;
-		padding-right: 0.5em;
+		.trailing-line-fg;
 	}
 }
