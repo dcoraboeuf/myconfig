@@ -15,7 +15,7 @@ import freemarker.template.TemplateModelException;
 
 public class FnEllipsis implements TemplateMethodModel {
 	
-	public static final String ELLIPSIS = "\u2026";
+	public static final String ELLIPSIS = "...";
 
 	public static String ellipsis(Locale locale, String value, int maxlength) {
 		Validate.notNull(locale, "Locale must be specified");
