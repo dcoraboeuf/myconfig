@@ -1,5 +1,5 @@
 <#include "/lib/layout.html">
-<@layout_std pageId="application" script=true modules=["items","key"] title=loc("application.title", application.name)>
+<@layout_std pageId="application" script=true style=true modules=["items","key"] title=loc("application.title", application.name)>
 	<article class="application">
 		<table>
 			<tbody>
@@ -89,30 +89,13 @@
 							</@items_crud>
 							<div id="dialog-key-update" style="display:none;">
 								<form action="gui/application/${application.id}/key/update" method="POST">
-									<input id="dialog-key-name-value" name="name" type="hidden" value="" />
-									<table>
-										<tr>
-											<td>
-												<@lh key="model.key.name" />
-											</td>
-											<td id="dialog-key-name"></td>
-										</tr>
-										<tr>
-											<td>
-												<label for="dialog-key-description">
-													<@lh key="model.key.description" />
-												</label>
-											</td>
-											<td>
-												<textarea id="dialog-key-description" name="description" rows="2" cols="20"></textarea>
-											</td>
-										</tr>
-										<tr>
-											<td colspan="2" align="right">
-												<input id="dialog-key-submit" type="submit" value="<@lh key='general.update' />" />
-											</td>
-										</tr>
-									</table>
+									<input id="dialog-key-name" name="name" type="hidden" value="" />
+									<div>
+										<textarea id="dialog-key-description" name="description" rows="5" cols="30"></textarea>
+									</div>
+									<div>
+										<input id="dialog-key-submit" type="submit" value="<@lh key='application.key.update.submit' />" />
+									</div>
 								</form>
 							</div>
 						</@panel>
