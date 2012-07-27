@@ -180,6 +180,19 @@ section.form {
 	}
 }
 
+tfoot td.form-commands {
+	text-align: right;
+	a.form-command {
+		font-size: 80%;
+		text-decoration: underline;
+		color: blue;
+		&.form-command-disabled {
+			color: lightgrey;
+			text-decoration: none;
+		}
+	}
+}
+
 // Key form
 
 @key-field-width: 30em;

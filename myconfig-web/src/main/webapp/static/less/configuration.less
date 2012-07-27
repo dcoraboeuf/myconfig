@@ -88,36 +88,3 @@ table.configuration-changes {
 		}
 	}
 }
-
-tfoot {
-	td.configuration-commands {
-		.action;
-		div.configuration-command {
-			border-radius: 5px;
-			padding: 2px 5px 2px 5px;
-			margin-top: 2px;
-			margin-bottom: 2px;
-			display: inline;
-			&.configuration-command-submit {
-				background-color: white;
-				border: solid 1px blue;
-				font-weight: bold;
-				color: black;
-				&.configuration-command-disabled {
-					border: solid 1px lightgray;
-					color: lightgray;
-					.noaction;
-				}
-			}
-			&.configuration-command-cancel {
-				text-decoration: underline;
-				color: blue;
-				&.configuration-command-disabled {
-					text-decoration: none;
-					color: lightgray;
-					.noaction;
-				}
-			}
-		}
-	}
-}

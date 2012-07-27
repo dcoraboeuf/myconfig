@@ -69,12 +69,7 @@
 					</#list>
 				</tbody>
 				<tfoot>
-					<tr>
-						<td colspan="${ environmentConfiguration.versionValuesPerKeyList?size + 1 }" class="configuration-commands">
-							<div id="configuration-changes-submit" class="configuration-command configuration-command-submit configuration-command-disabled" onclick="configuration.controlConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-							<div id="configuration-changes-reset" class="configuration-command configuration-command-cancel configuration-command-disabled" onclick="configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></div>
-						</td>
-					</tr>
+					<@configuration_commands span = environmentConfiguration.versionValuesPerKeyList?size + 1 />
 				</tfoot>
 			</table>
 		</article>

@@ -17,6 +17,15 @@
 		/>
 </#macro>
 
+<#macro configuration_commands span>
+	<tr>
+		<td colspan="${span}" class="form-commands">
+			<input id="configuration-changes-submit" type="button" class="form-command form-command-submit" disabled="disabled" value="<@lh key='configuration.changes.submit' />" onclick="configuration.controlConfigurationChanges()" />
+			<a id="configuration-changes-reset" class="form-command form-command-cancel form-command-disabled" href="javascript:configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></a>
+		</td>
+	</tr>
+</#macro>
+
 <#macro configuration_dialog>
 	<div id="dialog-changes" style="display:none;">
 		<table class="configuration-changes">

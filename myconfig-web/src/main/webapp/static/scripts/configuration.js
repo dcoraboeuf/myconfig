@@ -85,13 +85,13 @@ var configuration = function () {
 		if (value != oldvalue) {
 			$(input).addClass('changed');
 			configurationChanges[id] = id;
-			$('#configuration-changes-submit').removeClass('configuration-command-disabled');
-			$('#configuration-changes-reset').removeClass('configuration-command-disabled');
+			$('#configuration-changes-submit').removeAttr('disabled');
+			$('#configuration-changes-reset').removeClass('form-command-disabled');
 		} else {
 			$(input).removeClass('changed');
 			delete configurationChanges[id];
-			$('#configuration-changes-submit').addClass('configuration-command-disabled');
-			$('#configuration-changes-reset').addClass('configuration-command-disabled');
+			$('#configuration-changes-submit').attr('disabled', 'disabled');
+			$('#configuration-changes-reset').addClass('form-command-disabled');
 		}
 	}
 	
