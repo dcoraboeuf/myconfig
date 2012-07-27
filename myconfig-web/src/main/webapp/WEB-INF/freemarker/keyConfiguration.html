@@ -27,6 +27,11 @@
 						<@configuration_key value=keyConfiguration.nextKey class="next" />
 					</th>
 				</tr>
+				<tr class="key-description">
+					<th colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }">
+						${keyConfiguration.key.description?html}
+					</th>
+				</tr>
 				<tr class="columns">
 					<th class="version-title"><@lh key="model.version.name" /></th>
 					<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
