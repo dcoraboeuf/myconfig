@@ -20,15 +20,15 @@
 <#macro configuration_commands span>
 	<tr>
 		<td colspan="${span}" class="form-commands">
-			<input id="configuration-changes-submit" type="button" class="form-command form-command-submit" disabled="disabled" value="<@lh key='configuration.changes.submit' />" onclick="configuration.controlConfigurationChanges()" />
 			<a id="configuration-changes-reset" class="form-command form-command-cancel form-command-disabled" href="javascript:configuration.resetConfigurationChanges()"><@lh key="configuration.changes.reset" /></a>
+			<input id="configuration-changes-submit" type="button" class="form-command form-command-submit" disabled="disabled" value="<@lh key='configuration.changes.submit' />" onclick="configuration.controlConfigurationChanges()" />
 		</td>
 	</tr>
 </#macro>
 
 <#macro configuration_dialog>
 	<div id="dialog-changes" style="display:none;">
-		<table class="configuration-changes">
+		<table class="items configuration-changes">
 			<thead>
 				<tr>
 					<th><@lh key="configuration.change.environment" /></th>
@@ -42,9 +42,9 @@
 			</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="4" class="configuration-commands">
-						<div class="configuration-command configuration-command-submit" onclick="configuration.submitConfigurationChanges()"><@lh key="configuration.changes.submit" /></div>
-						<div class="configuration-command configuration-command-cancel" onclick="$('#dialog-changes').dialog('close')"><@lh key="general.cancel" /></div>
+					<td colspan="5" class="form-commands">
+						<a class="form-command form-command-cancel" href="javascript:$('#dialog-changes').dialog('close')"><@lh key="general.cancel" /></a>
+						<input type="button" class="form-command form-command-submit" value="<@lh key='configuration.changes.submit' />" onclick="configuration.submitConfigurationChanges()" />
 					</td>
 				</tr>
 			</tfoot>
