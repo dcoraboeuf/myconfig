@@ -4,59 +4,7 @@
 		<table>
 			<tbody>
 				<tr>
-					<td valign="top">
-						<@panel title="application.versions">
-							<@items_crud
-								id="versions"
-								columns=[{
-									"header": "model.version.name",
-									"field": "name"
-									}, {
-									"header": "application.version.keyCount",
-									"field": "keyCount",
-									"class": "item-column-type-number"
-									}, {
-									"header": "application.version.missingCount",
-									"special": "missing_count",
-									"action": "gui/configuration/version/${application.id}",
-									"actionItemField": "name"
-									}]
-								list=application.versionSummaryList
-								deleteAction="gui/application/${application.id}/version/delete"
-								deleteField="name"
-								deletePromptKey="version.delete"
-								editAction="gui/configuration/version/${application.id}"
-								editField="name"
-								createId="version-create"
-								createAction="gui/application/${application.id}/version/create"
-								errorKey="version_error"
-								/>
-						</@panel>
-						<@panel title="application.environments">
-							<@items_crud
-								id="environments"
-								columns=[{
-									"header": "model.environment.name",
-									"field": "name"
-									}, {
-									"header": "application.environment.missingCount",
-									"special": "missing_count",
-									"action": "gui/configuration/environment/${application.id}",
-									"actionItemField": "name"
-									}]
-								list=application.environmentSummaryList
-								deleteAction="gui/application/${application.id}/environment/delete"
-								deleteField="name"
-								deletePromptKey="environment.delete"
-								editAction="gui/configuration/environment/${application.id}"
-								editField="name"
-								createId="environment-create"
-								createAction="gui/application/${application.id}/environment/create"
-								errorKey="environment_error"
-								/>
-						</@panel>
-					</td>
-					<td valign="top">
+					<td colspan="2">
 						<@panel title="application.keys">
 							<@items_crud
 								id="keys"
@@ -99,6 +47,64 @@
 								</form>
 							</div>
 						</@panel>
+					</td>
+				</tr>
+				<tr>
+					<td valign="top">
+						<@panel title="application.versions">
+							<@items_crud
+								id="versions"
+								columns=[{
+									"header": "model.version.name",
+									"field": "name"
+									}, {
+									"header": "application.version.keyCount",
+									"field": "keyCount",
+									"class": "item-column-type-number"
+									}, {
+									"header": "application.version.missingCount",
+									"special": "missing_count",
+									"action": "gui/configuration/version/${application.id}",
+									"actionItemField": "name"
+									}]
+								list=application.versionSummaryList
+								deleteAction="gui/application/${application.id}/version/delete"
+								deleteField="name"
+								deletePromptKey="version.delete"
+								editAction="gui/configuration/version/${application.id}"
+								editField="name"
+								createId="version-create"
+								createAction="gui/application/${application.id}/version/create"
+								errorKey="version_error"
+								/>
+						</@panel>
+					</td>
+					<td>
+						<@panel title="application.environments">
+							<@items_crud
+								id="environments"
+								columns=[{
+									"header": "model.environment.name",
+									"field": "name"
+									}, {
+									"header": "application.environment.missingCount",
+									"special": "missing_count",
+									"action": "gui/configuration/environment/${application.id}",
+									"actionItemField": "name"
+									}]
+								list=application.environmentSummaryList
+								deleteAction="gui/application/${application.id}/environment/delete"
+								deleteField="name"
+								deletePromptKey="environment.delete"
+								editAction="gui/configuration/environment/${application.id}"
+								editField="name"
+								createId="environment-create"
+								createAction="gui/application/${application.id}/environment/create"
+								errorKey="environment_error"
+								/>
+						</@panel>
+					</td>
+					<td valign="top">
 					</td>
 				</tr>
 			</tbody>
