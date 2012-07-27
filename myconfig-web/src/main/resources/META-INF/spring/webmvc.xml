@@ -34,10 +34,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 				<entry key="loc" value-ref="fnLoc" />
 				<entry key="loclink" value-ref="fnLocLink" />
 				<entry key="localeSelected" value-ref="fnLocaleSelected" />
-				<!--
-				<entry key="uuid" value-ref="fnUuid" />
-				<entry key="rolecheck" value-ref="fnRoleCheck" />
-				-->
+				<entry key="ellipsis" value-ref="fnEllipsis" />
 			</map>
 		</property>
 	</bean>
@@ -45,10 +42,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<bean id="fnLoc" class="net.myconfig.web.support.fm.FnLoc" />
 	<bean id="fnLocLink" class="net.myconfig.web.support.fm.FnLocLink" />
 	<bean id="fnLocaleSelected" class="net.myconfig.web.support.fm.FnLocaleSelected" />
-	<!--
-	<bean id="fnUuid" class="net.cipol.web.support.fm.FnUuid" />
-	<bean id="fnRoleCheck" class="net.cipol.web.support.fm.FnRoleCheck" />
-	-->
+	<bean id="fnEllipsis" class="net.myconfig.web.support.fm.FnEllipsis" />
 
 	<!-- Freemarker views -->
 	<!-- FIXME Uses profiles for caching -->

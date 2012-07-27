@@ -41,7 +41,7 @@
 					<tr>
 						<td class="key">
 							<div class="key-name"><a href="gui/configuration/key/${versionConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
-							<div class="key-description"><@ellipsis value=key.description maxlength=30 /></div>
+							<div class="key-description">${ellipsis(key.description,30)?html}</div>
 						</td>
 						<#list versionConfiguration.environmentValuesPerKeyList as environmentConfiguration>
 							<td class="key-value">

@@ -1,14 +1,6 @@
 <#import "/spring.ftl" as spring />
 <#include "/lib/i18n.html" />
 
-<#macro ellipsis value maxlength>
-	<#if value?length gt maxlength>
-		${(value + '...')?substring(0,maxlength)?html}
-	<#else>
-		${value?html}
-	</#if>
-</#macro>
-
 <#macro panel title="">
 	<section class="panel">
 		<#if title != "">
