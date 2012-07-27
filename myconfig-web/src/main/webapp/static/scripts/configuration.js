@@ -73,7 +73,7 @@ var configuration = function () {
 			// Shows the dialog
 			$('#dialog-changes').dialog({
 				title: loc('configuration.changes.confirm'),
-				width: '50%'
+				width: 'auto'
 			});
 		}
 	}
