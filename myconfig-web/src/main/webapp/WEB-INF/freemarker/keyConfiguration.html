@@ -46,7 +46,7 @@
 						</th>
 					</tr>
 					<tr>
-						<th class="configuration-column-header-0><@lh key="model.version.name" /></th>
+						<th class="configuration-column-header-0"><@lh key="model.version" /> x <@lh key="model.environment" /></th>
 						<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
 							<th class="configuration-column-header">
 								<a href="gui/configuration/environment/${keyConfiguration.id}/${environmentConfiguration.name?html}">${environmentConfiguration.name?html}</a>
