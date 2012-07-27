@@ -19,7 +19,7 @@
 	</#if>
 </#macro>
 
-<@layout_std pageId="environmentConfiguration" style=true script=false modules=["configuration"] title=loc('environmentConfiguration', environmentConfiguration.environment)>
+<@layout_std pageId="environmentConfiguration" style=true script=false modules=["configuration","items"] title=loc('environmentConfiguration', environmentConfiguration.environment)>
 	<input id="application" type="hidden" value="${environmentConfiguration.id}" />
 	<@panel>
 		<article class="configuration">
@@ -44,10 +44,10 @@
 								</table>
 						</th>
 					</tr>
-					<tr class="columns">
-						<th class="key-title"><@lh key="model.key.name" /></th>
+					<tr>
+						<th class="configuration-column-header-0"><@lh key="model.key.name" /></th>
 						<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
-							<th class="column-title">
+							<th class="configuration-column-header">
 								<a href="gui/configuration/version/${environmentConfiguration.id}/${versionConfiguration.name?html}">${versionConfiguration.name?html}</a>
 							</th>
 						</#list>
@@ -55,13 +55,13 @@
 				</thead>
 				<tbody>
 					<#list environmentConfiguration.keyList as key>
-						<tr>
-							<td class="key">
-								<div class="key-name"><a href="gui/configuration/key/${environmentConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
-								<div class="key-description">${ellipsis(key.description,30)?html}</div>
+						<tr class="<@item_row_class index=key_index />">
+							<td class="configuration-row-header">
+								<div class="configuration-row-header-name"><a href="gui/configuration/key/${environmentConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
+								<div class="configuration-row-header-description">${ellipsis(key.description,30)?html}</div>
 							</td>
 							<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
-								<td class="key-value">
+								<td class="configuration-row-value">
 									<@configuration_value value=versionConfiguration.values[key.name] key=key environment=environmentConfiguration.environment version=versionConfiguration.name />
 								</td>
 							</#list>

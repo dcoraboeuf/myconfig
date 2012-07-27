@@ -7,6 +7,9 @@ article.configuration {
 		}
 	}
 	table.configuration {
+		tr.navigation th {
+			border-bottom: none;
+		}
 		table.navigation {
 			width: 100%;
 			td {
@@ -40,28 +43,28 @@ article.configuration {
 				}
 			}
 		}
-		tr.columns {
-			th {
-				&.key-title {
-					background-color: gray;
-				}
-				&.column-title {
-					background-color: lightgray;
-				}
-			}
+		th.configuration-column-header-0 {
 		}
-		td.key {
-			background-color: lightgray;
-			.key-name {
+		th.configuration-column-header {
+			text-align: center;
+		}
+		td.configuration-row-header {
+			.configuration-row-header-name {
 				font-weight: bold;
 			}
-			.key-description {
-				font-size: 75%;
-				font-style: italic;
+			.configuration-row-header-description {
+				.info;
 			}
 		}
-		td.key-value {
+		td.configuration-row-value {
 			vertical-align: top;
+		}
+		a {
+			text-decoration: none;
+			color: inherit;
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 	}
 }

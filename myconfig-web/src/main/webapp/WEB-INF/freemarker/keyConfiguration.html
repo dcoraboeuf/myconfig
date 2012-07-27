@@ -40,15 +40,15 @@
 							</table>
 						</th>
 					</tr>
-					<tr class="key-description">
+					<tr class="info">
 						<th colspan="${ keyConfiguration.environmentValuesPerVersionList?size + 1 }">
 							${keyConfiguration.key.description?html}
 						</th>
 					</tr>
-					<tr class="columns">
-						<th class="version-title"><@lh key="model.version.name" /></th>
+					<tr>
+						<th class="configuration-column-header-0><@lh key="model.version.name" /></th>
 						<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
-							<th class="column-title">
+							<th class="configuration-column-header">
 								<a href="gui/configuration/environment/${keyConfiguration.id}/${environmentConfiguration.name?html}">${environmentConfiguration.name?html}</a>
 							</th>
 						</#list>
@@ -56,10 +56,10 @@
 				</thead>
 				<tbody>
 					<#list keyConfiguration.versionList as version>
-						<tr>
-							<td class="version"><a href="gui/configuration/version/${keyConfiguration.id}/${version.name?html}">${version.name?html}</a></td>
+						<tr class="<@item_row_class index=version_index />">
+							<td class="configuration-row-header"><a href="gui/configuration/version/${keyConfiguration.id}/${version.name?html}">${version.name?html}</a></td>
 							<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
-								<td class="environment-value">
+								<td class="configuration-row-value">
 									<@configuration_value value=environmentConfiguration.values[version.name] key=keyConfiguration.key environment=environmentConfiguration.name version=version.name />
 								</td>
 							</#list>
