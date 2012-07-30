@@ -5,7 +5,7 @@
 # We don't care about Jenkins tags
 for TAG in $(git tag -l jenkins-myconfig*) ; do git tag -d $TAG; done
 # Tag
-TAG=b${BUILD_NUMBER}
+TAG=myconfig-${RELEASE}
 # Tagging the build
 git tag ${TAG}
 # Pushing the result
