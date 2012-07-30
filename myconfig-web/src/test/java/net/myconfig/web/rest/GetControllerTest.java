@@ -1,6 +1,7 @@
 package net.myconfig.web.rest;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
@@ -11,16 +12,24 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.web.renderer.HttpRenderer;
 import net.myconfig.web.renderer.HttpRendererService;
+import net.myconfig.web.renderer.RendererNotFoundException;
 import net.myconfig.web.support.ErrorHandler;
+import net.myconfig.web.support.ErrorMessage;
 import net.sf.jstring.Strings;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 public class GetControllerTest {
@@ -36,19 +45,41 @@ public class GetControllerTest {
 	private GetController get;
 	private MyConfigService service;
 	private HttpRendererService httpRendererService;
+	private ErrorHandler errorHandler;
 
 	@Before
 	public void before() {
+		Locale.setDefault(Locale.ENGLISH);
 		// Strings
-		Strings strings = new Strings();
+		Strings strings = new Strings("META-INF.resources.web-labels");
 		// Error handler
-		ErrorHandler errorHandler = mock(ErrorHandler.class);
+		errorHandler = mock(ErrorHandler.class);
 		// Service
 		service = mock(MyConfigService.class);
 		// HTTP Renderer
 		httpRendererService = mock(HttpRendererService.class);
 		// OK
 		get = new GetController(strings, errorHandler, service, httpRendererService);
+	}
+	
+	@Test
+	public void onException () {
+		// Mock: request
+		HttpServletRequest request = mock (HttpServletRequest.class);
+		// Mock: error handler
+		when(errorHandler.handleError(any(HttpServletRequest.class), any(Locale.class), any(Exception.class))).thenReturn(new ErrorMessage("xxx", "Error message"));
+		// Call
+		ResponseEntity<String> entity = get.onException(request, Locale.ENGLISH, new ApplicationNotFoundException(1));
+		assertNotNull (entity);
+		assertEquals ("An error has occurred.\nMessage: Error message\nReference: xxx", entity.getBody());
+		assertEquals (HttpStatus.INTERNAL_SERVER_ERROR, entity.getStatusCode());
+	}
+	
+	@Test
+	public void version() {
+		when(service.getVersion()).thenReturn("VX");
+		String value = get.version();
+		assertEquals ("VX", value);
 	}
 
 	@Test
@@ -82,6 +113,15 @@ public class GetControllerTest {
 		get.env_default(APP, VERSION, ENV, MODE, response);
 		// Checks the render call
 		verify(renderer, times(1)).renderer(any(ConfigurationSet.class), (String) isNull(), same(response));
+	}
+	
+	@Test(expected = ConfigurationModeNotFoundException.class)
+	public void env_no_mode() throws IOException {
+		// Renderer
+		when(httpRendererService.getRenderer(ConfigurationSet.class, MODE)).thenThrow(new RendererNotFoundException(ConfigurationSet.class, MODE));
+		// Call
+		MockHttpServletResponse response = new MockHttpServletResponse();
+		get.env(APP, VERSION, ENV, MODE, VARIANT, response);
 	}
 
 }

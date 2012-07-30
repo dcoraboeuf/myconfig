@@ -1,5 +1,8 @@
 package net.myconfig.web.home;
 
+import static org.apache.commons.lang3.StringEscapeUtils.escapeEcmaScript;
+import static org.apache.commons.lang3.StringUtils.replace;
+
 import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
@@ -10,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.jstring.Strings;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +48,7 @@ public class LocalisationController {
             }
             js.append(String.format("'%s': '%s'",
                     key,
-                    StringEscapeUtils.escapeEcmaScript(value)
+                    escape(value)
             		));
             i++;
         }
@@ -60,5 +62,11 @@ public class LocalisationController {
         outputStream.flush();
         // TODO Cache management
     }
+
+	protected String escape(String value) {
+		return escapeEcmaScript(
+					replace(value, "''", "'")
+				);
+	}
 
 }

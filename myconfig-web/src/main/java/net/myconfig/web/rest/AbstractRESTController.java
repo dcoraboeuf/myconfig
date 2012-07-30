@@ -28,10 +28,6 @@ public abstract class AbstractRESTController {
 		this.errorHandler = errorHandler;
 		this.myConfigService = myConfigService;
 	}
-	
-	protected Strings getStrings() {
-		return strings;
-	}
 
 	protected MyConfigService getMyConfigService() {
 		return myConfigService;

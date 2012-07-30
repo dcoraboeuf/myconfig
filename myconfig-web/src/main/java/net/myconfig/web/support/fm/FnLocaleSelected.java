@@ -24,7 +24,7 @@ public class FnLocaleSelected implements TemplateMethodModel {
 	public Object exec(@SuppressWarnings("rawtypes") List list) throws TemplateModelException {
 		// Checks
 		Validate.notNull(list, "List of arguments is required");
-		Validate.notEmpty(list, "List of arguments must not be empty");
+		Validate.isTrue(list.size() == 1, "List of arguments must contain one argument only");
 		// Gets the value
 		String value = (String) list.get(0);
 		// Gets the current locale value
