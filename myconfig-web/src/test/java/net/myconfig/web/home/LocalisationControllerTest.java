@@ -23,6 +23,8 @@ public class LocalisationControllerTest {
 
 	@Before
 	public void before() {
+		Locale.setDefault(Locale.ENGLISH);
+		
 		Strings strings = new Strings("localisation.test");
 		controller = new LocalisationController(strings);
 
@@ -47,14 +49,19 @@ public class LocalisationControllerTest {
 		List<String> lines = new ArrayList<String>(Arrays.asList(StringUtils.split(content, "\n")));
 		lines.remove(0);
 		content = StringUtils.join(lines, "\n");
-		assertEquals("var l = {\n" + "'application.delete': '[M-001-C] Voulez-vous vraiment supprimer l\\'application \\\"{0}\\\" et toute la configuration associ\\u00E9e ?',\n"
-				+ "'applications': 'Applications configur\\u00E9es'\n" + "};", content);
+		assertEquals("var l = {\n" + "'application.delete': '[M-001-C] Do you want to delete the \\\"{0}\\\" application and all its associated configuration?',\n"
+				+ "'applications': 'Configured applications'\n" + "};", content);
 	}
 
 	@Test
 	public void locale_fr() throws IOException {
 		controller.localisation(Locale.FRENCH, response);
-		do_locale_en();
+		String content = response.getContentAsString();
+		List<String> lines = new ArrayList<String>(Arrays.asList(StringUtils.split(content, "\n")));
+		lines.remove(0);
+		content = StringUtils.join(lines, "\n");
+		assertEquals("var l = {\n" + "'application.delete': '[M-001-C] Voulez-vous vraiment supprimer l\\'application \\\"{0}\\\" et toute la configuration associ\\u00E9e ?',\n"
+				+ "'applications': 'Applications configur\\u00E9es'\n" + "};", content);
 	}
 
 }
