@@ -15,6 +15,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DBConfig {
 	
+	public static final int VERSION = 1;
+	
 	@Autowired
 	private DataSource dataSource;
 	
@@ -25,7 +27,7 @@ public class DBConfig {
 	@Bean
 	public DBInit dbInit() {
 		DBInit db = new DBInit();
-		db.setVersion(0);
+		db.setVersion(VERSION);
 		db.setJdbcDataSource(dataSource);
 		db.setVersionTable("DBVERSION");
 		db.setVersionColumnName("VALUE");
