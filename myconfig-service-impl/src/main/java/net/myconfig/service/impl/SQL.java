@@ -174,4 +174,6 @@ public interface SQL {
 			"where e.name = :name " +
 			"and e.application = :application";
 
+	String CONFIGURATION_VALUE = "select value from configuration whre name = :name";
+
 }
