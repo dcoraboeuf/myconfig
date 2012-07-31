@@ -63,6 +63,7 @@ fi
 # 2. all the deployment files
 echo Creating the archive...
 tar --create --gzip --file=target/myconfig-${RELEASE}.tgz --directory=myconfig-web/target myconfig-web-${RELEASE}.war
+tar --update --gzip --file=target/myconfig-${RELEASE}.tgz pipeline/*.*
 if [ $? -ne 0 ]
 then
 	echo Archiving failed.
