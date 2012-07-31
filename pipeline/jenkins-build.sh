@@ -73,7 +73,7 @@ fi
 # Upload the archive into Nexus
 ###############################
 
-echo Uploading to Nexus @ ${NEXUS_URL} (id = ${NEXUS_ID})
+echo Uploading to Nexus @ ${NEXUS_URL} with id = ${NEXUS_ID}
 mvn deploy:deploy-file -Dfile=target/myconfig-${RELEASE}.tgz -DrepositoryId=${NEXUS_ID} -Durl=${NEXUS_URL} -DgroupId=net.myconfig -DartifactId=myconfig -Dversion=${RELEASE} -DgeneratePom=true -Dpackaging=tgz
 if [ $? -ne 0 ]
 then
