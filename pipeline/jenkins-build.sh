@@ -40,9 +40,15 @@ RELEASE=${VERSION}-${BUILD_NUMBER}
 # Runs the build itself and as much tests as possible
 #####################################################
 
+# Clean
+git checkout -- .
+
 # Build options
 echo Building release ${RELEASE}...
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=128m"
+
+# Changing the versions
+mvn versions:set -DnewVersion=${RELEASE} -DgenerateBackupPoms=false
 
 # Maven build
 mvn clean install -P acceptance-test
