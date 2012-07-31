@@ -63,7 +63,7 @@ fi
 # 2. all the deployment files
 echo Creating the archive...
 tar --create --gzip --file=target/myconfig-${RELEASE}.tgz --directory=myconfig-web/target myconfig-web-${RELEASE}.war
-if [ $? -ne 0]
+if [ $? -ne 0 ]
 then
 	echo Archiving failed.
 	exit 1
@@ -75,7 +75,7 @@ fi
 
 echo Uploading to Nexus @ ${NEXUS_URL} (id = ${NEXUS_ID})
 mvn deploy:deploy-file -Dfile=target/myconfig-${RELEASE}.tgz -DrepositoryId=${NEXUS_ID} -Durl=${NEXUS_URL} -DgroupId=net.myconfig -DartifactId=myconfig -Dversion=${RELEASE} -DgeneratePom=true -Dpackaging=tgz
-if [ $? -ne 0]
+if [ $? -ne 0 ]
 then
 	echo Deployment failed.
 	exit 1
