@@ -21,6 +21,9 @@ echo Building release ${RELEASE}...
 # Runs the build itself and as much tests as possible
 #####################################################
 
+# Build options
+export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=128m"
+
 # Maven build
 mvn clean install -P acceptance-test
 
