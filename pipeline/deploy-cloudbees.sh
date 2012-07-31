@@ -2,6 +2,8 @@
 
 
 # Following environment variables are required
+# VERSION			Version number (1.0.1)
+# BUILD				Build number for this version (12)
 # CB_APPID			CloudBees application ID
 # CB_ACCOUNT		CloudBees account name
 # CB_JDBC_URL		JDBC URL to the database
@@ -17,6 +19,8 @@ check_env()
 	fi
 }
 
+check_env "VERSION"
+check_env "BUILD"
 check_env "CB_APPID"
 check_env "CB_ACCOUNT"
 check_env "CB_JDBC_URL"
@@ -40,3 +44,7 @@ cb_config_set "myconfig.jdbc.url" "${CB_JDBC_USER}"
 cb_config_set "myconfig.jdbc.url" "${CB_JDBC_PASSWORD}"
 cb_config_set "myconfig.appid" "${CB_ACCOUNT}/${CB_APPID}"
 cb_config_set "spring.profiles.active" "prod"
+
+# Deployment
+WAR=myconfig-web-${VERSION}-${BUILD}.war
+bees app:deploy --appid "${CB_ACCOUNT}/${CB_APPID}" --message "Automatic deployment for ${VERSION}-${BUILD}" $WAR
