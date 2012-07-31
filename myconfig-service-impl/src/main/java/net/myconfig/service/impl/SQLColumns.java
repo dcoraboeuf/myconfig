@@ -1,7 +1,10 @@
 package net.myconfig.service.impl;
 
 public interface SQLColumns {
-	
+
+	String USER = "user";
+	String PASSWORD = "password";
+	String ADMIN = "admin";
 	String ENVIRONMENT = "environment";
 	String VERSION = "version";
 	String KEY = "appkey";
