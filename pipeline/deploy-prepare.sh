@@ -23,7 +23,7 @@ check_env "NEXUS_URL"
 RELEASE=${VERSION}-${BUILD}
 
 # Download
-wget --quiet ${NEXUS_URL}/net/myconfig/myconfig/${RELEASE}/myconfig-${RELEASE}.tgz
+wget --quiet ${NEXUS_URL}/net/myconfig/myconfig/${RELEASE}/myconfig-${RELEASE}.tar
 
 # Extraction
-tar xzvf myconfig-${RELEASE}.tgz
+tar xvf myconfig-${RELEASE}.tar
