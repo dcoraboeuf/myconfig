@@ -21,7 +21,11 @@ import java.util.TreeMap;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.core.AppFunction;
+import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.CoreException;
@@ -176,6 +180,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@UserGrant(UserFunction.app_create)
 	public ApplicationSummary createApplication(String name) {
 		validate(ApplicationValidation.class, NAME, name);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -193,6 +198,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.app_delete)
 	public Ack deleteApplication(int id) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource (ID, id));
 		return Ack.one (count);
@@ -200,6 +206,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.version_create)
 	public Ack createVersion(int id, String name) {
 		validate(VersionValidation.class, NAME, name);
 		checkApplication(id);

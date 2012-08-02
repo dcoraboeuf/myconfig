@@ -14,8 +14,8 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 		</authentication-manager>
 
 		<global-method-security access-decision-manager-ref="grantAccessDecisionManager">
-			<protect-pointcut expression="execution(* net.myconfig.service.api.MyConfigService.*(..))" access="user" />
-<!-- 			<protect-pointcut expression="execution(@net.myconfig.service.api.security.UserGrant * net.myconfig.service.impl.MyConfigServiceImpl.*(..))" access="user" /> -->
+			<protect-pointcut expression="execution(@net.myconfig.service.api.security.UserGrant * net.myconfig.service.impl.MyConfigServiceImpl.*(..))" access="user" />
+			<protect-pointcut expression="execution(@net.myconfig.service.api.security.AppGrant * net.myconfig.service.impl.MyConfigServiceImpl.*(..))" access="application" />
 		</global-method-security>
 
 	</beans:beans>
