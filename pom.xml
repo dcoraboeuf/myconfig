@@ -51,7 +51,7 @@
 	<properties>
 		<!-- Versions -->
 		<springVersion>3.1.1.RELEASE</springVersion>
-		<springSecurityVersion>3.1.0.RELEASE</springSecurityVersion>
+		<springSecurityVersion>3.1.1.RELEASE</springSecurityVersion>
 		<sidoVersion>1.1.1</sidoVersion>
 		<slf4jVersion>1.6.1</slf4jVersion>
 		<cucumberVersion>1.0.10</cucumberVersion>
