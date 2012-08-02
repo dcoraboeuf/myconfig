@@ -177,6 +177,7 @@ public interface SQL {
 	String CONFIGURATION_VALUE = "select value from configuration whre name = :name";
 	
 	String FUNCTIONS_USER = "select grantedfunction from usergrants where (user = :user or user = '*') order by grantedfunction";
+	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";
 	
 	String USER = "select * from users where name = :name and password = :password";
 

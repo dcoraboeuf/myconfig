@@ -1,4 +1,4 @@
-package net.myconfig.service.security;
+package net.myconfig.service.api.security;
 
 public class User {
 

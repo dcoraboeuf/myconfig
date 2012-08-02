@@ -1,13 +1,9 @@
 package net.myconfig.service.security;
 
-import java.util.List;
-
-import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.UserToken;
 
 public interface SecurityService {
 
-	List<UserFunction> getUserFunctions(User user);
-
-	User getUser(String username, String password);
+	UserToken getUserToken(String username, String password);
 
 }
