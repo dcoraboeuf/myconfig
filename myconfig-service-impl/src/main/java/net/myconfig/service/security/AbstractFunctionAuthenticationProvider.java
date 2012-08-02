@@ -2,7 +2,7 @@ package net.myconfig.service.security;
 
 import java.util.List;
 
-import net.myconfig.core.MyConfigFunctions;
+import net.myconfig.core.EnvFunction;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,11 +38,11 @@ public abstract class AbstractFunctionAuthenticationProvider extends AbstractNam
 				return null;
 			}
 			// Gets the general granted functions
-			List<MyConfigFunctions> functions = getFunctions(username);
+			List<EnvFunction> functions = getFunctions(username);
 			// Converts them to authorities
-			List<GrantedAuthority> authorities = Lists.transform(functions, new Function<MyConfigFunctions, GrantedAuthority>() {
+			List<GrantedAuthority> authorities = Lists.transform(functions, new Function<EnvFunction, GrantedAuthority>() {
 				@Override
-				public GrantedAuthority apply(MyConfigFunctions function) {
+				public GrantedAuthority apply(EnvFunction function) {
 					return new SimpleGrantedAuthority(function.name());
 				}
 			});
@@ -53,7 +53,7 @@ public abstract class AbstractFunctionAuthenticationProvider extends AbstractNam
 		}
 	}
 
-	protected List<MyConfigFunctions> getFunctions(String username) {
+	protected List<EnvFunction> getFunctions(String username) {
 		return securityService.getUserFunctions(username);
 	}
 

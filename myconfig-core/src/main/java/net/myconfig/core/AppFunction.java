@@ -1,19 +1,7 @@
 package net.myconfig.core;
 
-public enum MyConfigFunctions {
+public enum AppFunction {
 	
-	/**
-	 * Set-up of the security
-	 */
-	security_setup,
-	/**
-	 * Managements of the users
-	 */
-	security_users,
-	/**
-	 * Creation of a new application
-	 */
-	app_create,
 	/**
 	 * Access to this application and its versions and keys
 	 */
@@ -57,14 +45,6 @@ public enum MyConfigFunctions {
 	/**
 	 * Management of the matrix between keys and versions
 	 */
-	matrix,
-	/**
-	 * Access to this environment for this application
-	 */
-	env_view,
-	/**
-	 * Configuration for this environment, for all versions and keys
-	 */
-	env_config; 
+	matrix; 
 
 }

@@ -2,15 +2,19 @@ package net.myconfig.service.api;
 
 import java.util.List;
 
+import net.myconfig.core.AppFunction;
+import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.ConfigurationUpdates;
 
 public interface MyConfigService {
 
@@ -22,12 +26,15 @@ public interface MyConfigService {
 
 	List<ApplicationSummary> getApplications();
 
+	@UserGrant(UserFunction.app_create)
 	ApplicationSummary createApplication(String name);
 
+	@AppGrant(AppFunction.app_delete)
 	Ack deleteApplication(int id);
 
 	ApplicationConfiguration getApplicationConfiguration(int id);
 
+	@AppGrant(AppFunction.version_create)
 	Ack createVersion(int id, String name);
 
 	Ack deleteVersion(int id, String name);

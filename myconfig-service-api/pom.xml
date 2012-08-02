@@ -16,6 +16,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>myconfig-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.jstring</groupId>
 			<artifactId>jstring</artifactId>
 		</dependency>

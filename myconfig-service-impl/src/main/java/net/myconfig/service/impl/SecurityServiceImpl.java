@@ -11,7 +11,7 @@ import java.util.List;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
-import net.myconfig.core.MyConfigFunctions;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.service.security.SecurityService;
 import net.myconfig.service.security.User;
 
@@ -45,13 +45,13 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<MyConfigFunctions> getUserFunctions(String username) {
+	public List<EnvFunction> getUserFunctions(String username) {
 		return Lists.transform(
 				getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, username), String.class),
-				new Function<String, MyConfigFunctions>() {
+				new Function<String, EnvFunction>() {
 					@Override
-					public MyConfigFunctions apply(String name) {
-						return MyConfigFunctions.valueOf(name);
+					public EnvFunction apply(String name) {
+						return EnvFunction.valueOf(name);
 					}
 				});
 	}
