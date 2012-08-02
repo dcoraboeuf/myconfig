@@ -6,12 +6,15 @@ import static net.myconfig.service.impl.SQLColumns.PASSWORD;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
-import net.myconfig.core.EnvFunction;
+import net.myconfig.core.UserFunction;
 import net.myconfig.service.security.SecurityService;
 import net.myconfig.service.security.User;
 
@@ -45,24 +48,31 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<EnvFunction> getUserFunctions(String username) {
-		return Lists.transform(
-				getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, username), String.class),
-				new Function<String, EnvFunction>() {
-					@Override
-					public EnvFunction apply(String name) {
-						return EnvFunction.valueOf(name);
-					}
-				});
+	public List<UserFunction> getUserFunctions(User user) {
+		if (user.isAdmin()) {
+			List<UserFunction> list = new ArrayList<UserFunction>(Arrays.asList(UserFunction.values()));
+			Collections.sort(list);
+			return list;
+		} else {
+			return Lists.transform(
+					getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, user.getName()), String.class),
+					new Function<String, UserFunction>() {
+						@Override
+						public UserFunction apply(String name) {
+							return UserFunction.valueOf(name);
+						}
+					});
+		}
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public User getUser(String username, String password) {
+		final String digest = digest(password);
 		List<User> users = getNamedParameterJdbcTemplate().query(SQL.USER,
 				new MapSqlParameterSource()
 					.addValue(NAME, username)
-					.addValue(PASSWORD, digest(password)),
+					.addValue(PASSWORD, digest),
 				new RowMapper<User>() {
 					@Override
 					public User mapRow(ResultSet rs, int row) throws SQLException {

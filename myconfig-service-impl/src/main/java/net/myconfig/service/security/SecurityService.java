@@ -2,11 +2,11 @@ package net.myconfig.service.security;
 
 import java.util.List;
 
-import net.myconfig.core.EnvFunction;
+import net.myconfig.core.UserFunction;
 
 public interface SecurityService {
 
-	List<EnvFunction> getUserFunctions(String username);
+	List<UserFunction> getUserFunctions(User user);
 
 	User getUser(String username, String password);
 
