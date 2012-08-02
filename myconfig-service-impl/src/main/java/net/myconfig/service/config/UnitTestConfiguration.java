@@ -3,7 +3,7 @@ package net.myconfig.service.config;
 import javax.sql.DataSource;
 
 import net.myconfig.core.MyConfigProfiles;
-import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.InitialisationService;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ public class UnitTestConfiguration extends CommonConfiguration {
 
 	@Override
 	@Bean
-	public ConfigurationService configurationService() {
-		return new DefaultConfigurationService(MyConfigProfiles.TEST);
+	public InitialisationService initialisationService() {
+		return new DefaultInitialisationService(MyConfigProfiles.TEST);
 	}
 
 	@Bean

@@ -23,11 +23,6 @@ public class UserTokenImpl implements UserToken {
 		this.userFunctions = ImmutableSet.copyOf(userFunctions);
 		this.appFunctions = ImmutableMap.copyOf(appFunctions);
 	}
-
-	@Override
-	public User getUser() {
-		return user;
-	}
 	
 	@Override
 	public String getName() {

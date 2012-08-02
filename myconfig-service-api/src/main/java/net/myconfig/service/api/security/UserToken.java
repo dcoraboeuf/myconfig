@@ -5,8 +5,6 @@ import net.myconfig.core.UserFunction;
 
 public interface UserToken {
 
-	User getUser();
-
 	String getName();
 
 	boolean hasUserFunction(UserFunction fn);

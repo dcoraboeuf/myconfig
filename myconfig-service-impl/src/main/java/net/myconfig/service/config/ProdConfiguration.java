@@ -1,7 +1,7 @@
 package net.myconfig.service.config;
 
 import net.myconfig.core.MyConfigProfiles;
-import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.InitialisationService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,9 +13,9 @@ public class ProdConfiguration extends CommonConfiguration {
 
 	@Override
 	@Bean
-	public ConfigurationService configurationService() throws Exception {
+	public InitialisationService initialisationService() throws Exception {
 		// No logging file
-		return new DefaultConfigurationService(MyConfigProfiles.PROD);
+		return new DefaultInitialisationService(MyConfigProfiles.PROD);
 	}
 
 }

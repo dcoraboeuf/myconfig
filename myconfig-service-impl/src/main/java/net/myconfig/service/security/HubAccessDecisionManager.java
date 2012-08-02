@@ -7,11 +7,13 @@ import java.util.Collection;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -20,9 +22,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GrantAccessDecisionManager implements AccessDecisionManager {
+public class HubAccessDecisionManager implements AccessDecisionManager {
 
-	private final Logger logger = LoggerFactory.getLogger(GrantAccessDecisionManager.class);
+	private final Logger logger = LoggerFactory.getLogger(HubAccessDecisionManager.class);
+
+	private final SecuritySelector selector;
+
+	@Autowired
+	public HubAccessDecisionManager(SecuritySelector selector) {
+		this.selector = selector;
+	}
 
 	@Override
 	public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
@@ -65,24 +74,14 @@ public class GrantAccessDecisionManager implements AccessDecisionManager {
 	 * function for the given application ID.
 	 */
 	protected boolean checkAplicationGrant(Authentication authentication, int application, AppFunction fn) {
-		UserTokenImpl token = getUserToken(authentication);
-		return token != null && token.hasAppFunction(application, fn);
+		return selector.getSecurityManagement().hasApplicationFunction (authentication, application, fn);
 	}
 
 	/**
 	 * Checks if the current authentication has access to the user function.
 	 */
 	protected boolean checkUserGrant(Authentication authentication, UserFunction fn) {
-		UserTokenImpl token = getUserToken(authentication);
-		return token != null && token.hasUserFunction(fn);
-	}
-
-	protected UserTokenImpl getUserToken(Authentication authentication) {
-		if (authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserTokenImpl) {
-			return (UserTokenImpl) authentication.getPrincipal();
-		} else {
-			return null;
-		}
+		return selector.getSecurityManagement().hasUserFunction (authentication, fn);
 	}
 
 	protected <A extends Annotation> A getAnnotation(MethodInvocation invocation, Class<A> type) {

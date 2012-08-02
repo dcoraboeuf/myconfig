@@ -174,7 +174,7 @@ public interface SQL {
 			"where e.name = :name " +
 			"and e.application = :application";
 
-	String CONFIGURATION_VALUE = "select value from configuration whre name = :name";
+	String CONFIGURATION_VALUE = "select value from configuration where name = :name";
 	
 	String FUNCTIONS_USER = "select grantedfunction from usergrants where (user = :user or user = '*') order by grantedfunction";
 	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";

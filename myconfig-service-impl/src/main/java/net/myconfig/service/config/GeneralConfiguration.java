@@ -2,11 +2,11 @@ package net.myconfig.service.config;
 
 import javax.validation.Validator;
 
-import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.InitialisationService;
 
 public interface GeneralConfiguration {
 	
-	ConfigurationService configurationService() throws Exception;
+	InitialisationService initialisationService() throws Exception;
 	
 	Validator validator();
 

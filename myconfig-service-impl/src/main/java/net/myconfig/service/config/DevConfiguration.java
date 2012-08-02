@@ -1,7 +1,7 @@
 package net.myconfig.service.config;
 
 import net.myconfig.core.MyConfigProfiles;
-import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.InitialisationService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +13,8 @@ public class DevConfiguration extends CommonConfiguration {
 
 	@Override
 	@Bean
-	public ConfigurationService configurationService() {
-		return new DefaultConfigurationService(MyConfigProfiles.DEV);
+	public InitialisationService initialisationService() {
+		return new DefaultInitialisationService(MyConfigProfiles.DEV);
 	}
 
 }
