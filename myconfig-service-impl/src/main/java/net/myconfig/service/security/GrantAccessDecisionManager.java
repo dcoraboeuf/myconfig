@@ -1,6 +1,7 @@
 package net.myconfig.service.security;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Collection;
 
 import net.myconfig.core.AppFunction;
@@ -85,7 +86,20 @@ public class GrantAccessDecisionManager implements AccessDecisionManager {
 	}
 
 	protected <A extends Annotation> A getAnnotation(MethodInvocation invocation, Class<A> type) {
-		return invocation.getMethod().getAnnotation(type);
+		Method method = invocation.getMethod();
+		A a = method.getAnnotation(type);
+		if (a == null) {
+			Object target = invocation.getThis();
+			Method targetMethod;
+			try {
+				targetMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
+			} catch (Exception e) {
+				throw new IllegalStateException("Cannot find target method", e);
+			}
+			return targetMethod.getAnnotation(type);
+		} else {
+			return a;
+		}
 	}
 
 	@Override
