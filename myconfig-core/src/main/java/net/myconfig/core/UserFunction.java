@@ -13,6 +13,10 @@ public enum UserFunction {
 	/**
 	 * Creation of a new application
 	 */
-	app_create; 
+	app_create,
+	/**
+	 * List of applications
+	 */
+	app_list; 
 
 }

@@ -98,6 +98,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
+	@UserGrant(UserFunction.app_list)
 	public List<ApplicationSummary> getApplications() {
 		return getJdbcTemplate().query(SQL.APPLICATIONS, new RowMapper<ApplicationSummary>() {
 
