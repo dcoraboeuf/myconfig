@@ -22,9 +22,11 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.EnvGrant;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
@@ -119,6 +121,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
+	@AppGrant(AppFunction.app_view)
 	public ApplicationConfiguration getApplicationConfiguration(int application) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// ID
@@ -228,6 +231,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.version_delete)
 	public Ack deleteVersion(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
@@ -236,6 +240,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.env_create)
 	public Ack createEnvironment(int id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
@@ -250,6 +255,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.env_delete)
 	public Ack deleteEnvironment(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
@@ -258,6 +264,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.key_create)
 	public Ack createKey(int id, String name, String description) {
 		validate(KeyValidation.class, NAME, name);
 		validate(KeyValidation.class, DESCRIPTION, description);
@@ -273,6 +280,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.key_update)
 	public Ack updateKey(int application, String name, String description) {
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(application);
@@ -288,6 +296,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.key_delete)
 	public Ack deleteKey(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
@@ -296,6 +305,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
+	@AppGrant(AppFunction.app_view)
 	public MatrixConfiguration keyVersionConfiguration(int id) {
 		checkApplication(id);
 		// Criteria
@@ -334,6 +344,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
+	@AppGrant(AppFunction.app_view)
 	public VersionConfiguration getVersionConfiguration(int application, String version) {
 		checkApplication(application);
 		checkVersion(application, version);
@@ -391,6 +402,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
+	@EnvGrant(EnvFunction.env_view)
 	public EnvironmentConfiguration getEnvironmentConfiguration(int application, String environment) {
 		checkApplication(application);
 		checkEnvironment(application, environment);
@@ -469,6 +481,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
+	@AppGrant(AppFunction.app_view)
 	public KeyConfiguration getKeyConfiguration(int application, String keyName) {
 		checkApplication(application);
 		checkKey(application, keyName);
@@ -539,6 +552,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	// FIXME Security: special
 	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
@@ -572,6 +586,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.matrix)
 	public Ack addKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
@@ -592,6 +607,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.matrix)
 	public Ack removeKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
@@ -608,6 +624,8 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 
 	@Override
 	@Transactional(readOnly = true)
+	@EnvGrant(EnvFunction.env_view)
+	// FIXME Environment parameter 
 	public String getKey(String application, String version, String environment, String key) {
 		// Checks for existing data
 		checkApplication (application);
@@ -631,6 +649,8 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional(readOnly = true)
+	@EnvGrant(EnvFunction.env_view)
+	// FIXME Environment parameter
 	public ConfigurationSet getEnv(String application, String version, String environment) {
 		// Checks for existing data
 		checkApplication (application);
