@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultErrorHandler implements ErrorHandler {
 
-	private final Logger errors = LoggerFactory.getLogger("User");
+	private final Logger logger = LoggerFactory.getLogger("User");
 	
 	private final Strings strings;
 	
@@ -35,11 +35,14 @@ public class DefaultErrorHandler implements ErrorHandler {
 		// Error message
 		String displayMessage;
 		String loggedMessage;
+		boolean stackTrace;
 		if (ex instanceof LocalizableException) {
 			loggedMessage = ((LocalizableException)ex).getLocalizedMessage(strings, Locale.ENGLISH);
+			stackTrace = false;
 			displayMessage = ((LocalizableException)ex).getLocalizedMessage(strings, locale);
 		} else {
 			loggedMessage = ex.getMessage();
+			stackTrace = true;
 			// Gets a display message for this exception class
 			displayMessage = strings.get(Locale.ENGLISH, ex.getClass().getName(), false);
 			if (StringUtils.isBlank(displayMessage)) {
@@ -49,7 +52,12 @@ public class DefaultErrorHandler implements ErrorHandler {
 		// Traces the error
 		// TODO Adds request information
 		// TODO Adds authentication information
-		errors.error(String.format("[%s] %s", uuid, loggedMessage));
+		String formattedLoggedMessage = String.format("[%s] %s", uuid, loggedMessage);
+		if (stackTrace) {
+			logger.error(formattedLoggedMessage, ex);
+		} else {
+			logger.error(formattedLoggedMessage);
+		}
 		// OK
 		return new ErrorMessage(uuid, displayMessage);
 	}
