@@ -28,7 +28,7 @@ public class FnSecChkUserFn extends AbstractFnSec {
 		// Gets the current authentication
 		Authentication authentication = getAuthentication();
 		// Test
-		return selector.getSecurityManagement().hasUserFunction(authentication, fn);
+		return selector.hasUserFunction(authentication, fn);
 	}
 
 }

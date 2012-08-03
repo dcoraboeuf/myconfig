@@ -1,7 +1,7 @@
 package net.myconfig.service.api.security;
 
-public interface SecuritySelector {
+public interface SecuritySelector extends SecurityOperations {
 	
-	SecurityManagement getSecurityManagement();
+	String getSecurityManagementId();
 
 }

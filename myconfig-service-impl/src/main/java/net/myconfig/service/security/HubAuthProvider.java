@@ -1,6 +1,5 @@
 package net.myconfig.service.security;
 
-import net.myconfig.service.api.security.SecurityManagement;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserToken;
 
@@ -22,7 +21,7 @@ public class HubAuthProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		UserToken userToken = getSelectedSecurityManagement().authenticate(authentication);
+		UserToken userToken = selector.authenticate(authentication);
 		if (userToken != null) {
 			return new UserAuthenticationToken(userToken, authentication);
 		} else {
@@ -30,13 +29,9 @@ public class HubAuthProvider implements AuthenticationProvider {
 		}
 	}
 
-	protected SecurityManagement getSelectedSecurityManagement() {
-		return selector.getSecurityManagement();
-	}
-
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return getSelectedSecurityManagement().supports(authentication);
+		return selector.supports(authentication);
 	}
 
 }

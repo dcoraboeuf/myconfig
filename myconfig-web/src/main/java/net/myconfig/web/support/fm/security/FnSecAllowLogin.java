@@ -22,7 +22,7 @@ public class FnSecAllowLogin extends AbstractFnSec {
 		Validate.notNull(list, "List of arguments is required");
 		Validate.isTrue(list.size() == 0, "No argument is needed");
 		// Test
-		return selector.getSecurityManagement().allowLogin();
+		return selector.allowLogin();
 	}
 
 }

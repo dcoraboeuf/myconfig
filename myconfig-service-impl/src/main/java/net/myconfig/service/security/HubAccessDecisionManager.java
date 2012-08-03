@@ -74,14 +74,14 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 	 * function for the given application ID.
 	 */
 	protected boolean checkAplicationGrant(Authentication authentication, int application, AppFunction fn) {
-		return selector.getSecurityManagement().hasApplicationFunction (authentication, application, fn);
+		return selector.hasApplicationFunction (authentication, application, fn);
 	}
 
 	/**
 	 * Checks if the current authentication has access to the user function.
 	 */
 	protected boolean checkUserGrant(Authentication authentication, UserFunction fn) {
-		return selector.getSecurityManagement().hasUserFunction (authentication, fn);
+		return selector.hasUserFunction (authentication, fn);
 	}
 
 	protected <A extends Annotation> A getAnnotation(MethodInvocation invocation, Class<A> type) {
