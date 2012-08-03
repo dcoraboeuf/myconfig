@@ -1,5 +1,8 @@
 package net.myconfig.service.impl;
 
+import static net.myconfig.core.AppFunction.app_delete;
+import static net.myconfig.core.AppFunction.app_view;
+import static net.myconfig.core.AppFunction.version_create;
 import static net.myconfig.core.UserFunction.app_create;
 import static net.myconfig.core.UserFunction.app_list;
 import static org.junit.Assert.assertEquals;
@@ -26,6 +29,7 @@ public class SecurityServiceTest extends AbstractIntegrationTest {
 		UserToken user = service.getUserToken("admin", "admin");
 		assertNotNull(user);
 		assertEquals("admin", user.getName());
+		assertEquals("admin", user.getDisplayName());
 		assertTrue(user.isAdmin());
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
@@ -55,6 +59,7 @@ public class SecurityServiceTest extends AbstractIntegrationTest {
 		UserToken user = service.getUserToken("user1", "test");
 		assertNotNull(user);
 		assertEquals("user1", user.getName());
+		assertEquals("user1", user.getDisplayName());
 		assertFalse(user.isAdmin());
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
@@ -64,7 +69,18 @@ public class SecurityServiceTest extends AbstractIntegrationTest {
 				assertFalse(user.hasUserFunction(fn));
 			}
 		}
-		// TODO Applications functions
+		// Applications functions
+		for (AppFunction fn : AppFunction.values()) {
+			if (fn == app_delete || fn == version_create || fn == app_view) {
+				assertTrue(user.hasAppFunction(1, fn));
+			} else {
+				assertFalse(user.hasAppFunction(1, fn));
+			}
+		}
+		// No other app
+		for (AppFunction fn : AppFunction.values()) {
+			assertFalse(user.hasAppFunction(2, fn));
+		}
 		// TODO Environment functions
 	}
 
@@ -73,6 +89,7 @@ public class SecurityServiceTest extends AbstractIntegrationTest {
 		UserToken user = service.getUserToken("user2", "test");
 		assertNotNull(user);
 		assertEquals("user2", user.getName());
+		assertEquals("user2", user.getDisplayName());
 		assertFalse(user.isAdmin());
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
@@ -82,7 +99,18 @@ public class SecurityServiceTest extends AbstractIntegrationTest {
 				assertFalse(user.hasUserFunction(fn));
 			}
 		}
-		// TODO Applications functions
+		// Applications functions
+		for (AppFunction fn : AppFunction.values()) {
+			if (fn == app_view) {
+				assertTrue(user.hasAppFunction(1, fn));
+			} else {
+				assertFalse(user.hasAppFunction(1, fn));
+			}
+		}
+		// No other app
+		for (AppFunction fn : AppFunction.values()) {
+			assertFalse(user.hasAppFunction(2, fn));
+		}
 		// TODO Environment functions
 	}
 
