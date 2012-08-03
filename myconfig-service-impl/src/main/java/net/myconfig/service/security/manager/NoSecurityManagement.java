@@ -31,6 +31,11 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 	public boolean supports(Class<?> authentication) {
 		return true;
 	}
+	
+	@Override
+	public boolean allowLogin() {
+		return false;
+	}
 
 	@Override
 	public boolean hasUserFunction(Authentication authentication, UserFunction fn) {

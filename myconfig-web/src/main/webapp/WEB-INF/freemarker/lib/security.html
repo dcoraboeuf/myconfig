@@ -3,3 +3,17 @@
 		<#nested>
 	</#if>
 </#macro>
+
+<#macro sec_login>
+	<#if secAllowLogin()>
+		<#if secLogged()>
+			<!-- User name -->
+			${secUserName()?html}
+			<!-- Logout link -->
+			<a href="logout"><@lh key="app.logout" /></a>
+		<#else>
+			<!-- Login link -->
+			<a href="login"><@lh key="app.login" /></a>
+		</#if>
+	</#if>
+</#macro>

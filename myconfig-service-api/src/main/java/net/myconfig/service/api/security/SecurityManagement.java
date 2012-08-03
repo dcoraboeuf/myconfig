@@ -18,4 +18,6 @@ public interface SecurityManagement {
 
 	boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn);
 
+	boolean allowLogin();
+
 }

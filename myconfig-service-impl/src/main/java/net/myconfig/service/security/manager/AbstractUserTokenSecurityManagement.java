@@ -55,6 +55,11 @@ public abstract class AbstractUserTokenSecurityManagement extends AbstractSecuri
 		UserToken token = getUserToken(authentication);
 		return token != null && token.hasAppFunction(application, fn);
 	}
+	
+	@Override
+	public boolean allowLogin() {
+		return true;
+	}
 
 	protected abstract UserToken getUserToken(String username, String password);
 

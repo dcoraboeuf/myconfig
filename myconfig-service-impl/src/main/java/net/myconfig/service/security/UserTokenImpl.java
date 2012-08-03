@@ -30,6 +30,11 @@ public class UserTokenImpl implements UserToken {
 	}
 	
 	@Override
+	public String getDisplayName() {
+		return getName();
+	}
+	
+	@Override
 	public boolean isAdmin() {
 		return user.isAdmin();
 	}

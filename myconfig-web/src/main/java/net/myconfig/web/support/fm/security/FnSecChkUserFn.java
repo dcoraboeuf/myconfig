@@ -8,19 +8,14 @@ import net.myconfig.service.api.security.SecuritySelector;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
-import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModelException;
 
-public class FnSecChkUserFn implements TemplateMethodModel {
-
-	private final SecuritySelector selector;
+public class FnSecChkUserFn extends AbstractFnSec {
 
 	@Autowired
 	public FnSecChkUserFn(SecuritySelector selector) {
-		this.selector = selector;
+		super(selector);
 	}
 
 	@Override
@@ -34,15 +29,6 @@ public class FnSecChkUserFn implements TemplateMethodModel {
 		Authentication authentication = getAuthentication();
 		// Test
 		return selector.getSecurityManagement().hasUserFunction(authentication, fn);
-	}
-
-	protected Authentication getAuthentication() {
-		SecurityContext context = SecurityContextHolder.getContext();
-		if (context == null) {
-			return null;
-		} else {
-			return context.getAuthentication();
-		}
 	}
 
 }
