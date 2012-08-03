@@ -35,6 +35,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 				<entry key="loclink" value-ref="fnLocLink" />
 				<entry key="localeSelected" value-ref="fnLocaleSelected" />
 				<entry key="ellipsis" value-ref="fnEllipsis" />
+				<entry key="chk_user_fn" value-ref="fnSecChkUserFn" />
 			</map>
 		</property>
 	</bean>
@@ -43,6 +44,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<bean id="fnLocLink" class="net.myconfig.web.support.fm.FnLocLink" />
 	<bean id="fnLocaleSelected" class="net.myconfig.web.support.fm.FnLocaleSelected" />
 	<bean id="fnEllipsis" class="net.myconfig.web.support.fm.FnEllipsis" />
+	<bean id="fnSecChkUserFn" class="net.myconfig.web.support.fm.security.FnSecChkUserFn" />
 
 	<!-- Freemarker views -->
 	<!-- FIXME Uses profiles for caching -->

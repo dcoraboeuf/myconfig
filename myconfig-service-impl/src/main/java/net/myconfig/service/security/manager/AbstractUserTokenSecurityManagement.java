@@ -32,11 +32,15 @@ public abstract class AbstractUserTokenSecurityManagement extends AbstractSecuri
 	}
 	
 	protected UserToken getUserToken (Authentication authentication) {
-		Object details = authentication.getDetails();
-		if (details instanceof UserToken) {
-			return (UserToken) details;
-		} else {
+		if (authentication == null) {
 			return null;
+		} else {
+			Object details = authentication.getDetails();
+			if (details instanceof UserToken) {
+				return (UserToken) details;
+			} else {
+				return null;
+			}
 		}
 	}
 

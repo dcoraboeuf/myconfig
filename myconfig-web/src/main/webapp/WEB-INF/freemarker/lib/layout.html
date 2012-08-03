@@ -1,4 +1,5 @@
 <#include "/lib/common.html" >
+<#include "/lib/security.html" >
 
 <#macro layout_title pageId title="">
 	<#if title == "">
@@ -51,7 +52,9 @@
 		<section class="app-title">
 			<span class="app-title"><@lh key="app.title" /></span>
 			<div class="app-meta">
-				<a class="app-settings" href="settings"><@lh key="app.settings" /></a>
+				<@sec_chk_user_fn fn="security_setup">
+					<a class="app-settings" href="settings"><@lh key="app.settings" /></a>
+				</@sec_chk_user_fn>
 				<span class="app-language">
 					<@language value="en" />
 					<@language value="fr" />
