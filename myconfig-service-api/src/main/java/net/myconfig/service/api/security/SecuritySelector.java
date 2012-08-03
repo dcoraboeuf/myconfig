@@ -8,4 +8,6 @@ public interface SecuritySelector extends SecurityOperations {
 
 	List<String> getSecurityModes();
 
+	void switchSecurityMode(String mode);
+
 }

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,23 @@ public class HubSecuritySelector implements SecuritySelector {
 	@Override
 	public String getSecurityManagementId() {
 		return configurationService.getParameter(SECURITY_MODE, SECURITY_MODE_DEFAULT);
+	}
+	
+	// FIXME Security grant
+	@Override
+	public void switchSecurityMode(String mode) {
+		logger.info("[security] Changing security mode to {}", mode);
+		String currentMode = getSecurityManagementId();
+		if (!StringUtils.equals(currentMode, mode)) {
+			SecurityManagement manager = managers.get(mode);
+			if (manager == null) {
+				throw new SecurityManagementNotFoundException(mode);
+			}
+			configurationService.setParameter(SECURITY_MODE, mode);
+			
+		} else {
+			logger.info("[security] {} mode is already selected.", mode);
+		}
 	}
 	
 	@Override

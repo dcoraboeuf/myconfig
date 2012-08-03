@@ -28,5 +28,17 @@ public class ConfigurationServiceImpl extends AbstractDaoService implements Conf
 			return value;
 		}
 	}
+	
+	@Override
+	@Transactional
+	public void setParameter(String name, String value) {
+		String existingValue = getFirstItem(SQL.CONFIGURATION_VALUE, new MapSqlParameterSource(SQLColumns.NAME, name), String.class);
+		MapSqlParameterSource parameters = new MapSqlParameterSource().addValue(SQLColumns.NAME, name).addValue(SQLColumns.VALUE, value);
+		if (existingValue == null) {
+			getNamedParameterJdbcTemplate().update(SQL.CONFIGURATION_ADD, parameters);
+		} else {
+			getNamedParameterJdbcTemplate().update(SQL.CONFIGURATION_UPDATE, parameters);
+		}
+	}
 
 }

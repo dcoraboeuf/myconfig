@@ -175,6 +175,8 @@ public interface SQL {
 			"and e.application = :application";
 
 	String CONFIGURATION_VALUE = "select value from configuration where name = :name";
+	String CONFIGURATION_ADD = "insert into configuration (name, value) values (:name, :value)";
+	String CONFIGURATION_UPDATE = "update configuration set value = :value where name = :name";
 	
 	String FUNCTIONS_USER = "select grantedfunction from usergrants where (user = :user or user = '*') order by grantedfunction";
 	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";

@@ -1,6 +1,7 @@
 package net.myconfig.web.settings;
 
 import java.util.List;
+import java.util.Map;
 
 import net.myconfig.service.api.security.SecuritySelector;
 
@@ -25,6 +26,13 @@ public class SecuritySettingsCollaborator extends AbstractSettingsCollaborator {
 		// List of modes
 		List<String> securityModes = securitySelector.getSecurityModes();
 		model.addAttribute("securityModes", securityModes);
+	}
+
+	@Override
+	public void save(Map<String, String[]> parameters) {
+		// Mode
+		String mode = getParameter (parameters, "mode", true, null);
+		securitySelector.switchSecurityMode (mode);
 	}
 
 }
