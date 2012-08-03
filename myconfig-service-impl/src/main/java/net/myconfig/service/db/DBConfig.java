@@ -1,6 +1,6 @@
 package net.myconfig.service.db;
 
-import java.util.Collections;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -8,7 +8,6 @@ import net.sf.dbinit.DBInit;
 import net.sf.dbinit.DBInitAction;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,8 +20,7 @@ public class DBConfig {
 	private DataSource dataSource;
 	
 	@Autowired(required = false)
-	@Qualifier("dbPostAction")
-	private DBInitAction postAction;
+	private List<DBInitAction> postActions;
 	
 	@Bean
 	public DBInit dbInit() {
@@ -34,8 +32,8 @@ public class DBConfig {
 		db.setVersionColumnTimestamp("UPDATED");
 		db.setResourceInitialization("/META-INF/db/init.sql");
 		db.setResourceUpdate("/META-INF/db/update.{0}.sql");
-		if (postAction != null) {
-			db.setPostActions(Collections.singletonList(postAction));
+		if (postActions != null) {
+			db.setPostActions(postActions);
 		}
 		return db;
 	}
