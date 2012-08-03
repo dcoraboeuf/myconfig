@@ -24,3 +24,11 @@
 		</div>
 	</section>
 </#macro>
+
+<#macro select_option value text selection>
+	<#if value == selection>
+		<option value="${value?html}" selected="selected">${text?html}</option>
+	<#else>
+		<option value="${value?html}">${text?html}</option>
+	</#if>
+</#macro>

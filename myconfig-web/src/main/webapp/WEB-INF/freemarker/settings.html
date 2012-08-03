@@ -1,4 +1,15 @@
 <#include "/lib/layout.html">
 
 <@layout_std pageId="settings" title=loc("settings")>
+	<form action="gui/settings" method="POST">
+		<#list settingsCollaborators as settingsCollaborator>
+			<@panel title = settingsCollaborator.id>
+				<#include "/settings/${settingsCollaborator.id}.html" />
+			</@panel>
+		</#list>
+		<@panel>
+			<a class="form-command" href="."><@lh key = "general.cancel" /></a>
+			<input type="submit" value="<@lh key='general.submit' />" />
+		</@panel>
+	</form>
 </@layout_std>

@@ -1,6 +1,9 @@
 package net.myconfig.service.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -46,6 +49,13 @@ public class HubSecuritySelector implements SecuritySelector {
 	@Override
 	public String getSecurityManagementId() {
 		return configurationService.getParameter(SECURITY_MODE, SECURITY_MODE_DEFAULT);
+	}
+	
+	@Override
+	public List<String> getSecurityModes() {
+		List<String> modes = new ArrayList<String>(managers.keySet());
+		Collections.sort(modes);
+		return modes;
 	}
 
 	protected SecurityManagement getSecurityManagement() {

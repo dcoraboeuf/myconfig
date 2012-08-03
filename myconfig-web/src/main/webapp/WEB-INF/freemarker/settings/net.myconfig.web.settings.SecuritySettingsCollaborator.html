@@ -1,0 +1,8 @@
+<p>
+	<@lh key="net.myconfig.web.settings.SecuritySettingsCollaborator.mode" />
+	<select name="net.myconfig.web.settings.SecuritySettingsCollaborator.mode">
+		<#list securityModes as mode>
+			<@select_option value = mode text = loc("net.myconfig.service.api.security.SecurityManagement." + mode) selection = selectedSecurityMode />
+		</#list>
+	</select>
+</p>
