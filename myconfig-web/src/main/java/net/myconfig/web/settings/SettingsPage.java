@@ -1,4 +1,4 @@
-package net.myconfig.web.gui;
+package net.myconfig.web.settings;
 
 import java.util.Collection;
 
@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
-import net.myconfig.web.settings.SettingsCollaborator;
 import net.myconfig.web.support.ErrorHandler;
 
 @Controller
