@@ -47,20 +47,26 @@
 	</html>
 </#macro>
 
-<#macro layout_basic pageId style=false script=false scripts=[] modules=[] title="">
+<#macro layout_basic pageId style=false script=false scripts=[] modules=[] title="" showSecurity=true showLanguage=true showVersion=true>
 	<@layout_root pageId=pageId style=style script=script scripts=scripts modules=modules title=title>
 		<section class="app-title">
 			<span class="app-title"><@lh key="app.title" /></span>
 			<div class="app-meta">
-				<@sec_login />
-				<@sec_chk_user_fn fn="security_setup">
-					<a class="app-settings" href="gui/settings"><@lh key="app.settings" /></a>
-				</@sec_chk_user_fn>
-				<span class="app-language">
-					<@language value="en" />
-					<@language value="fr" />
-				</span>
-				<span class="app-version"><@lh key="app.version" /></span>
+				<#if showSecurity>
+					<@sec_login />
+					<@sec_chk_user_fn fn="security_setup">
+						<a class="app-settings" href="gui/settings"><@lh key="app.settings" /></a>
+					</@sec_chk_user_fn>
+				</#if>
+				<#if showLanguage>
+					<span class="app-language">
+						<@language value="en" />
+						<@language value="fr" />
+					</span>
+				</#if>
+				<#if showVersion>
+					<span class="app-version"><@lh key="app.version" /></span>
+				</#if>
 			</div>
 		</section>
 		<section class="app-page">

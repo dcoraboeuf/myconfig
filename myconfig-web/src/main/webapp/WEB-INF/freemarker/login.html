@@ -1,0 +1,41 @@
+<#include "/lib/layout.html">
+<@layout_basic pageId="login" showSecurity=false showLanguage=false>
+	<article class="std-page">
+		<h1 class="std-page" id="page-title"><@lh key="login"/></h1>
+		<div class="std-content">
+			<@panel>
+				<section class="form">
+					<form action="j_spring_security_check" method="POST">
+						<table>
+							<tbody>
+								<tr>
+									<td>
+										<@lh key="login.user" />
+									</td>
+									<td>
+										<input id="user" name="j_username" type="text" maxlength="80" size="16" autofocus="autofocus" />
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<@lh key="login.password" />
+									</td>
+									<td>
+										<input id="password" name="j_password" type="password" maxlength="80" size="16" />
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan="2">
+										<input type="submit" value="<@lh key='login.submit' />" />
+									</td>
+								</tr>
+							</tfoot>
+						</table>
+					</form>
+				</section>
+			</@panel>
+		</div>
+	</article>
+</@layout_basic>

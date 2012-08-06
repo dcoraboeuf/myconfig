@@ -9,14 +9,12 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 
 	<http auto-config="true">
+		<form-login login-page="/login"/>
+		<logout logout-url="/logout" logout-success-url="/logged-out"/>
 	</http>
 
 	<!-- FIXME We'd better use the same access decision manager for the web access -->
 	<!-- <http auto-config="true" access-decision-manager-ref="grantAccessDecisionManager"> -->
 	<!-- </http> -->
-
-	<!-- <http auto-config="true" access-decision-manager-ref="cipolAccessDecisionManager"> 
-		<intercept-url pattern="/ui/**" access="ROLE_USER"/> <form-login login-page="/login"/> 
-		<logout logout-url="/logout" logout-success-url="/logged-out"/> </http> -->
 
 </beans:beans>
