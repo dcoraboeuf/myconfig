@@ -50,5 +50,28 @@
 				</#list>
 			</tbody>
 		</table>
+		<@panel title="users.create">
+			<@form>
+				<form action="gui/user/create" onsubmit="return Users.validateCreate();">
+					<table>
+						<tbody>
+							<tr>
+								<td class="form-label">
+									<label for="user-name">
+										<@lh key="model.user.name" />
+									</label>
+								</td>
+								<td class="form-input">
+									<input id="user-name" autofocus="autofocus" name="name" maxlength="80" size="20" />
+								</td>
+								<td>
+									<input type="submit" value="<@lh key='users.create.submit' />" />
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</form>
+			</@form>
+		</@panel>
 	</@panel>
 </@layout_std>

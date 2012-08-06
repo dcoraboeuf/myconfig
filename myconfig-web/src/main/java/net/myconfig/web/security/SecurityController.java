@@ -38,7 +38,7 @@ public class SecurityController {
 	/**
 	 * Management of users
 	 */
-	@RequestMapping("/users")
+	@RequestMapping("/gui/users")
 	public String users(Model model) {
 		// List of user functions
 		List<UserFunction> userFunctions = Arrays.asList(UserFunction.values());
