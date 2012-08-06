@@ -1,0 +1,25 @@
+<#include "/lib/layout.html">
+
+<#macro item_column_boolean field item class="">
+	<td class="item-column item-column-${field} ${class}">
+		<#if item[field]>
+			<@lh key="general.yes" />
+		<#else>
+			<@lh key="general.no" />
+		</#if>
+	</td>
+</#macro>
+
+<@layout_std pageId="users" script=true modules=["items"]>
+	<@panel>
+		<@items_table id="users" actions=true headers=[
+					"model.user.name",
+					"model.user.admin"
+				]>
+			<@items items = users ; item>
+				<@item_column field="name" item=item />
+				<@item_column_boolean field="admin" item=item />				
+			</@items>
+		</@items_table>
+	</@panel>
+</@layout_std>

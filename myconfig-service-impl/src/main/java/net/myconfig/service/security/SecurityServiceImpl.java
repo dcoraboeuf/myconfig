@@ -18,11 +18,13 @@ import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserToken;
 import net.myconfig.service.impl.AbstractDaoService;
 import net.myconfig.service.impl.SQL;
 import net.myconfig.service.impl.SQLColumns;
+import net.myconfig.service.model.UserSummary;
 import net.sf.dbinit.DBInitAction;
 
 import org.slf4j.Logger;
@@ -74,6 +76,17 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 			t.execute(SQL.USER_INIT);
 			logger.info("[security] [init] Default 'admin' user has been created.");
 		}
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserSummary> getUserList() {
+		return getJdbcTemplate().query(SQL.USER_SUMMARIES, new RowMapper<UserSummary>() {
+			@Override
+			public UserSummary mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new UserSummary(rs.getString(SQLColumns.NAME), rs.getBoolean(SQLColumns.ADMIN));
+			}
+		});
 	}
 
 	@Override

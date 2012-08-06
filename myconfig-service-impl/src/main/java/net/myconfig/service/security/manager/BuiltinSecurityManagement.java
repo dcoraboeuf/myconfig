@@ -1,7 +1,7 @@
 package net.myconfig.service.security.manager;
 
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.UserToken;
-import net.myconfig.service.security.SecurityService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -182,6 +182,7 @@ public interface SQL {
 	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";
 	
 	String USER = "select * from users where name = :name and password = :password";
+	String USER_SUMMARIES = "select name, admin from users order by admin, name";
 	String USER_COUNT = "select count(*) from users";
 	String USER_INIT = "insert into users (name, password, admin) values (" +
 			"'admin', " +

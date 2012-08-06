@@ -12,8 +12,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.UserToken;
-import net.myconfig.service.security.SecurityService;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.junit.Test;
