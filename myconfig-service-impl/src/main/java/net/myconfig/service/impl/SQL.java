@@ -194,6 +194,9 @@ public interface SQL {
 			"true)";
 
 	String USER_DELETE = "delete from users where name = :name and admin = false";
+	String USER_FUNCTIONS_DELETE = "delete from usergrants where user = :name";
+	String APP_FUNCTIONS_DELETE = "delete from appgrants where user = :name";
+	String ENV_FUNCTIONS_DELETE = "delete from envgrants where user = :name";
 
 
 }

@@ -130,7 +130,11 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	@Override
 	@Transactional
 	public Ack userDelete(String name) {
-		int count = getNamedParameterJdbcTemplate().update(SQL.USER_DELETE, new MapSqlParameterSource(SQLColumns.NAME, name));
+		MapSqlParameterSource param = new MapSqlParameterSource(SQLColumns.NAME, name);
+		getNamedParameterJdbcTemplate().update(SQL.USER_FUNCTIONS_DELETE, param);
+		getNamedParameterJdbcTemplate().update(SQL.APP_FUNCTIONS_DELETE, param);
+		getNamedParameterJdbcTemplate().update(SQL.ENV_FUNCTIONS_DELETE, param);
+		int count = getNamedParameterJdbcTemplate().update(SQL.USER_DELETE, param);
 		return Ack.one (count);
 	}
 	
