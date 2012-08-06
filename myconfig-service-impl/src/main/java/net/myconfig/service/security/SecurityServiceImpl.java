@@ -77,14 +77,21 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 			logger.info("[security] [init] Default 'admin' user has been created.");
 		}
 	}
-	
+
 	@Override
 	@Transactional(readOnly = true)
 	public List<UserSummary> getUserList() {
-		return getJdbcTemplate().query(SQL.USER_SUMMARIES, new RowMapper<UserSummary>() {
+		List<User> users = getJdbcTemplate().query(SQL.USER_SUMMARIES, new RowMapper<User>() {
 			@Override
-			public UserSummary mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new UserSummary(rs.getString(SQLColumns.NAME), rs.getBoolean(SQLColumns.ADMIN));
+			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new User(rs.getString(SQLColumns.NAME), rs.getBoolean(SQLColumns.ADMIN));
+			}
+		});
+		return Lists.transform(users, new Function<User, UserSummary>() {
+			@Override
+			public UserSummary apply(User user) {
+				List<UserFunction> functions = getUserFunctions(user);
+				return new UserSummary(user.getName(), user.isAdmin(), functions);
 			}
 		});
 	}

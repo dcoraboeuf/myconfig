@@ -12,14 +12,43 @@
 
 <@layout_std pageId="users" script=true modules=["items"]>
 	<@panel>
-		<@items_table id="users" actions=true headers=[
-					"model.user.name",
-					"model.user.admin"
-				]>
-			<@items items = users ; item>
-				<@item_column field="name" item=item />
-				<@item_column_boolean field="admin" item=item />				
-			</@items>
-		</@items_table>
+		<table class="items">
+			<thead>
+				<tr>
+					<th>
+						<@lh key="model.user" />
+					</th>
+					<th>
+						<@lh key="model.user.admin" />
+					</th>
+					<#list userFunctions as userFunction>
+						<th>
+							<p class="function">${userFunction}</p>
+							<p class="info"><@lh key = "UserFunction." + userFunction /></p>
+						</th>
+					</#list>
+				</tr>
+			</thead>
+			<tbody>
+				<#list users as user>
+					<tr class="<@item_row_class index=user_index />"">
+						<td class="item-column item-column-name">
+							${user.name?html}
+						</td>
+						<@item_column_boolean item=user field="admin" />
+						<#list userFunctions as userFunction>
+							<td class="item-column">
+								<#if user.functions?seq_contains(userFunction) || user.admin>
+									<#assign setValue = "yes" />
+								<#else>
+									<#assign setValue = "no" />
+								</#if>
+								I18N ${setValue}
+							</td>
+						</#list>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
 	</@panel>
 </@layout_std>

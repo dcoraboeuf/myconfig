@@ -1,7 +1,9 @@
 package net.myconfig.web.security;
 
+import java.util.Arrays;
 import java.util.List;
 
+import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.model.UserSummary;
 
@@ -38,6 +40,9 @@ public class SecurityController {
 	 */
 	@RequestMapping("/users")
 	public String users(Model model) {
+		// List of user functions
+		List<UserFunction> userFunctions = Arrays.asList(UserFunction.values());
+		model.addAttribute("userFunctions", userFunctions);
 		// List of users
 		List<UserSummary> users = securityService.getUserList();
 		model.addAttribute("users", users);
