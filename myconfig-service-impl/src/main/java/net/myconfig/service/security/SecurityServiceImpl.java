@@ -126,6 +126,13 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 			throw new UserAlreadyDefinedException (name);
 		}
 	}
+	
+	@Override
+	@Transactional
+	public Ack userDelete(String name) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.USER_DELETE, new MapSqlParameterSource(SQLColumns.NAME, name));
+		return Ack.one (count);
+	}
 
 	protected Map<Integer, Set<AppFunction>> getAppFunctions(User user) {
 		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_APP, new MapSqlParameterSource().addValue(SQLColumns.USER, user.getName()));

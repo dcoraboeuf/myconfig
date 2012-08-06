@@ -71,5 +71,13 @@ public class SecurityController extends AbstractGUIPage {
 		// OK
 		return "redirect:/gui/users";
 	}
+	
+	@RequestMapping(value = "/gui/user/delete", method = RequestMethod.POST)
+	public String userDelete (@RequestParam String name) {
+		// Creation
+		ui.userDelete(name); 
+		// OK
+		return "redirect:/gui/users";
+	}
 
 }

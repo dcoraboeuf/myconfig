@@ -13,4 +13,6 @@ public interface SecurityService {
 
 	Ack userCreate(String name);
 
+	Ack userDelete(String name);
+
 }

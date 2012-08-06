@@ -27,6 +27,9 @@
 							<p class="info"><@lh key = "UserFunction." + userFunction /></p>
 						</th>
 					</#list>
+					<th>
+						-
+					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -46,6 +49,11 @@
 								I18N ${setValue}
 							</td>
 						</#list>
+						<td class="item-actions">
+							<#if !user.admin>
+								<@item_delete item=user action="gui/user/delete" formField="name" promptKey="users.delete" />
+							</#if>
+						</td>
 					</tr>
 				</#list>
 			</tbody>

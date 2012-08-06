@@ -54,4 +54,6 @@ public interface UIInterface {
 
 	Ack userCreate(String name);
 
+	Ack userDelete(String name);
+
 }
