@@ -52,7 +52,7 @@
 		</table>
 		<@panel title="users.create">
 			<@form>
-				<form action="gui/user/create" onsubmit="return Users.validateCreate();">
+				<form action="gui/user/create" method="POST" onsubmit="return Users.validateCreate();">
 					<table>
 						<tbody>
 							<tr>
@@ -68,6 +68,13 @@
 									<input type="submit" value="<@lh key='users.create.submit' />" />
 								</td>
 							</tr>
+							<#if .data_model["error"]??>
+								<tr>
+									<td colspan="3" class="error">
+										${.data_model["error"]}
+									</td>
+								</tr>
+							</#if>
 						</tbody>
 					</table>
 				</form>

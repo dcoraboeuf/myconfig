@@ -184,6 +184,7 @@ public interface SQL {
 	String USER = "select * from users where name = :name and password = :password";
 	String USER_SUMMARIES = "select name, admin from users order by admin, name";
 	String USER_COUNT = "select count(*) from users";
+	String USER_CREATE = "insert into users (name, password, admin) values (:name, '', false)";
 	String USER_INIT = "insert into users (name, password, admin) values (" +
 			"'admin', " +
 			"'c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec'," +

@@ -24,12 +24,15 @@ import net.myconfig.service.api.security.UserToken;
 import net.myconfig.service.impl.AbstractDaoService;
 import net.myconfig.service.impl.SQL;
 import net.myconfig.service.impl.SQLColumns;
+import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
+import net.myconfig.service.validation.UserValidation;
 import net.sf.dbinit.DBInitAction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -110,6 +113,18 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 		Map<Integer, Set<AppFunction>> appFunctions = getAppFunctions(user);
 		// OK
 		return new UserTokenImpl(user, userFunctions, appFunctions);
+	}
+	
+	@Override
+	@Transactional
+	public Ack userCreate(String name) {
+		validate(UserValidation.class, NAME, name);
+		try {
+			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource(SQLColumns.NAME, name)); 
+			return Ack.one (count);
+		} catch (DuplicateKeyException ex) {
+			throw new UserAlreadyDefinedException (name);
+		}
 	}
 
 	protected Map<Integer, Set<AppFunction>> getAppFunctions(User user) {

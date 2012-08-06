@@ -52,4 +52,6 @@ public interface UIInterface {
 
 	List<UserSummary> users();
 
+	Ack userCreate(String name);
+
 }

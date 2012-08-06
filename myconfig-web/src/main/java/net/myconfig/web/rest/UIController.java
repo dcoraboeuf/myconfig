@@ -150,5 +150,11 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	public @ResponseBody List<UserSummary> users() {
 		return securityService.getUserList();
 	}
+	
+	@Override
+	@RequestMapping(value = "/user/{name:.*}", method = RequestMethod.PUT)
+	public Ack userCreate(String name) {
+		return securityService.userCreate(name);
+	}
 
 }
