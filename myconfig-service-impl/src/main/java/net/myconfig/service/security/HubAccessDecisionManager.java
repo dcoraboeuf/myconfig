@@ -63,7 +63,7 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 		AppGrant grant = getAnnotation(invocation, AppGrant.class);
 		if (grant != null) {
 			int application = (Integer) invocation.getArguments()[0];
-			return checkAplicationGrant(authentication, application, grant.value());
+			return checkApplicationGrant(authentication, application, grant.value());
 		} else {
 			return false;
 		}
@@ -73,7 +73,7 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 	 * Checks if the current authentication has access to the application
 	 * function for the given application ID.
 	 */
-	protected boolean checkAplicationGrant(Authentication authentication, int application, AppFunction fn) {
+	protected boolean checkApplicationGrant(Authentication authentication, int application, AppFunction fn) {
 		return selector.hasApplicationFunction (authentication, application, fn);
 	}
 
