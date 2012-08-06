@@ -43,10 +43,18 @@
 							<td class="item-column user-function">
 								<#if user.admin>
 									<img src="static/images/user_admin.png" title="<@lh key='users.userfunction.admin' />" />
-								<#elseif user.functions?seq_contains(userFunction)>
-									<img user="${user.name?html}" function="${userFunction}" src="static/images/user_function_yes.png" class="action" onclick="Users.assignUserFunction(this,false);" />
 								<#else>
-									<img user="${user.name?html}" function="${userFunction}" src="static/images/user_function_no.png" class="action" onclick="Users.assignUserFunction(this,true);" />
+									<#if user.functions?seq_contains(userFunction)>
+										<#assign hasfn = "yes" />
+									<#else>
+										<#assign hasfn = "no" />
+									</#if>
+									<div
+										user="${user.name?html}"
+										function="${userFunction}"
+										set="${hasfn}"
+										class="user-function"
+										onclick="Users.assignUserFunction(this);" />
 								</#if>
 							</td>
 						</#list>

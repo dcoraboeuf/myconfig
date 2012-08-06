@@ -179,6 +179,9 @@ public interface SQL {
 	String CONFIGURATION_UPDATE = "update configuration set value = :value where name = :name";
 	
 	String FUNCTIONS_USER = "select grantedfunction from usergrants where (user = :user or user = '*') order by grantedfunction";
+	String FUNCTIONS_USER_ADD = "insert into usergrants (user, grantedfunction) values (:user, :grantedfunction)";
+	String FUNCTIONS_USER_REMOVE = "delete from usergrants where user = :user and grantedfunction = :grantedfunction";
+	
 	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";
 	
 	String USER = "select * from users where name = :name and password = :password";
@@ -191,5 +194,6 @@ public interface SQL {
 			"true)";
 
 	String USER_DELETE = "delete from users where name = :name and admin = false";
+
 
 }

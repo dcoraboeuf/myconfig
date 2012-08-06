@@ -133,6 +133,29 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 		int count = getNamedParameterJdbcTemplate().update(SQL.USER_DELETE, new MapSqlParameterSource(SQLColumns.NAME, name));
 		return Ack.one (count);
 	}
+	
+	@Override
+	@Transactional
+	public Ack userFunctionAdd(String name, UserFunction fn) {
+		userFunctionRemove(name, fn);
+		int count = getNamedParameterJdbcTemplate().update(
+				SQL.FUNCTIONS_USER_ADD,
+				new MapSqlParameterSource()
+					.addValue(SQLColumns.USER, name)
+					.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	public Ack userFunctionRemove(String name, UserFunction fn) {
+		int count = getNamedParameterJdbcTemplate().update(
+				SQL.FUNCTIONS_USER_REMOVE,
+				new MapSqlParameterSource()
+					.addValue(SQLColumns.USER, name)
+					.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
 
 	protected Map<Integer, Set<AppFunction>> getAppFunctions(User user) {
 		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_APP, new MapSqlParameterSource().addValue(SQLColumns.USER, user.getName()));

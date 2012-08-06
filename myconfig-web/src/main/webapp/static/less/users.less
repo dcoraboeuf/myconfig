@@ -1,10 +1,20 @@
-td.user-function {
-	text-align: center;
-}
-
 p.user-function {
 	margin: 0px;
 	&.function {
 		font-weight: bold;
+	}
+}
+
+div.user-function {
+	text-align: center;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	background-repeat: no-repeat;
+	&[set=yes] {
+		background-image: url('../images/user_function_yes.png');
+	}
+	&[set=no] {
+		background-image: url('../images/user_function_no.png');
 	}
 }
