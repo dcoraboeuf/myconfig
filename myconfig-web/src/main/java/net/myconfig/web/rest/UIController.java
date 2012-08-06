@@ -3,12 +3,14 @@ package net.myconfig.web.rest;
 import java.util.List;
 
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
+import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.web.support.ErrorHandler;
@@ -27,9 +29,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/ui")
 public class UIController extends AbstractRESTController implements UIInterface {
 
+	private final SecurityService securityService;
+
 	@Autowired
-	public UIController(Strings strings, ErrorHandler errorHandler, MyConfigService myConfigService) {
+	public UIController(Strings strings, ErrorHandler errorHandler, MyConfigService myConfigService, SecurityService securityService) {
 		super(strings, errorHandler, myConfigService);
+		this.securityService = securityService;
 	}
 
 	@Override
@@ -138,6 +143,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/version/{application}/{version}/remove/{key:.*}", method = RequestMethod.POST)
 	public @ResponseBody Ack keyVersionRemove (@PathVariable int application, @PathVariable String version, @PathVariable String key) {
 		return getMyConfigService().removeKeyVersion (application, version, key);
+	}
+	
+	@Override
+	@RequestMapping(value = "/security/users", method = RequestMethod.GET)
+	public @ResponseBody List<UserSummary> users() {
+		return securityService.getUserList();
 	}
 
 }

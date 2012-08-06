@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
@@ -45,6 +46,7 @@ public class UIControllerTest {
 
 	private UIController ui;
 	private MyConfigService service;
+	private SecurityService security;
 
 	@Before
 	public void before() {
@@ -53,10 +55,11 @@ public class UIControllerTest {
 		Strings strings = new Strings();
 		// Error handler
 		ErrorHandler errorHandler = mock(ErrorHandler.class);
-		// Service
+		// Service(s)
 		service = mock(MyConfigService.class);
+		security = mock(SecurityService.class);
 		// OK
-		ui = new UIController(strings, errorHandler, service);
+		ui = new UIController(strings, errorHandler, service, security);
 	}
 
 	@Test
