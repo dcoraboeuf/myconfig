@@ -1,4 +1,4 @@
-package net.myconfig.service.security;
+package net.myconfig.service.impl;
 
 import static net.myconfig.service.impl.SQLColumns.ADMIN;
 import static net.myconfig.service.impl.SQLColumns.NAME;
@@ -20,12 +20,12 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
+import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.api.security.UserToken;
-import net.myconfig.service.impl.AbstractDaoService;
-import net.myconfig.service.impl.SQL;
-import net.myconfig.service.impl.SQLColumns;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
+import net.myconfig.service.security.UserAlreadyDefinedException;
+import net.myconfig.service.security.UserTokenImpl;
 import net.myconfig.service.validation.UserValidation;
 import net.sf.dbinit.DBInitAction;
 
@@ -83,6 +83,7 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 
 	@Override
 	@Transactional(readOnly = true)
+	@UserGrant(UserFunction.security_users)
 	public List<UserSummary> getUserList() {
 		List<User> users = getJdbcTemplate().query(SQL.USER_SUMMARIES, new RowMapper<User>() {
 			@Override
@@ -117,6 +118,7 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	
 	@Override
 	@Transactional
+	@UserGrant(UserFunction.security_users)
 	public Ack userCreate(String name) {
 		validate(UserValidation.class, NAME, name);
 		try {
@@ -129,6 +131,7 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	
 	@Override
 	@Transactional
+	@UserGrant(UserFunction.security_users)
 	public Ack userDelete(String name) {
 		MapSqlParameterSource param = new MapSqlParameterSource(SQLColumns.NAME, name);
 		getNamedParameterJdbcTemplate().update(SQL.USER_FUNCTIONS_DELETE, param);
@@ -140,6 +143,7 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	
 	@Override
 	@Transactional
+	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionAdd(String name, UserFunction fn) {
 		userFunctionRemove(name, fn);
 		int count = getNamedParameterJdbcTemplate().update(
@@ -152,6 +156,7 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	
 	@Override
 	@Transactional
+	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionRemove(String name, UserFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(
 				SQL.FUNCTIONS_USER_REMOVE,
