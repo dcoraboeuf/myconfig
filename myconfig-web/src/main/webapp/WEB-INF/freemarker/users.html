@@ -10,7 +10,7 @@
 	</td>
 </#macro>
 
-<@layout_std pageId="users" script=true modules=["items"]>
+<@layout_std pageId="users" script=true style=true modules=["items"]>
 	<@panel>
 		<table class="items">
 			<thead>
@@ -22,9 +22,9 @@
 						<@lh key="model.user.admin" />
 					</th>
 					<#list userFunctions as userFunction>
-						<th>
-							<p class="function">${userFunction}</p>
-							<p class="info"><@lh key = "UserFunction." + userFunction /></p>
+						<th class="user-function">
+							<p class="function user-function">${userFunction}</p>
+							<p class="info user-function"><@lh key = "UserFunction." + userFunction /></p>
 						</th>
 					</#list>
 					<th>
@@ -40,13 +40,14 @@
 						</td>
 						<@item_column_boolean item=user field="admin" />
 						<#list userFunctions as userFunction>
-							<td class="item-column">
-								<#if user.functions?seq_contains(userFunction) || user.admin>
-									<#assign setValue = "yes" />
+							<td class="item-column user-function">
+								<#if user.admin>
+									<img src="static/images/user_admin.png" title="<@lh key='users.userfunction.admin' />" />
+								<#elseif user.functions?seq_contains(userFunction)>
+									<img user="${user.name?html}" function="${userFunction}" src="static/images/user_function_yes.png" class="action" onclick="Users.assignUserFunction(this,false);" />
 								<#else>
-									<#assign setValue = "no" />
+									<img user="${user.name?html}" function="${userFunction}" src="static/images/user_function_no.png" class="action" onclick="Users.assignUserFunction(this,true);" />
 								</#if>
-								I18N ${setValue}
 							</td>
 						</#list>
 						<td class="item-actions">
