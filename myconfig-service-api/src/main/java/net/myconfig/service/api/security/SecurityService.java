@@ -20,4 +20,8 @@ public interface SecurityService {
 
 	Ack userFunctionRemove(String name, UserFunction fn);
 
+	String getSecurityMode();
+
+	void setSecurityMode(String mode);
+
 }

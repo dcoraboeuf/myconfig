@@ -18,6 +18,7 @@ import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
@@ -47,6 +48,10 @@ import com.google.common.collect.Lists;
 @Service
 public class SecurityServiceImpl extends AbstractDaoService implements SecurityService, DBInitAction {
 
+	public static final String SECURITY_MODE = "security.mode";
+
+	private static final String SECURITY_MODE_DEFAULT = "none";
+
 	public static void main(String[] args) {
 		for (String password : args) {
 			System.out.format("%s ==> %s%n", password, digest(password));
@@ -58,10 +63,13 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	}
 
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
+	
+	private final ConfigurationService configurationService;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService) {
 		super(dataSource, validator);
+		this.configurationService = configurationService;
 	}
 
 	/**
@@ -79,6 +87,19 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 			t.execute(SQL.USER_INIT);
 			logger.info("[security] [init] Default 'admin' user has been created.");
 		}
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public String getSecurityMode() {
+		return configurationService.getParameter(SECURITY_MODE, SECURITY_MODE_DEFAULT);
+	}
+	
+	@Override
+	@Transactional
+	@UserGrant(UserFunction.security_setup)
+	public void setSecurityMode(String mode) {
+		configurationService.setParameter(SECURITY_MODE, mode);
 	}
 
 	@Override

@@ -6,38 +6,35 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import net.myconfig.core.AppFunction;
+import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.SecurityManagement;
+import net.myconfig.service.api.security.SecuritySelector;
+import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.UserToken;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
 
-import net.myconfig.core.AppFunction;
-import net.myconfig.core.UserFunction;
-import net.myconfig.service.api.ConfigurationService;
-import net.myconfig.service.api.security.SecurityManagement;
-import net.myconfig.service.api.security.SecuritySelector;
-import net.myconfig.service.api.security.UserToken;
-
 @Component
 public class HubSecuritySelector implements SecuritySelector {
 
-	public static final String SECURITY_MODE = "security.mode";
-
-	private static final String SECURITY_MODE_DEFAULT = "none";
-
 	private final Logger logger = LoggerFactory.getLogger(HubSecuritySelector.class);
 
-	private final ConfigurationService configurationService;
+	private final SecurityService securityService;
 	private final Map<String, SecurityManagement> managers;
 
 	@Autowired
-	public HubSecuritySelector(Collection<SecurityManagement> managers, ConfigurationService configurationService) {
-		this.configurationService = configurationService;
+	public HubSecuritySelector(Collection<SecurityManagement> managers, SecurityService securityService) {
+		this.securityService = securityService;
 		this.managers = Maps.uniqueIndex(managers, new Function<SecurityManagement, String>() {
 			@Override
 			public String apply(SecurityManagement manager) {
@@ -46,14 +43,14 @@ public class HubSecuritySelector implements SecuritySelector {
 			}
 		});
 	}
-	
+
 	@Override
 	public String getSecurityManagementId() {
-		return configurationService.getParameter(SECURITY_MODE, SECURITY_MODE_DEFAULT);
+		return securityService.getSecurityMode();
 	}
-	
-	// FIXME Security grant
+
 	@Override
+	@Transactional
 	public void switchSecurityMode(String mode) {
 		logger.info("[security] Changing security mode to {}", mode);
 		String currentMode = getSecurityManagementId();
@@ -62,13 +59,13 @@ public class HubSecuritySelector implements SecuritySelector {
 			if (manager == null) {
 				throw new SecurityManagementNotFoundException(mode);
 			}
-			configurationService.setParameter(SECURITY_MODE, mode);
-			
+			securityService.setSecurityMode(mode);
+
 		} else {
 			logger.info("[security] {} mode is already selected.", mode);
 		}
 	}
-	
+
 	@Override
 	public List<String> getSecurityModes() {
 		List<String> modes = new ArrayList<String>(managers.keySet());
