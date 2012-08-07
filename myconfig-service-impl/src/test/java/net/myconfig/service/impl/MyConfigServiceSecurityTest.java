@@ -1,12 +1,15 @@
 package net.myconfig.service.impl;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationSummary;
 
 import org.apache.commons.lang3.StringUtils;
@@ -64,7 +67,27 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		asUser();
 		myconfig.createApplication("xxx");
 	}
-	
+
+	@Test
+	public void deleteApplication_admin() {
+		asAdmin();
+		Ack ack = myconfig.deleteApplication(10);
+		assertFalse(ack.isSuccess());
+	}
+
+	@Test
+	public void deleteApplication_user_granted() {
+		asUser(10, AppFunction.app_delete);
+		Ack ack = myconfig.deleteApplication(10);
+		assertFalse(ack.isSuccess());
+	}
+
+	@Test(expected = AccessDeniedException.class)
+	public void deleteApplication_user_not_granted() {
+		asUser(11, AppFunction.app_delete);
+		myconfig.deleteApplication(10);
+	}
+
 	//
 	// TODO ApplicationConfiguration getApplicationConfiguration(int id);
 	//
