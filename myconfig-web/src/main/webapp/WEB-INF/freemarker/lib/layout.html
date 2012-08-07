@@ -54,9 +54,7 @@
 			<div class="app-meta">
 				<#if showSecurity>
 					<@sec_login />
-					<@sec_chk_user_fn fn="security_setup">
-						<a class="app-settings" href="gui/settings"><@lh key="app.settings" /></a>
-					</@sec_chk_user_fn>
+					<a class="app-settings" href="gui/settings"><@lh key="app.settings" /></a>
 				</#if>
 				<#if showLanguage>
 					<span class="app-language">
