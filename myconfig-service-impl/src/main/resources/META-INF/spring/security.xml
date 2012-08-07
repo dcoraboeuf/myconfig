@@ -13,12 +13,7 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<beans:beans profile="it,dev,prod">
 
-		<global-method-security access-decision-manager-ref="hubAccessDecisionManager">
-			<protect-pointcut expression="execution(@net.myconfig.service.api.security.UserGrant * net.myconfig.service.impl.*.*(..))" access="user" />
-			<protect-pointcut expression="execution(@net.myconfig.service.api.security.AppGrant * net.myconfig.service.impl.*.*(int,..))" access="application" />
-			<!-- FIXME A parameter must be flagged as defining the environment -->
-			<protect-pointcut expression="execution(@net.myconfig.service.api.security.EnvGrant * net.myconfig.service.impl.*.*(int,..))" access="environment" />
-		</global-method-security>
+		<beans:import resource="classpath:META-INF/secure-aop.xml" />
 
 	</beans:beans>
 

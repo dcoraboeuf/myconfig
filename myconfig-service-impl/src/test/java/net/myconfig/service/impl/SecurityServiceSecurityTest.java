@@ -21,13 +21,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.test.context.ContextConfiguration;
 
 /**
  * Test of the protection on the {@link SecurityService}.
  * 
  * TODO Create an ancestor for tests related to security
  */
-// @ContextConfiguration({ "classpath:META-INF/aop.xml" })
+@ContextConfiguration({ "classpath:META-INF/secure-aop.xml" })
 public class SecurityServiceSecurityTest extends AbstractIntegrationTest {
 
 	@Autowired

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<global-method-security access-decision-manager-ref="hubAccessDecisionManager">
+		<protect-pointcut expression="execution(@net.myconfig.service.api.security.UserGrant * net.myconfig.service.impl.*.*(..))" access="user" />
+		<protect-pointcut expression="execution(@net.myconfig.service.api.security.AppGrant * net.myconfig.service.impl.*.*(int,..))" access="application" />
+		<!-- FIXME A parameter must be flagged as defining the environment -->
+		<protect-pointcut expression="execution(@net.myconfig.service.api.security.EnvGrant * net.myconfig.service.impl.*.*(int,..))" access="environment" />
+	</global-method-security>
+
+</beans:beans>
