@@ -13,6 +13,7 @@ import net.myconfig.service.api.security.UserToken;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 
 public class HubAuthProviderTest {
@@ -23,7 +24,9 @@ public class HubAuthProviderTest {
 	@Before
 	public void before() {
 		selector = mock(SecuritySelector.class);
-		provider = new HubAuthProvider(selector);
+		ApplicationContext applicationContext = mock(ApplicationContext.class);
+		when(applicationContext.getBean(SecuritySelector.class)).thenReturn(selector);
+		provider = new HubAuthProvider(applicationContext);
 	}
 
 	@Test

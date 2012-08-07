@@ -4,7 +4,6 @@ import static net.myconfig.service.impl.SQLColumns.ADMIN;
 import static net.myconfig.service.impl.SQLColumns.NAME;
 import static net.myconfig.service.impl.SQLColumns.PASSWORD;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -28,16 +27,11 @@ import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.UserAlreadyDefinedException;
 import net.myconfig.service.security.UserTokenImpl;
 import net.myconfig.service.validation.UserValidation;
-import net.sf.dbinit.DBInitAction;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.security.core.token.Sha512DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +40,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 @Service
-public class SecurityServiceImpl extends AbstractDaoService implements SecurityService, DBInitAction {
+public class SecurityServiceImpl extends AbstractDaoService implements SecurityService {
 
 	public static final String SECURITY_MODE = "security.mode";
 
@@ -61,8 +55,6 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	private static String digest(String input) {
 		return Sha512DigestUtils.shaHex(input);
 	}
-
-	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 	
 	private final ConfigurationService configurationService;
 
@@ -70,23 +62,6 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
-	}
-
-	/**
-	 * Detects if a default 'admin' user must be created.
-	 */
-	public void run(Connection connection) throws SQLException {
-		JdbcTemplate t = new JdbcTemplate(new SingleConnectionDataSource(connection, true));
-		logger.info("[security] [init] Initializing the security service...");
-		int userCount = t.queryForInt(SQL.USER_COUNT);
-		logger.info("[security] [init] Number of users: {}", userCount);
-		if (userCount > 0) {
-			logger.info("[security] [init] Some users exist - no need to create any user");
-		} else {
-			logger.info("[security] [init] No user exists - needs to create default 'admin' user");
-			t.execute(SQL.USER_INIT);
-			logger.info("[security] [init] Default 'admin' user has been created.");
-		}
 	}
 	
 	@Override
