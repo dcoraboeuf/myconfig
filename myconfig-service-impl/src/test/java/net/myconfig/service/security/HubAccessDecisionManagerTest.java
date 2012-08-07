@@ -19,6 +19,7 @@ import net.myconfig.service.api.security.UserGrant;
 import org.aopalliance.intercept.MethodInvocation;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
@@ -31,7 +32,9 @@ public class HubAccessDecisionManagerTest {
 	@Before
 	public void before() {
 		selector = mock(SecuritySelector.class);
-		manager = new HubAccessDecisionManager(selector);
+		ApplicationContext applicationContext = mock(ApplicationContext.class);
+		when(applicationContext.getBean(SecuritySelector.class)).thenReturn(selector);
+		manager = new HubAccessDecisionManager(applicationContext);
 	}
 
 	@Test

@@ -7,13 +7,13 @@ import java.util.Collection;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AppGrant;
-import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
 
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -22,15 +22,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HubAccessDecisionManager implements AccessDecisionManager {
+public class HubAccessDecisionManager extends AbstractHubSelectorDependency implements AccessDecisionManager {
 
 	private final Logger logger = LoggerFactory.getLogger(HubAccessDecisionManager.class);
 
-	private final SecuritySelector selector;
-
 	@Autowired
-	public HubAccessDecisionManager(SecuritySelector selector) {
-		this.selector = selector;
+	public HubAccessDecisionManager(ApplicationContext applicationContext) {
+		super(applicationContext);
 	}
 
 	@Override
@@ -74,14 +72,14 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 	 * function for the given application ID.
 	 */
 	protected boolean checkApplicationGrant(Authentication authentication, int application, AppFunction fn) {
-		return selector.hasApplicationFunction (authentication, application, fn);
+		return getSecuritySelector().hasApplicationFunction(authentication, application, fn);
 	}
 
 	/**
 	 * Checks if the current authentication has access to the user function.
 	 */
 	protected boolean checkUserGrant(Authentication authentication, UserFunction fn) {
-		return selector.hasUserFunction (authentication, fn);
+		return getSecuritySelector().hasUserFunction(authentication, fn);
 	}
 
 	protected <A extends Annotation> A getAnnotation(MethodInvocation invocation, Class<A> type) {
