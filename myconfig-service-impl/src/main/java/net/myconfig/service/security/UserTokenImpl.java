@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserToken;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 public class UserTokenImpl implements UserToken {
 
@@ -41,7 +41,7 @@ public class UserTokenImpl implements UserToken {
 
 	@Override
 	public boolean hasUserFunction(UserFunction fn) {
-		if (user.isAdmin()) {
+		if (isAdmin()) {
 			return true;
 		} else {
 			return userFunctions.contains(fn);
@@ -50,7 +50,7 @@ public class UserTokenImpl implements UserToken {
 
 	@Override
 	public boolean hasAppFunction(int application, AppFunction fn) {
-		if (user.isAdmin()) {
+		if (isAdmin()) {
 			return true;
 		} else {
 			Set<AppFunction> set = appFunctions.get(application);
