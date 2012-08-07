@@ -10,6 +10,7 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.model.Ack;
+import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 
 import org.apache.commons.lang3.StringUtils;
@@ -88,9 +89,26 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		myconfig.deleteApplication(10);
 	}
 
-	//
-	// TODO ApplicationConfiguration getApplicationConfiguration(int id);
-	//
+	@Test
+	public void getApplicationConfiguration_admin() {
+		asAdmin();
+		ApplicationConfiguration conf = myconfig.getApplicationConfiguration(1);
+		assertNotNull(conf);
+	}
+
+	@Test
+	public void getApplicationConfiguration_user_granted() {
+		asUser(1, AppFunction.app_view);
+		ApplicationConfiguration conf = myconfig.getApplicationConfiguration(1);
+		assertNotNull(conf);
+	}
+
+	@Test(expected = AccessDeniedException.class)
+	public void getApplicationConfiguration_user_not_granted() {
+		asUser(UserFunction.app_list);
+		myconfig.getApplicationConfiguration(1);
+	}
+	
 	// TODO Ack createVersion(int id, String name);
 	//
 	// TODO Ack deleteVersion(int id, String name);
