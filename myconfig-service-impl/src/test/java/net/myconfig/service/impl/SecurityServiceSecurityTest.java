@@ -12,7 +12,6 @@ import net.myconfig.service.security.UserAuthenticationToken;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,20 +41,17 @@ public class SecurityServiceSecurityTest extends AbstractIntegrationTest {
 	}
 
 	@Test
-	@Ignore
 	public void getUserToken_nocontrol() {
 		UserToken token = service.getUserToken("user1", "test");
 		assertNotNull(token);
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	@Ignore
 	public void getUserList_no_auth() {
 		service.getUserList();
 	}
 
 	@Test
-	@Ignore
 	public void getUserList_admin() {
 		asAdmin();
 		List<UserSummary> users = service.getUserList();
