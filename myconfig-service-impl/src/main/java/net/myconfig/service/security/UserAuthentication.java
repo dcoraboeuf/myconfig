@@ -3,7 +3,7 @@ package net.myconfig.service.security;
 import java.util.Collection;
 
 import net.myconfig.core.MyConfigRoles;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,10 +11,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 
 public class UserAuthentication implements Authentication {
 
-	private final UserToken token;
+	private final UserProfile token;
 	private final Authentication authentication;
 
-	public UserAuthentication(UserToken token, Authentication authentication) {
+	public UserAuthentication(UserProfile token, Authentication authentication) {
 		this.token = token;
 		this.authentication = authentication;
 	}

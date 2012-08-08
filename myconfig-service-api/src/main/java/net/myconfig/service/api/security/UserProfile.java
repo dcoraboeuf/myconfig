@@ -4,7 +4,7 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 
-public interface UserToken {
+public interface UserProfile {
 
 	String getName();
 

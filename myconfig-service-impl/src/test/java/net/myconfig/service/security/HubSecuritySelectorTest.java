@@ -12,7 +12,7 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityManagement;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -73,10 +73,10 @@ public class HubSecuritySelectorTest {
 		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager2");
 
 		Authentication authentication = mock(Authentication.class);
-		UserToken expectedUserToken = mock(UserToken.class);
+		UserProfile expectedUserToken = mock(UserProfile.class);
 		when(manager2.authenticate(authentication)).thenReturn(expectedUserToken);
 
-		UserToken actualUserToken = selector.authenticate(authentication);
+		UserProfile actualUserToken = selector.authenticate(authentication);
 
 		assertSame(expectedUserToken, actualUserToken);
 	}

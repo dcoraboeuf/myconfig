@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import net.myconfig.core.MyConfigRoles;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
@@ -24,7 +24,7 @@ public class UserAuthenticationTokenTest {
 
 	@Test
 	public void name() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		when(token.getName()).thenReturn("x");
 		Authentication authentication = mock(Authentication.class);
 		
@@ -36,7 +36,7 @@ public class UserAuthenticationTokenTest {
 
 	@Test
 	public void credentials() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getCredentials()).thenReturn("xxx");
 		
@@ -48,7 +48,7 @@ public class UserAuthenticationTokenTest {
 
 	@Test
 	public void principal() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getPrincipal()).thenReturn("ppp");
 		
@@ -60,7 +60,7 @@ public class UserAuthenticationTokenTest {
 
 	@Test
 	public void details() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		Authentication authentication = mock(Authentication.class);
 		
 		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
@@ -71,7 +71,7 @@ public class UserAuthenticationTokenTest {
 
 	@Test
 	public void authenticated() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		Authentication authentication = mock(Authentication.class);
 		
 		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
@@ -82,7 +82,7 @@ public class UserAuthenticationTokenTest {
 
 	@Test
 	public void authenticated_set() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		Authentication authentication = mock(Authentication.class);
 		
 		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
@@ -94,25 +94,25 @@ public class UserAuthenticationTokenTest {
 
 	@Test
 	public void role_admin() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		when(token.isAdmin()).thenReturn(true);
 		testRole(token, MyConfigRoles.ADMIN);
 	}
 
 	@Test
 	public void role_user() {
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		when(token.isAdmin()).thenReturn(false);
 		testRole(token, MyConfigRoles.USER);
 	}
 
 	@Test
 	public void role_anonymous() {
-		UserToken token = null;
+		UserProfile token = null;
 		testRole(token, MyConfigRoles.ANONYMOUS);
 	}
 
-	protected void testRole(UserToken token, String expected) {
+	protected void testRole(UserProfile token, String expected) {
 		Authentication authentication = mock(Authentication.class);
 		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		Collection<? extends GrantedAuthority> authorities = userAuthentication.getAuthorities();

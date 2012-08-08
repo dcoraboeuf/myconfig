@@ -8,18 +8,18 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.User;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-public class UserTokenImpl implements UserToken {
+public class UserProfileImpl implements UserProfile {
 
 	private final User user;
 	private final Set<UserFunction> userFunctions;
 	private final Map<Integer, Set<AppFunction>> appFunctions;
 
-	public UserTokenImpl(User user, Collection<UserFunction> userFunctions, Map<Integer, Set<AppFunction>> appFunctions) {
+	public UserProfileImpl(User user, Collection<UserFunction> userFunctions, Map<Integer, Set<AppFunction>> appFunctions) {
 		this.user = user;
 		this.userFunctions = ImmutableSet.copyOf(userFunctions);
 		this.appFunctions = ImmutableMap.copyOf(appFunctions);
@@ -30,6 +30,7 @@ public class UserTokenImpl implements UserToken {
 		return user.getName();
 	}
 	
+	// TODO Uses a display name
 	@Override
 	public String getDisplayName() {
 		return getName();

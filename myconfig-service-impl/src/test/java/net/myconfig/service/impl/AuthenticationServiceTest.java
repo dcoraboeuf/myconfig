@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 
 	@Test
 	public void admin() {
-		UserToken user = service.getUserToken("admin", "admin");
+		UserProfile user = service.getUserToken("admin", "admin");
 		assertNotNull(user);
 		assertEquals("admin", user.getName());
 		assertEquals("admin", user.getDisplayName());
@@ -44,19 +44,19 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 
 	@Test
 	public void not_found_password() {
-		UserToken user = service.getUserToken("user1", "xxx");
+		UserProfile user = service.getUserToken("user1", "xxx");
 		assertNull(user);
 	}
 
 	@Test
 	public void not_found_user() {
-		UserToken user = service.getUserToken("user2", "xxx");
+		UserProfile user = service.getUserToken("user2", "xxx");
 		assertNull(user);
 	}
 
 	@Test
 	public void user1() {
-		UserToken user = service.getUserToken("user1", "test");
+		UserProfile user = service.getUserToken("user1", "test");
 		assertNotNull(user);
 		assertEquals("user1", user.getName());
 		assertEquals("user1", user.getDisplayName());
@@ -86,7 +86,7 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 
 	@Test
 	public void user2() {
-		UserToken user = service.getUserToken("user2", "test");
+		UserProfile user = service.getUserToken("user2", "test");
 		assertNotNull(user);
 		assertEquals("user2", user.getName());
 		assertEquals("user2", user.getDisplayName());

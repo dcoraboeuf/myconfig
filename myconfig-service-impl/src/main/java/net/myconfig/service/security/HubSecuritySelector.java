@@ -12,7 +12,7 @@ import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityManagement;
 import net.myconfig.service.api.security.SecuritySelector;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ public class HubSecuritySelector implements SecuritySelector {
 	}
 
 	@Override
-	public UserToken authenticate(Authentication authentication) {
+	public UserProfile authenticate(Authentication authentication) {
 		return getSecurityManagement().authenticate(authentication);
 	}
 

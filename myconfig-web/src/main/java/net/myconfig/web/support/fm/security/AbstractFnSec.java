@@ -1,7 +1,7 @@
 package net.myconfig.web.support.fm.security;
 
 import net.myconfig.service.api.security.SecuritySelector;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -26,10 +26,10 @@ public abstract class AbstractFnSec implements TemplateMethodModel {
 		}
 	}
 	
-	protected UserToken getUserToken() {
+	protected UserProfile getUserToken() {
 		Authentication authentication = getAuthentication();
-		if (authentication != null && authentication.isAuthenticated() && authentication.getDetails() instanceof UserToken) {
-			return (UserToken) authentication.getDetails();
+		if (authentication != null && authentication.isAuthenticated() && authentication.getDetails() instanceof UserProfile) {
+			return (UserProfile) authentication.getDetails();
 		} else {
 			return null;
 		}

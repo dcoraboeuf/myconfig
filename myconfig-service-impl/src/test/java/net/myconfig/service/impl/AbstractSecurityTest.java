@@ -9,7 +9,7 @@ import net.myconfig.core.MyConfigRoles;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
-import net.myconfig.service.api.security.UserToken;
+import net.myconfig.service.api.security.UserProfile;
 import net.myconfig.service.security.UserAuthentication;
 import net.myconfig.test.AbstractIntegrationTest;
 
@@ -49,7 +49,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	protected void asUser(final UserFunction... functions) {
 		SecurityContextImpl context = new SecurityContextImpl();
 
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		when(token.hasUserFunction(any(UserFunction.class))).thenAnswer(new Answer<Boolean>() {
 			@Override
 			public Boolean answer(InvocationOnMock invocation) throws Throwable {
@@ -66,7 +66,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	protected void asUser(int application, AppFunction fn) {
 		SecurityContextImpl context = new SecurityContextImpl();
 
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		when(token.hasAppFunction(application, fn)).thenReturn(true);
 
 		Authentication authentication = Mockito.mock(Authentication.class);
@@ -77,7 +77,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	protected void asAdmin() {
 		SecurityContextImpl context = new SecurityContextImpl();
 		
-		UserToken token = mock(UserToken.class);
+		UserProfile token = mock(UserProfile.class);
 		when(token.isAdmin()).thenReturn(true);
 		when(token.hasUserFunction(any(UserFunction.class))).thenReturn(true);
 		when(token.hasAppFunction(anyInt(), any(AppFunction.class))).thenReturn(true);

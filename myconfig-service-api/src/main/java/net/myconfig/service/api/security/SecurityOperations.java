@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 
 public interface SecurityOperations {
 
-	UserToken authenticate(Authentication authentication);
+	UserProfile authenticate(Authentication authentication);
 
 	boolean supports(Class<?> authentication);
 

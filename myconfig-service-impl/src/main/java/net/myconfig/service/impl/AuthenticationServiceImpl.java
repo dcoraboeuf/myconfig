@@ -11,8 +11,8 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.User;
-import net.myconfig.service.api.security.UserToken;
-import net.myconfig.service.security.UserTokenImpl;
+import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.security.UserProfileImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class AuthenticationServiceImpl extends AbstractSecurityService implement
 
 	@Override
 	@Transactional(readOnly = true)
-	public UserToken getUserToken(String username, String password) {
+	public UserProfile getUserToken(String username, String password) {
 		// Gets the user
 		User user = getUser(username, password);
 		if (user == null) {
@@ -45,7 +45,7 @@ public class AuthenticationServiceImpl extends AbstractSecurityService implement
 		// Application functions
 		Map<Integer, Set<AppFunction>> appFunctions = getAppFunctions(user);
 		// OK
-		return new UserTokenImpl(user, userFunctions, appFunctions);
+		return new UserProfileImpl(user, userFunctions, appFunctions);
 	}
 
 }
