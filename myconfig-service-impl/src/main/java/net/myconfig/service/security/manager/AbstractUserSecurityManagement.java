@@ -8,9 +8,9 @@ import net.myconfig.service.api.security.UserToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-public abstract class AbstractUserTokenSecurityManagement extends AbstractSecurityManagement {
+public abstract class AbstractUserSecurityManagement extends AbstractSecurityManagement {
 
-	public AbstractUserTokenSecurityManagement(String id) {
+	public AbstractUserSecurityManagement(String id) {
 		super(id);
 	}
 
