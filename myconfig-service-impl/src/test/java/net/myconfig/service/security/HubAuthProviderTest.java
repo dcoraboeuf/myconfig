@@ -48,8 +48,8 @@ public class HubAuthProviderTest {
 
 		Authentication o = provider.authenticate(authentication);
 		assertNotNull(o);
-		assertTrue(o instanceof UserAuthenticationToken);
-		UserAuthenticationToken a = (UserAuthenticationToken) o;
+		assertTrue(o instanceof UserAuthentication);
+		UserAuthentication a = (UserAuthentication) o;
 		assertSame(userToken, a.getDetails());
 		verify(selector, times(1)).authenticate(authentication);
 	}

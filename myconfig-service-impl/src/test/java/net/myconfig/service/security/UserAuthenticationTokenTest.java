@@ -28,7 +28,7 @@ public class UserAuthenticationTokenTest {
 		when(token.getName()).thenReturn("x");
 		Authentication authentication = mock(Authentication.class);
 		
-		UserAuthenticationToken userAuthentication = new UserAuthenticationToken(token, authentication);
+		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		
 		assertEquals("x", userAuthentication.getName());
 		verify(token, times(1)).getName();
@@ -40,7 +40,7 @@ public class UserAuthenticationTokenTest {
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getCredentials()).thenReturn("xxx");
 		
-		UserAuthenticationToken userAuthentication = new UserAuthenticationToken(token, authentication);
+		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		
 		assertEquals("xxx", userAuthentication.getCredentials());
 		verify(authentication, times(1)).getCredentials();
@@ -52,7 +52,7 @@ public class UserAuthenticationTokenTest {
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getPrincipal()).thenReturn("ppp");
 		
-		UserAuthenticationToken userAuthentication = new UserAuthenticationToken(token, authentication);
+		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		
 		assertEquals("ppp", userAuthentication.getPrincipal());
 		verify(authentication, times(1)).getPrincipal();
@@ -63,7 +63,7 @@ public class UserAuthenticationTokenTest {
 		UserToken token = mock(UserToken.class);
 		Authentication authentication = mock(Authentication.class);
 		
-		UserAuthenticationToken userAuthentication = new UserAuthenticationToken(token, authentication);
+		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		
 		assertSame(token, userAuthentication.getDetails());
 		verify(authentication, never()).getDetails();
@@ -74,7 +74,7 @@ public class UserAuthenticationTokenTest {
 		UserToken token = mock(UserToken.class);
 		Authentication authentication = mock(Authentication.class);
 		
-		UserAuthenticationToken userAuthentication = new UserAuthenticationToken(token, authentication);
+		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		
 		assertTrue(userAuthentication.isAuthenticated());
 		verify(authentication, never()).isAuthenticated();
@@ -85,7 +85,7 @@ public class UserAuthenticationTokenTest {
 		UserToken token = mock(UserToken.class);
 		Authentication authentication = mock(Authentication.class);
 		
-		UserAuthenticationToken userAuthentication = new UserAuthenticationToken(token, authentication);
+		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		userAuthentication.setAuthenticated(true);
 		userAuthentication.setAuthenticated(false);
 		verify(authentication, never()).setAuthenticated(false);
@@ -114,7 +114,7 @@ public class UserAuthenticationTokenTest {
 
 	protected void testRole(UserToken token, String expected) {
 		Authentication authentication = mock(Authentication.class);
-		UserAuthenticationToken userAuthentication = new UserAuthenticationToken(token, authentication);
+		UserAuthentication userAuthentication = new UserAuthentication(token, authentication);
 		Collection<? extends GrantedAuthority> authorities = userAuthentication.getAuthorities();
 		Set<String> roles = AuthorityUtils.authorityListToSet(authorities);
 		assertEquals(1, roles.size());

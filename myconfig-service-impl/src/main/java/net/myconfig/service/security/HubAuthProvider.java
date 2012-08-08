@@ -23,7 +23,7 @@ public class HubAuthProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		UserToken userToken = securitySelector.authenticate(authentication);
 		if (userToken != null) {
-			return new UserAuthenticationToken(userToken, authentication);
+			return new UserAuthentication(userToken, authentication);
 		} else {
 			return null;
 		}

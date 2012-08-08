@@ -10,7 +10,7 @@ import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.UserToken;
-import net.myconfig.service.security.UserAuthenticationToken;
+import net.myconfig.service.security.UserAuthentication;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -59,7 +59,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		});
 
 		Authentication authentication = Mockito.mock(Authentication.class);
-		context.setAuthentication(new UserAuthenticationToken(token, authentication));
+		context.setAuthentication(new UserAuthentication(token, authentication));
 		SecurityContextHolder.setContext(context);
 	}
 
@@ -70,7 +70,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		when(token.hasAppFunction(application, fn)).thenReturn(true);
 
 		Authentication authentication = Mockito.mock(Authentication.class);
-		context.setAuthentication(new UserAuthenticationToken(token, authentication));
+		context.setAuthentication(new UserAuthentication(token, authentication));
 		SecurityContextHolder.setContext(context);
 	}
 
@@ -83,7 +83,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		when(token.hasAppFunction(anyInt(), any(AppFunction.class))).thenReturn(true);
 		
 		Authentication authentication = Mockito.mock(Authentication.class);
-		context.setAuthentication(new UserAuthenticationToken(token, authentication));
+		context.setAuthentication(new UserAuthentication(token, authentication));
 		SecurityContextHolder.setContext(context);
 	}
 }
