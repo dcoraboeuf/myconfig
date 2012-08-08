@@ -4,18 +4,14 @@ import static net.myconfig.service.impl.SQLColumns.NAME;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
-import net.myconfig.service.api.security.SecurityManagement;
+import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
@@ -36,8 +32,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 @Service
@@ -46,24 +40,13 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
 	private final ConfigurationService configurationService;
-	private final Set<String> securityModes;
+	private final SecuritySelector securitySelector;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, Collection<SecurityManagement> securityManagements) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
-		this.securityModes = ImmutableSet.copyOf(Iterables.transform(securityManagements, new Function<SecurityManagement, String>() {
-			@Override
-			public String apply(SecurityManagement input) {
-				return input.getId();
-			}
-		}));
-	}
-	
-	@Override
-	@Transactional(readOnly = true)
-	public String getSecurityMode() {
-		return configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT);
+		this.securitySelector = securitySelector;
 	}
 
 	@Override
@@ -71,9 +54,9 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@UserGrant(UserFunction.security_setup)
 	public void setSecurityMode(String mode) {
 		logger.info("[security] Changing security mode to {}", mode);
-		// FIXME Security mode - duplicate code
-		String currentMode = getSecurityMode();
+		String currentMode = securitySelector.getSecurityMode();
 		if (!StringUtils.equals(currentMode, mode)) {
+			List<String> securityModes = securitySelector.getSecurityModes();
 			if (!securityModes.contains(mode)) {
 				throw new SecurityManagementNotFoundException(mode);
 			}
@@ -82,13 +65,6 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		} else {
 			logger.info("[security] {} mode is already selected.", mode);
 		}
-	}
-	
-	@Override
-	public List<String> getSecurityModes() {
-		ArrayList<String> modes = new ArrayList<String>(securityModes);
-		Collections.sort(modes);
-		return modes;
 	}
 
 	@Override

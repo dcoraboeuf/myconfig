@@ -20,8 +20,4 @@ public interface SecurityService {
 
 	void setSecurityMode(String mode);
 
-	String getSecurityMode();
-
-	List<String> getSecurityModes();
-
 }

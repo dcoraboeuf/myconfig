@@ -40,7 +40,7 @@ public class HubSecuritySelectorTest {
 	@Test
 	public void getSecurityManagementId() {
 		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("xxx");
-		assertEquals("xxx", selector.getSecurityManagementId());
+		assertEquals("xxx", selector.getSecurityMode());
 	}
 
 	@Test

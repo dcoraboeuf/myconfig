@@ -3,6 +3,7 @@ package net.myconfig.web.settings;
 import java.util.List;
 import java.util.Map;
 
+import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +14,20 @@ import org.springframework.ui.Model;
 public class SecuritySettingsCollaborator extends AbstractSettingsCollaborator {
 
 	private final SecurityService securityService;
+	private final SecuritySelector securitySelector;
 	
 	@Autowired
-	public SecuritySettingsCollaborator(SecurityService securityService) {
+	public SecuritySettingsCollaborator(SecurityService securityService, SecuritySelector securitySelector) {
 		this.securityService = securityService;
+		this.securitySelector = securitySelector;
 	}
 
 	@Override
 	public void initModel(Model model) {
 		// Selected security mode
-		model.addAttribute("selectedSecurityMode", securityService.getSecurityMode());
+		model.addAttribute("selectedSecurityMode", securitySelector.getSecurityMode());
 		// List of modes
-		List<String> securityModes = securityService.getSecurityModes();
+		List<String> securityModes = securitySelector.getSecurityModes();
 		model.addAttribute("securityModes", securityModes);
 	}
 

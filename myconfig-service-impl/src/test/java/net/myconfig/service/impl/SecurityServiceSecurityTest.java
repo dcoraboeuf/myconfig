@@ -127,21 +127,21 @@ public class SecurityServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test
 	public void getSecurityMode_no_control() {
-		assertEquals("builtin", securityService.getSecurityMode());
+		assertEquals("builtin", securitySelector.getSecurityMode());
 	}
 
 	@Test
 	public void setSecurityMode_admin() {
 		asAdmin();
 		securityService.setSecurityMode("none");
-		assertEquals("none", securityService.getSecurityMode());
+		assertEquals("none", securitySelector.getSecurityMode());
 	}
 
 	@Test
 	public void setSecurityMode_user_granted() {
 		asUser(UserFunction.security_setup);
 		securityService.setSecurityMode("none");
-		assertEquals("none", securityService.getSecurityMode());
+		assertEquals("none", securitySelector.getSecurityMode());
 	}
 
 	@Test(expected = AccessDeniedException.class)

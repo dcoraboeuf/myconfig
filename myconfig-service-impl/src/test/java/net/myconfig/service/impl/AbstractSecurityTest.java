@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.MyConfigRoles;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.UserToken;
 import net.myconfig.service.security.UserAuthenticationToken;
@@ -30,6 +31,9 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	
 	@Autowired
 	protected SecurityService securityService;
+	
+	@Autowired
+	protected SecuritySelector securitySelector;
 
 	@Before
 	public void cleanContext() {

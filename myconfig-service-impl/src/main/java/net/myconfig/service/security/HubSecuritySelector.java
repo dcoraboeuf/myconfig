@@ -43,8 +43,7 @@ public class HubSecuritySelector implements SecuritySelector {
 	}
 
 	@Override
-	public String getSecurityManagementId() {
-		// FIXME Security mode - duplicate code
+	public String getSecurityMode() {
 		return configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT);
 	}
 
@@ -56,7 +55,7 @@ public class HubSecuritySelector implements SecuritySelector {
 	}
 
 	protected SecurityManagement getSecurityManagement() {
-		String mode = getSecurityManagementId();
+		String mode = getSecurityMode();
 		SecurityManagement management = managers.get(mode);
 		if (management != null) {
 			return management;
