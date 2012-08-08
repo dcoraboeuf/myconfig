@@ -9,7 +9,6 @@ import java.util.List;
 
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecurityService;
-import net.myconfig.service.api.security.UserToken;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
 
@@ -20,12 +19,6 @@ import org.springframework.security.access.AccessDeniedException;
  * Test of the protection on the {@link SecurityService}.
  */
 public class SecurityServiceSecurityTest extends AbstractSecurityTest {
-
-	@Test
-	public void getUserToken_nocontrol() {
-		UserToken token = securityService.getUserToken("user1", "test");
-		assertNotNull(token);
-	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void getUserList_no_auth() {
@@ -140,15 +133,15 @@ public class SecurityServiceSecurityTest extends AbstractSecurityTest {
 	@Test
 	public void setSecurityMode_admin() {
 		asAdmin();
-		securityService.setSecurityMode("xxx");
-		assertEquals("xxx", securityService.getSecurityMode());
+		securityService.setSecurityMode("none");
+		assertEquals("none", securityService.getSecurityMode());
 	}
 
 	@Test
 	public void setSecurityMode_user_granted() {
 		asUser(UserFunction.security_setup);
-		securityService.setSecurityMode("xxx");
-		assertEquals("xxx", securityService.getSecurityMode());
+		securityService.setSecurityMode("none");
+		assertEquals("none", securityService.getSecurityMode());
 	}
 
 	@Test(expected = AccessDeniedException.class)

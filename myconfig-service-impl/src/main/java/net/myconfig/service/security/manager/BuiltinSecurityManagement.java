@@ -1,6 +1,6 @@
 package net.myconfig.service.security.manager;
 
-import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.UserToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,16 +9,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class BuiltinSecurityManagement extends AbstractUserTokenSecurityManagement {
 
-	private final SecurityService securityService;
+	private final AuthenticationService authenticationService;
 
 	@Autowired
-	public BuiltinSecurityManagement(SecurityService securityService) {
+	public BuiltinSecurityManagement(AuthenticationService authenticationService) {
 		super("builtin");
-		this.securityService = securityService;
+		this.authenticationService = authenticationService;
 	}
 
 	protected UserToken getUserToken(String username, String password) {
-		return securityService.getUserToken (username, password);
+		return authenticationService.getUserToken (username, password);
 	}
 
 }

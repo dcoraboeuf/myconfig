@@ -8,18 +8,16 @@ import java.util.Map;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityManagement;
 import net.myconfig.service.api.security.SecuritySelector;
-import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.UserToken;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
@@ -29,12 +27,12 @@ public class HubSecuritySelector implements SecuritySelector {
 
 	private final Logger logger = LoggerFactory.getLogger(HubSecuritySelector.class);
 
-	private final SecurityService securityService;
+	private final ConfigurationService configurationService;
 	private final Map<String, SecurityManagement> managers;
 
 	@Autowired
-	public HubSecuritySelector(Collection<SecurityManagement> managers, SecurityService securityService) {
-		this.securityService = securityService;
+	public HubSecuritySelector(Collection<SecurityManagement> managers, ConfigurationService configurationService) {
+		this.configurationService = configurationService;
 		this.managers = Maps.uniqueIndex(managers, new Function<SecurityManagement, String>() {
 			@Override
 			public String apply(SecurityManagement manager) {
@@ -46,24 +44,8 @@ public class HubSecuritySelector implements SecuritySelector {
 
 	@Override
 	public String getSecurityManagementId() {
-		return securityService.getSecurityMode();
-	}
-
-	@Override
-	@Transactional
-	public void switchSecurityMode(String mode) {
-		logger.info("[security] Changing security mode to {}", mode);
-		String currentMode = getSecurityManagementId();
-		if (!StringUtils.equals(currentMode, mode)) {
-			SecurityManagement manager = managers.get(mode);
-			if (manager == null) {
-				throw new SecurityManagementNotFoundException(mode);
-			}
-			securityService.setSecurityMode(mode);
-
-		} else {
-			logger.info("[security] {} mode is already selected.", mode);
-		}
+		// FIXME Security mode - duplicate code
+		return configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT);
 	}
 
 	@Override

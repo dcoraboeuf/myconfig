@@ -8,8 +8,6 @@ import net.myconfig.service.model.UserSummary;
 
 public interface SecurityService {
 
-	UserToken getUserToken(String username, String password);
-
 	List<UserSummary> getUserList();
 
 	Ack userCreate(String name);
@@ -20,8 +18,10 @@ public interface SecurityService {
 
 	Ack userFunctionRemove(String name, UserFunction fn);
 
+	void setSecurityMode(String mode);
+
 	String getSecurityMode();
 
-	void setSecurityMode(String mode);
+	List<String> getSecurityModes();
 
 }

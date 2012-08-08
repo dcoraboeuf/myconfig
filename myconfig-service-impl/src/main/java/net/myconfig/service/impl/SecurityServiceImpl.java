@@ -1,80 +1,94 @@
 package net.myconfig.service.impl;
 
-import static net.myconfig.service.impl.SQLColumns.ADMIN;
 import static net.myconfig.service.impl.SQLColumns.NAME;
-import static net.myconfig.service.impl.SQLColumns.PASSWORD;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
-import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.security.SecurityManagement;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
-import net.myconfig.service.api.security.UserToken;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
+import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
-import net.myconfig.service.security.UserTokenImpl;
 import net.myconfig.service.validation.UserValidation;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.security.core.token.Sha512DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 @Service
-public class SecurityServiceImpl extends AbstractDaoService implements SecurityService {
+public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
 
-	public static final String SECURITY_MODE = "security.mode";
+	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
-	private static final String SECURITY_MODE_DEFAULT = "none";
-
-	public static void main(String[] args) {
-		for (String password : args) {
-			System.out.format("%s ==> %s%n", password, digest(password));
-		}
-	}
-
-	private static String digest(String input) {
-		return Sha512DigestUtils.shaHex(input);
-	}
-	
 	private final ConfigurationService configurationService;
+	private final Set<String> securityModes;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, Collection<SecurityManagement> securityManagements) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
+		this.securityModes = ImmutableSet.copyOf(Iterables.transform(securityManagements, new Function<SecurityManagement, String>() {
+			@Override
+			public String apply(SecurityManagement input) {
+				return input.getId();
+			}
+		}));
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	public String getSecurityMode() {
-		return configurationService.getParameter(SECURITY_MODE, SECURITY_MODE_DEFAULT);
+		return configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT);
 	}
-	
+
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_setup)
 	public void setSecurityMode(String mode) {
-		configurationService.setParameter(SECURITY_MODE, mode);
+		logger.info("[security] Changing security mode to {}", mode);
+		// FIXME Security mode - duplicate code
+		String currentMode = getSecurityMode();
+		if (!StringUtils.equals(currentMode, mode)) {
+			if (!securityModes.contains(mode)) {
+				throw new SecurityManagementNotFoundException(mode);
+			}
+			configurationService.setParameter(ConfigurationService.SECURITY_MODE, mode);
+
+		} else {
+			logger.info("[security] {} mode is already selected.", mode);
+		}
+	}
+	
+	@Override
+	public List<String> getSecurityModes() {
+		ArrayList<String> modes = new ArrayList<String>(securityModes);
+		Collections.sort(modes);
+		return modes;
 	}
 
 	@Override
@@ -97,34 +111,18 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 	}
 
 	@Override
-	@Transactional(readOnly = true)
-	public UserToken getUserToken(String username, String password) {
-		// Gets the user
-		User user = getUser(username, password);
-		if (user == null) {
-			return null;
-		}
-		// User functions
-		List<UserFunction> userFunctions = getUserFunctions(user);
-		// Application functions
-		Map<Integer, Set<AppFunction>> appFunctions = getAppFunctions(user);
-		// OK
-		return new UserTokenImpl(user, userFunctions, appFunctions);
-	}
-	
-	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public Ack userCreate(String name) {
 		validate(UserValidation.class, NAME, name);
 		try {
-			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource(SQLColumns.NAME, name)); 
-			return Ack.one (count);
+			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource(SQLColumns.NAME, name));
+			return Ack.one(count);
 		} catch (DuplicateKeyException ex) {
-			throw new UserAlreadyDefinedException (name);
+			throw new UserAlreadyDefinedException(name);
 		}
 	}
-	
+
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
@@ -134,73 +132,24 @@ public class SecurityServiceImpl extends AbstractDaoService implements SecurityS
 		getNamedParameterJdbcTemplate().update(SQL.APP_FUNCTIONS_DELETE, param);
 		getNamedParameterJdbcTemplate().update(SQL.ENV_FUNCTIONS_DELETE, param);
 		int count = getNamedParameterJdbcTemplate().update(SQL.USER_DELETE, param);
-		return Ack.one (count);
+		return Ack.one(count);
 	}
-	
+
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionAdd(String name, UserFunction fn) {
 		userFunctionRemove(name, fn);
-		int count = getNamedParameterJdbcTemplate().update(
-				SQL.FUNCTIONS_USER_ADD,
-				new MapSqlParameterSource()
-					.addValue(SQLColumns.USER, name)
-					.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_ADD, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
 	}
-	
+
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionRemove(String name, UserFunction fn) {
-		int count = getNamedParameterJdbcTemplate().update(
-				SQL.FUNCTIONS_USER_REMOVE,
-				new MapSqlParameterSource()
-					.addValue(SQLColumns.USER, name)
-					.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
-	}
-
-	protected Map<Integer, Set<AppFunction>> getAppFunctions(User user) {
-		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_APP, new MapSqlParameterSource().addValue(SQLColumns.USER, user.getName()));
-		Map<Integer, Set<AppFunction>> result = new HashMap<Integer, Set<AppFunction>>();
-		for (Map<String, Object> row : list) {
-			int application = (Integer) row.get(SQLColumns.APPLICATION);
-			AppFunction fn = AppFunction.valueOf((String) row.get(SQLColumns.GRANTEDFUNCTION));
-			Set<AppFunction> set = result.get(application);
-			if (set == null) {
-				set = new HashSet<AppFunction>();
-				result.put(application, set);
-			}
-			set.add(fn);
-		}
-		return result;
-	}
-
-	protected List<UserFunction> getUserFunctions(User user) {
-		return Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, user.getName()), String.class),
-				new Function<String, UserFunction>() {
-					@Override
-					public UserFunction apply(String name) {
-						return UserFunction.valueOf(name);
-					}
-				});
-	}
-
-	protected User getUser(String username, String password) {
-		final String digest = digest(password);
-		List<User> users = getNamedParameterJdbcTemplate().query(SQL.USER, new MapSqlParameterSource().addValue(NAME, username).addValue(PASSWORD, digest), new RowMapper<User>() {
-			@Override
-			public User mapRow(ResultSet rs, int row) throws SQLException {
-				return new User(rs.getString(NAME), rs.getBoolean(ADMIN));
-			}
-		});
-		if (users.size() == 1) {
-			return users.get(0);
-		} else {
-			return null;
-		}
 	}
 
 }

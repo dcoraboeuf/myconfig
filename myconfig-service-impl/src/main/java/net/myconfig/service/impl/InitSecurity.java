@@ -3,7 +3,6 @@ package net.myconfig.service.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import net.myconfig.service.api.security.SecurityService;
 import net.sf.dbinit.DBInitAction;
 
 import org.slf4j.Logger;
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class InitSecurity implements DBInitAction {
 
-	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
+	private final Logger logger = LoggerFactory.getLogger(InitSecurity.class);
 
 	/**
 	 * Detects if a default 'admin' user must be created.

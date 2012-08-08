@@ -12,17 +12,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
-import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.UserToken;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class SecurityServiceTest extends AbstractIntegrationTest {
+public class AuthenticationServiceTest extends AbstractIntegrationTest {
 
 	@Autowired
-	private SecurityService service;
+	private AuthenticationService service;
 
 	@Test
 	public void admin() {
