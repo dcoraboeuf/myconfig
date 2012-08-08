@@ -6,7 +6,7 @@ import static net.myconfig.service.impl.SQLColumns.PASSWORD;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +16,11 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.User;
+import net.myconfig.service.security.AppFunctionKey;
+import net.myconfig.service.security.EnvFunctionKey;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -36,30 +39,37 @@ public abstract class AbstractSecurityService extends AbstractDaoService {
 		super(dataSource, validator);
 	}
 
-	protected Map<Integer, Set<AppFunction>> getAppFunctions(User user) {
-		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_APP, new MapSqlParameterSource().addValue(SQLColumns.USER, user.getName()));
-		Map<Integer, Set<AppFunction>> result = new HashMap<Integer, Set<AppFunction>>();
+	protected Set<EnvFunctionKey> getEnvFunctions(User user) {
+		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_ENV, new MapSqlParameterSource().addValue(SQLColumns.USER, user.getName()));
+		Set<EnvFunctionKey> result = new HashSet<EnvFunctionKey>();
 		for (Map<String, Object> row : list) {
 			int application = (Integer) row.get(SQLColumns.APPLICATION);
-			AppFunction fn = AppFunction.valueOf((String) row.get(SQLColumns.GRANTEDFUNCTION));
-			Set<AppFunction> set = result.get(application);
-			if (set == null) {
-				set = new HashSet<AppFunction>();
-				result.put(application, set);
-			}
-			set.add(fn);
+			String environment = (String) row.get(SQLColumns.ENVIRONMENT);
+			EnvFunction fn = EnvFunction.valueOf((String) row.get(SQLColumns.GRANTEDFUNCTION));
+			result.add(new EnvFunctionKey(application, environment, fn));
 		}
 		return result;
 	}
 
-	protected List<UserFunction> getUserFunctions(User user) {
-		return Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, user.getName()), String.class),
+	protected Set<AppFunctionKey> getAppFunctions(User user) {
+		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_APP, new MapSqlParameterSource().addValue(SQLColumns.USER, user.getName()));
+		Set<AppFunctionKey> result = new HashSet<AppFunctionKey>();
+		for (Map<String, Object> row : list) {
+			int application = (Integer) row.get(SQLColumns.APPLICATION);
+			AppFunction fn = AppFunction.valueOf((String) row.get(SQLColumns.GRANTEDFUNCTION));
+			result.add(new AppFunctionKey(application, fn));
+		}
+		return result;
+	}
+
+	protected EnumSet<UserFunction> getUserFunctions(User user) {
+		return EnumSet.copyOf(Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, user.getName()), String.class),
 				new Function<String, UserFunction>() {
 					@Override
 					public UserFunction apply(String name) {
 						return UserFunction.valueOf(name);
 					}
-				});
+				}));
 	}
 
 	protected User getUser(String username, String password) {

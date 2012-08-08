@@ -4,6 +4,7 @@ import static net.myconfig.service.impl.SQLColumns.NAME;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.EnumSet;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -80,7 +81,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		return Lists.transform(users, new Function<User, UserSummary>() {
 			@Override
 			public UserSummary apply(User user) {
-				List<UserFunction> functions = getUserFunctions(user);
+				EnumSet<UserFunction> functions = getUserFunctions(user);
 				return new UserSummary(user.getName(), user.isAdmin(), functions);
 			}
 		});

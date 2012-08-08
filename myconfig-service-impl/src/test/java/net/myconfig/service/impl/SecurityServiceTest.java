@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 
 import net.myconfig.core.UserFunction;
@@ -55,7 +56,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 		assertNotNull(user);
 		assertEquals(name, user.getName());
 		assertEquals(admin, user.isAdmin());
-		assertEquals(Arrays.asList(expectedFunctions), user.getFunctions());
+		assertEquals(EnumSet.copyOf(Arrays.asList(expectedFunctions)), user.getFunctions());
 	}
 
 	@Test(expected = AccessDeniedException.class)

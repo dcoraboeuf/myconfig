@@ -184,6 +184,8 @@ public interface SQL {
 	
 	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";
 	
+	String FUNCTIONS_ENV = "select application, environment, grantedfunction from envgrants where (user = :user or user = '*') order by application, environment, grantedfunction";
+	
 	String USER = "select * from users where name = :name and password = :password";
 	String USER_SUMMARIES = "select name, admin from users order by admin desc, name asc";
 	String USER_COUNT = "select count(*) from users";

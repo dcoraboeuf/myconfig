@@ -1,13 +1,15 @@
 package net.myconfig.service.security.manager;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.EnumSet;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.security.AppFunctionKey;
+import net.myconfig.service.security.EnvFunctionKey;
 import net.myconfig.service.security.UserProfileImpl;
 
 import org.springframework.security.core.Authentication;
@@ -22,7 +24,7 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 
 	@Override
 	public UserProfile authenticate(Authentication authentication) {
-		return new UserProfileImpl(new User("anonymous", true), Collections.<UserFunction> emptyList(), Collections.<Integer, Set<AppFunction>> emptyMap());
+		return new UserProfileImpl(new User("anonymous", true), EnumSet.noneOf(UserFunction.class), Collections.<AppFunctionKey> emptySet(), Collections.<EnvFunctionKey> emptySet());
 	}
 
 	@Override

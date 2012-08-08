@@ -1,17 +1,17 @@
 package net.myconfig.service.impl;
 
-import java.util.List;
-import java.util.Map;
+import java.util.EnumSet;
 import java.util.Set;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
-import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.security.AppFunctionKey;
+import net.myconfig.service.security.EnvFunctionKey;
 import net.myconfig.service.security.UserProfileImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +41,13 @@ public class AuthenticationServiceImpl extends AbstractSecurityService implement
 			return null;
 		}
 		// User functions
-		List<UserFunction> userFunctions = getUserFunctions(user);
+		EnumSet<UserFunction> userFunctions = getUserFunctions(user);
 		// Application functions
-		Map<Integer, Set<AppFunction>> appFunctions = getAppFunctions(user);
+		Set<AppFunctionKey> appFunctions = getAppFunctions(user);
+		// Environment functions
+		Set<EnvFunctionKey> envFunctions = getEnvFunctions(user);
 		// OK
-		return new UserProfileImpl(user, userFunctions, appFunctions);
+		return new UserProfileImpl(user, userFunctions, appFunctions, envFunctions);
 	}
 
 }
