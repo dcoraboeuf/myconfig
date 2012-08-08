@@ -5,12 +5,16 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.EnvGrant;
+import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
 
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +43,11 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 		// Method to authenticate
 		MethodInvocation invocation = (MethodInvocation) object;
 		// Checks the grants
-		if (userGranted(authentication, invocation) || applicationGranted(authentication, invocation)) {
+		if (userGranted(authentication, invocation)
+				|| applicationGranted(authentication, invocation)
+				|| environmentGranted(authentication, invocation)) {
 			logger.debug("[grant] Granted after authorization.");
 		}
-		// FIXME Environment level
 		// No control - anomaly
 		else {
 			String accessDeniedMessage = String.format("%s is under control but no access could be granted.", invocation.getMethod());
@@ -67,6 +72,45 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 		} else {
 			return false;
 		}
+	}
+
+	protected boolean environmentGranted(Authentication authentication, MethodInvocation invocation) {
+		EnvGrant grant = getAnnotation(invocation, EnvGrant.class);
+		if (grant != null) {
+			int application = (Integer) invocation.getArguments()[0];
+			String environment = null;
+			Annotation[][] allParamAnnotations = invocation.getMethod().getParameterAnnotations();
+			for (int i = 1 ; i < invocation.getArguments().length ; i++) {
+				Class<?> paramType = invocation.getMethod().getParameterTypes()[i];
+				if (String.class.isAssignableFrom(paramType)) {
+				Annotation[] paramAnnotations = allParamAnnotations[i];
+				if (paramAnnotations != null) {
+					for (Annotation paramAnnotation : paramAnnotations) {
+						if (paramAnnotation instanceof EnvGrantParam) {
+							if (environment != null) {
+								throw new EnvGrantParamAlreadyDefinedException(invocation.getMethod().getName());
+							}
+							environment = (String) invocation.getArguments()[i];
+						}
+					}
+				}
+				}
+			}
+			if (StringUtils.isBlank(environment)) {
+				throw new EnvGrantParamMissingException(invocation.getMethod().getName());
+			}
+			return checkEnvironmentGrant(authentication, application, environment, grant.value());
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Checks if the current authentication has access to the environment
+	 * function for the given application ID and the environment.
+	 */
+	protected boolean checkEnvironmentGrant(Authentication authentication, int application, String environment, EnvFunction fn) {
+		return securitySelector.hasEnvironmentFunction(authentication, application, environment, fn);
 	}
 
 	/**

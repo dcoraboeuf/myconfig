@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityManagement;
@@ -82,6 +83,11 @@ public class HubSecuritySelector implements SecuritySelector {
 	@Override
 	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
 		return getSecurityManagement().hasApplicationFunction(authentication, application, fn);
+	}
+
+	@Override
+	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
+		return getSecurityManagement().hasEnvironmentFunction(authentication, application, environment, fn);
 	}
 
 	@Override

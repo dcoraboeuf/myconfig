@@ -1,6 +1,7 @@
 package net.myconfig.service.security.manager;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.UserToken;
 
@@ -54,6 +55,12 @@ public abstract class AbstractUserTokenSecurityManagement extends AbstractSecuri
 	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
 		UserToken token = getUserToken(authentication);
 		return token != null && token.hasAppFunction(application, fn);
+	}
+	
+	@Override
+	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
+		UserToken token = getUserToken(authentication);
+		return token != null && token.hasEnvFunction(application, environment, fn);
 	}
 	
 	@Override

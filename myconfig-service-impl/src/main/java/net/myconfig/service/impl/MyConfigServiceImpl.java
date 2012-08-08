@@ -27,6 +27,7 @@ import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.EnvGrant;
+import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
@@ -625,7 +626,6 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_view)
-	// FIXME Environment parameter 
 	public String getKey(String application, String version, String environment, String key) {
 		// Checks for existing data
 		checkApplication (application);
@@ -650,8 +650,7 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	@Override
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_view)
-	// FIXME Environment parameter
-	public ConfigurationSet getEnv(String application, String version, String environment) {
+	public ConfigurationSet getEnv(String application, String version, @EnvGrantParam String environment) {
 		// Checks for existing data
 		checkApplication (application);
 		checkVersion (application, version);

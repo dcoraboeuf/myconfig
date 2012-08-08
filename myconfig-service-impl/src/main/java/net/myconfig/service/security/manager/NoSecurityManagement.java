@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserToken;
@@ -21,17 +22,14 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 
 	@Override
 	public UserToken authenticate(Authentication authentication) {
-		return new UserTokenImpl(
-				new User("anonymous", true),
-				Collections.<UserFunction> emptyList(),
-				Collections.<Integer, Set<AppFunction>> emptyMap());
+		return new UserTokenImpl(new User("anonymous", true), Collections.<UserFunction> emptyList(), Collections.<Integer, Set<AppFunction>> emptyMap());
 	}
 
 	@Override
 	public boolean supports(Class<?> authentication) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean allowLogin() {
 		return false;
@@ -44,6 +42,11 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 
 	@Override
 	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
+		return true;
+	}
+
+	@Override
+	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
 		return true;
 	}
 }

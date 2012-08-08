@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserToken;
@@ -56,6 +57,12 @@ public class UserTokenImpl implements UserToken {
 			Set<AppFunction> set = appFunctions.get(application);
 			return set != null && set.contains(fn);
 		}
+	}
+	
+	@Override
+	public boolean hasEnvFunction(int application, String environment, EnvFunction fn) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
