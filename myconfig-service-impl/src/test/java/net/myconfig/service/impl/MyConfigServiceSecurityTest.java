@@ -1,5 +1,6 @@
 package net.myconfig.service.impl;
 
+import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -7,11 +8,14 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.ConfigurationUpdate;
+import net.myconfig.service.model.ConfigurationUpdates;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -109,6 +113,39 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		myconfig.getApplicationConfiguration(1);
 	}
 	
+	@Test
+	public void updateConfiguration_admin() {
+		asAdmin();
+		ConfigurationUpdates updates = new ConfigurationUpdates(
+				asList(
+						new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"),
+						new ConfigurationUpdate("UAT", "1.0", "jdbc.password", "uatpwd")
+				));				
+		myconfig.updateConfiguration(1, updates);
+	}
+	
+	@Test
+	public void updateConfiguration_user_granted() {
+		asUser(1, EnvFunction.env_config, "DEV", "UAT");
+		ConfigurationUpdates updates = new ConfigurationUpdates(
+				asList(
+						new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"),
+						new ConfigurationUpdate("UAT", "1.0", "jdbc.password", "uatpwd")
+				));				
+		myconfig.updateConfiguration(1, updates);
+	}
+	
+	@Test(expected = AccessDeniedException.class)
+	public void updateConfiguration_user_not_granted() {
+		asUser(1, EnvFunction.env_config, "DEV");
+		ConfigurationUpdates updates = new ConfigurationUpdates(
+				asList(
+						new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"),
+						new ConfigurationUpdate("UAT", "1.0", "jdbc.password", "uatpwd")
+				));				
+		myconfig.updateConfiguration(1, updates);
+	}
+	
 	// TODO Ack createVersion(int id, String name);
 	//
 	// TODO Ack deleteVersion(int id, String name);
@@ -135,9 +172,6 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	// String environment);
 	//
 	// TODO KeyConfiguration getKeyConfiguration(int application, String key);
-	//
-	// TODO Ack updateConfiguration(int application, ConfigurationUpdates
-	// updates);
 	//
 	// TODO Ack updateKey(int application, String name, String description);
 

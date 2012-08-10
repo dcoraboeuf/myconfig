@@ -28,6 +28,7 @@ import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.EnvGrant;
 import net.myconfig.service.api.security.EnvGrantParam;
+import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
@@ -84,13 +85,13 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 @Service
-public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigService {
+public class MyConfigServiceImpl extends AbstractSecureService implements MyConfigService {
 
 	private final String versionNumber;
 
 	@Autowired
-	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource, Validator validator) {
-		super(dataSource, validator);
+	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource, Validator validator, SecuritySelector securitySelector) {
+		super(dataSource, validator, securitySelector);
 		this.versionNumber = versionNumber;
 	}
 	
@@ -553,7 +554,6 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 	
 	@Override
 	@Transactional
-	// FIXME Security: special
 	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
@@ -571,6 +571,8 @@ public class MyConfigServiceImpl extends AbstractDaoService implements MyConfigS
 			checkVersion(application, version);
 			checkKey(application, key);
 			// FIXME checkMatrix(application, version, key);
+			// Security check
+			checkEnvironmentAccess (application, environment, EnvFunction.env_config);
 			// Criteria
 			MapSqlParameterSource criteria = appCriteria
 					.addValue(ENVIRONMENT, environment)
