@@ -1,6 +1,9 @@
 package net.myconfig.service.impl;
 
+import static net.myconfig.service.impl.SQL.USER_SUMMARIES;
+import static net.myconfig.service.impl.SQLColumns.ADMIN;
 import static net.myconfig.service.impl.SQLColumns.NAME;
+import static net.myconfig.service.impl.SQLColumns.VERIFIED;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -72,17 +75,17 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Transactional(readOnly = true)
 	@UserGrant(UserFunction.security_users)
 	public List<UserSummary> getUserList() {
-		List<User> users = getJdbcTemplate().query(SQL.USER_SUMMARIES, new RowMapper<User>() {
+		List<User> users = getJdbcTemplate().query(USER_SUMMARIES, new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new User(rs.getString(SQLColumns.NAME), rs.getBoolean(SQLColumns.ADMIN));
+				return new User(rs.getString(NAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED));
 			}
 		});
 		return Lists.transform(users, new Function<User, UserSummary>() {
 			@Override
 			public UserSummary apply(User user) {
 				EnumSet<UserFunction> functions = getUserFunctions(user);
-				return new UserSummary(user.getName(), user.isAdmin(), functions);
+				return new UserSummary(user.getName(), user.isAdmin(), user.isVerified(), functions);
 			}
 		});
 	}
@@ -90,10 +93,12 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
-	public Ack userCreate(String name) {
+	public Ack userCreate(String name, String email) {
 		validate(UserValidation.class, NAME, name);
 		try {
-			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource(SQLColumns.NAME, name));
+			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource()
+			.addValue(SQLColumns.NAME, name)
+			.addValue(SQLColumns.EMAIL, email));
 			return Ack.one(count);
 		} catch (DuplicateKeyException ex) {
 			throw new UserAlreadyDefinedException(name);

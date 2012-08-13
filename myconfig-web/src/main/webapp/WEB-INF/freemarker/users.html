@@ -21,6 +21,9 @@
 					<th>
 						<@lh key="model.user.admin" />
 					</th>
+					<th>
+						<@lh key="model.user.verified" />
+					</th>
 					<#list userFunctions as userFunction>
 						<th class="user-function">
 							<p class="function user-function">${userFunction}</p>
@@ -39,6 +42,7 @@
 							${user.name?html}
 						</td>
 						<@item_column_boolean item=user field="admin" />
+						<@item_column_boolean item=user field="verified" />
 						<#list userFunctions as userFunction>
 							<td class="item-column user-function">
 								<#if user.admin>
@@ -78,8 +82,18 @@
 										<@lh key="model.user.name" />
 									</label>
 								</td>
-								<td class="form-input">
+								<td class="form-input" colspan="2">
 									<input id="user-name" autofocus="autofocus" name="name" maxlength="80" size="20" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form-label">
+									<label for="user-email">
+										<@lh key="model.user.email" />
+									</label>
+								</td>
+								<td class="form-input">
+									<input id="user-email" name="email" maxlength="120" size="40" />
 								</td>
 								<td>
 									<input type="submit" value="<@lh key='users.create.submit' />" />

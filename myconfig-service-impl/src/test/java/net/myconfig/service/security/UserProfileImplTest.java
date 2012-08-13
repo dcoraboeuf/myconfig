@@ -113,25 +113,25 @@ public class UserProfileImplTest {
 	}
 
 	private UserProfile user(String name, UserFunction fn) {
-		User user = new User(name, false);
+		User user = new User(name, false, true);
 		UserProfile profile = new UserProfileImpl(user, EnumSet.of(fn), Collections.<AppFunctionKey> emptySet(), Collections.<EnvFunctionKey> emptySet());
 		return profile;
 	}
 
 	private UserProfile user(String name, int application, AppFunction fn) {
-		User user = new User(name, false);
+		User user = new User(name, false, true);
 		UserProfile profile = new UserProfileImpl(user, EnumSet.noneOf(UserFunction.class), singleton(new AppFunctionKey(application, fn)), Collections.<EnvFunctionKey> emptySet());
 		return profile;
 	}
 
 	private UserProfile user(String name, int application, String environment, EnvFunction fn) {
-		User user = new User(name, false);
+		User user = new User(name, false, true);
 		UserProfile profile = new UserProfileImpl(user, EnumSet.noneOf(UserFunction.class), Collections.<AppFunctionKey> emptySet(), singleton(new EnvFunctionKey(application, environment, fn)));
 		return profile;
 	}
 
 	private UserProfile emptyUser(String name, boolean admin) {
-		User user = new User(name, admin);
+		User user = new User(name, admin, true);
 		UserProfile profile = new UserProfileImpl(user, EnumSet.noneOf(UserFunction.class), Collections.<AppFunctionKey> emptySet(), Collections.<EnvFunctionKey> emptySet());
 		return profile;
 	}

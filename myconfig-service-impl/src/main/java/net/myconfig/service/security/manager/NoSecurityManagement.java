@@ -24,7 +24,7 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 
 	@Override
 	public UserProfile authenticate(Authentication authentication) {
-		return new UserProfileImpl(new User("anonymous", true), EnumSet.noneOf(UserFunction.class), Collections.<AppFunctionKey> emptySet(), Collections.<EnvFunctionKey> emptySet());
+		return new UserProfileImpl(new User("anonymous", true, true), EnumSet.noneOf(UserFunction.class), Collections.<AppFunctionKey> emptySet(), Collections.<EnvFunctionKey> emptySet());
 	}
 
 	@Override

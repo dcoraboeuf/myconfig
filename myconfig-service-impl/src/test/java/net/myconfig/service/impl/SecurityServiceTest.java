@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
 
+import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -66,29 +68,33 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 
 	@Test
-	public void userCreate_admin() {
+	public void userCreate_admin() throws DataSetException, SQLException {
 		asAdmin();
-		Ack ack = securityService.userCreate("test");
+		Ack ack = securityService.userCreate("test", "test@test.com");
 		assertTrue(ack.isSuccess());
+		assertRecordExists("select * from users where name = 'test' and email = 'test@test.com' and password = '' and verified = false and admin = false");
 	}
 
 	@Test(expected = UserAlreadyDefinedException.class)
-	public void userCreate_admin_already_exists() {
+	public void userCreate_admin_already_exists() throws DataSetException, SQLException {
 		asAdmin();
-		securityService.userCreate("user1");
+		securityService.userCreate("user1", "test@test.com");
+		assertRecordNotExists("select * from users where name = 'user1'");
 	}
 
 	@Test
-	public void userCreate_user_granted() {
+	public void userCreate_user_granted() throws DataSetException, SQLException {
 		asUser(UserFunction.security_users);
-		Ack ack = securityService.userCreate("test");
+		Ack ack = securityService.userCreate("test", "test@test.com");
 		assertTrue(ack.isSuccess());
+		assertRecordExists("select * from users where name = 'test' and email = 'test@test.com' and password = '' and verified = false and admin = false");
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void userCreate_user_not_granted() {
+	public void userCreate_user_not_granted() throws DataSetException, SQLException {
 		asUser();
-		securityService.userCreate("test");
+		securityService.userCreate("testx", "x");
+		assertRecordNotExists("select * from users where name = 'testx'");
 	}
 
 	@Test

@@ -43,6 +43,12 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 	}
 
 	@Test
+	public void not_verified() {
+		UserProfile user = service.getUserToken("newuser", "");
+		assertNull(user);
+	}
+
+	@Test
 	public void not_found_password() {
 		UserProfile user = service.getUserToken("user1", "xxx");
 		assertNull(user);

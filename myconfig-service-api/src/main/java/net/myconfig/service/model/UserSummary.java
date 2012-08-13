@@ -8,11 +8,13 @@ public class UserSummary {
 
 	private final String name;
 	private final boolean admin;
+	private final boolean verified;
 	private final EnumSet<UserFunction> functions;
 
-	public UserSummary(String name, boolean admin, EnumSet<UserFunction> functions) {
+	public UserSummary(String name, boolean admin, boolean verified, EnumSet<UserFunction> functions) {
 		this.name = name;
 		this.admin = admin;
+		this.verified = verified;
 		this.functions = functions;
 	}
 
@@ -22,6 +24,10 @@ public class UserSummary {
 
 	public boolean isAdmin() {
 		return admin;
+	}
+
+	public boolean isVerified() {
+		return verified;
 	}
 
 	public EnumSet<UserFunction> getFunctions() {

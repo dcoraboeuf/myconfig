@@ -4,10 +4,12 @@ public class User {
 
 	private final String name;
 	private final boolean admin;
+	private final boolean verified;
 
-	public User(String name, boolean admin) {
+	public User(String name, boolean admin, boolean verified) {
 		this.name = name;
 		this.admin = admin;
+		this.verified = verified;
 	}
 
 	public String getName() {
@@ -16,6 +18,10 @@ public class User {
 
 	public boolean isAdmin() {
 		return admin;
+	}
+
+	public boolean isVerified() {
+		return verified;
 	}
 
 }

@@ -20,7 +20,8 @@ var Users = function () {
 	
 	return {
 		validateCreate: function () {
-			return myconfig.validateTextAsName ('#user-name');
+			return myconfig.validateTextAsName ('#user-name')
+				&& myconfig.validateTextAsName ('#user-email');
 		},
 		assignUserFunction: assignUserFunction
 	};

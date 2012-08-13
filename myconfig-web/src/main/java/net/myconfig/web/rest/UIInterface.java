@@ -53,7 +53,7 @@ public interface UIInterface {
 
 	List<UserSummary> users();
 
-	Ack userCreate(String name);
+	Ack userCreate(String name, String email);
 
 	Ack userDelete(String name);
 

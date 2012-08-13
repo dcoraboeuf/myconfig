@@ -10,7 +10,7 @@ public interface SecurityService {
 
 	List<UserSummary> getUserList();
 
-	Ack userCreate(String name);
+	Ack userCreate(String name, String email);
 
 	Ack userDelete(String name);
 

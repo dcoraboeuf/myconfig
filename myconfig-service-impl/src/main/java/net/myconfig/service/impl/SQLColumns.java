@@ -12,6 +12,8 @@ public interface SQLColumns {
 	String VALUE = "value";
 	String APPLICATION = "application";
 	String NAME = "name";
+	String EMAIL = "email";
+	String VERIFIED = "verified";
 	String ID = "id";
 	String DESCRIPTION = "description";
 	String VERSION_COUNT = "versionCount";

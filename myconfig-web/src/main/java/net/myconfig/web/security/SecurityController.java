@@ -65,9 +65,9 @@ public class SecurityController extends AbstractGUIPage {
 	}
 	
 	@RequestMapping(value = "/gui/user/create", method = RequestMethod.POST)
-	public String userCreate (@RequestParam String name) {
+	public String userCreate (@RequestParam String name, @RequestParam String email) {
 		// Creation
-		ui.userCreate(name); 
+		ui.userCreate(name, email); 
 		// OK
 		return "redirect:/gui/users";
 	}
