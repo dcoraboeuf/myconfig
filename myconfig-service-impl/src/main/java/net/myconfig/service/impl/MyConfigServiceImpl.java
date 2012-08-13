@@ -204,6 +204,9 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		}
 		int id = keyHolder.getKey().intValue();
 		// Initial grants
+		for (AppFunction fn : AppFunction.values()) {
+			grantAppFunction (id, fn);
+		}
 		// OK
 		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0);
 	}

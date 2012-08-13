@@ -183,6 +183,7 @@ public interface SQL {
 	String FUNCTIONS_USER_REMOVE = "delete from usergrants where user = :user and grantedfunction = :grantedfunction";
 	
 	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";
+	String GRANT_APP_FUNCTION = "insert into appgrants (user, application, grantedfunction) values (:user, :application, :grantedfunction)";
 	
 	String FUNCTIONS_ENV = "select application, environment, grantedfunction from envgrants where (user = :user or user = '*') order by application, environment, grantedfunction";
 	

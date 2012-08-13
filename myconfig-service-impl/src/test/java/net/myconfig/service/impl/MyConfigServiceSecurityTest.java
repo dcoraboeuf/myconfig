@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,6 +25,7 @@ import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.VersionConfiguration;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
@@ -62,17 +64,26 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	}
 
 	@Test
-	public void createApplication_admin() {
+	public void createApplication_admin() throws DataSetException, SQLException {
 		asAdmin();
 		ApplicationSummary app = myconfig.createApplication("xxx1");
 		assertNotNull(app);
+		int id = app.getId();
+		// Checks the grants
+		assertRecordNotExists("select * from appgrants where user = 'admin' and application = %d", id);
 	}
 
 	@Test
-	public void createApplication_user_granted() {
+	public void createApplication_user_granted() throws DataSetException, SQLException {
 		asUser(UserFunction.app_create);
 		ApplicationSummary app = myconfig.createApplication("xxx2");
 		assertNotNull(app);
+		int id = app.getId();
+		// Checks the grants
+		assertRecordCount(AppFunction.values().length, "select * from appgrants where user = 'userx' and application = %d", id);
+		for (AppFunction fn : AppFunction.values()) {
+			assertRecordExists("select * from appgrants where user = 'userx' and application = %d and grantedfunction = '%s'", id, fn.name());
+		}
 	}
 
 	@Test(expected = AccessDeniedException.class)

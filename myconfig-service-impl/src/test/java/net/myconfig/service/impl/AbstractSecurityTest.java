@@ -51,6 +51,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		SecurityContextImpl context = new SecurityContextImpl();
 
 		UserProfile token = mock(UserProfile.class);
+		when(token.getName()).thenReturn("userx");
 		when(token.hasUserFunction(any(UserFunction.class))).thenAnswer(new Answer<Boolean>() {
 			@Override
 			public Boolean answer(InvocationOnMock invocation) throws Throwable {

@@ -5,11 +5,15 @@ import java.util.List;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.service.api.security.SecuritySelector;
+import net.myconfig.service.api.security.UserProfile;
 import net.myconfig.service.model.Environment;
 import net.myconfig.service.security.support.SecurityUtils;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 
@@ -46,6 +50,22 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 				return hasEnvironmentAccess(application, env.getName(), EnvFunction.env_view);
 			}
 		}));
+	}
+
+	protected void grantAppFunction(int application, AppFunction fn) {
+		UserProfile profile = SecurityUtils.profile();
+		if (profile != null && !profile.isAdmin()) {
+			String user = profile.getName();
+			if (StringUtils.isNotBlank(user)) {
+				// Grant
+				getNamedParameterJdbcTemplate().update(
+						SQL.GRANT_APP_FUNCTION,
+						new MapSqlParameterSource()
+							.addValue(SQLColumns.USER, user)
+							.addValue(SQLColumns.APPLICATION, application)
+							.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+			}
+		}
 	}
 
 }
