@@ -16,6 +16,7 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationUpdate;
 import net.myconfig.service.model.ConfigurationUpdates;
+import net.myconfig.service.model.EnvironmentConfiguration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -146,6 +147,19 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		myconfig.updateConfiguration(1, updates);
 	}
 	
+	@Test
+	public void getEnvironmentConfiguration_granted () {
+		asUser(1, EnvFunction.env_view, "UAT");
+		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "UAT");
+		assertNotNull(c);
+	}
+	
+	@Test(expected = AccessDeniedException.class)
+	public void getEnvironmentConfiguration_not_granted () {
+		asUser(1, EnvFunction.env_config, "DEV");
+		myconfig.getEnvironmentConfiguration(1, "UAT");
+	}
+	
 	// TODO Ack createVersion(int id, String name);
 	//
 	// TODO Ack deleteVersion(int id, String name);
@@ -166,10 +180,6 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	//
 	// TODO VersionConfiguration getVersionConfiguration(int application, String
 	// version);
-	//
-	// TODO EnvironmentConfiguration getEnvironmentConfiguration(int
-	// application,
-	// String environment);
 	//
 	// TODO KeyConfiguration getKeyConfiguration(int application, String key);
 	//

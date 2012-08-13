@@ -405,7 +405,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_view)
-	public EnvironmentConfiguration getEnvironmentConfiguration(int application, String environment) {
+	public EnvironmentConfiguration getEnvironmentConfiguration(int application, @EnvGrantParam String environment) {
 		checkApplication(application);
 		checkEnvironment(application, environment);
 		// Application name

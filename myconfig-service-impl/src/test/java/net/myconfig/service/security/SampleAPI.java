@@ -11,5 +11,13 @@ public interface SampleAPI {
 	void user_call();
 	
 	void app_call(int application);
+	
+	void env_call_missing_param(int application);
+	
+	void env_call_ok(int application, String environment);
+	
+	void env_call_no_annotation(int application, String environment);
+	
+	void env_call_too_much(int application, String environment, String other);
 
 }

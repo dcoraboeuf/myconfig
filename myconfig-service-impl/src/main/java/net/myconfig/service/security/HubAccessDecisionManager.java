@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 public class HubAccessDecisionManager implements AccessDecisionManager {
 
 	private final Logger logger = LoggerFactory.getLogger(HubAccessDecisionManager.class);
-	
+
 	private final SecuritySelector securitySelector;
 
 	@Autowired
@@ -43,9 +43,7 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 		// Method to authenticate
 		MethodInvocation invocation = (MethodInvocation) object;
 		// Checks the grants
-		if (userGranted(authentication, invocation)
-				|| applicationGranted(authentication, invocation)
-				|| environmentGranted(authentication, invocation)) {
+		if (userGranted(authentication, invocation) || applicationGranted(authentication, invocation) || environmentGranted(authentication, invocation)) {
 			logger.debug("[grant] Granted after authorization.");
 		}
 		// No control - anomaly
@@ -78,22 +76,23 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 		EnvGrant grant = getAnnotation(invocation, EnvGrant.class);
 		if (grant != null) {
 			int application = (Integer) invocation.getArguments()[0];
+			Method method = getTargetMethod(invocation);
 			String environment = null;
-			Annotation[][] allParamAnnotations = invocation.getMethod().getParameterAnnotations();
-			for (int i = 1 ; i < invocation.getArguments().length ; i++) {
-				Class<?> paramType = invocation.getMethod().getParameterTypes()[i];
+			Annotation[][] allParamAnnotations = method.getParameterAnnotations();
+			for (int i = 1; i < invocation.getArguments().length; i++) {
+				Class<?> paramType = method.getParameterTypes()[i];
 				if (String.class.isAssignableFrom(paramType)) {
-				Annotation[] paramAnnotations = allParamAnnotations[i];
-				if (paramAnnotations != null) {
-					for (Annotation paramAnnotation : paramAnnotations) {
-						if (paramAnnotation instanceof EnvGrantParam) {
-							if (environment != null) {
-								throw new EnvGrantParamAlreadyDefinedException(invocation.getMethod().getName());
+					Annotation[] paramAnnotations = allParamAnnotations[i];
+					if (paramAnnotations != null) {
+						for (Annotation paramAnnotation : paramAnnotations) {
+							if (paramAnnotation instanceof EnvGrantParam) {
+								if (environment != null) {
+									throw new EnvGrantParamAlreadyDefinedException(method.getName());
+								}
+								environment = (String) invocation.getArguments()[i];
 							}
-							environment = (String) invocation.getArguments()[i];
 						}
 					}
-				}
 				}
 			}
 			if (StringUtils.isBlank(environment)) {
@@ -132,17 +131,23 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 		Method method = invocation.getMethod();
 		A a = method.getAnnotation(type);
 		if (a == null) {
-			Object target = invocation.getThis();
-			Method targetMethod;
-			try {
-				targetMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
-			} catch (Exception e) {
-				throw new IllegalStateException("Cannot find target method", e);
-			}
+			Method targetMethod = getTargetMethod(invocation);
 			return targetMethod.getAnnotation(type);
 		} else {
 			return a;
 		}
+	}
+
+	protected Method getTargetMethod(MethodInvocation invocation) {
+		Object target = invocation.getThis();
+		Method method = invocation.getMethod();
+		Method targetMethod;
+		try {
+			targetMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
+		} catch (Exception e) {
+			throw new IllegalStateException("Cannot find target method", e);
+		}
+		return targetMethod;
 	}
 
 	@Override

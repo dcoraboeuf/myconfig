@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.SecuritySelector;
@@ -130,10 +131,92 @@ public class HubAccessDecisionManagerTest {
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		when(invocation.getMethod()).thenReturn(method);
 		when(invocation.getThis()).thenReturn(target);
-		when(invocation.getArguments()).thenReturn(new Integer[]{1});
+		when(invocation.getArguments()).thenReturn(new Integer[] { 1 });
 
 		Authentication authentication = mock(Authentication.class);
 		when(selector.hasApplicationFunction(authentication, 1, AppFunction.app_view)).thenReturn(true);
+
+		manager.decide(authentication, invocation, null);
+	}
+
+	@Test(expected = EnvGrantParamMissingException.class)
+	public void decide_env_no_param() throws SecurityException, NoSuchMethodException {
+		Method method = SampleAPI.class.getMethod("env_call_missing_param", Integer.TYPE);
+
+		SampleImpl target = new SampleImpl();
+
+		MethodInvocation invocation = mock(MethodInvocation.class);
+		when(invocation.getMethod()).thenReturn(method);
+		when(invocation.getThis()).thenReturn(target);
+		when(invocation.getArguments()).thenReturn(new Object[] { 1 });
+
+		Authentication authentication = mock(Authentication.class);
+
+		manager.decide(authentication, invocation, null);
+	}
+
+	@Test(expected = EnvGrantParamMissingException.class)
+	public void decide_env_no_annotation() throws SecurityException, NoSuchMethodException {
+		Method method = SampleAPI.class.getMethod("env_call_no_annotation", Integer.TYPE, String.class);
+
+		SampleImpl target = new SampleImpl();
+
+		MethodInvocation invocation = mock(MethodInvocation.class);
+		when(invocation.getMethod()).thenReturn(method);
+		when(invocation.getThis()).thenReturn(target);
+		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV" });
+
+		Authentication authentication = mock(Authentication.class);
+
+		manager.decide(authentication, invocation, null);
+	}
+
+	@Test(expected = EnvGrantParamAlreadyDefinedException.class)
+	public void decide_env_too_much() throws SecurityException, NoSuchMethodException {
+		Method method = SampleAPI.class.getMethod("env_call_too_much", Integer.TYPE, String.class, String.class);
+
+		SampleImpl target = new SampleImpl();
+
+		MethodInvocation invocation = mock(MethodInvocation.class);
+		when(invocation.getMethod()).thenReturn(method);
+		when(invocation.getThis()).thenReturn(target);
+		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV", "x" });
+
+		Authentication authentication = mock(Authentication.class);
+
+		manager.decide(authentication, invocation, null);
+	}
+
+	@Test
+	public void decide_env_ok() throws SecurityException, NoSuchMethodException {
+		Method method = SampleAPI.class.getMethod("env_call_ok", Integer.TYPE, String.class);
+
+		SampleImpl target = new SampleImpl();
+
+		MethodInvocation invocation = mock(MethodInvocation.class);
+		when(invocation.getMethod()).thenReturn(method);
+		when(invocation.getThis()).thenReturn(target);
+		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV" });
+
+		Authentication authentication = mock(Authentication.class);
+		when(selector.hasEnvironmentFunction(authentication, 1, "DEV", EnvFunction.env_view)).thenReturn(true);
+
+		manager.decide(authentication, invocation, null);
+	}
+
+	@Test(expected = AccessDeniedException.class)
+	public void decide_env_not_granted() throws SecurityException, NoSuchMethodException {
+		Method method = SampleAPI.class.getMethod("env_call_ok", Integer.TYPE, String.class);
+
+		SampleImpl target = new SampleImpl();
+
+		MethodInvocation invocation = mock(MethodInvocation.class);
+		when(invocation.getMethod()).thenReturn(method);
+		when(invocation.getThis()).thenReturn(target);
+		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV" });
+
+		Authentication authentication = mock(Authentication.class);
+		when(selector.hasEnvironmentFunction(authentication, 1, "DEV", EnvFunction.env_view)).thenReturn(false);
 
 		manager.decide(authentication, invocation, null);
 	}
