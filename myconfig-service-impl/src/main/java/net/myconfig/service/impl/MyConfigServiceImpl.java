@@ -1,14 +1,18 @@
 package net.myconfig.service.impl;
 
-import static net.myconfig.service.impl.SQLColumns.*;
+import static net.myconfig.service.impl.SQLColumns.APPLICATION;
+import static net.myconfig.service.impl.SQLColumns.CONFIG_COUNT;
 import static net.myconfig.service.impl.SQLColumns.DESCRIPTION;
 import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT;
+import static net.myconfig.service.impl.SQLColumns.ENVIRONMENT_COUNT;
 import static net.myconfig.service.impl.SQLColumns.ID;
 import static net.myconfig.service.impl.SQLColumns.KEY;
 import static net.myconfig.service.impl.SQLColumns.KEY_COUNT;
 import static net.myconfig.service.impl.SQLColumns.NAME;
 import static net.myconfig.service.impl.SQLColumns.VALUE;
+import static net.myconfig.service.impl.SQLColumns.VALUE_COUNT;
 import static net.myconfig.service.impl.SQLColumns.VERSION;
+import static net.myconfig.service.impl.SQLColumns.VERSION_COUNT;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,11 +52,13 @@ import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConditionalValue;
 import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.service.model.ConfigurationUpdate;
+import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.ConfigurationValue;
 import net.myconfig.service.model.Environment;
 import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.EnvironmentSummary;
+import net.myconfig.service.model.IndexedValues;
 import net.myconfig.service.model.Key;
 import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.KeySummary;
@@ -60,8 +66,6 @@ import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
 import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.ConfigurationUpdate;
-import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
@@ -361,6 +365,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				return new Environment(rs.getString(NAME));
 			}
 		});
+		// Filters the list of environments
+		environments = filterEnvironments(application, environments);
 		// List of keys for the version
 		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_VERSION, versionCriteria, new RowMapper<Key>() {
 			@Override
@@ -508,6 +514,9 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				return new Environment(rs.getString(NAME));
 			}
 		});
+		
+		// Filtering
+		environments = filterEnvironments(application, environments);
 		
 		// List of versions for the key
 		List<Version> versionList = getNamedParameterJdbcTemplate().query(SQL.VERSIONS_FOR_KEY, keyCriteria, new RowMapper<Version>() {

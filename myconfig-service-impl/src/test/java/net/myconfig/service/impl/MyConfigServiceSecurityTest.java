@@ -1,10 +1,12 @@
 package net.myconfig.service.impl;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.myconfig.core.AppFunction;
@@ -17,11 +19,16 @@ import net.myconfig.service.model.ApplicationSummary;
 import net.myconfig.service.model.ConfigurationUpdate;
 import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.EnvironmentConfiguration;
+import net.myconfig.service.model.IndexedValues;
+import net.myconfig.service.model.KeyConfiguration;
+import net.myconfig.service.model.VersionConfiguration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
+
+import com.google.common.collect.Lists;
 
 public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
@@ -113,53 +120,84 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		asUser(UserFunction.app_list);
 		myconfig.getApplicationConfiguration(1);
 	}
-	
+
 	@Test
 	public void updateConfiguration_admin() {
 		asAdmin();
-		ConfigurationUpdates updates = new ConfigurationUpdates(
-				asList(
-						new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"),
-						new ConfigurationUpdate("UAT", "1.0", "jdbc.password", "uatpwd")
-				));				
+		ConfigurationUpdates updates = new ConfigurationUpdates(asList(new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"), new ConfigurationUpdate("UAT", "1.0", "jdbc.password",
+				"uatpwd")));
 		myconfig.updateConfiguration(1, updates);
 	}
-	
+
 	@Test
 	public void updateConfiguration_user_granted() {
 		asUser(1, EnvFunction.env_config, "DEV", "UAT");
-		ConfigurationUpdates updates = new ConfigurationUpdates(
-				asList(
-						new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"),
-						new ConfigurationUpdate("UAT", "1.0", "jdbc.password", "uatpwd")
-				));				
+		ConfigurationUpdates updates = new ConfigurationUpdates(asList(new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"), new ConfigurationUpdate("UAT", "1.0", "jdbc.password",
+				"uatpwd")));
 		myconfig.updateConfiguration(1, updates);
 	}
-	
+
 	@Test(expected = AccessDeniedException.class)
 	public void updateConfiguration_user_not_granted() {
 		asUser(1, EnvFunction.env_config, "DEV");
-		ConfigurationUpdates updates = new ConfigurationUpdates(
-				asList(
-						new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"),
-						new ConfigurationUpdate("UAT", "1.0", "jdbc.password", "uatpwd")
-				));				
+		ConfigurationUpdates updates = new ConfigurationUpdates(asList(new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"), new ConfigurationUpdate("UAT", "1.0", "jdbc.password",
+				"uatpwd")));
 		myconfig.updateConfiguration(1, updates);
 	}
-	
+
 	@Test
-	public void getEnvironmentConfiguration_granted () {
+	public void getEnvironmentConfiguration_granted() {
 		asUser(1, EnvFunction.env_view, "UAT");
 		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "UAT");
 		assertNotNull(c);
 	}
-	
+
 	@Test(expected = AccessDeniedException.class)
-	public void getEnvironmentConfiguration_not_granted () {
+	public void getEnvironmentConfiguration_not_granted() {
 		asUser(1, EnvFunction.env_config, "DEV");
 		myconfig.getEnvironmentConfiguration(1, "UAT");
 	}
-	
+
+	@Test
+	public void getKeyConfiguration_all() {
+		asAdmin();
+		KeyConfiguration c = myconfig.getKeyConfiguration(1, "jdbc.user");
+		assertNotNull(c);
+		List<IndexedValues<String>> environmentValuesPerVersionList = c.getEnvironmentValuesPerVersionList();
+		List<String> envs = Lists.transform(environmentValuesPerVersionList, IndexedValues.<String> indexFn());
+		assertEquals(Arrays.asList("DEV", "UAT"), envs);
+	}
+
+	@Test
+	public void getKeyConfiguration_restricted() {
+		asUser(1, EnvFunction.env_view, "DEV");
+		KeyConfiguration c = myconfig.getKeyConfiguration(1, "jdbc.user");
+		assertNotNull(c);
+		List<IndexedValues<String>> environmentValuesPerVersionList = c.getEnvironmentValuesPerVersionList();
+		List<String> envs = Lists.transform(environmentValuesPerVersionList, IndexedValues.<String> indexFn());
+		assertEquals(Arrays.asList("DEV"), envs);
+	}
+
+	@Test
+	public void getVersionConfiguration_all() {
+		asAdmin();
+		VersionConfiguration c = myconfig.getVersionConfiguration(1, "1.0");
+		assertNotNull(c);
+		List<IndexedValues<String>> environmentValuesPerKeyList = c.getEnvironmentValuesPerKeyList();
+		List<String> envs = Lists.transform(environmentValuesPerKeyList, IndexedValues.<String> indexFn());
+		assertEquals(Arrays.asList("DEV", "UAT"), envs);
+	}
+
+	@Test
+	public void getVersionConfiguration_restricted() {
+		asUser(1, EnvFunction.env_view, "DEV");
+		VersionConfiguration c = myconfig.getVersionConfiguration(1, "1.0");
+		assertNotNull(c);
+		List<IndexedValues<String>> environmentValuesPerKeyList = c.getEnvironmentValuesPerKeyList();
+		List<String> envs = Lists.transform(environmentValuesPerKeyList, IndexedValues.<String> indexFn());
+		assertEquals(Arrays.asList("DEV"), envs);
+	}
+
 	// TODO Ack createVersion(int id, String name);
 	//
 	// TODO Ack deleteVersion(int id, String name);
@@ -177,12 +215,7 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	// TODO Ack addKeyVersion(int application, String version, String key);
 	//
 	// TODO Ack removeKeyVersion(int application, String version, String key);
-	//
-	// TODO VersionConfiguration getVersionConfiguration(int application, String
-	// version);
-	//
-	// TODO KeyConfiguration getKeyConfiguration(int application, String key);
-	//
+
 	// TODO Ack updateKey(int application, String name, String description);
 
 	// TODO String getKey(String application, String version, String

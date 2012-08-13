@@ -79,6 +79,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		SecurityContextImpl context = new SecurityContextImpl();
 
 		UserProfile token = mock(UserProfile.class);
+		when(token.hasAppFunction(application, AppFunction.app_view)).thenReturn(true);
 		for (String env : envs) {
 			when(token.hasEnvFunction(application, env, fn)).thenReturn(true);
 		}
