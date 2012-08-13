@@ -63,13 +63,18 @@ public abstract class AbstractSecurityService extends AbstractDaoService {
 	}
 
 	protected EnumSet<UserFunction> getUserFunctions(User user) {
-		return EnumSet.copyOf(Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, user.getName()), String.class),
+		List<UserFunction> fns = Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, user.getName()), String.class),
 				new Function<String, UserFunction>() {
 					@Override
 					public UserFunction apply(String name) {
 						return UserFunction.valueOf(name);
 					}
-				}));
+				});
+		if (fns.isEmpty()) {
+			return EnumSet.noneOf(UserFunction.class);
+		} else {
+			return EnumSet.copyOf(fns);
+		}
 	}
 
 	protected User getUser(String username, String password) {
