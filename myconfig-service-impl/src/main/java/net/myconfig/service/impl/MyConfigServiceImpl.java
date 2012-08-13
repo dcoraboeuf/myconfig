@@ -203,6 +203,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			throw new ApplicationNameAlreadyDefinedException (name);
 		}
 		int id = keyHolder.getKey().intValue();
+		// Initial grants
+		// OK
 		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0);
 	}
 	
@@ -216,7 +218,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.version_create)
+	@AppGrant(AppFunction.app_config)
 	public Ack createVersion(int id, String name) {
 		validate(VersionValidation.class, NAME, name);
 		checkApplication(id);
@@ -237,7 +239,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.version_delete)
+	@AppGrant(AppFunction.app_config)
 	public Ack deleteVersion(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
@@ -246,7 +248,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.env_create)
+	@AppGrant(AppFunction.app_config)
 	public Ack createEnvironment(int id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
@@ -261,7 +263,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.env_delete)
+	@AppGrant(AppFunction.app_config)
 	public Ack deleteEnvironment(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
@@ -270,7 +272,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.key_create)
+	@AppGrant(AppFunction.app_config)
 	public Ack createKey(int id, String name, String description) {
 		validate(KeyValidation.class, NAME, name);
 		validate(KeyValidation.class, DESCRIPTION, description);
@@ -286,7 +288,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.key_update)
+	@AppGrant(AppFunction.app_config)
 	public Ack updateKey(int application, String name, String description) {
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(application);
@@ -302,7 +304,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.key_delete)
+	@AppGrant(AppFunction.app_config)
 	public Ack deleteKey(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
@@ -598,7 +600,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.matrix)
+	@AppGrant(AppFunction.app_matrix)
 	public Ack addKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
@@ -619,7 +621,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.matrix)
+	@AppGrant(AppFunction.app_matrix)
 	public Ack removeKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);

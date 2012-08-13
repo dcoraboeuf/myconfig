@@ -15,36 +15,12 @@ public enum AppFunction {
 	 */
 	app_users,
 	/**
-	 * Creation of a new version
+	 * Management of versions, keys and environments
 	 */
-	version_create,
-	/**
-	 * Deletion of a version
-	 */
-	version_delete,
-	/**
-	 * Creation of an environment
-	 */
-	env_create,
-	/**
-	 * Deletion of an environment
-	 */
-	env_delete, 
-	/**
-	 * Creation of a key
-	 */
-	key_create,
-	/**
-	 * Deletion of a key
-	 */
-	key_delete, 
-	/**
-	 * Update the description of a key
-	 */
-	key_update,
+	app_config,
 	/**
 	 * Management of the matrix between keys and versions
 	 */
-	matrix; 
+	app_matrix; 
 
 }

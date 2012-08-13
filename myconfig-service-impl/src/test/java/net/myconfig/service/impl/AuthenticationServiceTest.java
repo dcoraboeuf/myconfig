@@ -1,8 +1,8 @@
 package net.myconfig.service.impl;
 
+import static net.myconfig.core.AppFunction.app_config;
 import static net.myconfig.core.AppFunction.app_delete;
 import static net.myconfig.core.AppFunction.app_view;
-import static net.myconfig.core.AppFunction.version_create;
 import static net.myconfig.core.UserFunction.app_create;
 import static net.myconfig.core.UserFunction.app_list;
 import static org.junit.Assert.assertEquals;
@@ -71,7 +71,7 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		}
 		// Applications functions
 		for (AppFunction fn : AppFunction.values()) {
-			if (fn == app_delete || fn == version_create || fn == app_view) {
+			if (fn == app_delete || fn == app_config || fn == app_view) {
 				assertTrue(user.hasAppFunction(1, fn));
 			} else {
 				assertFalse(user.hasAppFunction(1, fn));

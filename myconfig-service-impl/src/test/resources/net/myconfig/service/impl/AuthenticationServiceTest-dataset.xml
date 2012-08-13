@@ -16,6 +16,6 @@
 	
 	<APPGRANTS application="1" user="*" grantedfunction="app_view" />
 	<APPGRANTS application="1" user="user1" grantedfunction="app_delete" />
-	<APPGRANTS application="1" user="user1" grantedfunction="version_create" />
+	<APPGRANTS application="1" user="user1" grantedfunction="app_config" />
 
 </dataset>
