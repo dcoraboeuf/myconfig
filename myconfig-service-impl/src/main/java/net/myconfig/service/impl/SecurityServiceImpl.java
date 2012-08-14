@@ -15,11 +15,13 @@ import javax.validation.Validator;
 
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.NotificationService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.model.Ack;
+import net.myconfig.service.model.NotificationType;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
@@ -45,12 +47,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	private final ConfigurationService configurationService;
 	private final SecuritySelector securitySelector;
+	private final NotificationService notificationService;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, NotificationService notificationService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
 		this.securitySelector = securitySelector;
+		this.notificationService = notificationService;
 	}
 
 	@Override
@@ -96,9 +100,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	public Ack userCreate(String name, String email) {
 		validate(UserValidation.class, NAME, name);
 		try {
+			// Creates the user
 			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource()
-			.addValue(SQLColumns.NAME, name)
-			.addValue(SQLColumns.EMAIL, email));
+				.addValue(SQLColumns.NAME, name)
+				.addValue(SQLColumns.EMAIL, email));
+			// Its initial state is not verified and a notification must be sent to the email
+			// TODO User display name
+			notificationService.sendNotification(name, name, email, NotificationType.NEW_USER, null);
+			// OK
 			return Ack.one(count);
 		} catch (DuplicateKeyException ex) {
 			throw new UserAlreadyDefinedException(name);
