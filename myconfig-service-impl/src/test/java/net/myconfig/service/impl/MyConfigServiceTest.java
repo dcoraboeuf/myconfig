@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import net.myconfig.service.api.MyConfigService;
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
@@ -58,6 +59,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.dbunit.dataset.DataSetException;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,11 +69,22 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Autowired
 	private MyConfigService myConfigService;
 	
+	@Autowired
+	private SecurityService securityService;
+	
 	@Value("${app.version}")
 	private String appVersion;
 	
 	@Autowired
 	private Strings strings;
+	
+	/**
+	 * Makes sure to work without security enabled
+	 */
+	@Before
+	public void securitySetup() {
+		securityService.setSecurityMode("none");
+	}
 	
 	@Test
 	public void version() {
