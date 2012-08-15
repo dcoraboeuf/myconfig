@@ -15,13 +15,15 @@ import javax.validation.Validator;
 
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
-import net.myconfig.service.api.NotificationService;
+import net.myconfig.service.api.message.Message;
+import net.myconfig.service.api.message.MessageChannel;
+import net.myconfig.service.api.message.MessageDestination;
+import net.myconfig.service.api.message.MessageService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.NotificationType;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
@@ -43,18 +45,27 @@ import com.google.common.collect.Lists;
 @Service
 public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
 
+	// TODO Use templating
+	private static final String NEW_USER_MESSAGE = "Dear %1$s,%n%n" +
+			"A new account '%1$s' has been registered for you.%n%n" +
+			"Please follow this link in order to validate your account and " +
+			"to create your password.%n%n" +
+			"%2$s%n%n" +
+			"Regards,%n" +
+			"the myconfig team.";
+
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
 	private final ConfigurationService configurationService;
 	private final SecuritySelector securitySelector;
-	private final NotificationService notificationService;
+	private final MessageService messageService;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, NotificationService notificationService) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
 		this.securitySelector = securitySelector;
-		this.notificationService = notificationService;
+		this.messageService = messageService;
 	}
 
 	@Override
@@ -105,13 +116,24 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 				.addValue(SQLColumns.NAME, name)
 				.addValue(SQLColumns.EMAIL, email));
 			// Its initial state is not verified and a notification must be sent to the email
-			// TODO User display name
-			notificationService.sendNotification(name, name, email, NotificationType.NEW_USER, null);
+			Message message = createNewUserMessage (name);
+			// Sends the message
+			Ack ack = messageService.sendMessage (message, new MessageDestination (MessageChannel.EMAIL, email));
 			// OK
-			return Ack.one(count);
+			return Ack.one(count).and(ack);
 		} catch (DuplicateKeyException ex) {
 			throw new UserAlreadyDefinedException(name);
 		}
+	}
+
+	private Message createNewUserMessage(String name) {
+		// FIXME Generates a token for the response
+		// FIXME Gets the return link
+		String link = "http://TODO";
+		// Creates the message
+		return new Message(
+				String.format("myconfig - registration for account", name),
+				String.format(NEW_USER_MESSAGE, name, link));
 	}
 
 	@Override
