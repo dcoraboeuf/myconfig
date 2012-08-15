@@ -28,6 +28,7 @@ import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
+import net.myconfig.service.token.TokenService;
 import net.myconfig.service.validation.UserValidation;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,14 +62,16 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private final SecuritySelector securitySelector;
 	private final MessageService messageService;
 	private final UIService uiService;
+	private final TokenService tokenService;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService, UIService uiService) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService, UIService uiService, TokenService tokenService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
 		this.securitySelector = securitySelector;
 		this.messageService = messageService;
 		this.uiService = uiService;
+		this.tokenService = tokenService;
 	}
 
 	@Override
@@ -130,8 +133,8 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	private Message createNewUserMessage(String name) {
-		// FIXME Generates a token for the response
-		String token = "TODO_TOKEN";
+		// Generates a token for the response
+		String token = tokenService.generateToken(TokenService.TokenType.NEW_USER, name);
 		// Gets the return link
 		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
 		// Creates the message
