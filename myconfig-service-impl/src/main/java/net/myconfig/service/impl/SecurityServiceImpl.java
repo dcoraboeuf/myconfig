@@ -15,6 +15,7 @@ import javax.validation.Validator;
 
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.UIService;
 import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
 import net.myconfig.service.api.message.MessageDestination;
@@ -59,13 +60,15 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private final ConfigurationService configurationService;
 	private final SecuritySelector securitySelector;
 	private final MessageService messageService;
+	private final UIService uiService;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService, UIService uiService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
 		this.securitySelector = securitySelector;
 		this.messageService = messageService;
+		this.uiService = uiService;
 	}
 
 	@Override
@@ -128,8 +131,9 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	private Message createNewUserMessage(String name) {
 		// FIXME Generates a token for the response
-		// FIXME Gets the return link
-		String link = "http://TODO";
+		String token = "TODO_TOKEN";
+		// Gets the return link
+		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
 		// Creates the message
 		return new Message(
 				String.format("myconfig - registration for account", name),
