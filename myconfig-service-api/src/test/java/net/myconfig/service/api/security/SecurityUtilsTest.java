@@ -1,9 +1,10 @@
-package net.myconfig.service.security.support;
+package net.myconfig.service.api.security;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.UserProfile;
 
 import org.junit.Before;

@@ -1,6 +1,6 @@
-package net.myconfig.service.security.support;
+package net.myconfig.service.api.security;
 
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.core.UserFunction;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -27,6 +27,20 @@ public final class SecurityUtils {
 			}
 		} else {
 			return null;
+		}
+	}
+
+	public static boolean hasOneOfUserFunction(UserFunction... fns) {
+		UserProfile profile = profile();
+		if (profile != null) {
+			for (UserFunction fn : fns) {
+				if (profile.hasUserFunction(fn)) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			return false;
 		}
 	}
 

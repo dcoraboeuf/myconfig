@@ -3,8 +3,10 @@ package net.myconfig.web.settings;
 import java.util.List;
 import java.util.Map;
 
+import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.SecurityUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,7 @@ public class SecuritySettingsCollaborator extends AbstractSettingsCollaborator {
 
 	private final SecurityService securityService;
 	private final SecuritySelector securitySelector;
-	
+
 	@Autowired
 	public SecuritySettingsCollaborator(SecurityService securityService, SecuritySelector securitySelector) {
 		this.securityService = securityService;
@@ -34,8 +36,13 @@ public class SecuritySettingsCollaborator extends AbstractSettingsCollaborator {
 	@Override
 	public void save(Map<String, String[]> parameters) {
 		// Mode
-		String mode = getParameter (parameters, "mode", true, null);
+		String mode = getParameter(parameters, "mode", true, null);
 		securityService.setSecurityMode(mode);
+	}
+
+	@Override
+	public boolean isAllowed() {
+		return SecurityUtils.hasOneOfUserFunction(UserFunction.security_setup, UserFunction.security_users);
 	}
 
 }

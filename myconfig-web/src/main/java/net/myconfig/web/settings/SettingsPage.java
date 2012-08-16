@@ -1,8 +1,14 @@
 package net.myconfig.web.settings;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import net.myconfig.web.gui.AbstractGUIPage;
+import net.myconfig.web.rest.UIInterface;
+import net.myconfig.web.support.ErrorHandler;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -13,10 +19,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.request.WebRequest;
-
-import net.myconfig.web.gui.AbstractGUIPage;
-import net.myconfig.web.rest.UIInterface;
-import net.myconfig.web.support.ErrorHandler;
 
 @Controller
 public class SettingsPage extends AbstractGUIPage {
@@ -33,13 +35,16 @@ public class SettingsPage extends AbstractGUIPage {
 
 	@RequestMapping(value = "/gui/settings", method = RequestMethod.GET)
 	public String settings(Model model) {
-		// Collaborators
-		model.addAttribute("settingsCollaborators", settingsCollaborators);
-		// FIXME Checks if those settings are allowed for the current user
+		List<SettingsCollaborator> retainedCollaborators = new ArrayList<SettingsCollaborator>();
 		// Model parameters for each collaborator
 		for (SettingsCollaborator settingsCollaborator : settingsCollaborators) {
-			settingsCollaborator.initModel(model);
+			if (settingsCollaborator.isAllowed()) {
+				settingsCollaborator.initModel(model);
+				retainedCollaborators.add(settingsCollaborator);
+			}
 		}
+		// Collaborators
+		model.addAttribute("settingsCollaborators", retainedCollaborators);
 		// OK
 		return "settings";
 	}
@@ -54,26 +59,30 @@ public class SettingsPage extends AbstractGUIPage {
 		// Collection of parameters per collaborator
 		Map<String,Map<String,String[]>> parametersPerCollaborator = new HashMap<String, Map<String,String[]>>();
 		for (SettingsCollaborator settingsCollaborator : settingsCollaborators) {
-			String id = settingsCollaborator.getId();
-			
-			Map<String,String[]> thisParameters = new HashMap<String, String[]>();
-			parametersPerCollaborator.put(id, thisParameters);
-			
-			String prefix = id + ".";
-			for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
-				String key = entry.getKey();
-				if (StringUtils.startsWith(key, prefix)) {
-					String name = StringUtils.substringAfter(key, prefix);
-					thisParameters.put(name, entry.getValue());
+			if (settingsCollaborator.isAllowed()) {
+				String id = settingsCollaborator.getId();
+				
+				Map<String,String[]> thisParameters = new HashMap<String, String[]>();
+				parametersPerCollaborator.put(id, thisParameters);
+				
+				String prefix = id + ".";
+				for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
+					String key = entry.getKey();
+					if (StringUtils.startsWith(key, prefix)) {
+						String name = StringUtils.substringAfter(key, prefix);
+						thisParameters.put(name, entry.getValue());
+					}
 				}
 			}
 		}
 		// Saves the settings per collaborator
 		for (SettingsCollaborator settingsCollaborator : settingsCollaborators) {
-			String id = settingsCollaborator.getId();
-			Map<String, String[]> thisParameters = parametersPerCollaborator.get(id);
-			logger.debug("[settings] collaborator {} -> {}", id, thisParameters);
-			settingsCollaborator.save (thisParameters);
+			if (settingsCollaborator.isAllowed()) {
+				String id = settingsCollaborator.getId();
+				Map<String, String[]> thisParameters = parametersPerCollaborator.get(id);
+				logger.debug("[settings] collaborator {} -> {}", id, thisParameters);
+				settingsCollaborator.save (thisParameters);
+			}
 		}
 		// OK
 		return "redirect:/";

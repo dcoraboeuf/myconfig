@@ -12,4 +12,6 @@ public interface SettingsCollaborator {
 
 	void save(Map<String, String[]> parameters);
 
+	boolean isAllowed();
+
 }
