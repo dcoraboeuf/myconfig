@@ -1,6 +1,7 @@
 package net.myconfig.service.token;
 
 
+
 public interface TokenService {
 	
 	public enum TokenType {
@@ -8,5 +9,7 @@ public interface TokenService {
 	}
 
 	String generateToken(TokenType type, String key);
+
+	void checkToken(String token, TokenType type, String key);
 
 }

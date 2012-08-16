@@ -71,6 +71,11 @@ var myconfig = function () {
 			var value = $(selector).val();
 			var trimmedValue = value.trim();
 			return validate (selector, trimmedValue == value);
+		},
+		validateConfirmation: function (source, confirmation) {
+			var value = $(source).val();
+			var confirmValue = $(confirmation).val();
+			return validate (confirmation, confirmValue == value);
 		}
 	};
 	

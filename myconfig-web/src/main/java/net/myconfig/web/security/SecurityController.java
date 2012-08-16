@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.InputException;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.web.gui.AbstractGUIPage;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,9 +26,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SecurityController extends AbstractGUIPage {
 	
+	private final SecurityService securityService;
+	
 	@Autowired
-	public SecurityController(UIInterface ui, ErrorHandler errorHandler) {
+	public SecurityController(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService) {
 		super(ui, errorHandler);
+		this.securityService = securityService;
 	}
 
 	@RequestMapping("/login")
@@ -78,6 +83,16 @@ public class SecurityController extends AbstractGUIPage {
 		ui.userDelete(name); 
 		// OK
 		return "redirect:/gui/users";
+	}
+	
+	@RequestMapping(value = "/gui/user/confirm/{name}/{token}", method = RequestMethod.GET)
+	public String userConfirm (@PathVariable String name, @PathVariable String token, Model model) {
+		// Confirms the token
+		securityService.checkUserConfirm(name, token);
+		// Fills the model
+		model.addAttribute("name", name).addAttribute("token", token);
+		// OK
+		return "userConfirm";
 	}
 
 }

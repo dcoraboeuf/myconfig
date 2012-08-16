@@ -202,5 +202,6 @@ public interface SQL {
 	String ENV_FUNCTIONS_DELETE = "delete from envgrants where user = :name";
 
 	String TOKEN_SAVE = "insert into tokens (token, tokentype, tokenkey, creation) values (:token, :tokentype, :tokenkey, :creation)";
+	String TOKEN_CHECK = "select creation from tokens where token = :token and tokentype = :tokentype and tokenkey = :tokenkey";
 
 }

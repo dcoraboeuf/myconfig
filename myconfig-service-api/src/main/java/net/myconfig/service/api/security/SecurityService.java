@@ -20,4 +20,6 @@ public interface SecurityService {
 
 	void setSecurityMode(String mode);
 
+	void checkUserConfirm(String name, String token);
+
 }

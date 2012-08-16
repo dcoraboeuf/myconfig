@@ -173,5 +173,10 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
 	}
+	
+	@Override
+	public void checkUserConfirm(String name, String token) {
+		tokenService.checkToken (token, TokenService.TokenType.NEW_USER, name);
+	}
 
 }

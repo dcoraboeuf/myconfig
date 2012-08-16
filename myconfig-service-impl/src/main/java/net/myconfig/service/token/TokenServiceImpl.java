@@ -15,7 +15,12 @@ import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLUtils;
 import net.myconfig.service.impl.AbstractDaoService;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.security.core.token.Sha512DigestUtils;
 import org.springframework.stereotype.Service;
@@ -25,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TokenServiceImpl extends AbstractDaoService implements TokenService {
+
+	private static final int EXPIRATION_DELAY = 15;
 
 	@Autowired
 	public TokenServiceImpl(DataSource dataSource, Validator validator) {
@@ -48,6 +55,29 @@ public class TokenServiceImpl extends AbstractDaoService implements TokenService
 					.addValue(CREATION, creation));
 		// OK
 		return token;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public void checkToken(String token, TokenType type, String key) {
+			try {
+				Timestamp creation = getNamedParameterJdbcTemplate().queryForObject(
+						SQL.TOKEN_CHECK, 
+						new MapSqlParameterSource()
+							.addValue(TOKEN, token)
+							.addValue(TOKENTYPE, type.name())
+							.addValue(TOKENKEY, key),
+						Timestamp.class);
+				DateTime utcCreation = new DateTime(creation.getTime(), DateTimeZone.UTC);
+				DateTime utcNow = DateTime.now(DateTimeZone.UTC);
+				Period period = new Period(utcCreation, utcNow);
+				Days days = period.toStandardDays();
+				if (days.isGreaterThan(Days.days(EXPIRATION_DELAY))) {
+					throw new TokenExpiredException (token, type, key);
+				}
+			} catch (EmptyResultDataAccessException ex) {
+				throw new TokenNotFoundException (token, type, key);
+			}
 	}
 
 	private String createToken(TokenType type, String key) {
