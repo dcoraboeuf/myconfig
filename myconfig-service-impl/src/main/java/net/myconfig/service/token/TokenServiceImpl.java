@@ -79,6 +79,19 @@ public class TokenServiceImpl extends AbstractDaoService implements TokenService
 				throw new TokenNotFoundException (token, type, key);
 			}
 	}
+	
+	@Override
+	@Transactional
+	public void consumesToken(String token, TokenType type, String key) {
+		// Checks the token
+		checkToken(token, type, key);
+		// Deletes the token
+		getNamedParameterJdbcTemplate().update(
+				SQL.TOKEN_DELETE,
+				new MapSqlParameterSource()
+					.addValue(TOKENTYPE, type.name())
+					.addValue(TOKENKEY, key));
+	}
 
 	private String createToken(TokenType type, String key) {
 		String s = String.format("%s-%s-%s", UUID.randomUUID(), type, key);

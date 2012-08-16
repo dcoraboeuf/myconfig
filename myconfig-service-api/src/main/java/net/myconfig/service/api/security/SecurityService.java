@@ -22,4 +22,6 @@ public interface SecurityService {
 
 	void checkUserConfirm(String name, String token);
 
+	void userConfirm(String name, String token, String password);
+
 }

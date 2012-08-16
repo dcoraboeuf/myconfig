@@ -8,6 +8,7 @@ import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.InputException;
 import net.myconfig.service.model.UserSummary;
+import net.myconfig.service.token.AbstractTokenException;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
@@ -25,9 +26,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class SecurityController extends AbstractGUIPage {
-	
+
 	private final SecurityService securityService;
-	
+
 	@Autowired
 	public SecurityController(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService) {
 		super(ui, errorHandler);
@@ -68,31 +69,43 @@ public class SecurityController extends AbstractGUIPage {
 		// OK
 		return "users";
 	}
-	
+
 	@RequestMapping(value = "/gui/user/create", method = RequestMethod.POST)
-	public String userCreate (@RequestParam String name, @RequestParam String email) {
+	public String userCreate(@RequestParam String name, @RequestParam String email) {
 		// Creation
-		ui.userCreate(name, email); 
+		ui.userCreate(name, email);
 		// OK
 		return "redirect:/gui/users";
 	}
-	
+
 	@RequestMapping(value = "/gui/user/delete", method = RequestMethod.POST)
-	public String userDelete (@RequestParam String name) {
+	public String userDelete(@RequestParam String name) {
 		// Creation
-		ui.userDelete(name); 
+		ui.userDelete(name);
 		// OK
 		return "redirect:/gui/users";
 	}
-	
+
 	@RequestMapping(value = "/gui/user/confirm/{name}/{token}", method = RequestMethod.GET)
-	public String userConfirm (@PathVariable String name, @PathVariable String token, Model model) {
+	public String userConfirmForm(@PathVariable String name, @PathVariable String token, Model model) {
 		// Confirms the token
 		securityService.checkUserConfirm(name, token);
 		// Fills the model
 		model.addAttribute("name", name).addAttribute("token", token);
 		// OK
 		return "userConfirm";
+	}
+
+	@RequestMapping(value = "/gui/user/confirm", method = RequestMethod.POST)
+	public String userConfirm(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
+		try {
+			securityService.userConfirm(name, token, password);
+			model.addAttribute("name", name);
+			return "userConfirmOK";
+		} catch (AbstractTokenException ex) {
+			model.addAttribute("error", errorHandler.displayableError(ex, locale)).addAttribute("name", name).addAttribute("token", token);
+			return "userConfirm";
+		}
 	}
 
 }

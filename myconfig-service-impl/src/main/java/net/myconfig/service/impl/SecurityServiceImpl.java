@@ -3,6 +3,8 @@ package net.myconfig.service.impl;
 import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
 import static net.myconfig.service.db.SQLColumns.NAME;
+import static net.myconfig.service.db.SQLColumns.PASSWORD;
+import static net.myconfig.service.db.SQLColumns.USER;
 import static net.myconfig.service.db.SQLColumns.VERIFIED;
 
 import java.sql.ResultSet;
@@ -177,6 +179,17 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	public void checkUserConfirm(String name, String token) {
 		tokenService.checkToken (token, TokenService.TokenType.NEW_USER, name);
+	}
+	
+	@Override
+	@Transactional
+	public void userConfirm(String name, String token, String password) {
+		// Consumes the token
+		tokenService.consumesToken (token, TokenService.TokenType.NEW_USER, name);
+		// Saves the password
+		getNamedParameterJdbcTemplate().update(SQL.USER_CONFIRM, new MapSqlParameterSource()
+			.addValue(USER, name)
+			.addValue(PASSWORD, digest(password)));
 	}
 
 }
