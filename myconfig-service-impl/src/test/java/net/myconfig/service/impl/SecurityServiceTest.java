@@ -4,27 +4,36 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Locale;
 
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.exception.ValidationException;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
+import net.sf.jstring.Strings;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 
 /**
  * Test of the protection on the {@link SecurityService}.
  */
 public class SecurityServiceTest extends AbstractSecurityTest {
+	
+	@Autowired
+	private Strings strings;
 
 	@Test(expected = AccessDeniedException.class)
 	public void getUserList_no_auth() {
@@ -73,6 +82,84 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 		Ack ack = securityService.userCreate("test", "test@test.com");
 		assertTrue(ack.isSuccess());
 		assertRecordExists("select * from users where name = 'test' and email = 'test@test.com' and password = '' and verified = false and admin = false");
+	}
+	
+	@Test
+	public void userCreate_null () {
+		try {
+			asAdmin();
+			securityService.userCreate(null, "test@test.com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-006] User name is invalid: may not be null",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_blank () {
+		try {
+			asAdmin();
+			securityService.userCreate("", "test@test.com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-006] User name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_spaces () {
+		try {
+			asAdmin();
+			securityService.userCreate("     ", "test@test.com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-006] User name is invalid: may not be blank",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_unrecognized_characters () {
+		try {
+			asAdmin();
+			securityService.userCreate("<te/st\u00E9>", "test@test.com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-006] User name is invalid: must be sequence of ASCII letters, dash(-), underscore(_) and/or spaces ( )",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_trim () {
+		try {
+			asAdmin();
+			securityService.userCreate("  test   ", "test@test.com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-006] User name is invalid: may not have leading or trailing blanks",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void applicationCreate_too_long () {
+		try {
+			asAdmin();
+			securityService.userCreate(StringUtils.repeat("x", 81), "test@test.com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-006] User name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
 	}
 
 	@Test(expected = UserAlreadyDefinedException.class)
