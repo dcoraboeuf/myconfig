@@ -112,7 +112,29 @@ public class SecurityController extends AbstractGUIPage {
 	public String userResetLink() {
 		securityService.userReset();
 		// OK
-		return "userResetOK";
+		return "userResetRequestOK";
+	}
+
+	@RequestMapping(value = "/gui/user/reset/{name}/{token}", method = RequestMethod.GET)
+	public String userResetForm(@PathVariable String name, @PathVariable String token, Model model) {
+		// Confirms the token
+		securityService.checkUserReset(name, token);
+		// Fills the model
+		model.addAttribute("name", name).addAttribute("token", token);
+		// OK
+		return "userReset";
+	}
+
+	@RequestMapping(value = "/gui/user/reset", method = RequestMethod.POST)
+	public String userReset(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String oldPassword, @RequestParam String newPassword, Model model) {
+		try {
+			securityService.userReset(name, token, oldPassword, newPassword);
+			model.addAttribute("name", name);
+			return "userResetOK";
+		} catch (InputException ex) {
+			model.addAttribute("error", errorHandler.displayableError(ex, locale)).addAttribute("name", name).addAttribute("token", token);
+			return "userReset";
+		}
 	}
 
 }

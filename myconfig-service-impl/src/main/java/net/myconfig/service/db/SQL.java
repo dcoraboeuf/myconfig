@@ -209,4 +209,6 @@ public interface SQL {
 
 	String USER_EMAIL = "select email from users where name = :user";
 
+	String USER_RESET = "update users set password = :newpassword where name = :user and password = :password";
+
 }

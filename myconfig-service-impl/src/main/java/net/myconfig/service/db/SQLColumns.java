@@ -4,6 +4,7 @@ public interface SQLColumns {
 
 	String USER = "user";
 	String PASSWORD = "password";
+	String NEWPASSWORD = "newpassword";
 	String ADMIN = "admin";
 	String GRANTEDFUNCTION = "grantedfunction";
 	String ENVIRONMENT = "environment";

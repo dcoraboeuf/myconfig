@@ -4,6 +4,7 @@ import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
 import static net.myconfig.service.db.SQLColumns.EMAIL;
 import static net.myconfig.service.db.SQLColumns.NAME;
+import static net.myconfig.service.db.SQLColumns.NEWPASSWORD;
 import static net.myconfig.service.db.SQLColumns.PASSWORD;
 import static net.myconfig.service.db.SQLColumns.USER;
 import static net.myconfig.service.db.SQLColumns.VERIFIED;
@@ -190,6 +191,28 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	public void checkUserConfirm(String name, String token) {
 		tokenService.checkToken(token, TokenType.NEW_USER, name);
+	}
+
+	@Override
+	public void checkUserReset(String name, String token) {
+		tokenService.checkToken(token, TokenType.RESET_USER, name);
+	}
+	
+	@Override
+	@Transactional
+	public void userReset(String name, String token, String oldPassword, String newPassword) {
+		// Consumes the token
+		tokenService.consumesToken(token, TokenType.RESET_USER, name);
+		// Changes the password
+		int count = getNamedParameterJdbcTemplate().update(SQL.USER_RESET, 
+				new MapSqlParameterSource()
+					.addValue(USER, name)
+					.addValue(PASSWORD, digest(oldPassword))
+					.addValue(NEWPASSWORD, digest(newPassword)));
+		// Check
+		if (count != 1) {
+			throw new CannotResetUserException(name);
+		}
 	}
 
 	@Override
