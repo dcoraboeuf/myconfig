@@ -1,10 +1,9 @@
 package net.myconfig.web.service;
 
 import static java.lang.String.format;
+import net.myconfig.service.api.UIService;
 
 import org.springframework.stereotype.Service;
-
-import net.myconfig.service.api.UIService;
 
 @Service
 public class WebUIService implements UIService {
@@ -18,6 +17,9 @@ public class WebUIService implements UIService {
 		switch (link) {
 		case NEW_USER:
 			query = format("gui/user/confirm/%s/%s", (Object[]) components);
+			break;
+		case RESET_USER:
+			query = format("gui/user/reset/%s/%s", (Object[]) components);
 			break;
 		default:
 			throw new IllegalStateException("UIService.Link is not supported: " + link);

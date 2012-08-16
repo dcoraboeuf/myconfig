@@ -108,4 +108,11 @@ public class SecurityController extends AbstractGUIPage {
 		}
 	}
 
+	@RequestMapping(value = "/gui/user/reset", method = RequestMethod.GET)
+	public String userResetLink() {
+		securityService.userReset();
+		// OK
+		return "userResetOK";
+	}
+
 }

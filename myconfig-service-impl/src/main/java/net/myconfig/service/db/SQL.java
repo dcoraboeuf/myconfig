@@ -207,4 +207,6 @@ public interface SQL {
 
 	String USER_CONFIRM = "update users set password = :password, verified = true where name = :user";
 
+	String USER_EMAIL = "select email from users where name = :user";
+
 }

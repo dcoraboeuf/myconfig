@@ -25,8 +25,10 @@ import net.myconfig.service.api.message.MessageDestination;
 import net.myconfig.service.api.message.MessageService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
+import net.myconfig.service.api.security.UserProfile;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.model.Ack;
@@ -54,13 +56,12 @@ import com.google.common.collect.Lists;
 public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
 
 	// TODO Use templating
-	private static final String NEW_USER_MESSAGE = "Dear %1$s,%n%n" +
-			"A new account '%1$s' has been registered for you.%n%n" +
-			"Please follow this link in order to validate your account and " +
-			"to create your password.%n%n" +
-			"%2$s%n%n" +
-			"Regards,%n" +
-			"the myconfig team.";
+	private static final String NEW_USER_MESSAGE = "Dear %1$s,%n%n" + "A new account '%1$s' has been registered for you.%n%n" + "Please follow this link in order to validate your account and "
+			+ "to create your password.%n%n" + "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
+
+	// TODO Use templating
+	private static final String RESET_USER_MESSAGE = "Dear %1$s,%n%n" + "You have asked for the reinitialisation of the '%1$s' account.%n%n" + "Please follow this link in order to complete the reinitialisation:%n%n"
+			+ "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
 
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
@@ -71,7 +72,8 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private final TokenService tokenService;
 
 	@Autowired
-	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService, UIService uiService, TokenService tokenService) {
+	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService,
+			UIService uiService, TokenService tokenService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
 		this.securitySelector = securitySelector;
@@ -125,13 +127,12 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		validate(UserValidation.class, EMAIL, email);
 		try {
 			// Creates the user
-			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource()
-				.addValue(NAME, name)
-				.addValue(EMAIL, email));
-			// Its initial state is not verified and a notification must be sent to the email
-			Message message = createNewUserMessage (name);
+			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource().addValue(NAME, name).addValue(EMAIL, email));
+			// Its initial state is not verified and a notification must be sent
+			// to the email
+			Message message = createNewUserMessage(name);
 			// Sends the message
-			Ack ack = messageService.sendMessage (message, new MessageDestination (MessageChannel.EMAIL, email));
+			Ack ack = messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
 			// OK
 			return Ack.one(count).and(ack);
 		} catch (DuplicateKeyException ex) {
@@ -145,9 +146,16 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		// Gets the return link
 		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
 		// Creates the message
-		return new Message(
-				String.format("myconfig - registration for account", name),
-				String.format(NEW_USER_MESSAGE, name, link));
+		return new Message(String.format("myconfig - registration for account", name), String.format(NEW_USER_MESSAGE, name, link));
+	}
+
+	private Message createResetUserMessage(String name) {
+		// Generates a token for the response
+		String token = tokenService.generateToken(TokenType.RESET_USER, name);
+		// Gets the return link
+		String link = uiService.getLink(UIService.Link.RESET_USER, name, token);
+		// Creates the message
+		return new Message(String.format("myconfig - reset password for account", name), String.format(RESET_USER_MESSAGE, name, link));
 	}
 
 	@Override
@@ -178,21 +186,39 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
 	}
-	
+
 	@Override
 	public void checkUserConfirm(String name, String token) {
-		tokenService.checkToken (token, TokenType.NEW_USER, name);
+		tokenService.checkToken(token, TokenType.NEW_USER, name);
 	}
-	
+
 	@Override
 	@Transactional
 	public void userConfirm(String name, String token, String password) {
 		// Consumes the token
-		tokenService.consumesToken (token, TokenType.NEW_USER, name);
+		tokenService.consumesToken(token, TokenType.NEW_USER, name);
 		// Saves the password
-		getNamedParameterJdbcTemplate().update(SQL.USER_CONFIRM, new MapSqlParameterSource()
-			.addValue(USER, name)
-			.addValue(PASSWORD, digest(password)));
+		getNamedParameterJdbcTemplate().update(SQL.USER_CONFIRM, new MapSqlParameterSource().addValue(USER, name).addValue(PASSWORD, digest(password)));
+	}
+
+	@Override
+	@Transactional
+	public void userReset() {
+		// Current profile
+		UserProfile profile = SecurityUtils.profile();
+		if (profile != null) {
+			String name = profile.getName();
+			// Gets the email from this user
+			String email = getEmail(name);
+			// Creates the reset message
+			Message message = createResetUserMessage(name);
+			// Sends the message
+			messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
+		}
+	}
+
+	private String getEmail(String name) {
+		return getNamedParameterJdbcTemplate().queryForObject(SQL.USER_EMAIL, new MapSqlParameterSource(USER, name), String.class);
 	}
 
 }
