@@ -5,11 +5,13 @@ import java.util.UUID;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.service.impl.AbstractDaoService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.token.Sha512DigestUtils;
 import org.springframework.stereotype.Service;
 
-import net.myconfig.service.impl.AbstractDaoService;
+// TODO Task to clean obsolete tokens after a while
 
 @Service
 public class TokenServiceImpl extends AbstractDaoService implements TokenService {
