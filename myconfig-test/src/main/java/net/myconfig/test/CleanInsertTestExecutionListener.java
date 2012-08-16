@@ -61,14 +61,15 @@ public class CleanInsertTestExecutionListener implements TestExecutionListener {
 			dataSetResourcePaths.add(dsLocation.value());
 		}
 
+		IDatabaseConnection dbConn = new DatabaseDataSourceConnection(testContext.getApplicationContext().getBean(DataSource.class));
 		if (!dataSetResourcePaths.isEmpty()) {
-			IDatabaseConnection dbConn = new DatabaseDataSourceConnection(testContext.getApplicationContext().getBean(DataSource.class));
 			for(String dataSetResourcePath : dataSetResourcePaths) {
 				InputStream in = testClass.getResourceAsStream(dataSetResourcePath);
 				if (in == null) {
 					throw new IOException("Cannot find dataset at " + dataSetResourcePath);
 				} else {
 					try {
+						LOG.info("Injecting dataset {} for {}", dataSetResourcePath, testContext.getClass().getName());
 						IDataSet dataSet = new FlatXmlDataSetBuilder().build(in);
 						DatabaseOperation.CLEAN_INSERT.execute(dbConn, dataSet);
 					} finally {
@@ -77,11 +78,10 @@ public class CleanInsertTestExecutionListener implements TestExecutionListener {
 				}
 			}
 			dbConn.getConnection().commit();
-			DBUnitHelper.setConnection(dbConn);
 		} else {
 			LOG.info("{} does not have any data set, no data injection", testContext.getClass().getName());
-			DBUnitHelper.setConnection(null);
 		}
+		DBUnitHelper.setConnection(dbConn);
 	}
 
 	@Override

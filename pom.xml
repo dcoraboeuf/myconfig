@@ -194,6 +194,11 @@
 				<version>1.4</version>
 			</dependency>
 			<dependency>
+			    <groupId>joda-time</groupId>
+			    <artifactId>joda-time</artifactId>
+			    <version>2.1</version>
+			</dependency>
+			<dependency>
 				<groupId>net.sf.dbinit</groupId>
 				<artifactId>dbinit</artifactId>
 				<version>1.2</version>

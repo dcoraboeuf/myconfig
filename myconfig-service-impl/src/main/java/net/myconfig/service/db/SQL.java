@@ -201,5 +201,6 @@ public interface SQL {
 	String APP_FUNCTIONS_DELETE = "delete from appgrants where user = :name";
 	String ENV_FUNCTIONS_DELETE = "delete from envgrants where user = :name";
 
+	String TOKEN_SAVE = "insert into tokens (token, tokentype, tokenkey, creation) values (:token, :tokentype, :tokenkey, :creation)";
 
 }

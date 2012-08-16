@@ -21,5 +21,9 @@ public interface SQLColumns {
 	String KEY_COUNT = "keyCount";
 	String CONFIG_COUNT = "configCount";
 	String VALUE_COUNT = "valueCount";
+	String TOKEN = "token";
+	String TOKENTYPE = "tokentype";
+	String TOKENKEY = "tokenkey";
+	String CREATION = "creation";
 
 }
