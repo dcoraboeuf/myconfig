@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import net.myconfig.service.db.SQL;
 import net.sf.dbinit.DBInitAction;
 
 import org.slf4j.Logger;

@@ -1,9 +1,9 @@
 package net.myconfig.service.impl;
 
-import static net.myconfig.service.impl.SQL.USER_SUMMARIES;
-import static net.myconfig.service.impl.SQLColumns.ADMIN;
-import static net.myconfig.service.impl.SQLColumns.NAME;
-import static net.myconfig.service.impl.SQLColumns.VERIFIED;
+import static net.myconfig.service.db.SQL.USER_SUMMARIES;
+import static net.myconfig.service.db.SQLColumns.ADMIN;
+import static net.myconfig.service.db.SQLColumns.NAME;
+import static net.myconfig.service.db.SQLColumns.VERIFIED;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +24,8 @@ import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
+import net.myconfig.service.db.SQL;
+import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;

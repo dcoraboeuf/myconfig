@@ -1,9 +1,9 @@
 package net.myconfig.service.impl;
 
-import static net.myconfig.service.impl.SQLColumns.ADMIN;
-import static net.myconfig.service.impl.SQLColumns.NAME;
-import static net.myconfig.service.impl.SQLColumns.PASSWORD;
-import static net.myconfig.service.impl.SQLColumns.VERIFIED;
+import static net.myconfig.service.db.SQLColumns.ADMIN;
+import static net.myconfig.service.db.SQLColumns.NAME;
+import static net.myconfig.service.db.SQLColumns.PASSWORD;
+import static net.myconfig.service.db.SQLColumns.VERIFIED;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +20,8 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.User;
+import net.myconfig.service.db.SQL;
+import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.security.AppFunctionKey;
 import net.myconfig.service.security.EnvFunctionKey;
 

@@ -1,4 +1,4 @@
-package net.myconfig.service.impl;
+package net.myconfig.service.db;
 
 public interface SQLColumns {
 

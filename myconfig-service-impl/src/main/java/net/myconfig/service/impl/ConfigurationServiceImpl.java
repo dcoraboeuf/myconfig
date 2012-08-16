@@ -4,6 +4,8 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.db.SQL;
+import net.myconfig.service.db.SQLColumns;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
