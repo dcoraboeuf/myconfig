@@ -1,10 +1,8 @@
 package net.myconfig.service.token;
 
-public interface TokenService {
+import net.myconfig.service.model.TokenType;
 
-	public enum TokenType {
-		NEW_USER
-	}
+public interface TokenService {
 
 	String generateToken(TokenType type, String key);
 

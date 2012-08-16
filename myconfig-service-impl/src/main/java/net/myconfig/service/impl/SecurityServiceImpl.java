@@ -29,6 +29,7 @@ import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.model.Ack;
+import net.myconfig.service.model.TokenType;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
@@ -138,7 +139,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	private Message createNewUserMessage(String name) {
 		// Generates a token for the response
-		String token = tokenService.generateToken(TokenService.TokenType.NEW_USER, name);
+		String token = tokenService.generateToken(TokenType.NEW_USER, name);
 		// Gets the return link
 		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
 		// Creates the message
@@ -178,14 +179,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	
 	@Override
 	public void checkUserConfirm(String name, String token) {
-		tokenService.checkToken (token, TokenService.TokenType.NEW_USER, name);
+		tokenService.checkToken (token, TokenType.NEW_USER, name);
 	}
 	
 	@Override
 	@Transactional
 	public void userConfirm(String name, String token, String password) {
 		// Consumes the token
-		tokenService.consumesToken (token, TokenService.TokenType.NEW_USER, name);
+		tokenService.consumesToken (token, TokenType.NEW_USER, name);
 		// Saves the password
 		getNamedParameterJdbcTemplate().update(SQL.USER_CONFIRM, new MapSqlParameterSource()
 			.addValue(USER, name)

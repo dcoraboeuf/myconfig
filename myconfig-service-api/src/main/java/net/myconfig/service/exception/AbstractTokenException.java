@@ -1,7 +1,6 @@
-package net.myconfig.service.token;
+package net.myconfig.service.exception;
 
-import net.myconfig.service.exception.CoreException;
-import net.myconfig.service.token.TokenService.TokenType;
+import net.myconfig.service.model.TokenType;
 
 public abstract class AbstractTokenException extends CoreException {
 
