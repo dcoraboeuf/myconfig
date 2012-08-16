@@ -2,6 +2,7 @@ package net.myconfig.service.impl;
 
 import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
+import static net.myconfig.service.db.SQLColumns.EMAIL;
 import static net.myconfig.service.db.SQLColumns.NAME;
 import static net.myconfig.service.db.SQLColumns.PASSWORD;
 import static net.myconfig.service.db.SQLColumns.USER;
@@ -121,11 +122,12 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@UserGrant(UserFunction.security_users)
 	public Ack userCreate(String name, String email) {
 		validate(UserValidation.class, NAME, name);
+		validate(UserValidation.class, EMAIL, email);
 		try {
 			// Creates the user
 			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource()
-				.addValue(SQLColumns.NAME, name)
-				.addValue(SQLColumns.EMAIL, email));
+				.addValue(NAME, name)
+				.addValue(EMAIL, email));
 			// Its initial state is not verified and a notification must be sent to the email
 			Message message = createNewUserMessage (name);
 			// Sends the message

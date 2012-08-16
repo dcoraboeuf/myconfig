@@ -150,7 +150,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void applicationCreate_too_long () {
+	public void userCreate_too_long () {
 		try {
 			asAdmin();
 			securityService.userCreate(StringUtils.repeat("x", 81), "test@test.com");
@@ -158,6 +158,84 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 		} catch (ValidationException ex) {
 			assertEquals (
 					"[S-012] [V-006] User name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_email_null () {
+		try {
+			asAdmin();
+			securityService.userCreate("test", null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-007] User e-mail is invalid: may not be null",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_email_blank () {
+		try {
+			asAdmin();
+			securityService.userCreate("test", "");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-007] User e-mail is invalid: size must be between 1 and 120",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_email_spaces () {
+		try {
+			asAdmin();
+			securityService.userCreate("test", "   ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-007] User e-mail is invalid: not a well-formed email address",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_email_unrecognized_format () {
+		try {
+			asAdmin();
+			securityService.userCreate("test", "test AT test DOT com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-007] User e-mail is invalid: not a well-formed email address",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_email_trim () {
+		try {
+			asAdmin();
+			securityService.userCreate("test", "  test@test.com  ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-007] User e-mail is invalid: not a well-formed email address",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void userCreate_email_too_long () {
+		try {
+			asAdmin();
+			securityService.userCreate("test", StringUtils.repeat("x", 120) + "@test.com");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-007] User e-mail is invalid: size must be between 1 and 120",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
