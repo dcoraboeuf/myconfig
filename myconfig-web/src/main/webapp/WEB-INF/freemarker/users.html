@@ -78,6 +78,9 @@
 										<input class="item-action" type="image" src="static/images/user_disable.png" title="<@lh key='users.disable' />" />
 									</form>
 								</#if>
+								<form class="item-action" action="gui/user/${user.name?html}/reset" method="post">
+									<input class="item-action" type="image" src="static/images/user_reset.png" title="<@lh key='users.reset' />" />
+								</form>
 							</#if>
 						</td>
 					</tr>
