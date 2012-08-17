@@ -158,6 +158,13 @@ public class SecurityController extends AbstractGUIPage {
 		}
 	}
 	
+	@RequestMapping(value = "/gui/user/{name}/reset", method = RequestMethod.POST)
+	public String userReset(@PathVariable String name) {
+		Validate.notBlank(name);
+		securityService.userReset(name);
+		return "redirect:/gui/users";
+	}
+	
 	@RequestMapping(value = "/gui/user/{name}/disable", method = RequestMethod.POST)
 	public String userDisable(@PathVariable String name) {
 		Validate.notBlank(name);

@@ -243,13 +243,20 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		UserProfile profile = SecurityUtils.profile();
 		if (profile != null) {
 			String name = profile.getName();
-			// Gets the email from this user
-			String email = getEmail(name);
-			// Creates the reset message
-			Message message = createResetUserMessage(name);
-			// Sends the message
-			messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
+			userReset(name);
 		}
+	}
+
+	@Override
+	@Transactional
+	@UserGrant(UserFunction.security_users)
+	public void userReset(String name) {
+		// Gets the email from this user
+		String email = getEmail(name);
+		// Creates the reset message
+		Message message = createResetUserMessage(name);
+		// Sends the message
+		messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
 	}
 
 	@Override

@@ -36,4 +36,6 @@ public interface SecurityService {
 
 	void userEnable(String name);
 
+	void userReset(String name);
+
 }
