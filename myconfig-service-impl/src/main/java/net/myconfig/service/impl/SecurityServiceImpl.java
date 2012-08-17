@@ -2,6 +2,7 @@ package net.myconfig.service.impl;
 
 import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
+import static net.myconfig.service.db.SQLColumns.DISABLED;
 import static net.myconfig.service.db.SQLColumns.EMAIL;
 import static net.myconfig.service.db.SQLColumns.NAME;
 import static net.myconfig.service.db.SQLColumns.NEWPASSWORD;
@@ -113,7 +114,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		List<User> users = getJdbcTemplate().query(USER_SUMMARIES, new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new User(rs.getString(NAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED));
+				return new User(rs.getString(NAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
 			}
 		});
 		return Lists.transform(users, new Function<User, UserSummary>() {

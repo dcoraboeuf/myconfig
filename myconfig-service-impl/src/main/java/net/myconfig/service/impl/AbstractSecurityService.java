@@ -1,6 +1,7 @@
 package net.myconfig.service.impl;
 
 import static net.myconfig.service.db.SQLColumns.ADMIN;
+import static net.myconfig.service.db.SQLColumns.DISABLED;
 import static net.myconfig.service.db.SQLColumns.NAME;
 import static net.myconfig.service.db.SQLColumns.PASSWORD;
 import static net.myconfig.service.db.SQLColumns.VERIFIED;
@@ -85,7 +86,7 @@ public abstract class AbstractSecurityService extends AbstractDaoService {
 		List<User> users = getNamedParameterJdbcTemplate().query(SQL.USER, new MapSqlParameterSource().addValue(NAME, username).addValue(PASSWORD, digest), new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int row) throws SQLException {
-				return new User(rs.getString(NAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED));
+				return new User(rs.getString(NAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
 			}
 		});
 		if (users.size() == 1) {

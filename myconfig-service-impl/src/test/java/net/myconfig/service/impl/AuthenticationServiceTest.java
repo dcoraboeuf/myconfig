@@ -10,12 +10,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+
+import java.sql.SQLException;
+
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.UserProfile;
 import net.myconfig.test.AbstractIntegrationTest;
 
+import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -57,6 +61,13 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void not_found_user() {
 		UserProfile user = service.getUserToken("user2", "xxx");
+		assertNull(user);
+	}
+
+	@Test
+	public void disabled_user() throws DataSetException, SQLException {
+		assertRecordExists("select * from users where name = 'disableduser' and password = '%s'", AbstractSecurityService.digest("test"));
+		UserProfile user = service.getUserToken("disableduser", "test");
 		assertNull(user);
 	}
 
