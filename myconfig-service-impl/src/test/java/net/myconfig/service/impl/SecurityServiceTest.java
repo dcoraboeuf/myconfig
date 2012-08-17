@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.ValidationException;
 import net.myconfig.service.model.Ack;
@@ -34,6 +36,9 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	
 	@Autowired
 	private Strings strings;
+	
+	@Autowired
+	private AuthenticationService authenticationService;
 
 	@Test(expected = AccessDeniedException.class)
 	public void getUserList_no_auth() {
@@ -260,6 +265,21 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 		asUser();
 		securityService.userCreate("testx", "x");
 		assertRecordNotExists("select * from users where name = 'testx'");
+	}
+	
+	@Test
+	public void user_disable() throws DataSetException, SQLException {
+		asAdmin();
+		assertNotNull(authenticationService.getUserToken("user2", "test"));
+		// Disabling
+		assertRecordExists("select * from users where name = 'user2' and disabled = false");
+		securityService.userDisable("user2");
+		assertRecordExists("select * from users where name = 'user2' and disabled = true");
+		// Cannot connect
+		assertNull(authenticationService.getUserToken("user2", "test"));
+		// Enable again
+		securityService.userEnable("user2");
+		assertRecordExists("select * from users where name = 'user2' and disabled = false");
 	}
 
 	@Test
