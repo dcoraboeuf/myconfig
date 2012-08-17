@@ -1,0 +1,10 @@
+<#include "/lib/layout.html">
+<@layout_std pageId="userForgottenNOK">
+	<@panel>
+		<p><@lh key = "userForgottenNOK.message" /></p>
+		<p class="info">${email?html}</p>
+		<form action=".">
+			<input type="submit" value="<@lh key='userForgottenNOK.home' />" />
+		</form>
+	</@panel>
+</@layout_std>

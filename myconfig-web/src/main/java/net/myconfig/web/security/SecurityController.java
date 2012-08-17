@@ -8,6 +8,7 @@ import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.AbstractTokenException;
 import net.myconfig.service.exception.InputException;
+import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
@@ -138,8 +139,22 @@ public class SecurityController extends AbstractGUIPage {
 	}
 
 	@RequestMapping(value = "/gui/user/forgotten", method = RequestMethod.GET)
-	public String userForgotten() {
+	public String userForgottenForm() {
 		return "userForgotten";
+	}
+
+	@RequestMapping(value = "/gui/user/forgotten", method = RequestMethod.POST)
+	public String userForgottenPost(@RequestParam String email, Model model) {
+		// e-mail
+		model.addAttribute("email", email);
+		// Asks for reset
+		Ack ack = securityService.userForgotten(email);
+		// OK
+		if (ack.isSuccess()) {
+			return "userForgottenOK";
+		} else {
+			return "userForgottenNOK";
+		}
 	}
 
 }

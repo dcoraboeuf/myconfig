@@ -45,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
@@ -61,8 +62,12 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 			+ "to create your password.%n%n" + "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
 
 	// TODO Use templating
-	private static final String RESET_USER_MESSAGE = "Dear %1$s,%n%n" + "You have asked for the reinitialisation of the '%1$s' account.%n%n" + "Please follow this link in order to complete the reinitialisation:%n%n"
+	private static final String USER_FORGOTTEN_MESSAGE = "Dear %1$s,%n%n" + "Your account name is '%1$s'.%n%n" + "You can follow the following link in order to reset your password.%n%n"
 			+ "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
+
+	// TODO Use templating
+	private static final String RESET_USER_MESSAGE = "Dear %1$s,%n%n" + "You have asked for the reinitialisation of the '%1$s' account.%n%n"
+			+ "Please follow this link in order to complete the reinitialisation:%n%n" + "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
 
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
@@ -150,6 +155,15 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		return new Message(String.format("myconfig - registration for account", name), String.format(NEW_USER_MESSAGE, name, link));
 	}
 
+	private Message createUserForgottenMessage(String name) {
+		// Generates a token for the response
+		String token = tokenService.generateToken(TokenType.NEW_USER, name);
+		// Gets the return link
+		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
+		// Creates the message
+		return new Message(String.format("myconfig - account reset", name), String.format(USER_FORGOTTEN_MESSAGE, name, link));
+	}
+
 	private Message createResetUserMessage(String name) {
 		// Generates a token for the response
 		String token = tokenService.generateToken(TokenType.RESET_USER, name);
@@ -197,18 +211,15 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	public void checkUserReset(String name, String token) {
 		tokenService.checkToken(token, TokenType.RESET_USER, name);
 	}
-	
+
 	@Override
 	@Transactional
 	public void userReset(String name, String token, String oldPassword, String newPassword) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.RESET_USER, name);
 		// Changes the password
-		int count = getNamedParameterJdbcTemplate().update(SQL.USER_RESET, 
-				new MapSqlParameterSource()
-					.addValue(USER, name)
-					.addValue(PASSWORD, digest(oldPassword))
-					.addValue(NEWPASSWORD, digest(newPassword)));
+		int count = getNamedParameterJdbcTemplate().update(SQL.USER_RESET,
+				new MapSqlParameterSource().addValue(USER, name).addValue(PASSWORD, digest(oldPassword)).addValue(NEWPASSWORD, digest(newPassword)));
 		// Check
 		if (count != 1) {
 			throw new CannotResetUserException(name);
@@ -237,6 +248,24 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 			Message message = createResetUserMessage(name);
 			// Sends the message
 			messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
+		}
+	}
+
+	@Override
+	@Transactional
+	public Ack userForgotten(String email) {
+		try {
+			// Gets the name for this user
+			String name = getNamedParameterJdbcTemplate().queryForObject(SQL.USER_FORGOTTEN, new MapSqlParameterSource(EMAIL, email), String.class);
+			// Creates the message to the user
+			Message message = createUserForgottenMessage(name);
+			// Sends the message
+			Ack ack = messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
+			// OK
+			return ack;
+		} catch (EmptyResultDataAccessException ex) {
+			// Cannot find the mail
+			return Ack.NOK;
 		}
 	}
 

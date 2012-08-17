@@ -30,4 +30,6 @@ public interface SecurityService {
 
 	void userReset(String name, String token, String oldPassword, String newPassword);
 
+	Ack userForgotten(String email);
+
 }

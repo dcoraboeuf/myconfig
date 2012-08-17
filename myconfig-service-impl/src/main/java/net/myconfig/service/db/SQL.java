@@ -211,4 +211,6 @@ public interface SQL {
 
 	String USER_RESET = "update users set password = :newpassword where name = :user and password = :password";
 
+	String USER_FORGOTTEN = "select name from users where email = :email and verified = true";
+
 }
