@@ -32,4 +32,8 @@ public interface SecurityService {
 
 	Ack userForgotten(String email);
 
+	void userDisable(String name);
+
+	void userEnable(String name);
+
 }

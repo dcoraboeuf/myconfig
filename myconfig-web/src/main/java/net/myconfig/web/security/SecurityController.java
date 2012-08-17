@@ -14,6 +14,7 @@ import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 
+import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ExtendedModelMap;
@@ -155,6 +156,20 @@ public class SecurityController extends AbstractGUIPage {
 		} else {
 			return "userForgottenNOK";
 		}
+	}
+	
+	@RequestMapping(value = "/gui/user/{name}/disable", method = RequestMethod.POST)
+	public String userDisable(@PathVariable String name) {
+		Validate.notBlank(name);
+		securityService.userDisable(name);
+		return "redirect:/gui/users";
+	}
+	
+	@RequestMapping(value = "/gui/user/{name}/enable", method = RequestMethod.POST)
+	public String userEnable(@PathVariable String name) {
+		Validate.notBlank(name);
+		securityService.userEnable(name);
+		return "redirect:/gui/users";
 	}
 
 }

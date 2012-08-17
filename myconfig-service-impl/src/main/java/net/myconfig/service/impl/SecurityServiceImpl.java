@@ -273,5 +273,19 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private String getEmail(String name) {
 		return getNamedParameterJdbcTemplate().queryForObject(SQL.USER_EMAIL, new MapSqlParameterSource(USER, name), String.class);
 	}
+	
+	@Override
+	@Transactional
+	@UserGrant(UserFunction.security_users)
+	public void userDisable(String name) {
+		getNamedParameterJdbcTemplate().update(SQL.USER_DISABLE, new MapSqlParameterSource(USER, name));
+	}
+	
+	@Override
+	@Transactional
+	@UserGrant(UserFunction.security_users)
+	public void userEnable(String name) {
+		getNamedParameterJdbcTemplate().update(SQL.USER_ENABLE, new MapSqlParameterSource(USER, name));
+	}
 
 }

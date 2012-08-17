@@ -213,4 +213,8 @@ public interface SQL {
 
 	String USER_FORGOTTEN = "select name from users where email = :email and verified = true";
 
+	String USER_DISABLE = "update users set disabled = true where name = :user and admin = false";
+
+	String USER_ENABLE = "update users set disabled = false where name = :user";
+
 }
