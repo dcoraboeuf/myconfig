@@ -1,0 +1,38 @@
+<#include "/lib/layout.html">
+<@layout_std pageId="userForgotten" script=true>
+	<@panel>
+		<@form>
+			<form method="POST" action="gui/user/forgotten" onsubmit="return UserForgotten.validate();">
+				<table>
+					<tbody>
+						<tr>
+							<td class="form-label"><label for="email"><@lh key="userForgotten.email" /></label></td>
+							<td class="form-input">
+								<input id="email" name="email" type="email" maxlength="120" size="60" autofocus="true" />
+							</td>
+						</tr>
+						<tr>
+							<td class="form-label info" colspan="2">
+								<@lh key="userForgotten.message" />
+							</td>
+						</tr>
+						<#if .data_model["error"]??>
+							<tr>
+								<td colspan="2" class="error">
+									${.data_model["error"]}
+								</td>
+							</tr>
+						</#if>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2" align="right">
+								<input id="submit" type="submit" value="<@lh key='userForgotten.submit' />" />
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</form>
+		</@form>
+	</@panel>
+</@layout_std>

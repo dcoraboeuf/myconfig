@@ -137,4 +137,9 @@ public class SecurityController extends AbstractGUIPage {
 		}
 	}
 
+	@RequestMapping(value = "/gui/user/forgotten", method = RequestMethod.GET)
+	public String userForgotten() {
+		return "userForgotten";
+	}
+
 }
