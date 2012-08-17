@@ -121,7 +121,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 			@Override
 			public UserSummary apply(User user) {
 				EnumSet<UserFunction> functions = getUserFunctions(user);
-				return new UserSummary(user.getName(), user.isAdmin(), user.isVerified(), functions);
+				return new UserSummary(user.getName(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
 			}
 		});
 	}

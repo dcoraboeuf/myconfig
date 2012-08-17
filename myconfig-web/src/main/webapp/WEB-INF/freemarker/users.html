@@ -24,6 +24,9 @@
 					<th>
 						<@lh key="model.user.verified" />
 					</th>
+					<th>
+						<@lh key="model.user.disabled" />
+					</th>
 					<#list userFunctions as userFunction>
 						<th class="user-function">
 							<p class="function user-function">${userFunction}</p>
@@ -43,6 +46,7 @@
 						</td>
 						<@item_column_boolean item=user field="admin" />
 						<@item_column_boolean item=user field="verified" />
+						<@item_column_boolean item=user field="disabled" />
 						<#list userFunctions as userFunction>
 							<td class="item-column user-function">
 								<#if user.admin>
@@ -63,8 +67,17 @@
 							</td>
 						</#list>
 						<td class="item-actions">
-							<#if !user.admin>
+							<#if !user.admin && secUserName() != user.name>
 								<@item_delete item=user action="gui/user/delete" formField="name" promptKey="users.delete" />
+								<#if user.disabled>
+									<form class="item-action" action="gui/user/${user.name?html}/enable" method="post">
+										<input class="item-action" type="image" src="static/images/user_enable.png" title="<@lh key='users.enable' />" />
+									</form>
+								<#else>
+									<form class="item-action" action="gui/user/${user.name?html}/disable" method="post">
+										<input class="item-action" type="image" src="static/images/user_disable.png" title="<@lh key='users.disable' />" />
+									</form>
+								</#if>
 							</#if>
 						</td>
 					</tr>
