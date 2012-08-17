@@ -13,7 +13,7 @@
 										<@lh key="login.user" />
 									</td>
 									<td>
-										<input id="user" name="j_username" type="text" maxlength="80" size="16" autofocus="autofocus" />
+										<input id="user" name="j_username" type="text" maxlength="80" size="32" autofocus="autofocus" />
 									</td>
 								</tr>
 								<tr>
@@ -21,13 +21,14 @@
 										<@lh key="login.password" />
 									</td>
 									<td>
-										<input id="password" name="j_password" type="password" maxlength="80" size="16" />
+										<input id="password" name="j_password" type="password" maxlength="80" size="32" />
 									</td>
 								</tr>
 							</tbody>
 							<tfoot>
 								<tr>
 									<td colspan="2">
+										<a class="info" href="gui/user/forgotten"><@lh key = "login.forgotten" /></a>
 										<input type="submit" value="<@lh key='login.submit' />" />
 									</td>
 								</tr>
