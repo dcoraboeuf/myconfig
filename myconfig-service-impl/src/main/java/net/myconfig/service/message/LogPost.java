@@ -16,8 +16,9 @@ public class LogPost extends AbstractMessagePost {
 
 	private final Logger logger = LoggerFactory.getLogger(LogPost.class);
 
-	public LogPost() {
-		super(MessageChannel.EMAIL);
+	@Override
+	public boolean supports(MessageChannel channel) {
+		return true;
 	}
 
 	@Override

@@ -7,12 +7,30 @@
 		<Arg>
 			<New class="org.apache.commons.dbcp.BasicDataSource">
 				<Set name="DriverClassName">org.h2.Driver</Set>
-				<Set name="Url">jdbc:h2:file:work/myconfig-prod/db/data;AUTOCOMMIT=OFF;MVCC=true</Set>
+				<Set name="Url">jdbc:h2:file:work/myconfig-prod/db/data;AUTOCOMMIT=OFF;MVCC=true
+				</Set>
 				<Set name="Username">sa</Set>
 				<Set name="Password"></Set>
 				<Set name="DefaultAutoCommit">false</Set>
 				<Set name="InitialSize">3</Set>
 				<Set name="MaxActive">6</Set>
+			</New>
+		</Arg>
+	</New>
+
+	<New id="myconfigMailSession" class="org.eclipse.jetty.plus.jndi.Resource">
+		<Arg>mail/myconfig</Arg>
+		<Arg>
+			<New class="org.eclipse.jetty.jndi.factories.MailSessionReference">
+				<Set name="user">fred</Set>
+				<Set name="password">fred</Set>
+				<Set name="properties">
+					<New class="java.util.Properties">
+						<Put name="mail.smtp.host">XXX</Put>
+						<Put name="mail.from">me@me</Put>
+						<Put name="mail.debug">true</Put>
+					</New>
+				</Set>
 			</New>
 		</Arg>
 	</New>

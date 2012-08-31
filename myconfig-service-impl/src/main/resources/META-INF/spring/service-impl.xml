@@ -25,5 +25,9 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
   	<beans profile="it,dev,prod">
     	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/myconfig" />
   	</beans>
+  	
+  	<beans profile="prod">
+    	<jee:jndi-lookup id="mailSession" jndi-name="mail/myconfig" />
+  	</beans>
 
 </beans>

@@ -111,6 +111,11 @@
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
+				<artifactId>spring-context-support</artifactId>
+				<version>${springVersion}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework</groupId>
 				<artifactId>spring-tx</artifactId>
 				<version>${springVersion}</version>
 			</dependency>
@@ -170,6 +175,12 @@
 				<groupId>org.aspectj</groupId>
 				<artifactId>aspectjweaver</artifactId>
 				<version>1.6.12</version>
+			</dependency>
+			<!-- J2EE -->
+			<dependency>
+			    <groupId>javax.mail</groupId>
+			    <artifactId>mail</artifactId>
+			    <version>1.4.5</version>
 			</dependency>
 			<!-- Validation -->
 			<dependency>
