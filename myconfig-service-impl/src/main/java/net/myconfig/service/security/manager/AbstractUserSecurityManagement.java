@@ -3,6 +3,7 @@ package net.myconfig.service.security.manager;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.UserProfile;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +13,46 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 
 	public AbstractUserSecurityManagement(String id) {
 		super(id);
+	}
+
+	@Override
+	public String getCurrentUserName() {
+		UserProfile profile = getCurrentProfile();
+		return profile != null ? profile.getName() : null;
+	}
+
+	@Override
+	public boolean hasOneOfUserFunction(UserFunction... fns) {
+		UserProfile profile = getCurrentProfile();
+		if (profile != null) {
+			for (UserFunction fn : fns) {
+				if (profile.hasUserFunction(fn)) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean isLogged() {
+		return getCurrentProfile() != null;
+	}
+
+	protected UserProfile getCurrentProfile() {
+		Authentication authentication = SecurityUtils.authentication();
+		if (authentication != null) {
+			Object details = authentication.getDetails();
+			if (details instanceof UserProfile) {
+				return (UserProfile) details;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -26,13 +67,13 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 			return null;
 		}
 	}
-	
+
 	@Override
 	public boolean supports(Class<?> authentication) {
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
-	
-	protected UserProfile getUserToken (Authentication authentication) {
+
+	protected UserProfile getUserToken(Authentication authentication) {
 		if (authentication == null) {
 			return null;
 		} else {
@@ -50,19 +91,19 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 		UserProfile token = getUserToken(authentication);
 		return token != null && token.hasUserFunction(fn);
 	}
-	
+
 	@Override
 	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
 		UserProfile token = getUserToken(authentication);
 		return token != null && token.hasAppFunction(application, fn);
 	}
-	
+
 	@Override
 	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
 		UserProfile token = getUserToken(authentication);
 		return token != null && token.hasEnvFunction(application, environment, fn);
 	}
-	
+
 	@Override
 	public boolean allowLogin() {
 		return true;

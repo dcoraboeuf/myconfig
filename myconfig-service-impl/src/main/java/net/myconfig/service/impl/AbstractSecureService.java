@@ -9,7 +9,6 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityUtils;
-import net.myconfig.service.api.security.UserProfile;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.model.Environment;
@@ -55,18 +54,15 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 	}
 
 	protected void grantAppFunction(int application, AppFunction fn) {
-		UserProfile profile = SecurityUtils.profile();
-		if (profile != null && !profile.isAdmin()) {
-			String user = profile.getName();
-			if (StringUtils.isNotBlank(user)) {
-				// Grant
-				getNamedParameterJdbcTemplate().update(
-						SQL.GRANT_APP_FUNCTION,
-						new MapSqlParameterSource()
-							.addValue(SQLColumns.USER, user)
-							.addValue(SQLColumns.APPLICATION, application)
-							.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
-			}
+		String user = securitySelector.getCurrentUserName();
+		if (StringUtils.isNotBlank(user)) {
+			// Grant
+			getNamedParameterJdbcTemplate().update(
+					SQL.GRANT_APP_FUNCTION,
+					new MapSqlParameterSource()
+						.addValue(SQLColumns.USER, user)
+						.addValue(SQLColumns.APPLICATION, application)
+						.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		}
 	}
 

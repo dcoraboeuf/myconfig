@@ -64,6 +64,21 @@ public class HubSecuritySelector implements SecuritySelector {
 			throw new SecurityManagementNotFoundException(mode);
 		}
 	}
+	
+	@Override
+	public String getCurrentUserName() {
+		return getSecurityManagement().getCurrentUserName();
+	}
+	
+	@Override
+	public boolean hasOneOfUserFunction(UserFunction... fns) {
+		return getSecurityManagement().hasOneOfUserFunction(fns);
+	}
+	
+	@Override
+	public boolean isLogged() {
+		return getSecurityManagement().isLogged();
+	}
 
 	@Override
 	public UserProfile authenticate(Authentication authentication) {

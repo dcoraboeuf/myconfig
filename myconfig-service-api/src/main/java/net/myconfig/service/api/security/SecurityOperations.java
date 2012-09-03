@@ -9,6 +9,12 @@ import org.springframework.security.core.Authentication;
 
 public interface SecurityOperations {
 
+	String getCurrentUserName();
+
+	boolean hasOneOfUserFunction(UserFunction... fns);
+
+	boolean isLogged();
+
 	UserProfile authenticate(Authentication authentication);
 
 	boolean supports(Class<?> authentication);
