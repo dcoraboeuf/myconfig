@@ -8,6 +8,7 @@ import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
 import net.myconfig.service.model.Ack;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ public class MailPost extends AbstractMessagePost {
 			this.mailSender.send(preparator);
 			return Ack.OK;
 		} catch (MailException ex) {
-			logger.error("[mail] Cannot send mail", ex);
+			logger.error("[mail] Cannot send mail: {}", ExceptionUtils.getRootCauseMessage(ex));
 			return Ack.NOK;
 		}
 	}
