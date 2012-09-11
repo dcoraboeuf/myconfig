@@ -27,7 +27,7 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
   	</beans>
   	
   	<beans profile="prod">
-    	<jee:jndi-lookup id="mailSession" jndi-name="mail/myconfig" />
+    	<jee:jndi-lookup id="mailSession" jndi-name="mail/SendGrid" />
   	</beans>
 
 </beans>

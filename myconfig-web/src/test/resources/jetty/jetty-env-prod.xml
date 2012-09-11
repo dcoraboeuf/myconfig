@@ -19,7 +19,7 @@
 	</New>
 
 	<New id="myconfigMailSession" class="org.eclipse.jetty.plus.jndi.Resource">
-		<Arg>mail/myconfig</Arg>
+		<Arg>mail/SendGrid</Arg>
 		<Arg>
 			<New class="org.eclipse.jetty.jndi.factories.MailSessionReference">
 				<Set name="user">fred</Set>
