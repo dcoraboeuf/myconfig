@@ -58,14 +58,6 @@ import com.google.common.collect.Lists;
 @Service
 public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
 
-	// TODO Use templating
-	private static final String USER_FORGOTTEN_MESSAGE = "Dear %1$s,%n%n" + "Your account name is '%1$s'.%n%n" + "You can follow the following link in order to reset your password.%n%n"
-			+ "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
-
-	// TODO Use templating
-	private static final String RESET_USER_MESSAGE = "Dear %1$s,%n%n" + "You have asked for the reinitialisation of the '%1$s' account.%n%n"
-			+ "Please follow this link in order to complete the reinitialisation:%n%n" + "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
-
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
 	private final ConfigurationService configurationService;
@@ -145,37 +137,31 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		}
 	}
 
-	private Message createNewUserMessage(String name) {
+	private Message createUserMessage(String user, TokenType tokenType, UIService.Link linkType, String templateId, String subjectFormat) {
 		// Generates a token for the response
-		String token = tokenService.generateToken(TokenType.NEW_USER, name);
+		String token = tokenService.generateToken(tokenType, user);
 		// Gets the return link
-		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
+		String link = uiService.getLink(linkType, user, token);
 		// Message template model
 		TemplateModel model = new TemplateModel();
-		model.add("user", name);
+		model.add("user", user);
 		model.add("link", link);
 		// Message content
-		String content = templateService.generate ("user_new.txt", model);
+		String content = templateService.generate(templateId, model);
 		// Creates the message
-		return new Message(String.format("myconfig - registration for account", name), content);
+		return new Message(String.format(subjectFormat, user), content);
+	}
+
+	private Message createNewUserMessage(String name) {
+		return createUserMessage(name, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_new.txt", "myconfig - registration for account");
 	}
 
 	private Message createUserForgottenMessage(String name) {
-		// Generates a token for the response
-		String token = tokenService.generateToken(TokenType.NEW_USER, name);
-		// Gets the return link
-		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
-		// Creates the message
-		return new Message(String.format("myconfig - account reset", name), String.format(USER_FORGOTTEN_MESSAGE, name, link));
+		return createUserMessage(name, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_forgotten.txt", "myconfig - account reset");
 	}
 
 	private Message createResetUserMessage(String name) {
-		// Generates a token for the response
-		String token = tokenService.generateToken(TokenType.RESET_USER, name);
-		// Gets the return link
-		String link = uiService.getLink(UIService.Link.RESET_USER, name, token);
-		// Creates the message
-		return new Message(String.format("myconfig - reset password for account", name), String.format(RESET_USER_MESSAGE, name, link));
+		return createUserMessage(name, TokenType.RESET_USER, UIService.Link.RESET_USER, "user_reset.txt", "myconfig - reset password for account");
 	}
 
 	@Override
@@ -282,14 +268,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private String getEmail(String name) {
 		return getNamedParameterJdbcTemplate().queryForObject(SQL.USER_EMAIL, new MapSqlParameterSource(USER, name), String.class);
 	}
-	
+
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public void userDisable(String name) {
 		getNamedParameterJdbcTemplate().update(SQL.USER_DISABLE, new MapSqlParameterSource(USER, name));
 	}
-	
+
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)

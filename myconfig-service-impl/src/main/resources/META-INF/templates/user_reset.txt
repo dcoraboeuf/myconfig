@@ -1,0 +1,10 @@
+Dear ${user},
+
+You have asked for the reinitialisation of the '${user}' account.
+
+Please follow this link in order to complete the reinitialisation:
+
+${link}
+
+Regards,
+the myconfig team.
