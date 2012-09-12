@@ -1,0 +1,10 @@
+Dear testuser,
+
+A new account 'testuser' has been registered for you.
+
+Please follow this link in order to validate your account and to create your password.
+
+http://mylink
+
+Regards,
+the myconfig team.

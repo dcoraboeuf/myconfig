@@ -21,6 +21,12 @@ http://www.springframework.org/schema/jee http://www.springframework.org/schema/
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
   		<property name="dataSource" ref="dataSource"/>
   	</bean>
+
+	<!-- Freemarker config for templating -->
+	<bean id="templateFreemarkerConfig" class="org.springframework.ui.freemarker.FreeMarkerConfigurationFactoryBean">
+		<qualifier value="templating" />
+		<property name="templateLoaderPath" value="classpath:META-INF/templates/" />
+	</bean>
   	
   	<beans profile="it,dev,prod">
     	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/myconfig" />

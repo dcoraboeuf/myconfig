@@ -63,6 +63,10 @@
 		    <scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.jstring</groupId>
 			<artifactId>jstring</artifactId>
 		</dependency>

@@ -29,6 +29,8 @@ import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
+import net.myconfig.service.api.template.TemplateModel;
+import net.myconfig.service.api.template.TemplateService;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.model.Ack;
@@ -57,10 +59,6 @@ import com.google.common.collect.Lists;
 public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
 
 	// TODO Use templating
-	private static final String NEW_USER_MESSAGE = "Dear %1$s,%n%n" + "A new account '%1$s' has been registered for you.%n%n" + "Please follow this link in order to validate your account and "
-			+ "to create your password.%n%n" + "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
-
-	// TODO Use templating
 	private static final String USER_FORGOTTEN_MESSAGE = "Dear %1$s,%n%n" + "Your account name is '%1$s'.%n%n" + "You can follow the following link in order to reset your password.%n%n"
 			+ "%2$s%n%n" + "Regards,%n" + "the myconfig team.";
 
@@ -75,16 +73,18 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private final MessageService messageService;
 	private final UIService uiService;
 	private final TokenService tokenService;
+	private final TemplateService templateService;
 
 	@Autowired
 	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService,
-			UIService uiService, TokenService tokenService) {
+			UIService uiService, TokenService tokenService, TemplateService templateService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
 		this.securitySelector = securitySelector;
 		this.messageService = messageService;
 		this.uiService = uiService;
 		this.tokenService = tokenService;
+		this.templateService = templateService;
 	}
 
 	@Override
@@ -150,8 +150,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		String token = tokenService.generateToken(TokenType.NEW_USER, name);
 		// Gets the return link
 		String link = uiService.getLink(UIService.Link.NEW_USER, name, token);
+		// Message template model
+		TemplateModel model = new TemplateModel();
+		model.add("user", name);
+		model.add("link", link);
+		// Message content
+		String content = templateService.generate ("user_new.txt", model);
 		// Creates the message
-		return new Message(String.format("myconfig - registration for account", name), String.format(NEW_USER_MESSAGE, name, link));
+		return new Message(String.format("myconfig - registration for account", name), content);
 	}
 
 	private Message createUserForgottenMessage(String name) {

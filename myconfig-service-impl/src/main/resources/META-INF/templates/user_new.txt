@@ -1,0 +1,10 @@
+Dear ${user},
+
+A new account '${user}' has been registered for you.
+
+Please follow this link in order to validate your account and to create your password.
+
+${link}
+
+Regards,
+the myconfig team.
