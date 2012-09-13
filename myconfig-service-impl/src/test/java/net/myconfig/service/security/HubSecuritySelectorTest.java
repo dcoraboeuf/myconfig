@@ -10,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityManagement;
 import net.myconfig.service.api.security.UserProfile;
@@ -39,7 +40,7 @@ public class HubSecuritySelectorTest {
 
 	@Test
 	public void getSecurityManagementId() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("xxx");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("xxx");
 		assertEquals("xxx", selector.getSecurityMode());
 	}
 
@@ -50,27 +51,27 @@ public class HubSecuritySelectorTest {
 
 	@Test
 	public void getSecurityManagement_1() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager1");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager1");
 		SecurityManagement securityManagement = selector.getSecurityManagement();
 		assertTrue(securityManagement == manager1);
 	}
 
 	@Test
 	public void getSecurityManagement_2() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager2");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 		SecurityManagement securityManagement = selector.getSecurityManagement();
 		assertTrue(securityManagement == manager2);
 	}
 
 	@Test(expected = SecurityManagementNotFoundException.class)
 	public void getSecurityManagement_not_found() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager3");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager3");
 		selector.getSecurityManagement();
 	}
 
 	@Test
 	public void delegate_authenticate() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager2");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
 		Authentication authentication = mock(Authentication.class);
 		UserProfile expectedUserToken = mock(UserProfile.class);
@@ -83,7 +84,7 @@ public class HubSecuritySelectorTest {
 
 	@Test
 	public void delegate_supports() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager2");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
 		selector.supports(Authentication.class);
 
@@ -92,7 +93,7 @@ public class HubSecuritySelectorTest {
 
 	@Test
 	public void delegate_hasUserFunction() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager2");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
 		Authentication authentication = mock(Authentication.class);
 		when(manager2.hasUserFunction(authentication, UserFunction.security_setup)).thenReturn(true);
@@ -104,7 +105,7 @@ public class HubSecuritySelectorTest {
 
 	@Test
 	public void delegate_hasAppFunction() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager2");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
 		Authentication authentication = mock(Authentication.class);
 		when(manager2.hasApplicationFunction(authentication, 10, AppFunction.app_users)).thenReturn(true);
@@ -116,7 +117,7 @@ public class HubSecuritySelectorTest {
 
 	@Test
 	public void delegate_allowLogin() {
-		when(configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT)).thenReturn("manager2");
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
 		when(manager2.allowLogin()).thenReturn(true);
 

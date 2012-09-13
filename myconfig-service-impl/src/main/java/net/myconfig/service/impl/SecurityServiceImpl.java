@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.UIService;
 import net.myconfig.service.api.message.Message;
@@ -91,7 +92,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 			if (!securityModes.contains(mode)) {
 				throw new SecurityManagementNotFoundException(mode);
 			}
-			configurationService.setParameter(ConfigurationService.SECURITY_MODE, mode);
+			configurationService.setParameter(ConfigurationKey.SECURITY_MODE, mode);
 
 		} else {
 			logger.info("[security] {} mode is already selected.", mode);

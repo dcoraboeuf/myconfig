@@ -1,5 +1,5 @@
 <dataset>
 
-	<CONFIGURATION name="key1" value="value1" />
+	<CONFIGURATION name="app.name" value="myapp" />
 
 </dataset>

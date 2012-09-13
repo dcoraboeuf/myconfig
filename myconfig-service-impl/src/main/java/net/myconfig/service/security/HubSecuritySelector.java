@@ -9,6 +9,7 @@ import java.util.Map;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityManagement;
 import net.myconfig.service.api.security.SecuritySelector;
@@ -45,7 +46,7 @@ public class HubSecuritySelector implements SecuritySelector {
 
 	@Override
 	public String getSecurityMode() {
-		return configurationService.getParameter(ConfigurationService.SECURITY_MODE, ConfigurationService.SECURITY_MODE_DEFAULT);
+		return configurationService.getParameter(ConfigurationKey.SECURITY_MODE);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
@@ -22,18 +23,19 @@ public class ConfigurationServiceImpl extends AbstractDaoService implements Conf
 
 	@Override
 	@Transactional(readOnly = true)
-	public String getParameter(String name, String defaultValue) {
-		String value = getFirstItem(SQL.CONFIGURATION_VALUE, new MapSqlParameterSource(SQLColumns.NAME, name), String.class);
+	public String getParameter(ConfigurationKey configurationKey) {
+		String value = getFirstItem(SQL.CONFIGURATION_VALUE, new MapSqlParameterSource(SQLColumns.NAME, configurationKey.getKey()), String.class);
 		if (value == null) {
-			return defaultValue;
+			return configurationKey.getDefault();
 		} else {
 			return value;
 		}
 	}
-	
+
 	@Override
 	@Transactional
-	public void setParameter(String name, String value) {
+	public void setParameter(ConfigurationKey configurationKey, String value) {
+		String name = configurationKey.getKey();
 		String existingValue = getFirstItem(SQL.CONFIGURATION_VALUE, new MapSqlParameterSource(SQLColumns.NAME, name), String.class);
 		MapSqlParameterSource parameters = new MapSqlParameterSource().addValue(SQLColumns.NAME, name).addValue(SQLColumns.VALUE, value);
 		if (existingValue == null) {

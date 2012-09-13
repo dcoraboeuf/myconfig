@@ -4,6 +4,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import net.myconfig.core.MyConfigProfiles;
+import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
@@ -42,7 +43,7 @@ public class MailPost extends AbstractMessagePost {
 	@Override
 	public Ack post(final Message message, final String destination) {
 		
-		final String replyToAddress = configurationService.getParameter(ConfigurationService.APP_REPLYTO_ADDRESS, ConfigurationService.APP_REPLYTO_ADDRESS_DEFAULT);
+		final String replyToAddress = configurationService.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS);
 
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
 
