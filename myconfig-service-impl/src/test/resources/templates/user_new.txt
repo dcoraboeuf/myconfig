@@ -1,4 +1,4 @@
-Dear testuser,
+Dear John Smith,
 
 A new account 'testuser' has been registered for you.
 

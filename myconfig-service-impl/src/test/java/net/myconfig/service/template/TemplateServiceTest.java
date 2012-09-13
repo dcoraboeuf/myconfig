@@ -25,7 +25,7 @@ public class TemplateServiceTest extends AbstractIntegrationTest {
 
 	@Test
 	public void user_new() throws IOException {
-		TemplateModel model = new TemplateModel().add("user", "testuser").add("link", "http://mylink");
+		TemplateModel model = new TemplateModel().add("user", "testuser").add("userFullName", "John Smith").add("link", "http://mylink");
 		String content = service.generate("user_new.txt", model);
 		String expected = Helper.getResourceAsString("/templates/user_new.txt");
 		assertEquals(expected, content);
