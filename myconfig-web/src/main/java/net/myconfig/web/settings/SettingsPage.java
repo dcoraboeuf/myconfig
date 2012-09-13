@@ -1,89 +1,54 @@
 package net.myconfig.web.settings;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import net.myconfig.service.api.security.SecuritySelector;
+import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class SettingsPage extends AbstractGUIPage {
 
-	private final Logger logger = LoggerFactory.getLogger(SettingsPage.class);
-
-	private final Collection<SettingsCollaborator> settingsCollaborators;
+	private final SecurityService securityService;
+	private final SecuritySelector securitySelector;
 
 	@Autowired
-	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, Collection<SettingsCollaborator> settingsCollaborators) {
+	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector) {
 		super(ui, errorHandler);
-		this.settingsCollaborators = settingsCollaborators;
+		this.securityService = securityService;
+		this.securitySelector = securitySelector;
 	}
 
 	@RequestMapping(value = "/gui/settings", method = RequestMethod.GET)
 	public String settings(Model model) {
-		List<SettingsCollaborator> retainedCollaborators = new ArrayList<SettingsCollaborator>();
-		// Model parameters for each collaborator
-		for (SettingsCollaborator settingsCollaborator : settingsCollaborators) {
-			if (settingsCollaborator.isAllowed()) {
-				settingsCollaborator.initModel(model);
-				retainedCollaborators.add(settingsCollaborator);
-			}
-		}
-		// Collaborators
-		model.addAttribute("settingsCollaborators", retainedCollaborators);
+
+		// Security settings
+		// Selected security mode
+		model.addAttribute("selectedSecurityMode", securitySelector.getSecurityMode());
+		// List of modes
+		List<String> securityModes = securitySelector.getSecurityModes();
+		model.addAttribute("securityModes", securityModes);
+
+		// User settings
+		// ... nothing...
+
 		// OK
 		return "settings";
 	}
 
-	@RequestMapping(value = "/gui/settings", method = RequestMethod.POST)
-	public String save(WebRequest request) {
-		Map<String, String[]> parameters = request.getParameterMap();
-		// Log
-		for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
-			logger.debug("[settings] param {} -> {}", entry.getKey(), StringUtils.join(entry.getValue(), ","));
-		}
-		// Collection of parameters per collaborator
-		Map<String,Map<String,String[]>> parametersPerCollaborator = new HashMap<String, Map<String,String[]>>();
-		for (SettingsCollaborator settingsCollaborator : settingsCollaborators) {
-			if (settingsCollaborator.isAllowed()) {
-				String id = settingsCollaborator.getId();
-				
-				Map<String,String[]> thisParameters = new HashMap<String, String[]>();
-				parametersPerCollaborator.put(id, thisParameters);
-				
-				String prefix = id + ".";
-				for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
-					String key = entry.getKey();
-					if (StringUtils.startsWith(key, prefix)) {
-						String name = StringUtils.substringAfter(key, prefix);
-						thisParameters.put(name, entry.getValue());
-					}
-				}
-			}
-		}
-		// Saves the settings per collaborator
-		for (SettingsCollaborator settingsCollaborator : settingsCollaborators) {
-			if (settingsCollaborator.isAllowed()) {
-				String id = settingsCollaborator.getId();
-				Map<String, String[]> thisParameters = parametersPerCollaborator.get(id);
-				logger.debug("[settings] collaborator {} -> {}", id, thisParameters);
-				settingsCollaborator.save (thisParameters);
-			}
-		}
+	@RequestMapping(value = "/gui/settings/security/mode", method = RequestMethod.POST)
+	public String setSecurityMode(@RequestParam String mode) {
+		// Saves the security mode
+		securityService.setSecurityMode(mode);
 		// OK
 		return "redirect:/";
 	}

@@ -1,15 +1,38 @@
 <#include "/lib/layout.html">
 
 <@layout_std pageId="settings" title=loc("settings")>
-	<form action="gui/settings" method="POST">
-		<#list settingsCollaborators as settingsCollaborator>
-			<@panel title = settingsCollaborator.id>
-				<#include "/settings/${settingsCollaborator.id}.html" />
-			</@panel>
-		</#list>
-		<@panel>
-			<a class="form-command" href="."><@lh key = "general.cancel" /></a>
-			<input type="submit" value="<@lh key='general.submit' />" />
+	<#if chk_user_fn('security_setup') || chk_user_fn('security_users')>
+		<@panel title = "settings.security">
+			<@sec_chk_user_fn fn="security_setup">
+				<form action="gui/settings/security/mode" method="post">
+					<@lh key="settings.security.mode" />
+					<select name="mode">
+						<#list securityModes as mode>
+							<@select_option value = mode text = loc("net.myconfig.service.api.security.SecurityManagement." + mode) selection = selectedSecurityMode />
+						</#list>
+					</select>
+					<input type="submit" value="<@lh key='settings.security.mode.submit'/>" />
+				</form>
+			</@sec_chk_user_fn>
+			<@sec_chk_user_fn fn="security_users">
+				<p id="builtin-settings">
+					<p>
+						<a href="gui/users"><@lh key="settings.security.builtin.users" /></a>
+					</p>
+					<p class="info">
+						<@lh key="settings.security.builtin.users.warning" />
+					</p>
+				</p>
+			</@sec_chk_user_fn>
 		</@panel>
-	</form>
+	</#if>
+	
+	<#if secLogged()>
+		<@panel title = "settings.user">
+			<@form title = "settings.user.password">
+				<p><@lh key = "settings.user.password.message" /></p>
+				<input type="button" value="<@lh key='settings.user.password.submit' />" onclick="location='gui/user/reset'" />
+			</@form>
+		</@panel>
+	</#if>
 </@layout_std>
