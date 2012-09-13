@@ -44,6 +44,7 @@ public class MailPost extends AbstractMessagePost {
 	public Ack post(final Message message, final String destination) {
 		
 		final String replyToAddress = configurationService.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS);
+		logger.debug("[mail] Sending message from: {}", replyToAddress);
 
 		MimeMessagePreparator preparator = new MimeMessagePreparator() {
 

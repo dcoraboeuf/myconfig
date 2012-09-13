@@ -7,4 +7,4 @@ You can follow the following link in order to reset your password.
 ${link}
 
 Regards,
-the myconfig team.
+${signature}.

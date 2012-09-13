@@ -7,4 +7,4 @@ Please follow this link in order to validate your account and to create your pas
 ${link}
 
 Regards,
-the myconfig team.
+${signature}.

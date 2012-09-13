@@ -8,14 +8,16 @@ public class UserSummary {
 
 	private final String name;
 	private final String displayName;
+	private final String email;
 	private final boolean admin;
 	private final boolean verified;
 	private final boolean disabled;
 	private final EnumSet<UserFunction> functions;
 
-	public UserSummary(String name, String displayName, boolean admin, boolean verified, boolean disabled, EnumSet<UserFunction> functions) {
+	public UserSummary(String name, String displayName, String email, boolean admin, boolean verified, boolean disabled, EnumSet<UserFunction> functions) {
 		this.name = name;
 		this.displayName = displayName;
+		this.email = email;
 		this.admin = admin;
 		this.verified = verified;
 		this.disabled = disabled;
@@ -25,9 +27,13 @@ public class UserSummary {
 	public String getName() {
 		return name;
 	}
-	
+
 	public String getDisplayName() {
 		return displayName;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 
 	public boolean isAdmin() {
@@ -37,7 +43,7 @@ public class UserSummary {
 	public boolean isVerified() {
 		return verified;
 	}
-	
+
 	public boolean isDisabled() {
 		return disabled;
 	}

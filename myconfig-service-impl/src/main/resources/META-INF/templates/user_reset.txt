@@ -7,4 +7,4 @@ Please follow this link in order to complete the reinitialisation:
 ${link}
 
 Regards,
-the myconfig team.
+${signature}.

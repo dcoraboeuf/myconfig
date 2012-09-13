@@ -22,6 +22,9 @@
 						<@lh key="model.user.displayName" />
 					</th>
 					<th>
+						<@lh key="model.user.email" />
+					</th>
+					<th>
 						<@lh key="model.user.admin" />
 					</th>
 					<th>
@@ -49,6 +52,9 @@
 						</td>
 						<td class="item-column item-column-displayName">
 							${user.displayName?html}
+						</td>
+						<td class="item-column item-column-email">
+							${user.email?html}
 						</td>
 						<@item_column_boolean item=user field="admin" />
 						<@item_column_boolean item=user field="verified" />

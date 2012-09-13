@@ -106,14 +106,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		List<User> users = getJdbcTemplate().query(USER_SUMMARIES, new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new User(rs.getString(NAME), rs.getString(DISPLAYNAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
+				return new User(rs.getString(NAME), rs.getString(DISPLAYNAME), rs.getString(EMAIL), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
 			}
 		});
 		return Lists.transform(users, new Function<User, UserSummary>() {
 			@Override
 			public UserSummary apply(User user) {
 				EnumSet<UserFunction> functions = getUserFunctions(user);
-				return new UserSummary(user.getName(), user.getDisplayName(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
+				return new UserSummary(user.getName(), user.getDisplayName(), user.getEmail(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
 			}
 		});
 	}
@@ -145,27 +145,35 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		String token = tokenService.generateToken(tokenType, user);
 		// Gets the return link
 		String link = uiService.getLink(linkType, user, token);
+		// Gets the signature
+		String signature = configurationService.getParameter(ConfigurationKey.APP_REPLYTO_NAME);
 		// Message template model
 		TemplateModel model = new TemplateModel();
 		model.add("user", user);
 		model.add("userFullName", userDisplayName);
 		model.add("link", link);
+		model.add("signature", signature);
 		// Message content
 		String content = templateService.generate(templateId, model);
 		// Creates the message
 		return new Message(String.format(subjectFormat, user), content);
 	}
+	
+	private String getMessageTitle (String message) {
+		String appName = configurationService.getParameter(ConfigurationKey.APP_NAME);
+		return String.format("%s - %s", appName, message);
+	}
 
 	private Message createNewUserMessage(String name, String userDisplayName) {
-		return createUserMessage(name, userDisplayName, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_new.txt", "myconfig - registration for account");
+		return createUserMessage(name, userDisplayName, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_new.txt", getMessageTitle("registration for account"));
 	}
 
 	private Message createUserForgottenMessage(String name, String userDisplayName) {
-		return createUserMessage(name, userDisplayName, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_forgotten.txt", "myconfig - account reset");
+		return createUserMessage(name, userDisplayName, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_forgotten.txt", getMessageTitle("account reset"));
 	}
 
 	private Message createResetUserMessage(String name, String userDisplayName) {
-		return createUserMessage(name, userDisplayName, TokenType.RESET_USER, UIService.Link.RESET_USER, "user_reset.txt", "myconfig - reset password for account");
+		return createUserMessage(name, userDisplayName, TokenType.RESET_USER, UIService.Link.RESET_USER, "user_reset.txt", getMessageTitle("reset password for account"));
 	}
 
 	@Override
