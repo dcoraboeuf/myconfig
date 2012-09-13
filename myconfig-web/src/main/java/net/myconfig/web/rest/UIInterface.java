@@ -6,12 +6,12 @@ import net.myconfig.core.UserFunction;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.ConfigurationUpdates;
 
 public interface UIInterface {
 
@@ -53,7 +53,7 @@ public interface UIInterface {
 
 	List<UserSummary> users();
 
-	Ack userCreate(String name, String email);
+	Ack userCreate(String name, String displayName, String email);
 
 	Ack userDelete(String name);
 

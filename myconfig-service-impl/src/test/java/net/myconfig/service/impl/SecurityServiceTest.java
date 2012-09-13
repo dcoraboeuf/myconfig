@@ -84,7 +84,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	@Test
 	public void userCreate_admin() throws DataSetException, SQLException {
 		asAdmin();
-		Ack ack = securityService.userCreate("test", "test@test.com");
+		Ack ack = securityService.userCreate("test", "Test", "test@test.com");
 		assertTrue(ack.isSuccess());
 		assertRecordExists("select * from users where name = 'test' and email = 'test@test.com' and password = '' and verified = false and admin = false");
 	}
@@ -93,7 +93,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_null () {
 		try {
 			asAdmin();
-			securityService.userCreate(null, "test@test.com");
+			securityService.userCreate(null, "Test", "test@test.com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -106,7 +106,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_blank () {
 		try {
 			asAdmin();
-			securityService.userCreate("", "test@test.com");
+			securityService.userCreate("", "Test", "test@test.com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -119,7 +119,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_spaces () {
 		try {
 			asAdmin();
-			securityService.userCreate("     ", "test@test.com");
+			securityService.userCreate("     ", "Test", "test@test.com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -132,7 +132,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_unrecognized_characters () {
 		try {
 			asAdmin();
-			securityService.userCreate("<te/st\u00E9>", "test@test.com");
+			securityService.userCreate("<te/st\u00E9>", "Test", "test@test.com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -145,7 +145,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_trim () {
 		try {
 			asAdmin();
-			securityService.userCreate("  test   ", "test@test.com");
+			securityService.userCreate("  test   ", "Test", "test@test.com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -158,7 +158,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_too_long () {
 		try {
 			asAdmin();
-			securityService.userCreate(StringUtils.repeat("x", 81), "test@test.com");
+			securityService.userCreate(StringUtils.repeat("x", 81), "Test", "test@test.com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -171,7 +171,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_email_null () {
 		try {
 			asAdmin();
-			securityService.userCreate("test", null);
+			securityService.userCreate("test", "Test", null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -184,7 +184,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_email_blank () {
 		try {
 			asAdmin();
-			securityService.userCreate("test", "");
+			securityService.userCreate("test", "Test", "");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -197,7 +197,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_email_spaces () {
 		try {
 			asAdmin();
-			securityService.userCreate("test", "   ");
+			securityService.userCreate("test", "Test", "   ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -210,7 +210,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_email_unrecognized_format () {
 		try {
 			asAdmin();
-			securityService.userCreate("test", "test AT test DOT com");
+			securityService.userCreate("test", "Test", "test AT test DOT com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -223,7 +223,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_email_trim () {
 		try {
 			asAdmin();
-			securityService.userCreate("test", "  test@test.com  ");
+			securityService.userCreate("test", "Test", "  test@test.com  ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -236,7 +236,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	public void userCreate_email_too_long () {
 		try {
 			asAdmin();
-			securityService.userCreate("test", StringUtils.repeat("x", 120) + "@test.com");
+			securityService.userCreate("test", "Test", StringUtils.repeat("x", 120) + "@test.com");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -248,14 +248,14 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	@Test(expected = UserAlreadyDefinedException.class)
 	public void userCreate_admin_already_exists() throws DataSetException, SQLException {
 		asAdmin();
-		securityService.userCreate("user1", "test@test.com");
+		securityService.userCreate("user1", "Test", "test@test.com");
 		assertRecordNotExists("select * from users where name = 'user1'");
 	}
 
 	@Test
 	public void userCreate_user_granted() throws DataSetException, SQLException {
 		asUser(UserFunction.security_users);
-		Ack ack = securityService.userCreate("test", "test@test.com");
+		Ack ack = securityService.userCreate("test", "Test", "test@test.com");
 		assertTrue(ack.isSuccess());
 		assertRecordExists("select * from users where name = 'test' and email = 'test@test.com' and password = '' and verified = false and admin = false");
 	}
@@ -263,7 +263,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	@Test(expected = AccessDeniedException.class)
 	public void userCreate_user_not_granted() throws DataSetException, SQLException {
 		asUser();
-		securityService.userCreate("testx", "x");
+		securityService.userCreate("testx", "Test", "x");
 		assertRecordNotExists("select * from users where name = 'testx'");
 	}
 	

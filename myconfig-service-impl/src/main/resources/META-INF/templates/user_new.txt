@@ -1,4 +1,4 @@
-Dear ${user},
+Dear ${userFullName},
 
 A new account '${user}' has been registered for you.
 

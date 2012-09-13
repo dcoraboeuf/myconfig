@@ -1,4 +1,4 @@
-Dear ${user},
+Dear ${userFullName},
 
 You have asked for the reinitialisation of the '${user}' account.
 

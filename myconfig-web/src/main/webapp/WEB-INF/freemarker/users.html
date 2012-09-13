@@ -19,6 +19,9 @@
 						<@lh key="model.user" />
 					</th>
 					<th>
+						<@lh key="model.user.displayName" />
+					</th>
+					<th>
 						<@lh key="model.user.admin" />
 					</th>
 					<th>
@@ -43,6 +46,9 @@
 					<tr class="<@item_row_class index=user_index />"">
 						<td class="item-column item-column-name">
 							${user.name?html}
+						</td>
+						<td class="item-column item-column-displayName">
+							${user.displayName?html}
 						</td>
 						<@item_column_boolean item=user field="admin" />
 						<@item_column_boolean item=user field="verified" />
@@ -100,6 +106,16 @@
 								</td>
 								<td class="form-input" colspan="2">
 									<input id="user-name" autofocus="autofocus" type="text" name="name" maxlength="80" size="20" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form-label">
+									<label for="user-displayName">
+										<@lh key="model.user.displayName" />
+									</label>
+								</td>
+								<td class="form-input" colspan="2">
+									<input id="user-displayName" type="text" name="displayName" maxlength="80" size="30" />
 								</td>
 							</tr>
 							<tr>

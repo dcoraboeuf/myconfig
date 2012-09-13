@@ -33,7 +33,7 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		UserProfile user = service.getUserToken("admin", "admin");
 		assertNotNull(user);
 		assertEquals("admin", user.getName());
-		assertEquals("admin", user.getDisplayName());
+		assertEquals("Administrator", user.getDisplayName());
 		assertTrue(user.isAdmin());
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
@@ -76,7 +76,7 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		UserProfile user = service.getUserToken("user1", "test");
 		assertNotNull(user);
 		assertEquals("user1", user.getName());
-		assertEquals("user1", user.getDisplayName());
+		assertEquals("User 1", user.getDisplayName());
 		assertFalse(user.isAdmin());
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
@@ -106,7 +106,7 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		UserProfile user = service.getUserToken("user2", "test");
 		assertNotNull(user);
 		assertEquals("user2", user.getName());
-		assertEquals("user2", user.getDisplayName());
+		assertEquals("User 2", user.getDisplayName());
 		assertFalse(user.isAdmin());
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {

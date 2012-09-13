@@ -13,6 +13,7 @@ public interface SQLColumns {
 	String VALUE = "value";
 	String APPLICATION = "application";
 	String NAME = "name";
+	String DISPLAYNAME = "displayName";
 	String EMAIL = "email";
 	String VERIFIED = "verified";
 	String DISABLED = "disabled";

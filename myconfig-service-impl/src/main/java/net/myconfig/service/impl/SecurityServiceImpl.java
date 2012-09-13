@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
 import static net.myconfig.service.db.SQLColumns.DISABLED;
+import static net.myconfig.service.db.SQLColumns.DISPLAYNAME;
 import static net.myconfig.service.db.SQLColumns.EMAIL;
 import static net.myconfig.service.db.SQLColumns.NAME;
 import static net.myconfig.service.db.SQLColumns.NEWPASSWORD;
@@ -104,14 +105,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		List<User> users = getJdbcTemplate().query(USER_SUMMARIES, new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new User(rs.getString(NAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
+				return new User(rs.getString(NAME), rs.getString(DISPLAYNAME), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
 			}
 		});
 		return Lists.transform(users, new Function<User, UserSummary>() {
 			@Override
 			public UserSummary apply(User user) {
 				EnumSet<UserFunction> functions = getUserFunctions(user);
-				return new UserSummary(user.getName(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
+				return new UserSummary(user.getName(), user.getDisplayName(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
 			}
 		});
 	}
@@ -119,15 +120,16 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
-	public Ack userCreate(String name, String email) {
+	public Ack userCreate(String name, String displayName, String email) {
 		validate(UserValidation.class, NAME, name);
+		validate(UserValidation.class, DISPLAYNAME, displayName);
 		validate(UserValidation.class, EMAIL, email);
 		try {
 			// Creates the user
-			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource().addValue(NAME, name).addValue(EMAIL, email));
+			int count = getNamedParameterJdbcTemplate().update(SQL.USER_CREATE, new MapSqlParameterSource().addValue(NAME, name).addValue(DISPLAYNAME, displayName).addValue(EMAIL, email));
 			// Its initial state is not verified and a notification must be sent
 			// to the email
-			Message message = createNewUserMessage(name);
+			Message message = createNewUserMessage(name, displayName);
 			// Sends the message
 			Ack ack = messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
 			// OK
@@ -137,7 +139,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		}
 	}
 
-	private Message createUserMessage(String user, TokenType tokenType, UIService.Link linkType, String templateId, String subjectFormat) {
+	private Message createUserMessage(String user, String userDisplayName, TokenType tokenType, UIService.Link linkType, String templateId, String subjectFormat) {
 		// Generates a token for the response
 		String token = tokenService.generateToken(tokenType, user);
 		// Gets the return link
@@ -145,6 +147,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		// Message template model
 		TemplateModel model = new TemplateModel();
 		model.add("user", user);
+		model.add("userFullName", userDisplayName);
 		model.add("link", link);
 		// Message content
 		String content = templateService.generate(templateId, model);
@@ -152,16 +155,16 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		return new Message(String.format(subjectFormat, user), content);
 	}
 
-	private Message createNewUserMessage(String name) {
-		return createUserMessage(name, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_new.txt", "myconfig - registration for account");
+	private Message createNewUserMessage(String name, String userDisplayName) {
+		return createUserMessage(name, userDisplayName, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_new.txt", "myconfig - registration for account");
 	}
 
-	private Message createUserForgottenMessage(String name) {
-		return createUserMessage(name, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_forgotten.txt", "myconfig - account reset");
+	private Message createUserForgottenMessage(String name, String userDisplayName) {
+		return createUserMessage(name, userDisplayName, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_forgotten.txt", "myconfig - account reset");
 	}
 
-	private Message createResetUserMessage(String name) {
-		return createUserMessage(name, TokenType.RESET_USER, UIService.Link.RESET_USER, "user_reset.txt", "myconfig - reset password for account");
+	private Message createResetUserMessage(String name, String userDisplayName) {
+		return createUserMessage(name, userDisplayName, TokenType.RESET_USER, UIService.Link.RESET_USER, "user_reset.txt", "myconfig - reset password for account");
 	}
 
 	@Override
@@ -241,8 +244,10 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	public void userReset(String name) {
 		// Gets the email from this user
 		String email = getEmail(name);
+		// Gets the display name for this user
+		String displayName = getDisplayName(name);
 		// Creates the reset message
-		Message message = createResetUserMessage(name);
+		Message message = createResetUserMessage(name, displayName);
 		// Sends the message
 		messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
 	}
@@ -253,8 +258,10 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		try {
 			// Gets the name for this user
 			String name = getNamedParameterJdbcTemplate().queryForObject(SQL.USER_FORGOTTEN, new MapSqlParameterSource(EMAIL, email), String.class);
+			// Gets the display name for this user
+			String displayName = getDisplayName(name);
 			// Creates the message to the user
-			Message message = createUserForgottenMessage(name);
+			Message message = createUserForgottenMessage(name, displayName);
 			// Sends the message
 			Ack ack = messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
 			// OK
@@ -267,6 +274,10 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	private String getEmail(String name) {
 		return getNamedParameterJdbcTemplate().queryForObject(SQL.USER_EMAIL, new MapSqlParameterSource(USER, name), String.class);
+	}
+
+	private String getDisplayName(String name) {
+		return getNamedParameterJdbcTemplate().queryForObject(SQL.USER_DISPLAY_NAME, new MapSqlParameterSource(USER, name), String.class);
 	}
 
 	@Override

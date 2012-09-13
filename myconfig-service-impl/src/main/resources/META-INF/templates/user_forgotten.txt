@@ -1,4 +1,4 @@
-Dear ${user},
+Dear ${userFullName},
 
 Your account name is '${user}'.
 

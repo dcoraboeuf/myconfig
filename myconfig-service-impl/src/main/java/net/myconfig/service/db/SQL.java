@@ -188,11 +188,11 @@ public interface SQL {
 	String FUNCTIONS_ENV = "select application, environment, grantedfunction from envgrants where (user = :user or user = '*') order by application, environment, grantedfunction";
 	
 	String USER = "select * from users where name = :name and password = :password and verified = true and disabled = false";
-	String USER_SUMMARIES = "select name, admin, verified, disabled from users order by admin desc, name asc";
+	String USER_SUMMARIES = "select name, displayname, admin, verified, disabled from users order by admin desc, name asc";
 	String USER_COUNT = "select count(*) from users";
-	String USER_CREATE = "insert into users (name, password, admin, email, verified, disabled) values (:name, '', false, :email, false, false)";
-	String USER_INIT = "insert into users (name, password, admin, email, verified, disabled) values (" +
-			"'admin', " +
+	String USER_CREATE = "insert into users (name, displayname, password, admin, email, verified, disabled) values (:name, :displayName, '', false, :email, false, false)";
+	String USER_INIT = "insert into users (name, displayname, password, admin, email, verified, disabled) values (" +
+			"'admin', 'Administrator', " +
 			"'c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec'," +
 			"true, '', true, false)";
 
@@ -208,6 +208,7 @@ public interface SQL {
 	String USER_CONFIRM = "update users set password = :password, verified = true where name = :user and disabled = false";
 
 	String USER_EMAIL = "select email from users where name = :user and verified = true and disabled = false";
+	String USER_DISPLAY_NAME = "select displayName from users where name = :user";
 
 	String USER_RESET = "update users set password = :newpassword where name = :user and password = :password";
 

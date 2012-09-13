@@ -16,6 +16,12 @@ public class UserValidation {
 	public String name;
 
 	@NotNull
+	@NotBlank
+	@Trimmed
+	@Size(min = 1, max = 80)
+	public String displayName;
+
+	@NotNull
 	@Size(min = 1, max = 120)
 	@Email
 	public String email;

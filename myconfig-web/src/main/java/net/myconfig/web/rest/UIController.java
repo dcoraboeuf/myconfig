@@ -8,12 +8,12 @@ import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
 import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
@@ -154,8 +154,8 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/user/{name:.*}", method = RequestMethod.PUT)
-	public @ResponseBody Ack userCreate(String name, @RequestParam String email) {
-		return securityService.userCreate(name, email);
+	public @ResponseBody Ack userCreate(String name, @RequestParam String displayName, @RequestParam String email) {
+		return securityService.userCreate(name, displayName, email);
 	}
 	
 	@Override

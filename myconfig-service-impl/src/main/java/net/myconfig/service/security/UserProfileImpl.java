@@ -30,10 +30,9 @@ public class UserProfileImpl implements UserProfile {
 		return user.getName();
 	}
 
-	// TODO Uses a display name
 	@Override
 	public String getDisplayName() {
-		return getName();
+		return user.getDisplayName();
 	}
 
 	@Override
