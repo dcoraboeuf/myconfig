@@ -260,7 +260,15 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_CREATE,
 				idNameSource(id, name));
-			return Ack.one (count);
+			if (count == 1) {
+				// Initial grants
+				for (EnvFunction fn : EnvFunction.values()) {
+					grantEnvFunction (id, name, fn);
+				}
+				return Ack.OK;
+			} else {
+				return Ack.NOK;
+			}
 		} catch (DuplicateKeyException ex) {
 			throw new EnvironmentAlreadyDefinedException(id, name);
 		}

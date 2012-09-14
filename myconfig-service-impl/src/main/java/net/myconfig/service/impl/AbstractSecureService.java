@@ -9,11 +9,11 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityUtils;
+import net.myconfig.service.api.security.UserProfile;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.model.Environment;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -54,8 +54,9 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 	}
 
 	protected void grantAppFunction(int application, AppFunction fn) {
-		String user = securitySelector.getCurrentUserName();
-		if (StringUtils.isNotBlank(user)) {
+		UserProfile profile = securitySelector.getCurrentProfile();
+		if (profile != null && !profile.isAdmin()) {
+			String user = profile.getName();
 			// Grant
 			getNamedParameterJdbcTemplate().update(
 					SQL.GRANT_APP_FUNCTION,
@@ -63,6 +64,23 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 						.addValue(SQLColumns.USER, user)
 						.addValue(SQLColumns.APPLICATION, application)
 						.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+			// FIXME Updates the current user profile
+		}
+	}
+
+	protected void grantEnvFunction(int application, String name, EnvFunction fn) {
+		UserProfile profile = securitySelector.getCurrentProfile();
+		if (profile != null && !profile.isAdmin()) {
+			String user = profile.getName();
+			// Grant
+			getNamedParameterJdbcTemplate().update(
+					SQL.GRANT_ENV_FUNCTION,
+					new MapSqlParameterSource()
+						.addValue(SQLColumns.USER, user)
+						.addValue(SQLColumns.APPLICATION, application)
+						.addValue(SQLColumns.ENVIRONMENT, name)
+						.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+			// FIXME Updates the current user profile
 		}
 	}
 

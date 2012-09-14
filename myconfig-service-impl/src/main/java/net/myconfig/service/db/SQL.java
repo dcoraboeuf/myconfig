@@ -186,6 +186,7 @@ public interface SQL {
 	String GRANT_APP_FUNCTION = "insert into appgrants (user, application, grantedfunction) values (:user, :application, :grantedfunction)";
 	
 	String FUNCTIONS_ENV = "select application, environment, grantedfunction from envgrants where (user = :user or user = '*') order by application, environment, grantedfunction";
+	String GRANT_ENV_FUNCTION = "insert into envgrants (user, application, environment, grantedfunction) values (:user, :application, :environment, :grantedfunction)";
 	
 	String USER = "select * from users where name = :name and password = :password and verified = true and disabled = false";
 	String USER_SUMMARIES = "select name, displayname, email, admin, verified, disabled from users order by admin desc, name asc";
