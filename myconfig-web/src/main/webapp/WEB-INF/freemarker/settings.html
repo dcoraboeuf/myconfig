@@ -12,8 +12,12 @@
 		<@panel title = "settings.user">
 		
 			<@form title = "settings.user.password">
-				<p><@lh key = "settings.user.password.message" /></p>
-				<input type="button" value="<@lh key='settings.user.password.submit' />" onclick="location='gui/user/password'" />
+				<#if userEmail != '' >
+					<p><@lh key = "settings.user.password.message" /></p>
+					<input type="button" value="<@lh key='settings.user.password.submit' />" onclick="location='gui/user/password'" />
+				<#else>
+					<p class="info"><@lh key = "settings.user.password.noemail" /></p>
+				</#if>
 			</@form>
 			
 			<@form title = "settings.user.data">
