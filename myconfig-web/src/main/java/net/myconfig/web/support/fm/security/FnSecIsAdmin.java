@@ -3,6 +3,7 @@ package net.myconfig.web.support.fm.security;
 import java.util.List;
 
 import net.myconfig.service.api.security.SecuritySelector;
+import net.myconfig.service.api.security.UserProfile;
 
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,8 @@ public class FnSecIsAdmin extends AbstractFnSec {
 		Validate.notNull(list, "List of arguments is required");
 		Validate.isTrue(list.size() == 0, "No argument is needed");
 		// Test
-		return getUserToken() != null;
+		UserProfile profile = getUserToken();
+		return profile != null && profile.isAdmin();
 	}
 
 }
