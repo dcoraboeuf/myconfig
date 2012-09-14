@@ -98,6 +98,16 @@ public class SecurityController extends AbstractGUIPage {
 		return "userConfirm";
 	}
 
+	@RequestMapping(value = "/gui/user/forgotten/{name}/{token}", method = RequestMethod.GET)
+	public String userForgottenForm(@PathVariable String name, @PathVariable String token, Model model) {
+		// Confirms the token
+		securityService.checkUserForgotten(name, token);
+		// Fills the model
+		model.addAttribute("name", name).addAttribute("token", token);
+		// OK
+		return "userForgottenForm";
+	}
+
 	@RequestMapping(value = "/gui/user/confirm", method = RequestMethod.POST)
 	public String userConfirm(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
 		try {
@@ -140,7 +150,7 @@ public class SecurityController extends AbstractGUIPage {
 	}
 
 	@RequestMapping(value = "/gui/user/forgotten", method = RequestMethod.GET)
-	public String userForgottenForm() {
+	public String userForgotten() {
 		return "userForgotten";
 	}
 

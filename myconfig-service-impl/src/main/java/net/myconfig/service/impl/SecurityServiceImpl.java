@@ -215,6 +215,11 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	@Override
+	public void checkUserForgotten(String name, String token) {
+		tokenService.checkToken(token, TokenType.FORGOTTEN_PASSWORD, name);
+	}
+
+	@Override
 	public void checkUserReset(String name, String token) {
 		tokenService.checkToken(token, TokenType.RESET_USER, name);
 	}

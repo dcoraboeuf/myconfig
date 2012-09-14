@@ -42,4 +42,6 @@ public interface SecurityService {
 
 	void userReset(String name);
 
+	void checkUserForgotten(String name, String token);
+
 }

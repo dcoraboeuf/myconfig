@@ -1,0 +1,41 @@
+<#include "/lib/layout.html">
+<@layout_std pageId="userForgottenForm" script=true title = loc("userForgottenForm", name)>
+	<@panel>
+		<@form>
+			<form method="POST" action="gui/user/forgotten/set" onsubmit="return UserForgottenForm.validate();">
+				<input name="name" type="hidden" value="${name?html}" />
+				<input name="token" type="hidden" value="${token?html}" />
+				<table>
+					<tbody>
+						<tr>
+							<td class="form-label"><label for="password"><@lh key="model.user.password" /></label></td>
+							<td class="form-input">
+								<input id="password" name="password" type="password" maxlength="32" size="32" autofocus="true" />
+							</td>
+						</tr>
+						<tr>
+							<td class="form-label"><label for="confirm-password"><@lh key="userForgottenForm.confirmPassword" /></label></td>
+							<td class="form-input">
+								<input id="confirm-password" type="password" maxlength="32" size="32" />
+							</td>
+						</tr>
+						<#if .data_model["error"]??>
+							<tr>
+								<td colspan="2" class="error">
+									${.data_model["error"]}
+								</td>
+							</tr>
+						</#if>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="2" align="right">
+								<input id="submit" type="submit" value="<@lh key='userForgottenForm.submit' />" />
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+				</form>
+		</@form>
+	</@panel>
+</@layout_std>
