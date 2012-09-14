@@ -32,7 +32,7 @@ public interface SecurityService {
 
 	void checkUserReset(String name, String token);
 
-	void userReset(String name, String token, String oldPassword, String newPassword);
+	void userReset(String name, String token, String password);
 
 	Ack userForgotten(String email);
 

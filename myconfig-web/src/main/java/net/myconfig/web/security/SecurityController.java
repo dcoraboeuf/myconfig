@@ -186,6 +186,28 @@ public class SecurityController extends AbstractGUIPage {
 		securityService.userReset(name);
 		return "redirect:/gui/users";
 	}
+
+	@RequestMapping(value = "/gui/user/reset/{name}/{token}", method = RequestMethod.GET)
+	public String userResetForm(@PathVariable String name, @PathVariable String token, Model model) {
+		// Confirms the token
+		securityService.checkUserReset(name, token);
+		// Fills the model
+		model.addAttribute("name", name).addAttribute("token", token);
+		// OK
+		return "userResetForm";
+	}
+
+	@RequestMapping(value = "/gui/user/reset", method = RequestMethod.POST)
+	public String userResetFormSet(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
+		try {
+			securityService.userReset(name, token, password);
+			model.addAttribute("name", name);
+			return "userResetFormOK";
+		} catch (AbstractTokenException ex) {
+			model.addAttribute("error", errorHandler.displayableError(ex, locale)).addAttribute("name", name).addAttribute("token", token);
+			return "userResetForm";
+		}
+	}
 	
 	@RequestMapping(value = "/gui/user/{name}/disable", method = RequestMethod.POST)
 	public String userDisable(@PathVariable String name) {

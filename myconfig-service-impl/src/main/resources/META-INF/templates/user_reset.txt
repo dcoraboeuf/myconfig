@@ -1,8 +1,8 @@
 Dear ${userFullName},
 
-You have asked for the reinitialisation of the '${user}' account.
+The reinitialisation of the '${user}' account has been requested.
 
-Please follow this link in order to complete the reinitialisation:
+Please follow this link in order to complete this reinitialisation:
 
 ${link}
 

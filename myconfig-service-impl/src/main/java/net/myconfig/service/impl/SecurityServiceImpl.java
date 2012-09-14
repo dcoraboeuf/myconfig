@@ -231,12 +231,12 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
-	public void userReset(String name, String token, String oldPassword, String newPassword) {
+	public void userReset(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.RESET_USER, name);
 		// Changes the password
 		int count = getNamedParameterJdbcTemplate().update(SQL.USER_RESET,
-				new MapSqlParameterSource().addValue(USER, name).addValue(PASSWORD, digest(oldPassword)).addValue(NEWPASSWORD, digest(newPassword)));
+				new MapSqlParameterSource().addValue(USER, name).addValue(PASSWORD, digest(password)));
 		// Check
 		if (count != 1) {
 			throw new CannotResetUserException(name);
