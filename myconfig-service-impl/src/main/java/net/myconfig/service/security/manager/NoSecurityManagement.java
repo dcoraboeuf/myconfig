@@ -45,6 +45,11 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 			public String getDisplayName() {
 				return "Anonymous";
 			}
+			
+			@Override
+			public String getEmail() {
+				return null;
+			}
 		};
 	}
 
@@ -69,6 +74,11 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 
 	@Override
 	public UserProfile authenticate(Authentication authentication) {
+		return anonymousProfile();
+	}
+	
+	@Override
+	public UserProfile getCurrentProfile() {
 		return anonymousProfile();
 	}
 

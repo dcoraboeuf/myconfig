@@ -41,7 +41,8 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 		return getCurrentProfile() != null;
 	}
 
-	protected UserProfile getCurrentProfile() {
+	@Override
+	public UserProfile getCurrentProfile() {
 		Authentication authentication = SecurityUtils.authentication();
 		if (authentication != null) {
 			Object details = authentication.getDetails();

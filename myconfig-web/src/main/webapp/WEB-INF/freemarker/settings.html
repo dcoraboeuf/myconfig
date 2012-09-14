@@ -1,12 +1,57 @@
 <#include "/lib/layout.html">
 
 <@layout_std pageId="settings" script=true title=loc("settings")>
+
+	<#if .data_model["error"]??>
+		<p class="error">
+			${.data_model["error"]?html}
+		</p>
+	</#if>
 	
 	<#if secLogged()>
 		<@panel title = "settings.user">
+		
 			<@form title = "settings.user.password">
 				<p><@lh key = "settings.user.password.message" /></p>
 				<input type="button" value="<@lh key='settings.user.password.submit' />" onclick="location='gui/user/password'" />
+			</@form>
+			
+			<@form title = "settings.user.data">
+				<form action="gui/settings/user/data" method="post" onsubmit="return Settings.validateUserData()">
+					<table>
+						<tbody>
+							<tr>
+								<td><@lh key="model.user.displayName" /></td>
+								<td>
+									<input id="userDisplayName" name="displayName" type="text" maxlength="80" size="40" value="${userDisplayName?html}" />
+								</td>
+							</tr>
+							<tr>
+								<td><@lh key="model.user.email" /></td>
+								<td>
+									<input id="userEmail" name="email" type="email" maxlength="120" size="40" value="${userEmail?html}" />
+								</td>
+							</tr>
+							<tr>
+								<td><@lh key="settings.user.data.password" /></td>
+								<td>
+									<input id="userPassword" name="password" type="password" maxlength="16" size="16" />
+									<br/>
+									<span class="info"><@lh key="settings.user.data.password.message" /></span>
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="2">
+									<input type="submit" value="<@lh key='settings.user.data.submit' />" />
+									<br/>
+									<span class="info"><@lh key="settings.user.data.warning" /></span>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</form>
 			</@form>
 		</@panel>
 	</#if>

@@ -11,6 +11,8 @@ public interface SecurityOperations {
 
 	String getCurrentUserName();
 
+	UserProfile getCurrentProfile();
+
 	boolean hasOneOfUserFunction(UserFunction... fns);
 
 	boolean isLogged();

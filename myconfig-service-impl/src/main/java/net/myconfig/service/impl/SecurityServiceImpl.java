@@ -290,6 +290,26 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 			messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
 		}
 	}
+	
+	@Override
+	@Transactional
+	public void updateUserData(String password, String displayName, String email) {
+		// Validation
+		validate(UserValidation.class, DISPLAYNAME, displayName);
+		validate(UserValidation.class, EMAIL, email);
+		// Gets the current user
+		String name = securitySelector.getCurrentUserName();
+		if (StringUtils.isNotBlank(name)) {
+			int count = getNamedParameterJdbcTemplate().update(SQL.USER_UPDATE, new MapSqlParameterSource()
+				.addValue(NAME, name)
+				.addValue(PASSWORD, digest(password))
+				.addValue(DISPLAYNAME, displayName)
+				.addValue(EMAIL, email));
+			if (count != 1) {
+				throw new CannotUpdateUserDataException (name);
+			}
+		}
+	}
 
 	@Override
 	@Transactional

@@ -18,4 +18,6 @@ public interface UserProfile {
 
 	String getDisplayName();
 
+	String getEmail();
+
 }

@@ -72,6 +72,11 @@ public class HubSecuritySelector implements SecuritySelector {
 	}
 	
 	@Override
+	public UserProfile getCurrentProfile() {
+		return getSecurityManagement().getCurrentProfile();
+	}
+	
+	@Override
 	public boolean hasOneOfUserFunction(UserFunction... fns) {
 		return getSecurityManagement().hasOneOfUserFunction(fns);
 	}

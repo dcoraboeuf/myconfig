@@ -34,6 +34,11 @@ public class UserProfileImpl implements UserProfile {
 	public String getDisplayName() {
 		return user.getDisplayName();
 	}
+	
+	@Override
+	public String getEmail() {
+		return user.getEmail();
+	}
 
 	@Override
 	public boolean isAdmin() {

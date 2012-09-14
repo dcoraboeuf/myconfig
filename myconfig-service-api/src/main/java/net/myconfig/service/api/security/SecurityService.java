@@ -46,4 +46,6 @@ public interface SecurityService {
 
 	void userForgottenSet(String name, String token, String password);
 
+	void updateUserData(String password, String displayName, String email);
+
 }
