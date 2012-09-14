@@ -39,7 +39,7 @@
 			<#list scripts as scriptfile>
 				<script src="static/scripts/${scriptfile}" type="text/javascript"></script>
 			</#list>
-			<title><@lh key="app.title" /> - <@lh key="app.version" /> - <@layout_title pageId=pageId title=title /></title>
+			<title><@myconfigName/> - <@lh key="app.version" /> - <@layout_title pageId=pageId title=title /></title>
 	    </head>
 		<body>
 			<#nested>
@@ -50,7 +50,7 @@
 <#macro layout_basic pageId style=false script=false scripts=[] modules=[] title="" showSecurity=true showLanguage=true showVersion=true>
 	<@layout_root pageId=pageId style=style script=script scripts=scripts modules=modules title=title>
 		<section class="app-title">
-			<span class="app-title"><@lh key="app.title" /></span>
+			<span class="app-title"><@myconfigName/></span>
 			<div class="app-meta">
 				<#if showSecurity>
 					<@sec_login />

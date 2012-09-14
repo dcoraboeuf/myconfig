@@ -1,6 +1,10 @@
 <#import "/spring.ftl" as spring />
 <#include "/lib/i18n.html" />
 
+<#macro myconfigName>
+	${ settingsAppName()?html }
+</#macro>
+
 <#macro panel title="">
 	<section class="panel">
 		<#if title != "">
