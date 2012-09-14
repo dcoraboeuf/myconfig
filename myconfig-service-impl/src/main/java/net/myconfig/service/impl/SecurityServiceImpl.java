@@ -346,7 +346,12 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	private String getEmail(String name) {
-		return getNamedParameterJdbcTemplate().queryForObject(SQL.USER_EMAIL, new MapSqlParameterSource(USER, name), String.class);
+		String email = getNamedParameterJdbcTemplate().queryForObject(SQL.USER_EMAIL, new MapSqlParameterSource(USER, name), String.class);
+		if (StringUtils.isBlank(email)) {
+			throw new CannotFindValidEmailException(name);
+		} else {
+			return email;
+		}
 	}
 
 	private String getDisplayName(String name) {
