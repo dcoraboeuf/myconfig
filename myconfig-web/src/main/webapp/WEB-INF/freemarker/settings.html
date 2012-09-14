@@ -1,6 +1,16 @@
 <#include "/lib/layout.html">
 
-<@layout_std pageId="settings" title=loc("settings")>
+<@layout_std pageId="settings" script=true title=loc("settings")>
+	
+	<#if secLogged()>
+		<@panel title = "settings.user">
+			<@form title = "settings.user.password">
+				<p><@lh key = "settings.user.password.message" /></p>
+				<input type="button" value="<@lh key='settings.user.password.submit' />" onclick="location='gui/user/reset'" />
+			</@form>
+		</@panel>
+	</#if>
+
 	<#if chk_user_fn('security_setup') || chk_user_fn('security_users')>
 		<@panel title = "settings.security">
 			<@sec_chk_user_fn fn="security_setup">
@@ -26,13 +36,55 @@
 			</@sec_chk_user_fn>
 		</@panel>
 	</#if>
-	
-	<#if secLogged()>
-		<@panel title = "settings.user">
-			<@form title = "settings.user.password">
-				<p><@lh key = "settings.user.password.message" /></p>
-				<input type="button" value="<@lh key='settings.user.password.submit' />" onclick="location='gui/user/reset'" />
+
+	<#if secIsAdmin()>
+		<@panel title = "settings.app">
+			<@form>
+				<form action="gui/settings/app" method="post" onsubmit="return Settings.validateAppSettings()">
+					<table>
+						<tbody>
+							<tr>
+								<td class="form-label">
+									<label for="app-name">
+										<@lh key="settings.app.name" />
+									</label>
+								</td>
+								<td class="form-input">
+									<input id="app-name" type="text" name="name" maxlength="80" size="20" value="${appName?html}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form-label">
+									<label for="app-replyto-name">
+										<@lh key="settings.app.replyto.address" />
+									</label>
+								</td>
+								<td class="form-input">
+									<input id="app-replyto-address" type="email" name="replytoAddress" maxlength="80" size="20" value="${appReplytoAddress?html}" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form-label">
+									<label for="app-replyto-name">
+										<@lh key="settings.app.replyto.name" />
+									</label>
+								</td>
+								<td class="form-input">
+									<input id="app-replyto-name" type="text" name="replytoName" maxlength="80" size="20" value="${appReplytoName?html}" />
+								</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr>
+								<td colspan="2" align="right">
+									<input type="submit" value="<@lh key='settings.app.submit' />" />
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+				</form>
 			</@form>
 		</@panel>
 	</#if>
+	
 </@layout_std>

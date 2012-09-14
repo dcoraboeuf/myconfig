@@ -2,6 +2,8 @@ package net.myconfig.web.settings;
 
 import java.util.List;
 
+import net.myconfig.service.api.ConfigurationKey;
+import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.web.gui.AbstractGUIPage;
@@ -20,16 +22,23 @@ public class SettingsPage extends AbstractGUIPage {
 
 	private final SecurityService securityService;
 	private final SecuritySelector securitySelector;
+	private final ConfigurationService configurationService;
 
 	@Autowired
-	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector) {
+	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector, ConfigurationService configurationService) {
 		super(ui, errorHandler);
 		this.securityService = securityService;
 		this.securitySelector = securitySelector;
+		this.configurationService = configurationService;
 	}
 
 	@RequestMapping(value = "/gui/settings", method = RequestMethod.GET)
 	public String settings(Model model) {
+		
+		// Application settings
+		model.addAttribute("appName", configurationService.getParameter(ConfigurationKey.APP_NAME));
+		model.addAttribute("appReplytoAddress", configurationService.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
+		model.addAttribute("appReplytoName", configurationService.getParameter(ConfigurationKey.APP_REPLYTO_NAME));
 
 		// Security settings
 		// Selected security mode
@@ -39,7 +48,7 @@ public class SettingsPage extends AbstractGUIPage {
 		model.addAttribute("securityModes", securityModes);
 
 		// User settings
-		// ... nothing...
+		// ... nothing yet...
 
 		// OK
 		return "settings";
@@ -49,6 +58,15 @@ public class SettingsPage extends AbstractGUIPage {
 	public String setSecurityMode(@RequestParam String mode) {
 		// Saves the security mode
 		securityService.setSecurityMode(mode);
+		// OK
+		return "redirect:/";
+	}
+
+	@RequestMapping(value = "/gui/settings/app", method = RequestMethod.POST)
+	public String setApplicationSettings (@RequestParam String name, @RequestParam String replytoAddress, @RequestParam String replytoName) {
+		configurationService.setParameter(ConfigurationKey.APP_NAME, name);
+		configurationService.setParameter(ConfigurationKey.APP_REPLYTO_ADDRESS, replytoAddress);
+		configurationService.setParameter(ConfigurationKey.APP_REPLYTO_NAME, replytoName);
 		// OK
 		return "redirect:/";
 	}

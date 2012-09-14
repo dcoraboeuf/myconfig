@@ -40,6 +40,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 				<entry key="secAllowLogin" value-ref="fnSecAllowLogin" />
 				<entry key="secLogged" value-ref="fnSecLogged" />
 				<entry key="secUserName" value-ref="fnSecUserName" />
+				<entry key="secIsAdmin" value-ref="fnSecIsAdmin" />
 			</map>
 		</property>
 	</bean>
@@ -52,6 +53,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<bean id="fnSecAllowLogin" class="net.myconfig.web.support.fm.security.FnSecAllowLogin" />
 	<bean id="fnSecLogged" class="net.myconfig.web.support.fm.security.FnSecLogged" />
 	<bean id="fnSecUserName" class="net.myconfig.web.support.fm.security.FnSecUserName" />
+	<bean id="fnSecIsAdmin" class="net.myconfig.web.support.fm.security.FnSecIsAdmin" />
 
 	<!-- Freemarker views -->
 	<!-- FIXME Uses profiles for caching -->
