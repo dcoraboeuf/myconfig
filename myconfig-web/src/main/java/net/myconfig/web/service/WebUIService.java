@@ -39,6 +39,9 @@ public class WebUIService implements UIService {
 		case USER_CHANGE_PASSWORD:
 			query = format("gui/user/password/%s/%s", (Object[]) components);
 			break;
+		case FORGOTTEN_PASSWORD:
+			query = format("gui/user/forgotten/%s/%s", (Object[]) components);
+			break;
 		default:
 			throw new IllegalStateException("UIService.Link is not supported: " + link);
 		}

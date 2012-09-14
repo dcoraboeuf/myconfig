@@ -169,7 +169,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	private Message createUserForgottenMessage(String name, String userDisplayName) {
-		return createUserMessage(name, userDisplayName, TokenType.NEW_USER, UIService.Link.NEW_USER, "user_forgotten.txt", getMessageTitle("account reset"));
+		return createUserMessage(name, userDisplayName, TokenType.FORGOTTEN_PASSWORD, UIService.Link.FORGOTTEN_PASSWORD, "user_forgotten.txt", getMessageTitle("account reset"));
 	}
 
 	private Message createResetUserMessage(String name, String userDisplayName) {
