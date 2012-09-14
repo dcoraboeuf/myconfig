@@ -24,7 +24,11 @@ public interface SecurityService {
 
 	void userConfirm(String name, String token, String password);
 
-	void userReset();
+	void userChangePassword();
+
+	void checkUserChangePassword(String name, String token);
+
+	void userChangePassword(String name, String token, String oldPassword, String newPassword);
 
 	void checkUserReset(String name, String token);
 

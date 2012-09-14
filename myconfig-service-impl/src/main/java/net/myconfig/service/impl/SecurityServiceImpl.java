@@ -176,6 +176,10 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		return createUserMessage(name, userDisplayName, TokenType.RESET_USER, UIService.Link.RESET_USER, "user_reset.txt", getMessageTitle("reset password for account"));
 	}
 
+	private Message createChangePasswordUserMessage(String name, String userDisplayName) {
+		return createUserMessage(name, userDisplayName, TokenType.USER_CHANGE_PASSWORD, UIService.Link.USER_CHANGE_PASSWORD, "user_change_password.txt", getMessageTitle("change password for account"));
+	}
+
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
@@ -216,6 +220,11 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	@Override
+	public void checkUserChangePassword(String name, String token) {
+		tokenService.checkToken(token, TokenType.USER_CHANGE_PASSWORD, name);
+	}
+
+	@Override
 	@Transactional
 	public void userReset(String name, String token, String oldPassword, String newPassword) {
 		// Consumes the token
@@ -231,6 +240,20 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
+	public void userChangePassword(String name, String token, String oldPassword, String newPassword) {
+		// Consumes the token
+		tokenService.consumesToken(token, TokenType.USER_CHANGE_PASSWORD, name);
+		// Changes the password
+		int count = getNamedParameterJdbcTemplate().update(SQL.USER_CHANGE_PASSWORD,
+				new MapSqlParameterSource().addValue(USER, name).addValue(PASSWORD, digest(oldPassword)).addValue(NEWPASSWORD, digest(newPassword)));
+		// Check
+		if (count != 1) {
+			throw new CannotChangePasswordException(name);
+		}
+	}
+
+	@Override
+	@Transactional
 	public void userConfirm(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.NEW_USER, name);
@@ -240,10 +263,17 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
-	public void userReset() {
+	public void userChangePassword() {
 		String name = securitySelector.getCurrentUserName();
 		if (StringUtils.isNotBlank(name)) {
-			userReset(name);
+			// Gets the email from this user
+			String email = getEmail(name);
+			// Gets the display name for this user
+			String displayName = getDisplayName(name);
+			// Creates the reset message
+			Message message = createChangePasswordUserMessage(name, displayName);
+			// Sends the message
+			messageService.sendMessage(message, new MessageDestination(MessageChannel.EMAIL, email));
 		}
 	}
 

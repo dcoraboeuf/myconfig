@@ -110,32 +110,32 @@ public class SecurityController extends AbstractGUIPage {
 		}
 	}
 
-	@RequestMapping(value = "/gui/user/reset", method = RequestMethod.GET)
-	public String userResetLink() {
-		securityService.userReset();
+	@RequestMapping(value = "/gui/user/password", method = RequestMethod.GET)
+	public String userChangePasswordLink() {
+		securityService.userChangePassword();
 		// OK
-		return "userResetRequestOK";
+		return "userChangePasswordRequestOK";
 	}
 
-	@RequestMapping(value = "/gui/user/reset/{name}/{token}", method = RequestMethod.GET)
-	public String userResetForm(@PathVariable String name, @PathVariable String token, Model model) {
+	@RequestMapping(value = "/gui/user/password/{name}/{token}", method = RequestMethod.GET)
+	public String userChangePasswordForm(@PathVariable String name, @PathVariable String token, Model model) {
 		// Confirms the token
-		securityService.checkUserReset(name, token);
+		securityService.checkUserChangePassword(name, token);
 		// Fills the model
 		model.addAttribute("name", name).addAttribute("token", token);
 		// OK
-		return "userReset";
+		return "userChangePassword";
 	}
 
-	@RequestMapping(value = "/gui/user/reset", method = RequestMethod.POST)
-	public String userReset(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String oldPassword, @RequestParam String newPassword, Model model) {
+	@RequestMapping(value = "/gui/user/password", method = RequestMethod.POST)
+	public String userChangePassword(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String oldPassword, @RequestParam String newPassword, Model model) {
 		try {
-			securityService.userReset(name, token, oldPassword, newPassword);
+			securityService.userChangePassword(name, token, oldPassword, newPassword);
 			model.addAttribute("name", name);
-			return "userResetOK";
+			return "userChangePasswordOK";
 		} catch (InputException ex) {
 			model.addAttribute("error", errorHandler.displayableError(ex, locale)).addAttribute("name", name).addAttribute("token", token);
-			return "userReset";
+			return "userChangePassword";
 		}
 	}
 
