@@ -108,6 +108,18 @@ public class SecurityController extends AbstractGUIPage {
 		return "userForgottenForm";
 	}
 
+	@RequestMapping(value = "/gui/user/forgotten/set", method = RequestMethod.POST)
+	public String userForgottenFormSet(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
+		try {
+			securityService.userForgottenSet(name, token, password);
+			model.addAttribute("name", name);
+			return "userForgottenFormOK";
+		} catch (AbstractTokenException ex) {
+			model.addAttribute("error", errorHandler.displayableError(ex, locale)).addAttribute("name", name).addAttribute("token", token);
+			return "userForgottenForm";
+		}
+	}
+
 	@RequestMapping(value = "/gui/user/confirm", method = RequestMethod.POST)
 	public String userConfirm(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
 		try {

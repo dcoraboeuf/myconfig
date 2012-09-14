@@ -210,7 +210,7 @@ public interface SQL {
 	String USER_EMAIL = "select email from users where name = :user";
 	String USER_DISPLAY_NAME = "select displayName from users where name = :user";
 
-	String USER_RESET = "update users set password = :newpassword where name = :user and password = :password";
+	String USER_RESET = "update users set password = :password where name = :user";
 	String USER_CHANGE_PASSWORD = "update users set password = :newpassword where name = :user and password = :password";
 
 	String USER_FORGOTTEN = "select name from users where email = :email and verified = true";

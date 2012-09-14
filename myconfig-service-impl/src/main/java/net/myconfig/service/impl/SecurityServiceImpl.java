@@ -265,6 +265,15 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		// Saves the password
 		getNamedParameterJdbcTemplate().update(SQL.USER_CONFIRM, new MapSqlParameterSource().addValue(USER, name).addValue(PASSWORD, digest(password)));
 	}
+	
+	@Override
+	@Transactional
+	public void userForgottenSet(String name, String token, String password) {
+		// Consumes the token
+		tokenService.consumesToken(token, TokenType.FORGOTTEN_PASSWORD, name);
+		// Saves the password
+		getNamedParameterJdbcTemplate().update(SQL.USER_RESET, new MapSqlParameterSource().addValue(USER, name).addValue(PASSWORD, digest(password)));
+	}
 
 	@Override
 	@Transactional

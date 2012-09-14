@@ -44,4 +44,6 @@ public interface SecurityService {
 
 	void checkUserForgotten(String name, String token);
 
+	void userForgottenSet(String name, String token, String password);
+
 }
