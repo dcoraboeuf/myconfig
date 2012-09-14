@@ -136,7 +136,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 			// OK
 			return Ack.one(count).and(ack);
 		} catch (DuplicateKeyException ex) {
-			throw new UserAlreadyDefinedException(name);
+			throw new UserAlreadyDefinedException(name, email);
 		}
 	}
 
