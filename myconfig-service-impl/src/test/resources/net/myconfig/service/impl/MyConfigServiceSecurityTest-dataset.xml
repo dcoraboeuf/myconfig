@@ -26,5 +26,28 @@
 	<CONFIG application="1" version="1.0" appkey="jdbc.password" environment="UAT" value="1.0 jdbc.password UAT" />
 	<CONFIG application="1" version="1.1" appkey="jdbc.password" environment="DEV" value="1.1 jdbc.password DEV" />
 	<CONFIG application="1" version="1.1" appkey="jdbc.password" environment="UAT" value="1.1 jdbc.password UAT" />
+	
+	<CONFIGURATION name="security.mode" value="builtin" />
+	
+	<USERS name="admin" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="Administrator" email="admin@myconfig.net" admin="true" verified="true" disabled="false" />
+	
+	<USERS name="user0" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="User with no grant" email="user0@myconfig.net" admin="false" verified="true" disabled="false" />
+	
+	<USERS name="user_app_list" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="User with grant on app_list" email="user_app_list@myconfig.net" admin="false" verified="true" disabled="false" />
+	<USERGRANTS user="user_app_list" grantedfunction="app_list" />
+	
+	<USERS name="user_app_create" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="User with grant on app_create" email="user_app_create@myconfig.net" admin="false" verified="true" disabled="false" />
+	<USERGRANTS user="user_app_create" grantedfunction="app_create" />
+	
+	<USERS name="user_app_delete" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="User with grant on app_delete" email="user_app_delete@myconfig.net" admin="false" verified="true" disabled="false" />
+	<APPGRANTS user="user_app_delete" application="1" grantedfunction="app_delete" />
+	
+	<USERS name="user_app_view" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="User with grant on app_view" email="user_app_view@myconfig.net" admin="false" verified="true" disabled="false" />
+	<APPGRANTS user="user_app_view" application="1" grantedfunction="app_view" />
+	
+	<USERS name="user_app_view_env_config_DEV_UAT" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="User with grant on app_view and env_config on DEV,UAT" email="user_app_view_env_config_DEV_UAT@myconfig.net" admin="false" verified="true" disabled="false" />
+	<APPGRANTS user="user_app_view_env_config_DEV_UAT" application="1" grantedfunction="app_view" />
+	<ENVGRANTS user="user_app_view_env_config_DEV_UAT" application="1" environment="DEV" grantedfunction="env_config" />
+	<ENVGRANTS user="user_app_view_env_config_DEV_UAT" application="1" environment="UAT" grantedfunction="env_config" />	
 
 </dataset>

@@ -13,7 +13,7 @@ import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecurityManagement;
 import net.myconfig.service.api.security.SecuritySelector;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.User;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +72,7 @@ public class HubSecuritySelector implements SecuritySelector {
 	}
 	
 	@Override
-	public UserProfile getCurrentProfile() {
+	public User getCurrentProfile() {
 		return getSecurityManagement().getCurrentProfile();
 	}
 	
@@ -87,7 +87,7 @@ public class HubSecuritySelector implements SecuritySelector {
 	}
 
 	@Override
-	public UserProfile authenticate(Authentication authentication) {
+	public User authenticate(Authentication authentication) {
 		return getSecurityManagement().authenticate(authentication);
 	}
 

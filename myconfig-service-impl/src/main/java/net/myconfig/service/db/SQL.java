@@ -177,15 +177,16 @@ public interface SQL {
 	String CONFIGURATION_VALUE = "select value from configuration where name = :name";
 	String CONFIGURATION_ADD = "insert into configuration (name, value) values (:name, :value)";
 	String CONFIGURATION_UPDATE = "update configuration set value = :value where name = :name";
-	
+
 	String FUNCTIONS_USER = "select grantedfunction from usergrants where (user = :user or user = '*') order by grantedfunction";
+	String FUNCTION_USER = "select grantedfunction from usergrants where (user = :user or user = '*') and grantedfunction = :grantedfunction";
 	String FUNCTIONS_USER_ADD = "insert into usergrants (user, grantedfunction) values (:user, :grantedfunction)";
 	String FUNCTIONS_USER_REMOVE = "delete from usergrants where user = :user and grantedfunction = :grantedfunction";
 	
-	String FUNCTIONS_APP = "select application, grantedfunction from appgrants where (user = :user or user = '*') order by application, grantedfunction";
+	String FUNCTION_APP	= "select grantedfunction from appgrants where (user = :user or user = '*') and application = :application and grantedfunction = :grantedfunction";
 	String GRANT_APP_FUNCTION = "insert into appgrants (user, application, grantedfunction) values (:user, :application, :grantedfunction)";
-	
-	String FUNCTIONS_ENV = "select application, environment, grantedfunction from envgrants where (user = :user or user = '*') order by application, environment, grantedfunction";
+
+	String FUNCTION_ENV	= "select grantedfunction from envgrants where (user = :user or user = '*') and application = :application and environment = :environment and grantedfunction = :grantedfunction";
 	String GRANT_ENV_FUNCTION = "insert into envgrants (user, application, environment, grantedfunction) values (:user, :application, :environment, :grantedfunction)";
 	
 	String USER = "select * from users where name = :name and password = :password and verified = true and disabled = false";

@@ -16,7 +16,8 @@ import java.sql.SQLException;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.GrantService;
+import net.myconfig.service.api.security.User;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.dbunit.dataset.DataSetException;
@@ -27,53 +28,64 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 
 	@Autowired
 	private AuthenticationService service;
+	
+	@Autowired
+	private GrantService grantService;
 
 	@Test
 	public void admin() {
-		UserProfile user = service.getUserToken("admin", "admin");
+		User user = service.getUserToken("admin", "admin");
 		assertNotNull(user);
 		assertEquals("admin", user.getName());
 		assertEquals("Administrator", user.getDisplayName());
 		assertTrue(user.isAdmin());
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
-			assertTrue(user.hasUserFunction(fn));
+			if (fn == app_list) {
+				assertTrue(grantService.hasUserFunction("admin", fn));
+			} else {
+				assertFalse(grantService.hasUserFunction("admin", fn));
+			}
 		}
 		// Applications functions
 		for (AppFunction fn : AppFunction.values()) {
-			assertTrue(user.hasAppFunction(1, fn));
+			if (fn == app_view) {
+				assertTrue(grantService.hasAppFunction("admin", 1, fn));
+			} else {
+				assertFalse(grantService.hasAppFunction("admin", 1, fn));
+			}
 		}
 		// TODO Environment functions
 	}
 
 	@Test
 	public void not_verified() {
-		UserProfile user = service.getUserToken("newuser", "");
+		User user = service.getUserToken("newuser", "");
 		assertNull(user);
 	}
 
 	@Test
 	public void not_found_password() {
-		UserProfile user = service.getUserToken("user1", "xxx");
+		User user = service.getUserToken("user1", "xxx");
 		assertNull(user);
 	}
 
 	@Test
 	public void not_found_user() {
-		UserProfile user = service.getUserToken("user2", "xxx");
+		User user = service.getUserToken("user2", "xxx");
 		assertNull(user);
 	}
 
 	@Test
 	public void disabled_user() throws DataSetException, SQLException {
 		assertRecordExists("select * from users where name = 'disableduser' and password = '%s'", AbstractSecurityService.digest("test"));
-		UserProfile user = service.getUserToken("disableduser", "test");
+		User user = service.getUserToken("disableduser", "test");
 		assertNull(user);
 	}
 
 	@Test
 	public void user1() {
-		UserProfile user = service.getUserToken("user1", "test");
+		User user = service.getUserToken("user1", "test");
 		assertNotNull(user);
 		assertEquals("user1", user.getName());
 		assertEquals("User 1", user.getDisplayName());
@@ -81,29 +93,29 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
 			if (fn == app_list || fn == app_create) {
-				assertTrue(user.hasUserFunction(fn));
+				assertTrue(grantService.hasUserFunction("user1", fn));
 			} else {
-				assertFalse(user.hasUserFunction(fn));
+				assertFalse(grantService.hasUserFunction("user1", fn));
 			}
 		}
 		// Applications functions
 		for (AppFunction fn : AppFunction.values()) {
 			if (fn == app_delete || fn == app_config || fn == app_view) {
-				assertTrue(user.hasAppFunction(1, fn));
+				assertTrue(grantService.hasAppFunction("user1", 1, fn));
 			} else {
-				assertFalse(user.hasAppFunction(1, fn));
+				assertFalse(grantService.hasAppFunction("user1", 1, fn));
 			}
 		}
 		// No other app
 		for (AppFunction fn : AppFunction.values()) {
-			assertFalse(user.hasAppFunction(2, fn));
+			assertFalse(grantService.hasAppFunction("user1", 2, fn));
 		}
 		// TODO Environment functions
 	}
 
 	@Test
 	public void user2() {
-		UserProfile user = service.getUserToken("user2", "test");
+		User user = service.getUserToken("user2", "test");
 		assertNotNull(user);
 		assertEquals("user2", user.getName());
 		assertEquals("User 2", user.getDisplayName());
@@ -111,22 +123,22 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		// User functions
 		for (UserFunction fn : UserFunction.values()) {
 			if (fn == app_list) {
-				assertTrue(user.hasUserFunction(fn));
+				assertTrue(grantService.hasUserFunction("user2", fn));
 			} else {
-				assertFalse(user.hasUserFunction(fn));
+				assertFalse(grantService.hasUserFunction("user2", fn));
 			}
 		}
 		// Applications functions
 		for (AppFunction fn : AppFunction.values()) {
 			if (fn == app_view) {
-				assertTrue(user.hasAppFunction(1, fn));
+				assertTrue(grantService.hasAppFunction("user2", 1, fn));
 			} else {
-				assertFalse(user.hasAppFunction(1, fn));
+				assertFalse(grantService.hasAppFunction("user2", 1, fn));
 			}
 		}
 		// No other app
 		for (AppFunction fn : AppFunction.values()) {
-			assertFalse(user.hasAppFunction(2, fn));
+			assertFalse(grantService.hasAppFunction("user2", 2, fn));
 		}
 		// TODO Environment functions
 	}

@@ -15,7 +15,9 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.GrantService;
+import net.myconfig.service.api.security.User;
+import net.myconfig.service.support.UserBuilder;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,19 +31,21 @@ public class BuiltinSecurityManagementTest {
 
 	private BuiltinSecurityManagement mgr;
 	private AuthenticationService authenticationService;
+	private GrantService grantService;
 
 	@Before
 	public void init() {
 		authenticationService = mock(AuthenticationService.class);
-		mgr = new BuiltinSecurityManagement(authenticationService);
+		grantService = mock(GrantService.class);
+		mgr = new BuiltinSecurityManagement(authenticationService, grantService);
 	}
 
 	@Test
 	public void getUserProfile() {
-		UserProfile profile = mock(UserProfile.class);
-		when(authenticationService.getUserToken("name", "pwd")).thenReturn(profile);
-		UserProfile actualProfile = mgr.getUserToken("name", "pwd");
-		assertSame(profile, actualProfile);
+		User expectedUser = mock(User.class);
+		when(authenticationService.getUserToken("name", "pwd")).thenReturn(expectedUser);
+		User actualUser = mgr.getUserToken("name", "pwd");
+		assertSame(expectedUser, actualUser);
 		verify(authenticationService, times(1)).getUserToken("name", "pwd");
 	}
 
@@ -49,21 +53,21 @@ public class BuiltinSecurityManagementTest {
 	public void authenticate_no() {
 		Authentication authentication = mock(Authentication.class);
 
-		UserProfile actualProfile = mgr.authenticate(authentication);
-		assertNull(actualProfile);
+		User actualUser = mgr.authenticate(authentication);
+		assertNull(actualUser);
 		verify(authenticationService, never()).getUserToken(anyString(), anyString());
 	}
 
 	@Test
 	public void authenticate() {
-		UserProfile profile = mock(UserProfile.class);
-		when(authenticationService.getUserToken("name", "pwd")).thenReturn(profile);
+		User expectedUser = mock(User.class);
+		when(authenticationService.getUserToken("name", "pwd")).thenReturn(expectedUser);
 
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken("name", "pwd");
 
-		UserProfile actualProfile = mgr.authenticate(authentication);
+		User actualUser = mgr.authenticate(authentication);
 
-		assertSame(profile, actualProfile);
+		assertSame(expectedUser, actualUser);
 		verify(authenticationService, times(1)).getUserToken("name", "pwd");
 	}
 
@@ -86,18 +90,19 @@ public class BuiltinSecurityManagementTest {
 
 	@Test
 	public void getUserToken_profile() {
-		UserProfile profile = mock(UserProfile.class);
+		User user = mock(User.class);
 		Authentication authentication = mock(Authentication.class);
-		when(authentication.getDetails()).thenReturn(profile);
-		assertSame(profile, mgr.getUserToken(authentication));
+		when(authentication.getDetails()).thenReturn(user);
+		assertSame(user, mgr.getUserToken(authentication));
 	}
 
 	@Test
 	public void hasUserFunction_user() {
-		UserProfile profile = mock(UserProfile.class);
-		when(profile.hasUserFunction(UserFunction.app_create)).thenReturn(true);
+		User user = UserBuilder.create("user").build();		
+		when(grantService.hasUserFunction("user", UserFunction.app_create)).thenReturn(true);
+		
 		Authentication authentication = mock(Authentication.class);
-		when(authentication.getDetails()).thenReturn(profile);
+		when(authentication.getDetails()).thenReturn(user);
 		for (UserFunction fn : UserFunction.values()) {
 			assertEquals(String.format("Check for %s", fn), fn == UserFunction.app_create, mgr.hasUserFunction(authentication, fn));
 		}
@@ -112,10 +117,12 @@ public class BuiltinSecurityManagementTest {
 
 	@Test
 	public void hasAppFunction_user() {
-		UserProfile profile = mock(UserProfile.class);
-		when(profile.hasAppFunction(2, AppFunction.app_view)).thenReturn(true);
+		User user = UserBuilder.create("user").build();		
+		when(grantService.hasAppFunction("user", 2, AppFunction.app_view)).thenReturn(true);
+		
 		Authentication authentication = mock(Authentication.class);
-		when(authentication.getDetails()).thenReturn(profile);
+		when(authentication.getDetails()).thenReturn(user);
+		
 		for (int application : APPLICATIONS) {
 			for (AppFunction fn : AppFunction.values()) {
 				assertEquals(application == 2 && fn == AppFunction.app_view, mgr.hasApplicationFunction(authentication, application, fn));
@@ -134,10 +141,12 @@ public class BuiltinSecurityManagementTest {
 
 	@Test
 	public void hasEnvFunction_user() {
-		UserProfile profile = mock(UserProfile.class);
-		when(profile.hasEnvFunction(2, "UAT", EnvFunction.env_view)).thenReturn(true);
+		User user = UserBuilder.create("user").build();	
+		when(grantService.hasEnvFunction("user", 2, "UAT", EnvFunction.env_view)).thenReturn(true);
+		
 		Authentication authentication = mock(Authentication.class);
-		when(authentication.getDetails()).thenReturn(profile);
+		when(authentication.getDetails()).thenReturn(user);
+		
 		for (int application : APPLICATIONS) {
 			for (String environment : ENVIRONMENTS) {
 				for (EnvFunction fn : EnvFunction.values()) {

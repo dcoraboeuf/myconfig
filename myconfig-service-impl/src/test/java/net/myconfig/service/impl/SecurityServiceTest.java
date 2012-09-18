@@ -46,15 +46,15 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 
 	@Test
-	public void getUserList_admin() {
+	public void getUserList_admin() throws SQLException {
 		asAdmin();
 		List<UserSummary> users = securityService.getUserList();
 		assertUserList(users);
 	}
 
 	@Test
-	public void getUserList_user_granted() {
-		asUser(UserFunction.security_users);
+	public void getUserList_user_granted() throws SQLException {
+		asUser().grant(UserFunction.security_users);
 		List<UserSummary> users = securityService.getUserList();
 		assertUserList(users);
 	}
@@ -76,7 +76,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void getUserList_user_not_granted() {
+	public void getUserList_user_not_granted() throws SQLException {
 		asUser();
 		securityService.getUserList();
 	}
@@ -90,7 +90,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_null () {
+	public void userCreate_null () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate(null, "Test", "test@test.com");
@@ -103,7 +103,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_blank () {
+	public void userCreate_blank () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("", "Test", "test@test.com");
@@ -116,7 +116,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_spaces () {
+	public void userCreate_spaces () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("     ", "Test", "test@test.com");
@@ -129,7 +129,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_unrecognized_characters () {
+	public void userCreate_unrecognized_characters () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("<te/st\u00E9>", "Test", "test@test.com");
@@ -142,7 +142,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_trim () {
+	public void userCreate_trim () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("  test   ", "Test", "test@test.com");
@@ -155,7 +155,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_too_long () {
+	public void userCreate_too_long () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate(StringUtils.repeat("x", 81), "Test", "test@test.com");
@@ -168,7 +168,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_email_null () {
+	public void userCreate_email_null () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("test", "Test", null);
@@ -181,7 +181,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_email_blank () {
+	public void userCreate_email_blank () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("test", "Test", "");
@@ -194,7 +194,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_email_spaces () {
+	public void userCreate_email_spaces () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("test", "Test", "   ");
@@ -207,7 +207,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_email_unrecognized_format () {
+	public void userCreate_email_unrecognized_format () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("test", "Test", "test AT test DOT com");
@@ -220,7 +220,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_email_trim () {
+	public void userCreate_email_trim () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("test", "Test", "  test@test.com  ");
@@ -233,7 +233,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 	
 	@Test
-	public void userCreate_email_too_long () {
+	public void userCreate_email_too_long () throws SQLException {
 		try {
 			asAdmin();
 			securityService.userCreate("test", "Test", StringUtils.repeat("x", 120) + "@test.com");
@@ -254,7 +254,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 
 	@Test
 	public void userCreate_user_granted() throws DataSetException, SQLException {
-		asUser(UserFunction.security_users);
+		asUser().grant(UserFunction.security_users);
 		Ack ack = securityService.userCreate("test", "Test", "test@test.com");
 		assertTrue(ack.isSuccess());
 		assertRecordExists("select * from users where name = 'test' and email = 'test@test.com' and password = '' and verified = false and admin = false");
@@ -283,61 +283,61 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 
 	@Test
-	public void userDelete_admin() {
+	public void userDelete_admin() throws SQLException {
 		asAdmin();
 		Ack ack = securityService.userDelete("test");
 		assertFalse(ack.isSuccess());
 	}
 
 	@Test
-	public void userDelete_user_granted() {
-		asUser(UserFunction.security_users);
+	public void userDelete_user_granted() throws SQLException {
+		asUser().grant(UserFunction.security_users);
 		Ack ack = securityService.userDelete("test");
 		assertFalse(ack.isSuccess());
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void userDelete_user_not_granted() {
+	public void userDelete_user_not_granted() throws SQLException {
 		asUser();
 		securityService.userDelete("test");
 	}
 
 	@Test
-	public void userFunctionAdd_admin() {
+	public void userFunctionAdd_admin() throws SQLException {
 		asAdmin();
 		Ack ack = securityService.userFunctionAdd("user1", UserFunction.app_create);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
-	public void userFunctionAdd_user_granted() {
-		asUser(UserFunction.security_users);
+	public void userFunctionAdd_user_granted() throws SQLException {
+		asUser().grant(UserFunction.security_users);
 		Ack ack = securityService.userFunctionAdd("user1", UserFunction.app_create);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void userFunctionAdd_user_not_granted() {
+	public void userFunctionAdd_user_not_granted() throws SQLException {
 		asUser();
 		securityService.userFunctionAdd("user1", UserFunction.app_create);
 	}
 
 	@Test
-	public void userFunctionRemove_admin() {
+	public void userFunctionRemove_admin() throws SQLException {
 		asAdmin();
 		Ack ack = securityService.userFunctionRemove("user1", UserFunction.app_create);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
-	public void userFunctionRemove_user_granted() {
-		asUser(UserFunction.security_users);
+	public void userFunctionRemove_user_granted() throws SQLException {
+		asUser().grant(UserFunction.security_users);
 		Ack ack = securityService.userFunctionRemove("user1", UserFunction.app_create);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void userFunctionRemove_user_not_granted() {
+	public void userFunctionRemove_user_not_granted() throws SQLException {
 		asUser();
 		securityService.userFunctionRemove("user1", UserFunction.app_create);
 	}
@@ -348,27 +348,27 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	}
 
 	@Test
-	public void setSecurityMode_admin() {
+	public void setSecurityMode_admin() throws SQLException {
 		asAdmin();
 		securityService.setSecurityMode("none");
 		assertEquals("none", securitySelector.getSecurityMode());
 	}
 
 	@Test(expected = SecurityManagementNotFoundException.class)
-	public void setSecurityMode_admin_unknown_mode() {
+	public void setSecurityMode_admin_unknown_mode() throws SQLException {
 		asAdmin();
 		securityService.setSecurityMode("xxx");
 	}
 
 	@Test
-	public void setSecurityMode_user_granted() {
-		asUser(UserFunction.security_setup);
+	public void setSecurityMode_user_granted() throws SQLException {
+		asUser().grant(UserFunction.security_setup);
 		securityService.setSecurityMode("none");
 		assertEquals("none", securitySelector.getSecurityMode());
 	}
 
 	@Test(expected = AccessDeniedException.class)
-	public void setSecurityMode_user_not_granted() {
+	public void setSecurityMode_user_not_granted() throws SQLException {
 		asUser();
 		securityService.setSecurityMode("xxx");
 	}

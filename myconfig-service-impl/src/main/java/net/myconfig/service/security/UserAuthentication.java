@@ -3,7 +3,7 @@ package net.myconfig.service.security;
 import java.util.Collection;
 
 import net.myconfig.core.MyConfigRoles;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.User;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,23 +11,23 @@ import org.springframework.security.core.authority.AuthorityUtils;
 
 public class UserAuthentication implements Authentication {
 
-	private final UserProfile token;
+	private final User user;
 	private final Authentication authentication;
 
-	public UserAuthentication(UserProfile token, Authentication authentication) {
-		this.token = token;
+	public UserAuthentication(User user, Authentication authentication) {
+		this.user = user;
 		this.authentication = authentication;
 	}
 
 	@Override
 	public String getName() {
-		return token.getName();
+		return user.getName();
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		if (token != null) {
-			if (token.isAdmin()) {
+		if (user != null) {
+			if (user.isAdmin()) {
 				return AuthorityUtils.createAuthorityList(MyConfigRoles.ADMIN);
 			} else {
 				return AuthorityUtils.createAuthorityList(MyConfigRoles.USER);
@@ -44,7 +44,7 @@ public class UserAuthentication implements Authentication {
 
 	@Override
 	public Object getDetails() {
-		return token;
+		return user;
 	}
 
 	@Override

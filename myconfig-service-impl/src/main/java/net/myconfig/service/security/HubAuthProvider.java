@@ -1,7 +1,7 @@
 package net.myconfig.service.security;
 
 import net.myconfig.service.api.security.SecuritySelector;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -21,9 +21,9 @@ public class HubAuthProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		UserProfile userToken = securitySelector.authenticate(authentication);
-		if (userToken != null) {
-			return new UserAuthentication(userToken, authentication);
+		User user = securitySelector.authenticate(authentication);
+		if (user != null) {
+			return new UserAuthentication(user, authentication);
 		} else {
 			return null;
 		}

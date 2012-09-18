@@ -9,7 +9,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import net.myconfig.service.api.security.SecuritySelector;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.User;
+import net.myconfig.service.support.UserBuilder;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -43,14 +44,14 @@ public class HubAuthProviderTest {
 	@Test
 	public void authenticate_found() {
 		Authentication authentication = mock(Authentication.class);
-		UserProfile userToken = mock(UserProfile.class);
-		when(selector.authenticate(authentication)).thenReturn(userToken);
+		User user = UserBuilder.create("user").build();
+		when(selector.authenticate(authentication)).thenReturn(user);
 
 		Authentication o = provider.authenticate(authentication);
 		assertNotNull(o);
 		assertTrue(o instanceof UserAuthentication);
 		UserAuthentication a = (UserAuthentication) o;
-		assertSame(userToken, a.getDetails());
+		assertSame(user, a.getDetails());
 		verify(selector, times(1)).authenticate(authentication);
 	}
 

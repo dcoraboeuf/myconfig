@@ -22,7 +22,7 @@ public class FnSecLogged extends AbstractFnSec {
 		Validate.notNull(list, "List of arguments is required");
 		Validate.isTrue(list.size() == 0, "No argument is needed");
 		// Test
-		return getUserToken() != null;
+		return getUser() != null;
 	}
 
 }

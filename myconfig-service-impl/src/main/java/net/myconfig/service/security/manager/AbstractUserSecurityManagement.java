@@ -3,30 +3,34 @@ package net.myconfig.service.security.manager;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecurityUtils;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.User;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 public abstract class AbstractUserSecurityManagement extends AbstractSecurityManagement {
-
-	public AbstractUserSecurityManagement(String id) {
+	
+	private final GrantService grantService;
+	
+	public AbstractUserSecurityManagement(String id, GrantService grantService) {
 		super(id);
+		this.grantService = grantService;
 	}
 
 	@Override
 	public String getCurrentUserName() {
-		UserProfile profile = getCurrentProfile();
+		User profile = getCurrentProfile();
 		return profile != null ? profile.getName() : null;
 	}
 
 	@Override
 	public boolean hasOneOfUserFunction(UserFunction... fns) {
-		UserProfile profile = getCurrentProfile();
-		if (profile != null) {
+		User user = getCurrentProfile();
+		if (user != null) {
 			for (UserFunction fn : fns) {
-				if (profile.hasUserFunction(fn)) {
+				if (grantService.hasUserFunction(user.getName(), fn)) {
 					return true;
 				}
 			}
@@ -42,12 +46,12 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 	}
 
 	@Override
-	public UserProfile getCurrentProfile() {
+	public User getCurrentProfile() {
 		Authentication authentication = SecurityUtils.authentication();
 		if (authentication != null) {
 			Object details = authentication.getDetails();
-			if (details instanceof UserProfile) {
-				return (UserProfile) details;
+			if (details instanceof User) {
+				return (User) details;
 			} else {
 				return null;
 			}
@@ -57,7 +61,7 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 	}
 
 	@Override
-	public UserProfile authenticate(Authentication authentication) {
+	public User authenticate(Authentication authentication) {
 		if (authentication instanceof UsernamePasswordAuthenticationToken) {
 			UsernamePasswordAuthenticationToken o = (UsernamePasswordAuthenticationToken) authentication;
 			String username = o.getName();
@@ -74,13 +78,13 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 		return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 
-	protected UserProfile getUserToken(Authentication authentication) {
+	protected User getUserToken(Authentication authentication) {
 		if (authentication == null) {
 			return null;
 		} else {
 			Object details = authentication.getDetails();
-			if (details instanceof UserProfile) {
-				return (UserProfile) details;
+			if (details instanceof User) {
+				return (User) details;
 			} else {
 				return null;
 			}
@@ -89,20 +93,20 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 
 	@Override
 	public boolean hasUserFunction(Authentication authentication, UserFunction fn) {
-		UserProfile token = getUserToken(authentication);
-		return token != null && token.hasUserFunction(fn);
+		User user = getUserToken(authentication);
+		return user != null && (user.isAdmin() || grantService.hasUserFunction(user.getName(), fn));
 	}
 
 	@Override
 	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
-		UserProfile token = getUserToken(authentication);
-		return token != null && token.hasAppFunction(application, fn);
+		User user = getUserToken(authentication);
+		return user != null && (user.isAdmin() || grantService.hasAppFunction(user.getName(), application, fn));
 	}
 
 	@Override
 	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
-		UserProfile token = getUserToken(authentication);
-		return token != null && token.hasEnvFunction(application, environment, fn);
+		User user = getUserToken(authentication);
+		return user != null && (user.isAdmin() || grantService.hasEnvFunction(user.getName(), application, environment, fn));
 	}
 
 	@Override
@@ -110,6 +114,6 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 		return true;
 	}
 
-	protected abstract UserProfile getUserToken(String username, String password);
+	protected abstract User getUserToken(String username, String password);
 
 }

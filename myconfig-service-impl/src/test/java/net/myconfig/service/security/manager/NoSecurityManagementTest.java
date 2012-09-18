@@ -5,11 +5,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.User;
 
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
@@ -24,7 +23,7 @@ public class NoSecurityManagementTest {
 	@Test
 	public void authenticate() {
 		Authentication authentication = mock(Authentication.class);
-		UserProfile profile = mgr.authenticate(authentication);
+		User profile = mgr.authenticate(authentication);
 		assertNotNull(profile);
 		assertEquals("anonymous", profile.getName());
 	}

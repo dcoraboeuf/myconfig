@@ -7,7 +7,7 @@ import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
-import net.myconfig.service.api.security.UserProfile;
+import net.myconfig.service.api.security.User;
 import net.myconfig.service.exception.InputException;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
@@ -62,10 +62,10 @@ public class SettingsPage extends AbstractGUIPage {
 
 		// User settings
 		// User data
-		UserProfile profile = securitySelector.getCurrentProfile();
-		if (securitySelector.allowLogin() && profile != null) {
-			model.addAttribute("userDisplayName", profile.getDisplayName());
-			model.addAttribute("userEmail", profile.getEmail());
+		User user = securitySelector.getCurrentProfile();
+		if (securitySelector.allowLogin() && user != null) {
+			model.addAttribute("userDisplayName", user.getDisplayName());
+			model.addAttribute("userEmail", user.getEmail());
 		}
 
 		// OK

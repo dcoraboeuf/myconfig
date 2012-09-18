@@ -11,13 +11,13 @@ public interface SecurityOperations {
 
 	String getCurrentUserName();
 
-	UserProfile getCurrentProfile();
+	User getCurrentProfile();
 
 	boolean hasOneOfUserFunction(UserFunction... fns);
 
 	boolean isLogged();
 
-	UserProfile authenticate(Authentication authentication);
+	User authenticate(Authentication authentication);
 
 	boolean supports(Class<?> authentication);
 

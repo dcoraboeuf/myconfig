@@ -27,6 +27,7 @@ import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
 import net.myconfig.service.api.message.MessageDestination;
 import net.myconfig.service.api.message.MessageService;
+import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
@@ -68,10 +69,11 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	private final UIService uiService;
 	private final TokenService tokenService;
 	private final TemplateService templateService;
+	private final GrantService grantService;
 
 	@Autowired
 	public SecurityServiceImpl(DataSource dataSource, Validator validator, ConfigurationService configurationService, SecuritySelector securitySelector, MessageService messageService,
-			UIService uiService, TokenService tokenService, TemplateService templateService) {
+			UIService uiService, TokenService tokenService, TemplateService templateService, GrantService grantService) {
 		super(dataSource, validator);
 		this.configurationService = configurationService;
 		this.securitySelector = securitySelector;
@@ -79,6 +81,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		this.uiService = uiService;
 		this.tokenService = tokenService;
 		this.templateService = templateService;
+		this.grantService = grantService;
 	}
 
 	@Override
@@ -112,7 +115,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		return Lists.transform(users, new Function<User, UserSummary>() {
 			@Override
 			public UserSummary apply(User user) {
-				EnumSet<UserFunction> functions = getUserFunctions(user);
+				EnumSet<UserFunction> functions = grantService.getUserFunctions(user.getName());
 				return new UserSummary(user.getName(), user.getDisplayName(), user.getEmail(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
 			}
 		});
