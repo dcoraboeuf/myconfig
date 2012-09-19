@@ -11,9 +11,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 
 public abstract class AbstractUserSecurityManagement extends AbstractSecurityManagement {
-	
+
 	private final GrantService grantService;
-	
+
 	public AbstractUserSecurityManagement(String id, GrantService grantService) {
 		super(id);
 		this.grantService = grantService;
@@ -29,12 +29,16 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 	public boolean hasOneOfUserFunction(UserFunction... fns) {
 		User user = getCurrentProfile();
 		if (user != null) {
-			for (UserFunction fn : fns) {
-				if (grantService.hasUserFunction(user.getName(), fn)) {
-					return true;
+			if (user.isAdmin()) {
+				return true;
+			} else {
+				for (UserFunction fn : fns) {
+					if (grantService.hasUserFunction(user.getName(), fn)) {
+						return true;
+					}
 				}
+				return false;
 			}
-			return false;
 		} else {
 			return false;
 		}
