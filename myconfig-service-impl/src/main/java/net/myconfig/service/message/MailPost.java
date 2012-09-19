@@ -1,5 +1,7 @@
 package net.myconfig.service.message;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -50,10 +52,7 @@ public class MailPost extends AbstractMessagePost {
 
 			@Override
 			public void prepare(MimeMessage mimeMessage) throws Exception {
-				mimeMessage.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(destination));
-				mimeMessage.setFrom(new InternetAddress(replyToAddress));
-				mimeMessage.setSubject(message.getTitle());
-				mimeMessage.setText(message.getContent());
+				prepareMessage(mimeMessage, message, destination, replyToAddress);
 			}
 		};
 		try {
@@ -63,6 +62,13 @@ public class MailPost extends AbstractMessagePost {
 			logger.error("[mail] Cannot send mail: {}", ExceptionUtils.getRootCauseMessage(ex));
 			return Ack.NOK;
 		}
+	}
+
+	protected void prepareMessage(MimeMessage mimeMessage, Message message, String destination, String replyToAddress) throws MessagingException, AddressException {
+		mimeMessage.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(destination));
+		mimeMessage.setFrom(new InternetAddress(replyToAddress));
+		mimeMessage.setSubject(message.getTitle());
+		mimeMessage.setText(message.getContent());
 	}
 
 }
