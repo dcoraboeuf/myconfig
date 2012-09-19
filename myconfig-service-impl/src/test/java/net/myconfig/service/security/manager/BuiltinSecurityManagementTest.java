@@ -13,6 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
+import net.myconfig.core.MyConfigRoles;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.GrantService;
@@ -21,8 +22,13 @@ import net.myconfig.service.support.UserBuilder;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class BuiltinSecurityManagementTest {
 
@@ -40,6 +46,14 @@ public class BuiltinSecurityManagementTest {
 		mgr = new BuiltinSecurityManagement(authenticationService, grantService);
 	}
 
+	@Before
+	public void cleanContext() {
+		// No context
+		SecurityContextImpl context = new SecurityContextImpl();
+		context.setAuthentication(new AnonymousAuthenticationToken("anonymous", "anonymous", AuthorityUtils.createAuthorityList(MyConfigRoles.ANONYMOUS)));
+		SecurityContextHolder.setContext(context);
+	}
+
 	@Test
 	public void getUserProfile() {
 		User expectedUser = mock(User.class);
@@ -47,6 +61,93 @@ public class BuiltinSecurityManagementTest {
 		User actualUser = mgr.getUserToken("name", "pwd");
 		assertSame(expectedUser, actualUser);
 		verify(authenticationService, times(1)).getUserToken("name", "pwd");
+	}
+	
+	@Test
+	public void getCurrentProfile_no_authentication() {
+		SecurityContext context = mock(SecurityContext.class);
+		SecurityContextHolder.setContext(context);
+		User user = mgr.getCurrentProfile();
+		assertNull(user);
+	}
+	
+	@Test
+	public void getCurrentProfile_no_user() {
+		User user = mgr.getCurrentProfile();
+		assertNull(user);
+	}
+	
+	@Test
+	public void getCurrentProfile_user() {
+		User expectedUser = asUser();
+		User actualUser = mgr.getCurrentProfile();
+		assertSame(expectedUser, actualUser);
+	}
+
+	protected User asUser() {
+		User expectedUser = UserBuilder.user();
+		return asUser(expectedUser);
+	}
+
+	protected User asUser(User user) {
+		Authentication authentication = mock(Authentication.class);
+		when(authentication.getDetails()).thenReturn(user);
+		SecurityContext context = mock(SecurityContext.class);
+		when(context.getAuthentication()).thenReturn(authentication);
+		SecurityContextHolder.setContext(context);
+		return user;
+	}
+	
+	@Test
+	public void isLogged_no_user() {
+		assertFalse(mgr.isLogged());
+	}
+	
+	@Test
+	public void isLogged_user() {
+		asUser();
+		assertTrue(mgr.isLogged());
+	}
+	
+	@Test
+	public void getCurrentUserName_no_user() {
+		assertNull(mgr.getCurrentUserName());
+	}
+	
+	@Test
+	public void getCurrentUserName_user() {
+		asUser(UserBuilder.user("user"));
+		assertEquals("user", mgr.getCurrentUserName());
+	}
+	
+	@Test
+	public void hasOneOfUserFunction_no_user() {
+		assertFalse(mgr.hasOneOfUserFunction());
+	}
+	
+	@Test
+	public void hasOneOfUserFunction_admin() {
+		asUser(UserBuilder.create("admin").admin().build());
+		assertTrue(mgr.hasOneOfUserFunction());
+	}
+	
+	@Test
+	public void hasOneOfUserFunction_no_fn() {
+		asUser();
+		assertFalse(mgr.hasOneOfUserFunction());
+	}
+	
+	@Test
+	public void hasOneOfUserFunction_at_least_one_function() {
+		asUser(UserBuilder.create("user").build());
+		when(grantService.hasUserFunction("user", UserFunction.app_list)).thenReturn(true);
+		assertTrue(mgr.hasOneOfUserFunction(UserFunction.app_create, UserFunction.app_list));
+	}
+	
+	@Test
+	public void hasOneOfUserFunction_no_function() {
+		asUser(UserBuilder.create("user").build());
+		assertFalse(mgr.hasOneOfUserFunction(UserFunction.app_create, UserFunction.app_list));
 	}
 
 	@Test
@@ -97,6 +198,18 @@ public class BuiltinSecurityManagementTest {
 	}
 
 	@Test
+	public void hasUserFunction_admin() {
+		User user = UserBuilder.administrator();
+		
+		Authentication authentication = mock(Authentication.class);
+		when(authentication.getDetails()).thenReturn(user);
+		
+		for (UserFunction fn : UserFunction.values()) {
+			assertEquals(String.format("Check for %s", fn), true, mgr.hasUserFunction(authentication, fn));
+		}
+	}
+
+	@Test
 	public void hasUserFunction_user() {
 		User user = UserBuilder.create("user").build();		
 		when(grantService.hasUserFunction("user", UserFunction.app_create)).thenReturn(true);
@@ -112,6 +225,20 @@ public class BuiltinSecurityManagementTest {
 	public void hasUserFunction_none() {
 		for (UserFunction fn : UserFunction.values()) {
 			assertFalse(String.format("Check for %s", fn), mgr.hasUserFunction(null, fn));
+		}
+	}
+
+	@Test
+	public void hasAppFunction_admin() {
+		User user = UserBuilder.administrator();
+		
+		Authentication authentication = mock(Authentication.class);
+		when(authentication.getDetails()).thenReturn(user);
+		
+		for (int application : APPLICATIONS) {
+			for (AppFunction fn : AppFunction.values()) {
+				assertEquals(true, mgr.hasApplicationFunction(authentication, application, fn));
+			}
 		}
 	}
 
@@ -135,6 +262,22 @@ public class BuiltinSecurityManagementTest {
 		for (int application : APPLICATIONS) {
 			for (AppFunction fn : AppFunction.values()) {
 				assertFalse(mgr.hasApplicationFunction(null, application, fn));
+			}
+		}
+	}
+
+	@Test
+	public void hasEnvFunction_admin() {
+		User user = UserBuilder.administrator();
+		
+		Authentication authentication = mock(Authentication.class);
+		when(authentication.getDetails()).thenReturn(user);
+		
+		for (int application : APPLICATIONS) {
+			for (String environment : ENVIRONMENTS) {
+				for (EnvFunction fn : EnvFunction.values()) {
+					assertEquals(true, mgr.hasEnvironmentFunction(authentication, application, environment, fn));
+				}
 			}
 		}
 	}

@@ -4,6 +4,10 @@ import net.myconfig.service.api.security.User;
 
 public class UserBuilder {
 
+	public static User administrator() {
+		return create("admin").admin().build();
+	}
+
 	public static User user() {
 		return user("user");
 	}
