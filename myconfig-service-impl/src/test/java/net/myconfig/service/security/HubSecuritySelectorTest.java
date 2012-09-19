@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
@@ -117,6 +118,18 @@ public class HubSecuritySelectorTest {
 	}
 
 	@Test
+	public void delegate_hasEnvFunction() {
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
+
+		Authentication authentication = mock(Authentication.class);
+		when(manager2.hasEnvironmentFunction(authentication, 10, "UAT", EnvFunction.env_config)).thenReturn(true);
+
+		boolean actual = selector.hasEnvironmentFunction(authentication, 10, "UAT", EnvFunction.env_config);
+
+		assertTrue(actual);
+	}
+
+	@Test
 	public void delegate_allowLogin() {
 		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
@@ -125,6 +138,51 @@ public class HubSecuritySelectorTest {
 		boolean actual = selector.allowLogin();
 
 		assertTrue(actual);
+	}
+	
+	@Test
+	public void delegate_isLogged() {
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
+
+		when(manager2.isLogged()).thenReturn(true);
+
+		boolean actual = selector.isLogged();
+
+		assertTrue(actual);
+	}
+	
+	@Test
+	public void delegate_hasOneOfUserFunction() {
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
+
+		when(manager2.hasOneOfUserFunction()).thenReturn(true);
+
+		boolean actual = selector.hasOneOfUserFunction();
+
+		assertTrue(actual);
+	}
+	
+	@Test
+	public void delegate_getCurrentProfile() {
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
+
+		User user = UserBuilder.user();
+		when(manager2.getCurrentProfile()).thenReturn(user);
+
+		User actual = selector.getCurrentProfile();
+
+		assertSame(user, actual);
+	}
+	
+	@Test
+	public void delegate_getCurrentUserName() {
+		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
+
+		when(manager2.getCurrentUserName()).thenReturn("user");
+
+		String actual = selector.getCurrentUserName();
+
+		assertEquals("user", actual);
 	}
 
 }
