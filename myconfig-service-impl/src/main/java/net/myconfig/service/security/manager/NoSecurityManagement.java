@@ -13,7 +13,7 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 
 	private static final String ANONYMOUS_USER_NAME = "anonymous";
 
-	public final User anonymousProfile = new User(ANONYMOUS_USER_NAME, "Anonymous", "", true, true, false);
+	private final User anonymousProfile = new User(ANONYMOUS_USER_NAME, "Anonymous", "", true, true, false);
 
 	public NoSecurityManagement() {
 		super("none");

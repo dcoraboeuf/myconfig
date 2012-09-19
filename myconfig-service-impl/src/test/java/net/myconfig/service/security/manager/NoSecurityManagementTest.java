@@ -3,6 +3,7 @@ package net.myconfig.service.security.manager;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import net.myconfig.core.AppFunction;
@@ -26,6 +27,31 @@ public class NoSecurityManagementTest {
 		User profile = mgr.authenticate(authentication);
 		assertNotNull(profile);
 		assertEquals("anonymous", profile.getName());
+	}
+	
+	@Test
+	public void getCurrentUserName() {
+		assertNull(mgr.getCurrentUserName());
+	}
+	
+	@Test
+	public void getCurrentProfile() {
+		User user = mgr.getCurrentProfile();
+		assertNotNull(user);
+		assertTrue(user.isAdmin());
+		assertEquals("anonymous", user.getName());
+		assertEquals("Anonymous", user.getDisplayName());
+		assertEquals("", user.getEmail());
+	}
+	
+	@Test
+	public void isLogged() {
+		assertTrue(mgr.isLogged());
+	}
+	
+	@Test
+	public void hasOneOfUserFunction() {
+		assertTrue(mgr.hasOneOfUserFunction());
 	}
 
 	@Test
