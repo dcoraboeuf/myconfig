@@ -12,6 +12,7 @@
 			<@items items = applications ; item>
 				<@item_column field="id" item=item />
 				<@item_column field="name" item=item />
+				
 				<@item_column field="versionCount" item=item class="item-column-type-number" />
 				<@item_column field="keyCount" item=item class="item-column-type-number" />
 				<@item_column field="environmentCount" item=item class="item-column-type-number" />
@@ -26,8 +27,12 @@
 				</td>
 				
 				<@item_actions item=item>
-					<@item_delete item=item action="gui/applications/delete" promptKey="application.delete" />
-					<@item_edit item=item action="gui/application" />
+					<#if item.delete>
+						<@item_delete item=item action="gui/applications/delete" promptKey="application.delete" />
+					</#if>
+					<#if item.config>
+						<@item_edit item=item action="gui/application" />
+					</#if>
 				</@item_actions>
 				
 			</@items>
