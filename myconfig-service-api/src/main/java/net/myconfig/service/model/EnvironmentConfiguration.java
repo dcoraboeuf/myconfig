@@ -2,8 +2,11 @@ package net.myconfig.service.model;
 
 import java.util.List;
 
+import lombok.Data;
+
 import com.google.common.collect.ImmutableList;
 
+@Data
 public class EnvironmentConfiguration {
 
 	private final int id;
@@ -22,34 +25,6 @@ public class EnvironmentConfiguration {
 		this.nextEnvironment = nextEnvironment;
 		this.keyList = ImmutableList.copyOf(keyList);
 		this.versionValuesPerKeyList = ImmutableList.copyOf(versionValuesPerKeyList);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getEnvironment() {
-		return environment;
-	}
-
-	public String getPreviousEnvironment() {
-		return previousEnvironment;
-	}
-
-	public String getNextEnvironment() {
-		return nextEnvironment;
-	}
-
-	public List<Key> getKeyList() {
-		return keyList;
-	}
-
-	public List<IndexedValues<ConditionalValue>> getVersionValuesPerKeyList() {
-		return versionValuesPerKeyList;
 	}
 
 }

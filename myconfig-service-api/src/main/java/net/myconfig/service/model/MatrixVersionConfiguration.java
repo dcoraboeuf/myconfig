@@ -3,8 +3,11 @@ package net.myconfig.service.model;
 import java.util.Collection;
 import java.util.Set;
 
+import lombok.Data;
+
 import com.google.common.collect.ImmutableSet;
 
+@Data
 public class MatrixVersionConfiguration {
 
 	private final String name;
@@ -13,14 +16,6 @@ public class MatrixVersionConfiguration {
 	public MatrixVersionConfiguration(String name, Collection<String> keys) {
 		this.name = name;
 		this.keys = ImmutableSet.copyOf(keys);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Set<String> getKeys() {
-		return keys;
 	}
 
 }

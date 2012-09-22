@@ -2,8 +2,11 @@ package net.myconfig.service.model;
 
 import java.util.List;
 
+import lombok.Data;
+
 import com.google.common.collect.ImmutableList;
 
+@Data
 public class ApplicationConfiguration {
 
 	private final int id;
@@ -18,26 +21,6 @@ public class ApplicationConfiguration {
 		this.versionSummaryList = ImmutableList.copyOf(versionSummaryList);
 		this.environmentSummaryList = ImmutableList.copyOf(environmentSummaryList);
 		this.keySummaryList = ImmutableList.copyOf(keySummaryList);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-	
-	public List<VersionSummary> getVersionSummaryList() {
-		return versionSummaryList;
-	}
-	
-	public List<EnvironmentSummary> getEnvironmentSummaryList() {
-		return environmentSummaryList;
-	}
-	
-	public List<KeySummary> getKeySummaryList() {
-		return keySummaryList;
 	}
 
 }

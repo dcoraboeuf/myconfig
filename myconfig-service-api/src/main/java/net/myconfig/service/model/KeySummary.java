@@ -1,5 +1,10 @@
 package net.myconfig.service.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class KeySummary extends Key {
 
 	private final int versionCount;
@@ -11,18 +16,6 @@ public class KeySummary extends Key {
 		this.versionCount = versionCount;
 		this.configCount = configCount;
 		this.valueCount = valueCount;
-	}
-
-	public int getVersionCount() {
-		return versionCount;
-	}
-	
-	public int getConfigCount() {
-		return configCount;
-	}
-	
-	public int getValueCount() {
-		return valueCount;
 	}
 
 }

@@ -2,8 +2,11 @@ package net.myconfig.service.model;
 
 import java.util.List;
 
+import lombok.Data;
+
 import com.google.common.collect.ImmutableList;
 
+@Data
 public class VersionConfiguration {
 
 	private final int id;
@@ -22,34 +25,6 @@ public class VersionConfiguration {
 		this.nextVersion = nextVersion;
 		this.keyList = ImmutableList.copyOf(keyList);
 		this.environmentValuesPerKeyList = ImmutableList.copyOf(environmentValuesPerKeyList);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public List<Key> getKeyList() {
-		return keyList;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public String getPreviousVersion() {
-		return previousVersion;
-	}
-
-	public String getNextVersion() {
-		return nextVersion;
-	}
-
-	public List<IndexedValues<String>> getEnvironmentValuesPerKeyList() {
-		return environmentValuesPerKeyList;
 	}
 
 }

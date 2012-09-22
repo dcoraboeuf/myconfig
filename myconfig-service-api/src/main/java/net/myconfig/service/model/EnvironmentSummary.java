@@ -1,7 +1,12 @@
 package net.myconfig.service.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper = false)
 public class EnvironmentSummary extends Environment {
-	
+
 	private final int configCount;
 	private final int valueCount;
 
@@ -9,14 +14,6 @@ public class EnvironmentSummary extends Environment {
 		super(name);
 		this.configCount = configCount;
 		this.valueCount = valueCount;
-	}
-	
-	public int getConfigCount() {
-		return configCount;
-	}
-	
-	public int getValueCount() {
-		return valueCount;
 	}
 
 }

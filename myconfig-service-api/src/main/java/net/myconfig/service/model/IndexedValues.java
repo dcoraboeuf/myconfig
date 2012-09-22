@@ -2,9 +2,12 @@ package net.myconfig.service.model;
 
 import java.util.Map;
 
+import lombok.Data;
+
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 
+@Data
 public class IndexedValues<T> {
 
 	public static <V> Function<IndexedValues<V>, String> indexFn() {
@@ -22,14 +25,6 @@ public class IndexedValues<T> {
 	public IndexedValues(String name, Map<String, T> values) {
 		this.name = name;
 		this.values = ImmutableMap.copyOf(values);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public Map<String, T> getValues() {
-		return values;
 	}
 
 }

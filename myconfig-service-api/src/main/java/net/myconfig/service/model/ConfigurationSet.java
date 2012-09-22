@@ -2,8 +2,11 @@ package net.myconfig.service.model;
 
 import java.util.List;
 
+import lombok.Data;
+
 import com.google.common.collect.ImmutableList;
 
+@Data
 public class ConfigurationSet {
 
 	private final String application;
@@ -17,22 +20,6 @@ public class ConfigurationSet {
 		this.environment = environment;
 		this.version = version;
 		this.values = ImmutableList.copyOf(values);
-	}
-
-	public String getApplication() {
-		return application;
-	}
-
-	public String getEnvironment() {
-		return environment;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
-	public List<ConfigurationValue> getValues() {
-		return values;
 	}
 
 }

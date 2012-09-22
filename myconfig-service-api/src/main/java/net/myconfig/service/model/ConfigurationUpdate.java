@@ -1,8 +1,11 @@
 package net.myconfig.service.model;
 
+import lombok.Data;
+
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@Data
 public class ConfigurationUpdate {
 
 	private final String environment;
@@ -20,22 +23,6 @@ public class ConfigurationUpdate {
 		this.version = version;
 		this.key = key;
 		this.value = value;
-	}
-
-	public String getEnvironment() {
-		return environment;
-	}
-	
-	public String getVersion() {
-		return version;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public String getValue() {
-		return value;
 	}
 
 }

@@ -1,5 +1,8 @@
 package net.myconfig.service.model;
 
+import lombok.Data;
+
+@Data
 public final class Ack {
 
 	public static final Ack OK = new Ack(true);
@@ -14,14 +17,6 @@ public final class Ack {
 	}
 
 	private final boolean success;
-
-	private Ack(boolean success) {
-		this.success = success;
-	}
-
-	public boolean isSuccess() {
-		return success;
-	}
 
 	public Ack and(Ack ack) {
 		return validate(isSuccess() && ack.isSuccess());

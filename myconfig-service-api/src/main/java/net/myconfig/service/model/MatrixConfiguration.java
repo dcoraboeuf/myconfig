@@ -2,10 +2,13 @@ package net.myconfig.service.model;
 
 import java.util.List;
 
+import lombok.Data;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.collect.ImmutableList;
 
+@Data
 public class MatrixConfiguration {
 
 	private final int id;
@@ -18,22 +21,6 @@ public class MatrixConfiguration {
 		this.name = name;
 		this.versionConfigurationList = ImmutableList.copyOf(versionConfigurationList);
 		this.keyList = ImmutableList.copyOf(keyList);
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public List<MatrixVersionConfiguration> getVersionConfigurationList() {
-		return versionConfigurationList;
-	}
-
-	public List<Key> getKeyList() {
-		return keyList;
 	}
 
 	public boolean isEnabled(String version, String key) {
