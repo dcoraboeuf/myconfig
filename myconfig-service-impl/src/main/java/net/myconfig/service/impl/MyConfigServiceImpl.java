@@ -88,6 +88,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 @Service
@@ -108,9 +110,9 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
-	@UserGrant(UserFunction.app_list)
 	public List<ApplicationSummary> getApplications() {
-		return getJdbcTemplate().query(SQL.APPLICATIONS, new RowMapper<ApplicationSummary>() {
+		// Gets the raw list of applications
+		List<ApplicationSummary> unfilteredApplications = getJdbcTemplate().query(SQL.APPLICATIONS, new RowMapper<ApplicationSummary>() {
 
 			@Override
 			public ApplicationSummary mapRow(ResultSet rs, int i)
@@ -122,9 +124,41 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 						rs.getInt(KEY_COUNT),
 						rs.getInt(ENVIRONMENT_COUNT),
 						rs.getInt(CONFIG_COUNT),
-						rs.getInt(VALUE_COUNT));
+						rs.getInt(VALUE_COUNT),
+						false, false, false);
 			}
 		});
+		
+		// 1) Filter at application level
+		List<ApplicationSummary> filteredApplications;
+		// If user is granted with app_list, he can see all applications
+		if (hasUserAccess(UserFunction.app_list)) {
+			filteredApplications = unfilteredApplications;
+		}
+		// If not, we have to filter on app_view
+		else {
+			filteredApplications = Lists.newArrayList(Iterables.filter(unfilteredApplications, new Predicate<ApplicationSummary>() {
+				@Override
+				public boolean apply(ApplicationSummary app) {
+					return hasApplicationAccess(app.getId(), AppFunction.app_view);
+				}
+			}));
+		}
+		
+		// 2) Gets the ACL rights for each remaining application
+		List<ApplicationSummary> aclApplications = Lists.transform(filteredApplications, new Function<ApplicationSummary, ApplicationSummary>() {
+			@Override
+			public ApplicationSummary apply(ApplicationSummary app) {
+				int id = app.getId();
+				boolean canDelete = hasApplicationAccess(id, AppFunction.app_delete);
+				boolean canConfig = hasApplicationAccess(id, AppFunction.app_config);
+				boolean canView = hasApplicationAccess(id, AppFunction.app_view);
+				return app.acl (canDelete, canConfig, canView);
+			}
+		});
+		
+		// OK
+		return aclApplications;
 	}
 	
 	@Override
@@ -210,7 +244,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			grantAppFunction (id, fn);
 		}
 		// OK
-		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0);
+		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0, true, true, true);
 	}
 	
 	@Override

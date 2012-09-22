@@ -61,10 +61,12 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		assertNotNull(apps);
 	}
 
-	@Test(expected = AccessDeniedException.class)
+	@Test
 	public void getApplications_user_not_granted() throws SQLException {
 		asUser();
-		myconfig.getApplications();
+		List<ApplicationSummary> apps = myconfig.getApplications();
+		assertNotNull(apps);
+		assertTrue(apps.isEmpty());
 	}
 
 	@Test

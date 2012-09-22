@@ -7,6 +7,7 @@ import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
+import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
@@ -35,6 +36,20 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		if (!hasEnvironmentAccess(application, environment, fn)) {
 			throw new AccessDeniedException(String.format("Function %s is denied for environment %s in application %s", fn, environment, application));
 		}
+	}
+
+	protected boolean hasUserAccess(UserFunction fn) {
+		// Gets the authentication
+		Authentication authentication = SecurityUtils.authentication();
+		// Check
+		return securitySelector.hasUserFunction(authentication, fn);
+	}
+
+	protected boolean hasApplicationAccess(int application, AppFunction fn) {
+		// Gets the authentication
+		Authentication authentication = SecurityUtils.authentication();
+		// Check
+		return securitySelector.hasApplicationFunction(authentication, application, fn);
 	}
 
 	protected boolean hasEnvironmentAccess(int application, String environment, EnvFunction fn) {

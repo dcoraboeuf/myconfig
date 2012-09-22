@@ -19,6 +19,9 @@ public class ApplicationSummaryBuilder {
 	private int environmentCount;
 	private int configCount;
 	private int valueCount;
+	private boolean delete = true;
+	private boolean config = true;
+	private boolean view = true;
 
 	protected ApplicationSummaryBuilder() {
 	}
@@ -59,7 +62,7 @@ public class ApplicationSummaryBuilder {
 	}
 
 	public ApplicationSummary build() {
-		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount);
+		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount, delete, config, view);
 	}
 
 }

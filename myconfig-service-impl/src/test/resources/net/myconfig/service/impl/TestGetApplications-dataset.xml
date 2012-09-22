@@ -1,0 +1,13 @@
+<dataset>
+
+	<APPLICATION id="1" name="app1" />
+	<APPLICATION id="2" name="app2" />
+	
+	<CONFIGURATION name="security.mode" value="builtin" />
+	
+	<USERS name="admin" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="Administrator" email="admin@myconfig.net" admin="true" verified="true" disabled="false" />
+	
+	<USERS name="user0" password="ee26b0dd4af7e749aa1a8ee3c10ae9923f618980772e473f8819a5d4940e0db27ac185f8a0e1d5f84f88bc887fd67b143732c304cc5fa9ad8e6f57f50028a8ff" displayname="User app_list, no app acl" email="user0@myconfig.net" admin="false" verified="true" disabled="false" />
+	<USERGRANTS user="user0" grantedfunction="app_list" />
+		
+</dataset>
