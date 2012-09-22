@@ -66,7 +66,6 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		asUser();
 		List<ApplicationSummary> apps = myconfig.getApplications();
 		assertNotNull(apps);
-		assertTrue(apps.isEmpty());
 	}
 
 	@Test
