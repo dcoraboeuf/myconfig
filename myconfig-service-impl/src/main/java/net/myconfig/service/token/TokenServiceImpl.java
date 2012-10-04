@@ -21,7 +21,6 @@ import net.myconfig.service.model.TokenType;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Days;
-import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -73,8 +72,7 @@ public class TokenServiceImpl extends AbstractDaoService implements TokenService
 						Timestamp.class);
 				DateTime utcCreation = new DateTime(creation.getTime(), DateTimeZone.UTC);
 				DateTime utcNow = DateTime.now(DateTimeZone.UTC);
-				Period period = new Period(utcCreation, utcNow);
-				Days days = period.toStandardDays();
+				Days days = Days.daysBetween(utcCreation, utcNow);
 				if (days.isGreaterThan(Days.days(EXPIRATION_DELAY))) {
 					throw new TokenExpiredException (token, type, key);
 				}
