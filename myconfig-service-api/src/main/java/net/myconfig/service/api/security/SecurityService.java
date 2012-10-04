@@ -2,6 +2,7 @@ package net.myconfig.service.api.security;
 
 import java.util.List;
 
+import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.UserSummary;
@@ -47,5 +48,9 @@ public interface SecurityService {
 	void userForgottenSet(String name, String token, String password);
 
 	void updateUserData(String password, String displayName, String email);
+
+	Ack appFunctionAdd(int application, String user, AppFunction fn);
+
+	Ack appFunctionRemove(int application, String user, AppFunction fn);
 
 }

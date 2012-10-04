@@ -7,7 +7,7 @@ var UserApplications = function () {
 			var user = img.getAttribute("user");
 			var fn = img.getAttribute("function");
 			var method = (set == "no") ? 'add' : 'remove';
-			var url = 'ui/user/' + user + '/application/' + application + '/ ' + fn + '/' + method; 
+			var url = 'ui/user/' + user + '/application/' + application + '/function/' + fn + '/' + method; 
 			$.post (url, function (data) {
 					if (data.success) {
 						img.setAttribute('set', (set == "yes" ? "no" : "yes"));

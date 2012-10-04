@@ -2,6 +2,7 @@ package net.myconfig.service.impl;
 
 import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
+import static net.myconfig.service.db.SQLColumns.APPLICATION;
 import static net.myconfig.service.db.SQLColumns.DISABLED;
 import static net.myconfig.service.db.SQLColumns.DISPLAYNAME;
 import static net.myconfig.service.db.SQLColumns.EMAIL;
@@ -19,6 +20,7 @@ import java.util.List;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
@@ -27,6 +29,7 @@ import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
 import net.myconfig.service.api.message.MessageDestination;
 import net.myconfig.service.api.message.MessageService;
+import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
@@ -209,6 +212,23 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionRemove(String name, UserFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	@AppGrant(AppFunction.app_users)
+	public Ack appFunctionAdd(int application, String user, AppFunction fn) {
+		appFunctionRemove(application, user, fn);
+		int count = getNamedParameterJdbcTemplate().update(SQL.GRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	@AppGrant(AppFunction.app_users)
+	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
 	}
 

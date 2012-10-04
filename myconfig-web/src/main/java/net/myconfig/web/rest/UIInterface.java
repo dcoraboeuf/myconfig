@@ -2,6 +2,7 @@ package net.myconfig.web.rest;
 
 import java.util.List;
 
+import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.model.Ack;
 import net.myconfig.service.model.ApplicationConfiguration;
@@ -60,5 +61,9 @@ public interface UIInterface {
 	Ack userFunctionAdd(String name, UserFunction fn);
 
 	Ack userFunctionRemove(String name, UserFunction fn);
+
+	Ack appFunctionAdd(String user, int application, AppFunction fn);
+
+	Ack appFunctionRemove(String user, int application, AppFunction fn);
 
 }

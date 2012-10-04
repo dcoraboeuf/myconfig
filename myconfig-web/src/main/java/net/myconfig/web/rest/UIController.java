@@ -2,6 +2,7 @@ package net.myconfig.web.rest;
 
 import java.util.List;
 
+import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
@@ -174,6 +175,18 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/user/{name}/function/{fn}/remove", method = RequestMethod.POST)
 	public @ResponseBody Ack userFunctionRemove (@PathVariable String name, @PathVariable UserFunction fn) {
 		return securityService.userFunctionRemove (name, fn);
+	}
+	
+	@Override
+	@RequestMapping(value = "/user/{user}/application/{application}/function/{fn}/add", method = RequestMethod.POST)
+	public @ResponseBody Ack appFunctionAdd(@PathVariable String user, @PathVariable int application, @PathVariable AppFunction fn) {
+		return securityService.appFunctionAdd (application, user, fn);
+	}
+	
+	@Override
+	@RequestMapping(value = "/user/{user}/application/{application}/function/{fn}/remove", method = RequestMethod.POST)
+	public @ResponseBody Ack appFunctionRemove(@PathVariable String user, @PathVariable int application, @PathVariable AppFunction fn) {
+		return securityService.appFunctionRemove (application, user, fn);
 	}
 
 }
