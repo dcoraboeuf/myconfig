@@ -37,10 +37,12 @@
 				
 			</@items>
 			
-			<@items_commands>
-				<@item_create id="application-create" action="gui/applications/create" label="applications.new" />
-				<@item_error />
-			</@items_commands>
+			<@sec_chk_user_fn fn="app_create">
+				<@items_commands>
+					<@item_create id="application-create" action="gui/applications/create" label="applications.new" />
+					<@item_error />
+				</@items_commands>
+			</@sec_chk_user_fn>
 		</@items_table>
 	</@panel>
 </@layout_std>
