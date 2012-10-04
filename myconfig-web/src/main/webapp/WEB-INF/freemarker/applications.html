@@ -37,6 +37,11 @@
 					<#if item.config>
 						<@item_edit item=item action="gui/application" />
 					</#if>
+					<#if item.matrix>
+						<form class="item-action item-action-matrix" action="gui/matrix/${item.id}" method="get">
+							<input class="item-action item-action-matrix" type="image" src="static/images/matrix.png" />
+						</form>
+					</#if>
 				</@item_actions>
 				
 			</@items>

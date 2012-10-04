@@ -129,7 +129,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 						rs.getInt(ENVIRONMENT_COUNT),
 						rs.getInt(CONFIG_COUNT),
 						rs.getInt(VALUE_COUNT),
-						false, false, false);
+						false, false, false, false);
 			}
 		});
 		
@@ -157,7 +157,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				boolean canDelete = hasApplicationAccess(id, AppFunction.app_delete);
 				boolean canConfig = hasApplicationAccess(id, AppFunction.app_config);
 				boolean canView = hasApplicationAccess(id, AppFunction.app_view);
-				return app.acl (canDelete, canConfig, canView);
+				boolean canMatrix = hasApplicationAccess(id, AppFunction.app_matrix);
+				return app.acl (canDelete, canConfig, canView, canMatrix);
 			}
 		});
 		
@@ -248,7 +249,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			grantAppFunction (id, fn);
 		}
 		// OK
-		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0, true, true, true);
+		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0, true, true, true, true);
 	}
 	
 	@Override
@@ -364,7 +365,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
-	@AppGrant(AppFunction.app_view)
+	@AppGrant(AppFunction.app_matrix)
 	public MatrixConfiguration keyVersionConfiguration(int id) {
 		checkApplication(id);
 		// Criteria

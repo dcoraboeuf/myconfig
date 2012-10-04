@@ -17,9 +17,10 @@ public class ApplicationSummary {
 	private final boolean delete;
 	private final boolean config;
 	private final boolean view;
+	private final boolean matrix;
 
-	public ApplicationSummary acl(boolean canDelete, boolean canConfig, boolean canView) {
-		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount, canDelete, canConfig, canView);
+	public ApplicationSummary acl(boolean canDelete, boolean canConfig, boolean canView, boolean canMatrix) {
+		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount, canDelete, canConfig, canView, canMatrix);
 	}
 
 }
