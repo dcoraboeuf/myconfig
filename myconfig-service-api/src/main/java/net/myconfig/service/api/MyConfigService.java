@@ -10,6 +10,7 @@ import net.myconfig.service.model.ConfigurationUpdates;
 import net.myconfig.service.model.EnvironmentConfiguration;
 import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.MatrixConfiguration;
+import net.myconfig.service.model.UserApplicationRights;
 import net.myconfig.service.model.VersionConfiguration;
 
 public interface MyConfigService {
@@ -55,5 +56,7 @@ public interface MyConfigService {
 	Ack updateConfiguration(int application, ConfigurationUpdates updates);
 
 	Ack updateKey(int application, String name, String description);
+	
+	List<UserApplicationRights> getUserApplicationRights (String user);
 
 }

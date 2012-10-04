@@ -9,6 +9,7 @@ import static net.myconfig.service.db.SQLColumns.ID;
 import static net.myconfig.service.db.SQLColumns.KEY;
 import static net.myconfig.service.db.SQLColumns.KEY_COUNT;
 import static net.myconfig.service.db.SQLColumns.NAME;
+import static net.myconfig.service.db.SQLColumns.USER;
 import static net.myconfig.service.db.SQLColumns.VALUE;
 import static net.myconfig.service.db.SQLColumns.VALUE_COUNT;
 import static net.myconfig.service.db.SQLColumns.VERSION;
@@ -17,7 +18,9 @@ import static net.myconfig.service.db.SQLColumns.VERSION_COUNT;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -66,6 +69,7 @@ import net.myconfig.service.model.KeyConfiguration;
 import net.myconfig.service.model.KeySummary;
 import net.myconfig.service.model.MatrixConfiguration;
 import net.myconfig.service.model.MatrixVersionConfiguration;
+import net.myconfig.service.model.UserApplicationRights;
 import net.myconfig.service.model.Version;
 import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.service.model.VersionSummary;
@@ -790,6 +794,42 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		if (list.isEmpty()) {
 			throw exception;
 		}
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public List<UserApplicationRights> getUserApplicationRights(String user) {
+		List<UserApplicationRights> result = new ArrayList<UserApplicationRights>();
+		// Gets the list of applications as id:name pairs
+		List<Map<String, Object>> idNameList = getJdbcTemplate().queryForList(SQL.APPLICATIONS_FOR_USER_RIGHTS);
+		for (Map<String, Object> idName : idNameList) {
+			int id = (Integer) idName.get(ID);
+			String name = (String) idName.get(NAME);
+			// Is this application allowed for administration of users?
+			if (hasApplicationAccess(id, AppFunction.app_users)) {
+				// Set of allowed functions
+				Collection<AppFunction> fns = Lists.transform(
+						getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTION_APP_LIST_FOR_USER,
+								new MapSqlParameterSource()
+									.addValue(APPLICATION, id)
+									.addValue(USER, user),
+								String.class),
+						new Function<String, AppFunction>() {
+							@Override
+							public AppFunction apply (String value) {
+								return AppFunction.valueOf(value);
+							}
+						});
+				// OK
+				if (fns.isEmpty()) {
+					result.add(new UserApplicationRights(id, name, EnumSet.noneOf(AppFunction.class)));
+				} else {
+					result.add(new UserApplicationRights(id, name, EnumSet.copyOf(fns)));
+				}
+			}
+		}
+		// OK
+		return result;
 	}
 
 }

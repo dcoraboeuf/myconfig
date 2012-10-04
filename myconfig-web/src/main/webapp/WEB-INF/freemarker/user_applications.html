@@ -1,0 +1,92 @@
+<#include "/lib/layout.html">
+<@layout_std pageId="user_applications" style=true script=true modules=["items"] title=loc("user_applications", user)>
+	<@panel>
+		<table class="items">
+			<thead>
+				<tr>
+					<th><@lh key="model.application.id" /></th>
+					<th><@lh key="model.application.name" /></th>
+					<#list appFunctions as appFunction>
+						<th class="app-function">
+							<p class="function app-function">${appFunction}</p>
+							<p class="info app-function"><@lh key = "AppFunction." + appFunction /></p>
+						</th>
+					</#list>
+				</tr>
+			</thead>
+			<tbody>
+				<#list applications as application>
+					<tr>
+						<td class="item-column item-column-id">
+							${application.id?html}
+						</td>
+						<td class="item-column item-column-name">
+							${application.name?html}
+						</td>
+						<#list appFunctions as appFunction>
+							<td class="item-column app-function">
+								<#if application.functions?seq_contains(appFunction)>
+									<#assign hasfn = "yes" />
+								<#else>
+									<#assign hasfn = "no" />
+								</#if>
+								<div
+									application="${application.id}"
+									user="${user?html}"
+									function="${appFunction}"
+									set="${hasfn}"
+									class="app-function"
+									onclick="UserApplications.assignAppFunction(this);" />
+							</td>
+						</#list>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+		<#--
+		<@items_table id="applications" actions=true headers=[
+					"model.application.id",
+					"model.application.name",
+					"applications.versionCount",
+					"applications.keyCount",
+					"applications.environmentCount",
+					"applications.missingValuesCount"
+				]>
+			<@items items = applications ; item>
+				<@item_column field="id" item=item />
+				<@item_column field="name" item=item />
+				
+				<@item_column field="versionCount" item=item class="item-column-type-number" />
+				<@item_column field="keyCount" item=item class="item-column-type-number" />
+				<@item_column field="environmentCount" item=item class="item-column-type-number" />
+				
+				<#assign missingCount = item.configCount - item.valueCount />
+				<td class="item-column item-column-missingValuesCount item-column-type-number">
+					<#if missingCount gt 0>
+						<a href="gui/application/${item.id}">${missingCount}</a>
+					<#else>
+						${missingCount}
+					</#if>
+				</td>
+				
+				<@item_actions item=item>
+					<#if item.delete>
+						<@item_delete item=item action="gui/applications/delete" promptKey="application.delete" />
+					</#if>
+					<#if item.config>
+						<@item_edit item=item action="gui/application" />
+					</#if>
+				</@item_actions>
+				
+			</@items>
+			
+			<@sec_chk_user_fn fn="app_create">
+				<@items_commands>
+					<@item_create id="application-create" action="gui/applications/create" label="applications.new" />
+					<@item_error />
+				</@items_commands>
+			</@sec_chk_user_fn>
+		</@items_table>
+		-->
+	</@panel>
+</@layout_std>

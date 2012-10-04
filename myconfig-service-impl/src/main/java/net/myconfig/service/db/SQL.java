@@ -30,6 +30,8 @@ public interface SQL {
 			"from application a  " +
 			"order by a.name";
 	
+	String APPLICATIONS_FOR_USER_RIGHTS = "select a.id, a.name from application a order by a.name";
+	
 	String APPLICATION_CREATE = "insert into application (name) values (:name)";
 
 	String APPLICATION_DELETE = "delete from application where id = :id";
@@ -184,6 +186,7 @@ public interface SQL {
 	String FUNCTIONS_USER_REMOVE = "delete from usergrants where user = :user and grantedfunction = :grantedfunction";
 	
 	String FUNCTION_APP	= "select grantedfunction from appgrants where (user = :user or user = '*') and application = :application and grantedfunction = :grantedfunction";
+	String FUNCTION_APP_LIST_FOR_USER = "select grantedfunction from appgrants where user = :user and application = :application";
 	String GRANT_APP_FUNCTION = "insert into appgrants (user, application, grantedfunction) values (:user, :application, :grantedfunction)";
 
 	String FUNCTION_ENV	= "select grantedfunction from envgrants where (user = :user or user = '*') and application = :application and environment = :environment and grantedfunction = :grantedfunction";
