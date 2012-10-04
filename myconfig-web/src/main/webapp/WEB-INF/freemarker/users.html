@@ -79,8 +79,11 @@
 							</td>
 						</#list>
 						<td class="item-actions">
+							<#-- Only non-admin users need administration -->
 							<#if !user.admin && secUserName() != user.name>
+								<#-- Deleting a user -->
 								<@item_delete item=user action="gui/user/delete" formField="name" promptKey="users.delete" />
+								<#-- Activation of a user -->
 								<#if user.disabled>
 									<form class="item-action" action="gui/user/${user.name?html}/enable" method="post">
 										<input class="item-action" type="image" src="static/images/user_enable.png" title="<@lh key='users.enable' />" />
@@ -90,9 +93,16 @@
 										<input class="item-action" type="image" src="static/images/user_disable.png" title="<@lh key='users.disable' />" />
 									</form>
 								</#if>
+								<#-- Resetting a user -->
 								<form class="item-action" action="gui/user/${user.name?html}/reset" method="post">
 									<input class="item-action" type="image" src="static/images/user_reset.png" title="<@lh key='users.reset' />" />
 								</form>
+								<#-- Applications for a user -->
+								<@sec_chk_user_fn fn="security_users">
+									<form class="item-action" action="gui/user/${user.name?html}/applications" method="get">
+										<input class="item-action" type="image" src="static/images/applications.png" title="<@lh key='users.applications' />" />
+									</form>
+								</@sec_chk_user_fn>
 							</#if>
 						</td>
 					</tr>
