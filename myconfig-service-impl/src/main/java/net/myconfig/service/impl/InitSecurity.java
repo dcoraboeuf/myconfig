@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import net.myconfig.service.db.SQL;
+import net.sf.dbinit.DBExecutor;
 import net.sf.dbinit.DBInitAction;
 
 import org.slf4j.Logger;
@@ -21,7 +22,7 @@ public class InitSecurity implements DBInitAction {
 	 * Detects if a default 'admin' user must be created.
 	 */
 	@Override
-	public void run(Connection connection) throws SQLException {
+	public void run(DBExecutor executor, Connection connection) throws SQLException {
 		JdbcTemplate t = new JdbcTemplate(new SingleConnectionDataSource(connection, true));
 		logger.info("[security] [init] Initializing the security service...");
 		int userCount = t.queryForInt(SQL.USER_COUNT);
