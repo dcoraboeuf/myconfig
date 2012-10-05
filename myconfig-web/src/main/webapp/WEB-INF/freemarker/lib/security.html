@@ -4,6 +4,12 @@
 	</#if>
 </#macro>
 
+<#macro sec_chk_app_fn application fn>
+	<#if chk_app_fn(application,fn)>
+		<#nested>
+	</#if>
+</#macro>
+
 <#macro sec_login>
 	<#if secAllowLogin()>
 		<#if secLogged()>

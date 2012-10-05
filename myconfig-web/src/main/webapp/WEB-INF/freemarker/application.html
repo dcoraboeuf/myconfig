@@ -111,7 +111,9 @@
 		</table>
 	</article>
 	<@layout_std_nav href="gui/" key="applications" />
-	<@layout_std_nav href="gui/matrix/${application.id}" key="matrix" />
+	<@sec_chk_app_fn application=application.id fn="app_matrix">
+		<@layout_std_nav href="gui/matrix/${application.id}" key="matrix" />
+	</@sec_chk_app_fn>
 </@layout_std>
 
 <#macro key_description item>

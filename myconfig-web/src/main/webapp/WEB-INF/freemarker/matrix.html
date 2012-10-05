@@ -49,5 +49,7 @@
 		</@form>
 	</@panel>
 	<@layout_std_nav href="gui/" key="applications" />
-	<@layout_std_nav href="gui/application/${configuration.id}" key="application" />
+	<@sec_chk_app_fn application=configuration.id fn="app_config">
+		<@layout_std_nav href="gui/application/${configuration.id}" key="application" />
+	</@sec_chk_app_fn>
 </@layout_std>
