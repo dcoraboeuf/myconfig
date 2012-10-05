@@ -53,7 +53,7 @@ public class TestGetApplications extends AbstractSecurityTest {
 		assertNotNull(list);
 		assertEquals (asList(
 				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, false, false),
-				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, true, true)
+				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, true, false)
 				), list);
 	}
 	
