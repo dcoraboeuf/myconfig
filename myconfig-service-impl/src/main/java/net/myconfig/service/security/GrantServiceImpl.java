@@ -60,7 +60,18 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	// FIXME Cache
 	@Override
 	public boolean hasAppFunction(String name, int application, AppFunction fn) {
-		return getFirstItem(SQL.FUNCTION_APP, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
+		boolean ok = getFirstItem(SQL.FUNCTION_APP, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
+		if (!ok && fn.hasParents()) {
+			for (AppFunction parentFn: fn.getParents()) {
+				ok = hasAppFunction(name, application, parentFn);
+				if (ok) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			return ok;
+		}
 	}
 
 	// FIXME Cache
