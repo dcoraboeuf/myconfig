@@ -1,20 +1,18 @@
 @import "general";
 
 table.tablesorter {
-	th {
+	th.header {
 		.action;
-		&.header {
-			background-image: url('../images/sort.png');
+		background-image: url('../images/sort.png');
+		background-repeat: no-repeat;
+		padding-left: 16px;
+		&.headerSortUp {
+			background-image: url('../images/sort-asc.png');
 			background-repeat: no-repeat;
-			padding-left: 16px;
-			&.headerSortUp {
-				background-image: url('../images/sort-asc.png');
-				background-repeat: no-repeat;
-			}
-			&.headerSortDown {
-				background-image: url('../images/sort-desc.png');
-				background-repeat: no-repeat;
-			}
+		}
+		&.headerSortDown {
+			background-image: url('../images/sort-desc.png');
+			background-repeat: no-repeat;
 		}
 	}
 }
