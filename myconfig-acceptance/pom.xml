@@ -157,10 +157,6 @@
 								            <name>spring.profiles.active</name>
 								            <value>it</value>
 							            </systemProperty>
-							            <systemProperty>
-							            	<name>it.db</name>
-							            	<value>${basedir}/src/test/resources/it/db.sql</value>
-							            </systemProperty>
 									    <systemProperty>
 									    	<name>jetty.port</name>
 											<value>${it.port}</value>
