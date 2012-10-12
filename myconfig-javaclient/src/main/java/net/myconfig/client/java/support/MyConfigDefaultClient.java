@@ -21,6 +21,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -39,7 +41,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 
 	@Override
 	public String version() {
-		return get("/version", String.class);
+		return get("/ui/version", String.class);
 	}
 
 	@Override
@@ -49,8 +51,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 
 	@Override
 	public ApplicationSummary applicationCreate(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return put(String.format("/ui/application/%s", name), ApplicationSummary.class);
 	}
 
 	@Override
@@ -192,44 +193,46 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	}
 
 	protected <T> T get(String path, Class<T> returnType) {
-		// Gets the HTTP client
-		HttpClient client = new DefaultHttpClient();
-		// Method
-		HttpGet get = new HttpGet(getUrl(path));
-		try {
-			// Executes the call
-			try {
-				HttpResponse response = client.execute(get);
-				// Parses the response
-				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-					// OK response
-					HttpEntity entity = response.getEntity();
-					// Gets the content as a JSON string
-					String content = EntityUtils.toString(entity, "UTF-8");
-					// Parses the response
-					if (String.class.isAssignableFrom(returnType)) {
-						@SuppressWarnings("unchecked")
-						T value = (T) content;
-						return value;
-					} else {
-						ObjectMapper mapper = new ObjectMapper();
-						return mapper.readValue(content, returnType);
-					}
-				} else {
-					// FIXME Error
-					return null;
-				}
-			} catch (IOException e) {
-				// FIXME Error
-				return null;
-			}
-		} finally {
-			get.releaseConnection();
-		}
+		return request(new HttpGet(getUrl(path)), returnType);
+	}
+
+	protected <T> T put(String path, Class<T> returnType) {
+		return request(new HttpPut(getUrl(path)), returnType);
 	}
 
 	protected String getUrl(String path) {
 		return url + path;
+	}
+
+	protected <T> T request(HttpUriRequest request, Class<T> returnType) {
+		// Gets the HTTP client
+		HttpClient client = new DefaultHttpClient();
+		// Executes the call
+		try {
+			HttpResponse response = client.execute(request);
+			// Parses the response
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				// OK response
+				HttpEntity entity = response.getEntity();
+				// Gets the content as a JSON string
+				String content = EntityUtils.toString(entity, "UTF-8");
+				// Parses the response
+				if (String.class.isAssignableFrom(returnType)) {
+					@SuppressWarnings("unchecked")
+					T value = (T) content;
+					return value;
+				} else {
+					ObjectMapper mapper = new ObjectMapper();
+					return mapper.readValue(content, returnType);
+				}
+			} else {
+				// FIXME Error
+				return null;
+			}
+		} catch (IOException e) {
+			// FIXME Error
+			return null;
+		}
 	}
 
 }
