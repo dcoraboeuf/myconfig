@@ -34,6 +34,7 @@ import net.myconfig.core.model.MatrixVersionConfiguration;
 import net.myconfig.core.model.Version;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.model.VersionSummary;
+import net.myconfig.core.utils.MapBuilder;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
@@ -50,7 +51,6 @@ import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.test.AbstractIntegrationTest;
-import net.myconfig.test.MapBuilder;
 import net.sf.jstring.Strings;
 
 import org.apache.commons.lang3.StringUtils;

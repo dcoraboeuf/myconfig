@@ -1,4 +1,4 @@
-package net.myconfig.test;
+package net.myconfig.core.utils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

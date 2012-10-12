@@ -1,6 +1,10 @@
 package net.myconfig.client.java.support;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.core.AppFunction;
@@ -15,16 +19,23 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.utils.MapBuilder;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -66,10 +77,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return null;
 	}
 
+	/**
+	 * PUT /ui/version/{application}/{name:.*}
+	 */
 	@Override
 	public Ack versionCreate(int id, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return put (String.format("/ui/version/%d/%s", id, name), Ack.class);
 	}
 
 	@Override
@@ -78,10 +91,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return null;
 	}
 
+	/**
+	 * PUT /ui/environment/{application}/{name:.*}
+	 */
 	@Override
 	public Ack environmentCreate(int id, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return put(String.format("/ui/environment/%d/%s", id, name), Ack.class);
 	}
 
 	@Override
@@ -96,10 +111,13 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return null;
 	}
 
+	/**
+	 * <p>POST /ui/key/{application}/{name}/create
+	 * <p>param: description
+	 */
 	@Override
 	public Ack keyCreate(int id, String name, String description) {
-		// TODO Auto-generated method stub
-		return null;
+		return post(String.format("/ui/key/%d/%s/create", id, name), Ack.class, MapBuilder.<String,String>create().put("description", description).build());
 	}
 
 	@Override
@@ -114,10 +132,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return null;
 	}
 
+	/**
+	 * POST /ui/version/{application}/{version}/add/{key:.*}
+	 */
 	@Override
 	public Ack keyVersionAdd(int application, String version, String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return post(String.format("/ui/version/%d/%s/add/%s", application, version, key), Ack.class, null);
 	}
 
 	@Override
@@ -144,10 +164,13 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return null;
 	}
 
+	/**
+	 * <p>POST /ui/configuration/{application:\\d+}
+	 * <p>Body: JSON updates
+	 */
 	@Override
 	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
-		// TODO Auto-generated method stub
-		return null;
+		return post (String.format("/ui/configuration/%s", application), Ack.class, updates);
 	}
 
 	@Override
@@ -191,6 +214,17 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public String key(String application, String version, String environment, String key) {
+		return get(String.format(
+				"/get/key/%s/%s/%s/%s",
+				application,
+				environment,
+				version,
+				key
+			), String.class);
+	}
 
 	protected <T> T get(String path, Class<T> returnType) {
 		return request(new HttpGet(getUrl(path)), returnType);
@@ -198,6 +232,37 @@ public class MyConfigDefaultClient implements MyConfigClient {
 
 	protected <T> T put(String path, Class<T> returnType) {
 		return request(new HttpPut(getUrl(path)), returnType);
+	}
+
+	protected <T> T post(String path, Class<T> returnType, Map<String, String> parameters) {
+		HttpPost post = new HttpPost(getUrl(path));
+		if (parameters != null) {
+			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
+			for (Map.Entry<String, String> param: parameters.entrySet()) {
+				nvps.add(new BasicNameValuePair(param.getKey(), param.getValue()));
+			}
+			try {
+				post.setEntity(new UrlEncodedFormEntity(nvps));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Management of client exceptions
+				throw new RuntimeException (e);
+			}
+		}
+		return request(post, returnType);
+	}
+
+	protected <T> T post(String path, Class<T> returnType, Object body) {
+		HttpPost post = new HttpPost(getUrl(path));
+		if (body != null) {
+			try {
+				String json = new ObjectMapper().writeValueAsString(body);
+				post.setEntity(new StringEntity(json, ContentType.create("application/json", "UTF-8")));
+			} catch (IOException e) {
+				// TODO Management of client exceptions
+				throw new RuntimeException (e);
+			}
+		}
+		return request(post, returnType);
 	}
 
 	protected <T> T delete(String path, Class<T> returnType) {
@@ -230,12 +295,14 @@ public class MyConfigDefaultClient implements MyConfigClient {
 					return mapper.readValue(content, returnType);
 				}
 			} else {
+				// FIXME Gets the localized exception?
 				throw new RuntimeException(String.format("Error while executing %s: [%d] %s",
 					request,
 					response.getStatusLine().getStatusCode(),
 					response.getStatusLine().getReasonPhrase()));
 			}
 		} catch (IOException e) {
+			// TODO Management of client exceptions
 			throw new RuntimeException("Error while executing " + request, e);
 		}
 	}
