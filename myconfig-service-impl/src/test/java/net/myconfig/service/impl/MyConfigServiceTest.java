@@ -155,7 +155,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void applications() {
-		List<ApplicationSummary> applications = myConfigService.getApplications();
+		List<ApplicationSummary> applications = myConfigService.getApplications().getSummaries();
 		assertNotNull (applications);
 		{
 			ApplicationSummary app = applications.get(0);

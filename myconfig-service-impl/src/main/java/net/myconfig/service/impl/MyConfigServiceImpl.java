@@ -33,6 +33,7 @@ import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ConditionalValue;
 import net.myconfig.core.model.ConfigurationSet;
@@ -114,7 +115,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ApplicationSummary> getApplications() {
+	public ApplicationSummaries getApplications() {
 		// Gets the raw list of applications
 		List<ApplicationSummary> unfilteredApplications = getJdbcTemplate().query(SQL.APPLICATIONS, new RowMapper<ApplicationSummary>() {
 
@@ -163,7 +164,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		});
 		
 		// OK
-		return aclApplications;
+		return new ApplicationSummaries(aclApplications);
 	}
 	
 	@Override

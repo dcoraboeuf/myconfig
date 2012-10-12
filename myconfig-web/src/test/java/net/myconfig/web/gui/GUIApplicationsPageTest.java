@@ -30,7 +30,7 @@ public class GUIApplicationsPageTest extends AbstractConfigurationTest {
 	@Test
 	public void application_list () throws Exception {
 		// Initial number of applications
-		int applicationCount = ui.applications().size();
+		int applicationCount = ui.applications().getSummaries().size();
 		// Initial state
 		applicationCreate("app1");
 		applicationCreate("app2");

@@ -91,6 +91,12 @@
 				<artifactId>commons-fileupload</artifactId>
 				<version>1.2.1</version>
 			</dependency>
+			<!-- HTTP client -->
+			<dependency>
+			    <groupId>org.apache.httpcomponents</groupId>
+			    <artifactId>httpclient</artifactId>
+			    <version>4.2.1</version>
+			</dependency>
 			<!-- Guava -->
 			<dependency>
 				<groupId>com.google.guava</groupId>

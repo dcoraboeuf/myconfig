@@ -48,14 +48,14 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 	@Test
 	public void getUserList_admin() throws SQLException {
 		asAdmin();
-		List<UserSummary> users = securityService.getUserList();
+		List<UserSummary> users = securityService.getUserList().getSummaries();
 		assertUserList(users);
 	}
 
 	@Test
 	public void getUserList_user_granted() throws SQLException {
 		asUser().grant(UserFunction.security_users);
-		List<UserSummary> users = securityService.getUserList();
+		List<UserSummary> users = securityService.getUserList().getSummaries();
 		assertUserList(users);
 	}
 

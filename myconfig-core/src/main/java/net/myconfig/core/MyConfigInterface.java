@@ -1,20 +1,19 @@
 package net.myconfig.core;
 
-import java.util.List;
-
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
-import net.myconfig.core.model.UserSummary;
+import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
 
 public interface MyConfigInterface {
 
-	List<ApplicationSummary> applications();
+	ApplicationSummaries applications();
 
 	ApplicationSummary applicationCreate(String name);
 
@@ -50,7 +49,7 @@ public interface MyConfigInterface {
 
 	Ack updateConfiguration(int application, ConfigurationUpdates updates);
 
-	List<UserSummary> users();
+	UserSummaries users();
 
 	Ack userCreate(String name, String displayName, String email);
 

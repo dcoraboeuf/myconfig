@@ -1,15 +1,13 @@
 package net.myconfig.service.api.security;
 
-import java.util.List;
-
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
-import net.myconfig.core.model.UserSummary;
+import net.myconfig.core.model.UserSummaries;
 
 public interface SecurityService {
 
-	List<UserSummary> getUserList();
+	UserSummaries getUserList();
 
 	Ack userCreate(String name, String displayName, String email);
 

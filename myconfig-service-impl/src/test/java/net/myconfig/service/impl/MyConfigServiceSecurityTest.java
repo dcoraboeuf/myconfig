@@ -50,21 +50,21 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	@Test
 	public void getApplications_admin() throws SQLException {
 		asAdmin();
-		List<ApplicationSummary> apps = myconfig.getApplications();
+		List<ApplicationSummary> apps = myconfig.getApplications().getSummaries();
 		assertNotNull(apps);
 	}
 
 	@Test
 	public void getApplications_user_granted() throws SQLException {
 		asUser().grant(UserFunction.app_list);
-		List<ApplicationSummary> apps = myconfig.getApplications();
+		List<ApplicationSummary> apps = myconfig.getApplications().getSummaries();
 		assertNotNull(apps);
 	}
 
 	@Test
 	public void getApplications_user_not_granted() throws SQLException {
 		asUser();
-		List<ApplicationSummary> apps = myconfig.getApplications();
+		List<ApplicationSummary> apps = myconfig.getApplications().getSummaries();
 		assertNotNull(apps);
 	}
 

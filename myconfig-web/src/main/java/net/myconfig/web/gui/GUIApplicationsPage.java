@@ -2,6 +2,10 @@ package net.myconfig.web.gui;
 
 import java.util.Locale;
 
+import net.myconfig.service.exception.InputException;
+import net.myconfig.web.rest.UIInterface;
+import net.myconfig.web.support.ErrorHandler;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ExtendedModelMap;
@@ -10,10 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import net.myconfig.service.exception.InputException;
-import net.myconfig.web.rest.UIInterface;
-import net.myconfig.web.support.ErrorHandler;
 
 @Controller
 public class GUIApplicationsPage extends AbstractGUIPage {
@@ -35,7 +35,7 @@ public class GUIApplicationsPage extends AbstractGUIPage {
 	
 	@RequestMapping({"/gui/applications", "/gui/"})
 	public String applications (Model model) {
-		model.addAttribute(MODEL_APPLICATIONS, ui.applications());
+		model.addAttribute(MODEL_APPLICATIONS, ui.applications().getSummaries());
 		return VIEW_APPLICATIONS;
 	}
 	

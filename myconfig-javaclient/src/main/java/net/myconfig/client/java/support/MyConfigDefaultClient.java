@@ -1,19 +1,28 @@
 package net.myconfig.client.java.support;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
 
 import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
-import net.myconfig.core.model.UserSummary;
+import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.codehaus.jackson.map.ObjectMapper;
 
 public class MyConfigDefaultClient implements MyConfigClient {
 
@@ -28,9 +37,8 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	}
 
 	@Override
-	public List<ApplicationSummary> applications() {
-		// TODO Auto-generated method stub
-		return null;
+	public ApplicationSummaries applications() {
+		return get ("/ui/applications", ApplicationSummaries.class);
 	}
 
 	@Override
@@ -136,7 +144,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	}
 
 	@Override
-	public List<UserSummary> users() {
+	public UserSummaries users() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -175,6 +183,39 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	public Ack appFunctionRemove(String user, int application, AppFunction fn) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	protected <T> T get (String path, Class<T> returnType) {
+		// Gets the HTTP client
+		HttpClient client = new DefaultHttpClient();
+		// Method
+		HttpGet get = new HttpGet(getUrl(path));
+		// Executes the call
+		try {
+			HttpResponse response = client.execute(get);
+			// Parses the response
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				// OK response
+				InputStream o = response.getEntity().getContent();
+				try {
+					// Parses the response
+					ObjectMapper mapper = new ObjectMapper();
+					return mapper.readValue(o, returnType);
+				} finally {
+					o.close();
+				}
+			} else {
+				// FIXME Error
+				return null;
+			}
+		} catch (IOException e) {
+			// FIXME Error
+			return null;
+		}
+	}
+
+	protected String getUrl(String path) {
+		return url + path;
 	}
 
 }

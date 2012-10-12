@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.core.model.ConfigurationUpdates;
@@ -21,7 +22,7 @@ public interface MyConfigService {
 
 	ConfigurationSet getEnv(String application, String version, String environment);
 
-	List<ApplicationSummary> getApplications();
+	ApplicationSummaries getApplications();
 
 	ApplicationSummary createApplication(String name);
 

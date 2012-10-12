@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ConditionalValue;
 import net.myconfig.core.model.ConfigurationUpdate;
@@ -65,8 +66,8 @@ public class UIControllerTest {
 	@Test
 	public void application_list() {
 		List<ApplicationSummary> expectedApplications = Arrays.asList(ApplicationSummaryBuilder.create(1, "app1").build(), ApplicationSummaryBuilder.create(2, "app2").build());
-		when(service.getApplications()).thenReturn(expectedApplications);
-		List<ApplicationSummary> actualApplications = ui.applications();
+		when(service.getApplications()).thenReturn(new ApplicationSummaries(expectedApplications));
+		List<ApplicationSummary> actualApplications = ui.applications().getSummaries();
 		assertSame(expectedApplications, actualApplications);
 	}
 
