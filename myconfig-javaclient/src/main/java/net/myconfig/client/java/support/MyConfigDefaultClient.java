@@ -1,7 +1,6 @@
 package net.myconfig.client.java.support;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.core.AppFunction;
@@ -17,11 +16,13 @@ import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
 public class MyConfigDefaultClient implements MyConfigClient {
@@ -35,15 +36,15 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	public String getUrl() {
 		return url;
 	}
-	
+
 	@Override
 	public String version() {
-		return get ("/version", String.class);
+		return get("/version", String.class);
 	}
 
 	@Override
 	public ApplicationSummaries applications() {
-		return get ("/ui/applications", ApplicationSummaries.class);
+		return get("/ui/applications", ApplicationSummaries.class);
 	}
 
 	@Override
@@ -189,33 +190,41 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	protected <T> T get (String path, Class<T> returnType) {
+
+	protected <T> T get(String path, Class<T> returnType) {
 		// Gets the HTTP client
 		HttpClient client = new DefaultHttpClient();
 		// Method
 		HttpGet get = new HttpGet(getUrl(path));
-		// Executes the call
 		try {
-			HttpResponse response = client.execute(get);
-			// Parses the response
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				// OK response
-				InputStream o = response.getEntity().getContent();
-				try {
+			// Executes the call
+			try {
+				HttpResponse response = client.execute(get);
+				// Parses the response
+				if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+					// OK response
+					HttpEntity entity = response.getEntity();
+					// Gets the content as a JSON string
+					String content = EntityUtils.toString(entity, "UTF-8");
 					// Parses the response
-					ObjectMapper mapper = new ObjectMapper();
-					return mapper.readValue(o, returnType);
-				} finally {
-					o.close();
+					if (String.class.isAssignableFrom(returnType)) {
+						@SuppressWarnings("unchecked")
+						T value = (T) content;
+						return value;
+					} else {
+						ObjectMapper mapper = new ObjectMapper();
+						return mapper.readValue(content, returnType);
+					}
+				} else {
+					// FIXME Error
+					return null;
 				}
-			} else {
+			} catch (IOException e) {
 				// FIXME Error
 				return null;
 			}
-		} catch (IOException e) {
-			// FIXME Error
-			return null;
+		} finally {
+			get.releaseConnection();
 		}
 	}
 
