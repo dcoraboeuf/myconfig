@@ -72,7 +72,7 @@ class ITRestUI {
 		http.request ( Method.GET, ContentType.JSON ) {
 			uri.path = "applications"
 			response.success = { resp, json ->
-				return json.find {
+				return json.summaries.find {
 					sum -> (sum.id == id) 
 				}
 			}
