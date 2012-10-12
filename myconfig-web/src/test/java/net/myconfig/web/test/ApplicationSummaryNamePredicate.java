@@ -2,7 +2,7 @@ package net.myconfig.web.test;
 
 import org.apache.commons.lang3.StringUtils;
 
-import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationSummary;
 
 import com.google.common.base.Predicate;
 

@@ -5,6 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
+import net.myconfig.core.model.Key;
+import net.myconfig.core.model.MatrixConfiguration;
+import net.myconfig.core.model.MatrixVersionConfiguration;
+
 import org.junit.Test;
 
 public class MatrixConfigurationTest {

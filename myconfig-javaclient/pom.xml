@@ -15,5 +15,12 @@
 	<name>myconfig Java Client</name>
 	<description>Java client for myconfig</description>
 	
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>myconfig-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 	
 </project>

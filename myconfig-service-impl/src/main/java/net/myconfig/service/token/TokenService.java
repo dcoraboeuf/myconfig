@@ -1,6 +1,6 @@
 package net.myconfig.service.token;
 
-import net.myconfig.service.model.TokenType;
+import net.myconfig.core.model.TokenType;
 
 public interface TokenService {
 

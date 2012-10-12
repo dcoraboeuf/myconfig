@@ -4,8 +4,8 @@ import java.util.List;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.UserSummary;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.UserSummary;
 
 public interface SecurityService {
 

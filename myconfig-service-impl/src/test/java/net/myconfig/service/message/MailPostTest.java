@@ -13,11 +13,11 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import net.myconfig.core.model.Ack;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
-import net.myconfig.service.model.Ack;
 
 import org.junit.Test;
 import org.springframework.mail.MailException;

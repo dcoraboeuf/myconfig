@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.service.api.MyConfigService;
-import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.web.renderer.HttpRenderer;
 import net.myconfig.web.renderer.HttpRendererService;
 import net.myconfig.web.renderer.RendererNotFoundException;

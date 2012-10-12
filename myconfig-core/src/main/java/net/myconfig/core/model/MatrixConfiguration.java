@@ -1,10 +1,10 @@
-package net.myconfig.service.model;
+package net.myconfig.core.model;
 
 import java.util.List;
 
 import lombok.Data;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.collect.ImmutableList;
 

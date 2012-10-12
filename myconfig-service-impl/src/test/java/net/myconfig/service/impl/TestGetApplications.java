@@ -9,8 +9,8 @@ import java.util.List;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.service.api.MyConfigService;
-import net.myconfig.service.model.ApplicationSummary;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

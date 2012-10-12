@@ -8,12 +8,12 @@ import javax.validation.Validator;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Environment;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
-import net.myconfig.service.model.Environment;
 
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.security.access.AccessDeniedException;

@@ -1,6 +1,6 @@
 package net.myconfig.service.api.message;
 
-import net.myconfig.service.model.Ack;
+import net.myconfig.core.model.Ack;
 
 
 public interface MessageService {

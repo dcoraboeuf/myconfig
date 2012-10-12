@@ -1,9 +1,9 @@
-package net.myconfig.service.model;
+package net.myconfig.core.model;
 
 import lombok.Data;
 
 @Data
-public class Version {
+public class Environment {
 
 	private final String name;
 

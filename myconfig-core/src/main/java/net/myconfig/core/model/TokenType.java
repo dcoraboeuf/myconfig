@@ -1,4 +1,4 @@
-package net.myconfig.service.model;
+package net.myconfig.core.model;
 
 public enum TokenType {
 	/**

@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.UserSummary;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.ValidationException;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
 import net.sf.jstring.Strings;

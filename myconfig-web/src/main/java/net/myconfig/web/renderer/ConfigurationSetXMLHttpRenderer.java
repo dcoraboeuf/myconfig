@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.google.common.collect.ImmutableSet;
 
 import freemarker.template.Configuration;
-import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationSet;
 
 @Component
 public class ConfigurationSetXMLHttpRenderer extends AbstractXMLTemplateHttpRenderer<ConfigurationSet> {
