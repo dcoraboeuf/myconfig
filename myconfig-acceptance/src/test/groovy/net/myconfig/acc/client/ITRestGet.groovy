@@ -1,4 +1,4 @@
-package net.myconfig.web.it
+package net.myconfig.acc.client
 
 import static org.junit.Assert.assertEquals
 import static org.junit.Assert.assertFalse
