@@ -1,4 +1,4 @@
-package net.myconfig.service.model;
+package net.myconfig.core.model;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
