@@ -65,6 +65,7 @@
 		<module>myconfig-test</module>
 		<module>myconfig-core</module>
 		<module>myconfig-acceptance</module>
+		<module>myconfig-javaclient</module>
 	</modules>
 
 	<dependencyManagement>
