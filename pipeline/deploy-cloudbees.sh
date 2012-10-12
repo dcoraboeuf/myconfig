@@ -44,6 +44,7 @@ cb_config_set "myconfig.jdbc.user" "${CB_JDBC_USER}"
 cb_config_set "myconfig.jdbc.password" "${CB_JDBC_PASSWORD}"
 cb_config_set "myconfig.appid" "${CB_ACCOUNT}/${CB_APPID}"
 cb_config_set "spring.profiles.active" "prod"
+cb_config_set "dbinit.profile" "mysql"
 
 # Deployment
 WAR=myconfig-web-${VERSION}-${BUILD}.war
