@@ -7,7 +7,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.core.model.Ack;
@@ -65,9 +64,9 @@ public class UIControllerTest {
 
 	@Test
 	public void application_list() {
-		List<ApplicationSummary> expectedApplications = Arrays.asList(ApplicationSummaryBuilder.create(1, "app1").build(), ApplicationSummaryBuilder.create(2, "app2").build());
-		when(service.getApplications()).thenReturn(new ApplicationSummaries(expectedApplications));
-		List<ApplicationSummary> actualApplications = ui.applications().getSummaries();
+		ApplicationSummaries expectedApplications = new ApplicationSummaries(Arrays.asList(ApplicationSummaryBuilder.create(1, "app1").build(), ApplicationSummaryBuilder.create(2, "app2").build()));
+		when(service.getApplications()).thenReturn(expectedApplications);
+		ApplicationSummaries actualApplications = ui.applications();
 		assertSame(expectedApplications, actualApplications);
 	}
 
