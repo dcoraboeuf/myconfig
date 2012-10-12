@@ -1,5 +1,8 @@
 package net.myconfig.core.model;
 
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.annotate.JsonCreator;
+
 import lombok.Data;
 
 @Data
@@ -14,6 +17,11 @@ public final class Ack {
 
 	public static Ack one(int count) {
 		return validate(count == 1);
+	}
+	
+	@JsonCreator
+	public static Ack fromJson (JsonNode node) {
+		return Ack.validate(node.get("success").getBooleanValue());
 	}
 
 	private final boolean success;
