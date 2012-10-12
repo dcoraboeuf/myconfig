@@ -20,6 +20,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -56,8 +57,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 
 	@Override
 	public Ack applicationDelete(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return delete(String.format("/ui/application/%d", id), Ack.class);
 	}
 
 	@Override
@@ -200,6 +200,10 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return request(new HttpPut(getUrl(path)), returnType);
 	}
 
+	protected <T> T delete(String path, Class<T> returnType) {
+		return request(new HttpDelete(getUrl(path)), returnType);
+	}
+
 	protected String getUrl(String path) {
 		return url + path;
 	}
@@ -226,12 +230,13 @@ public class MyConfigDefaultClient implements MyConfigClient {
 					return mapper.readValue(content, returnType);
 				}
 			} else {
-				// FIXME Error
-				return null;
+				throw new RuntimeException(String.format("Error while executing %s: [%d] %s",
+					request,
+					response.getStatusLine().getStatusCode(),
+					response.getStatusLine().getReasonPhrase()));
 			}
 		} catch (IOException e) {
-			// FIXME Error
-			return null;
+			throw new RuntimeException("Error while executing " + request, e);
 		}
 	}
 
