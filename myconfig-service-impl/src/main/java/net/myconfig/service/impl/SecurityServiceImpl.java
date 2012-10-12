@@ -22,6 +22,10 @@ import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.TokenType;
+import net.myconfig.core.model.UserSummaries;
+import net.myconfig.core.model.UserSummary;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.UIService;
@@ -39,9 +43,6 @@ import net.myconfig.service.api.template.TemplateModel;
 import net.myconfig.service.api.template.TemplateService;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.TokenType;
-import net.myconfig.service.model.UserSummary;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
 import net.myconfig.service.security.UserAlreadyDefinedException;
 import net.myconfig.service.token.TokenService;
@@ -108,20 +109,20 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional(readOnly = true)
 	@UserGrant(UserFunction.security_users)
-	public List<UserSummary> getUserList() {
+	public UserSummaries getUserList() {
 		List<User> users = getJdbcTemplate().query(USER_SUMMARIES, new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 				return new User(rs.getString(NAME), rs.getString(DISPLAYNAME), rs.getString(EMAIL), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
 			}
 		});
-		return Lists.transform(users, new Function<User, UserSummary>() {
+		return new UserSummaries(Lists.transform(users, new Function<User, UserSummary>() {
 			@Override
 			public UserSummary apply(User user) {
 				EnumSet<UserFunction> functions = grantService.getUserFunctions(user.getName());
 				return new UserSummary(user.getName(), user.getDisplayName(), user.getEmail(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
 			}
-		});
+		}));
 	}
 
 	@Override

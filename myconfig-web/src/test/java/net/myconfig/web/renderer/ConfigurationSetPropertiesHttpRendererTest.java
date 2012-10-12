@@ -17,8 +17,8 @@ import java.util.Arrays;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import net.myconfig.service.model.ConfigurationSet;
-import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.core.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationValue;
 
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;

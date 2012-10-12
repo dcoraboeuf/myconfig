@@ -5,23 +5,20 @@ import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.fail
+import groovyx.net.http.ContentType
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
 
-import net.sf.json.JSONNull
-
-import groovyx.net.http.ContentType;
-import groovyx.net.http.HTTPBuilder;
-import groovyx.net.http.Method;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.BeforeClass
+import org.junit.Test
 
 class ITRestGet {
 	
-	def version
-	def http
+	static def version
+	static def http
 	
-	@Before
-	void before() {
+	@BeforeClass
+	static void before() {
 		def itPort = System.properties['it.port']
 		if (itPort == null || itPort == "") {
 			itPort = "9999"

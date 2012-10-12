@@ -16,9 +16,9 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.exception.ApplicationNotFoundException;
-import net.myconfig.service.model.ConfigurationSet;
 import net.myconfig.web.renderer.HttpRenderer;
 import net.myconfig.web.renderer.HttpRendererService;
 import net.myconfig.web.renderer.RendererNotFoundException;

@@ -31,6 +31,28 @@ import javax.validation.Validator;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
+import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ConditionalValue;
+import net.myconfig.core.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationUpdate;
+import net.myconfig.core.model.ConfigurationUpdates;
+import net.myconfig.core.model.ConfigurationValue;
+import net.myconfig.core.model.Environment;
+import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.EnvironmentSummary;
+import net.myconfig.core.model.IndexedValues;
+import net.myconfig.core.model.Key;
+import net.myconfig.core.model.KeyConfiguration;
+import net.myconfig.core.model.KeySummary;
+import net.myconfig.core.model.MatrixConfiguration;
+import net.myconfig.core.model.MatrixVersionConfiguration;
+import net.myconfig.core.model.UserApplicationRights;
+import net.myconfig.core.model.Version;
+import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.model.VersionSummary;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.EnvGrant;
@@ -52,27 +74,6 @@ import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.ApplicationConfiguration;
-import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.ConditionalValue;
-import net.myconfig.service.model.ConfigurationSet;
-import net.myconfig.service.model.ConfigurationUpdate;
-import net.myconfig.service.model.ConfigurationUpdates;
-import net.myconfig.service.model.ConfigurationValue;
-import net.myconfig.service.model.Environment;
-import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.EnvironmentSummary;
-import net.myconfig.service.model.IndexedValues;
-import net.myconfig.service.model.Key;
-import net.myconfig.service.model.KeyConfiguration;
-import net.myconfig.service.model.KeySummary;
-import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.MatrixVersionConfiguration;
-import net.myconfig.service.model.UserApplicationRights;
-import net.myconfig.service.model.Version;
-import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.VersionSummary;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
 import net.myconfig.service.validation.KeyValidation;
@@ -114,7 +115,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
-	public List<ApplicationSummary> getApplications() {
+	public ApplicationSummaries getApplications() {
 		// Gets the raw list of applications
 		List<ApplicationSummary> unfilteredApplications = getJdbcTemplate().query(SQL.APPLICATIONS, new RowMapper<ApplicationSummary>() {
 
@@ -163,7 +164,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		});
 		
 		// OK
-		return aclApplications;
+		return new ApplicationSummaries(aclApplications);
 	}
 	
 	@Override

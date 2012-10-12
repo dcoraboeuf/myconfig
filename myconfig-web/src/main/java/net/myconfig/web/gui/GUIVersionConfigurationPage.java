@@ -1,6 +1,6 @@
 package net.myconfig.web.gui;
 
-import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 

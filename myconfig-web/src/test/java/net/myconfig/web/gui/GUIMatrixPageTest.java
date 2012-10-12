@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 
-import net.myconfig.service.model.Key;
-import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.MatrixVersionConfiguration;
+import net.myconfig.core.model.Key;
+import net.myconfig.core.model.MatrixConfiguration;
+import net.myconfig.core.model.MatrixVersionConfiguration;
 import net.myconfig.web.rest.UIInterface;
 
 import org.junit.Before;

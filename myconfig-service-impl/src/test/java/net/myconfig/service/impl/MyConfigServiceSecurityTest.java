@@ -13,16 +13,16 @@ import java.util.List;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ConfigurationUpdate;
+import net.myconfig.core.model.ConfigurationUpdates;
+import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.IndexedValues;
+import net.myconfig.core.model.KeyConfiguration;
+import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.service.api.MyConfigService;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.ApplicationConfiguration;
-import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.ConfigurationUpdate;
-import net.myconfig.service.model.ConfigurationUpdates;
-import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.IndexedValues;
-import net.myconfig.service.model.KeyConfiguration;
-import net.myconfig.service.model.VersionConfiguration;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dbunit.dataset.DataSetException;
@@ -50,21 +50,21 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	@Test
 	public void getApplications_admin() throws SQLException {
 		asAdmin();
-		List<ApplicationSummary> apps = myconfig.getApplications();
+		List<ApplicationSummary> apps = myconfig.getApplications().getSummaries();
 		assertNotNull(apps);
 	}
 
 	@Test
 	public void getApplications_user_granted() throws SQLException {
 		asUser().grant(UserFunction.app_list);
-		List<ApplicationSummary> apps = myconfig.getApplications();
+		List<ApplicationSummary> apps = myconfig.getApplications().getSummaries();
 		assertNotNull(apps);
 	}
 
 	@Test
 	public void getApplications_user_not_granted() throws SQLException {
 		asUser();
-		List<ApplicationSummary> apps = myconfig.getApplications();
+		List<ApplicationSummary> apps = myconfig.getApplications().getSummaries();
 		assertNotNull(apps);
 	}
 

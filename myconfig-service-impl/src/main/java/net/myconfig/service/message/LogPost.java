@@ -1,9 +1,9 @@
 package net.myconfig.service.message;
 
 import net.myconfig.core.MyConfigProfiles;
+import net.myconfig.core.model.Ack;
 import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
-import net.myconfig.service.model.Ack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

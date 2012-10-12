@@ -11,12 +11,12 @@ import java.util.UUID;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.core.model.TokenType;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLUtils;
 import net.myconfig.service.exception.TokenExpiredException;
 import net.myconfig.service.exception.TokenNotFoundException;
 import net.myconfig.service.impl.AbstractDaoService;
-import net.myconfig.service.model.TokenType;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
