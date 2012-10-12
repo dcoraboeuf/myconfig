@@ -35,6 +35,11 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	public String getUrl() {
 		return url;
 	}
+	
+	@Override
+	public String version() {
+		return get ("/version", String.class);
+	}
 
 	@Override
 	public ApplicationSummaries applications() {

@@ -8,8 +8,6 @@ import static org.junit.Assert.fail
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
-import net.myconfig.client.java.MyConfigClient
-import net.myconfig.client.java.support.MyConfigClientFactory
 
 import org.junit.BeforeClass
 import org.junit.Test
@@ -34,9 +32,6 @@ class ITRestGet {
 		def url = "http://localhost:$itPort/myconfig/get/"
 		// Creates the HTTP client for the API
 		http = new HTTPBuilder(url)
-		
-		// Initialization of data
-		MyConfigClient client = MyConfigClientFactory.create(url).build()
 	}
 	
 	@Test

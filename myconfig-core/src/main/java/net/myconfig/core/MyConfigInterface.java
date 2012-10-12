@@ -12,6 +12,8 @@ import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
 
 public interface MyConfigInterface {
+	
+	String version();
 
 	ApplicationSummaries applications();
 
