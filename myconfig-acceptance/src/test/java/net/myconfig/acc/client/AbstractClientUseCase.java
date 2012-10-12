@@ -30,6 +30,6 @@ public abstract class AbstractClientUseCase {
 			public boolean apply(ApplicationSummary o) {
 				return id == o.getId();
 			}
-		});
+		}, null);
 	}
 }
