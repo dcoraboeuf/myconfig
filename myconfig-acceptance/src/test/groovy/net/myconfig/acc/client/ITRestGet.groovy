@@ -9,41 +9,19 @@ import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
 
+import net.myconfig.acc.support.AccUtils;
+
 import org.junit.BeforeClass
 import org.junit.Test
 
-class ITRestGet {
-	
-	static def version
-	static def http
-	
-	@BeforeClass
-	static void before() {
-		def itPort = System.properties['it.port']
-		if (itPort == null || itPort == "") {
-			itPort = "9999"
-		}
-		def props = new Properties()
-		getClass().getResourceAsStream("/Project.properties").withStream {
-			stream -> props.load(stream)
-		}
-		version = props["project.version"]
-		// URL of the server
-		def url = "http://localhost:$itPort/myconfig/get/"
-		// Creates the HTTP client for the API
-		http = new HTTPBuilder(url)
-	}
+class ITRestGet extends AbstractClientUseCase {
 	
 	@Test
 	void version() {
-		http.request ( Method.GET, ContentType.TEXT ) {
-			uri.path = "version"
-			response.success = { resp, reader ->
-				def content = reader.text
-				if (version != content) {
-					fail("Expected version $version but was $content")
-				}
-			}
+		def actualVersion = client().version()
+		def expectedVersion = AccUtils.CONTEXT.getVersion()
+		if (expectedVersion != actualVersion) {
+			fail("Expected version $version but was $content")
 		}
 	}
 	
