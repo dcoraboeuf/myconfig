@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,6 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
-import net.myconfig.core.utils.MapBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -116,10 +116,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return delete (format("/ui/environment/%d/%s", id, name), Ack.class);
 	}
 
+	/**
+	 * DELETE /ui/key/{id}/{name:.*}
+	 */
 	@Override
 	public Ack keyDelete(int id, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return delete (format("/ui/key/%d/%s", id, name), Ack.class);
 	}
 
 	/**
@@ -128,13 +130,16 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	 */
 	@Override
 	public Ack keyCreate(int id, String name, String description) {
-		return post(String.format("/ui/key/%d/%s/create", id, name), Ack.class, MapBuilder.<String,String>create().put("description", description).build());
+		return post(format("/ui/key/%d/%s/create", id, name), Ack.class, Collections.singletonMap("description", description));
 	}
 
+	/**
+	 * <p>POST /ui/key/{application}/{name}/update
+	 * <p>param: description
+	 */
 	@Override
 	public Ack keyUpdate(int id, String name, String description) {
-		// TODO Auto-generated method stub
-		return null;
+		return post(format("/ui/key/%d/%s/update", id, name), Ack.class, Collections.singletonMap("description", description));
 	}
 
 	@Override

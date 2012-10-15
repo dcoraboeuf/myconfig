@@ -118,7 +118,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/key/{application}/{name}/update", method = RequestMethod.POST)
-	public Ack keyUpdate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
+	public @ResponseBody Ack keyUpdate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
 		return getMyConfigService().updateKey (application, name, description);
 	}
 	
@@ -130,7 +130,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/application/{id}/key_version", method = RequestMethod.DELETE)
-	public MatrixConfiguration keyVersionConfiguration(@PathVariable int id) {
+	public @ResponseBody MatrixConfiguration keyVersionConfiguration(@PathVariable int id) {
 		return getMyConfigService().keyVersionConfiguration(id);
 	}
 

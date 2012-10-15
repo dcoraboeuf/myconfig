@@ -88,26 +88,49 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	
 	@Test
 	void createAndDeleteVersion() {
-		// Creates a version
-		client().versionCreate(id, "2.0");
+		// Creates
+		client().versionCreate(id, "2.0")
 		// Checks it has been created
 		assert client().applicationConfiguration(id).getVersionSummaryList().find { it.getName() == "2.0" } != null
-		// Deletes the version
-		client().versionDelete(id, "2.0");
+		// Deletes
+		client().versionDelete(id, "2.0")
 		// Checks it has been deleted
 		assert client().applicationConfiguration(id).getVersionSummaryList().find { it.getName() == "2.0" } == null
 	}
 	
 	@Test
 	void createAndDeleteEnvironment() {
-		// Creates a version
-		client().environmentCreate(id, "BETA");
+		// Creates
+		client().environmentCreate(id, "BETA")
 		// Checks it has been created
 		assert client().applicationConfiguration(id).getEnvironmentSummaryList().find { it.getName() == "BETA" } != null
-		// Deletes the version
+		// Deletes
 		client().environmentDelete(id, "BETA");
 		// Checks it has been deleted
 		assert client().applicationConfiguration(id).getEnvironmentSummaryList().find { it.getName() == "BETA" } == null
+	}
+	
+	@Test
+	void createUpdateAndDeleteKey() {
+		// Creates a version
+		client().keyCreate(id, "mykey", "A description")
+		// Checks it has been created
+		def key = client().applicationConfiguration(id).getKeySummaryList().find { it.getName() == "mykey" }
+		assert key != null
+		assert "mykey" == key.getName()
+		assert "A description" == key.getDescription()
+		
+		// Updates
+		client().keyUpdate(id, "mykey", "Another description")
+		key = client().applicationConfiguration(id).getKeySummaryList().find { it.getName() == "mykey" }
+		assert key != null
+		assert "mykey" == key.getName()
+		assert "Another description" == key.getDescription()
+		
+		// Deletes
+		client().keyDelete(id, "mykey")
+		// Checks it has been deleted
+		assert client().applicationConfiguration(id).getEnvironmentSummaryList().find { it.getName() == "mykey" } == null
 	}
 
 }
