@@ -2,7 +2,8 @@ package net.myconfig.service.config;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -14,21 +15,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 
-@Configuration
 public class StringsLoader {
 	
 	private final Logger logger = LoggerFactory.getLogger(StringsLoader.class);
 
-	@Autowired
-	private ApplicationContext applicationContext;
-
-	@Bean
 	public Strings load() throws IOException {
 		logger.info("[strings] Setting default locale to English");
 		Locale.setDefault(Locale.ENGLISH);
@@ -36,12 +27,12 @@ public class StringsLoader {
 		Set<String> paths = new HashSet<String>();
 		Strings strings = new Strings();
 		// Adds all properties in META-INF/resources
-		Resource[] resources = applicationContext.getResources("classpath*:META-INF/resources/strings");
-		for (Resource resource : resources) {
-			URI uri = resource.getURI();
-			logger.info("[strings] Trying to load uri {}", uri);
+		Enumeration<URL> resources = getClass().getClassLoader().getResources("META-INF/resources/strings");
+		while (resources.hasMoreElements()) {
+			URL url = resources.nextElement();
+			logger.info("[strings] Trying to load URL {}", url);
 			// JDK7 Reads the content
-			InputStream in = resource.getInputStream();
+			InputStream in = url.openStream();
 			try {
 				List<String> lines = IOUtils.readLines(in);
 				for (String line : lines) {
