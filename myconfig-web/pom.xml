@@ -189,10 +189,6 @@
 							            <name>jetty.port</name>
 							            <value>9999</value>
 						            </systemProperty>
-						            <systemProperty>
-							            <name>it.db</name>
-							            <value>../myconfig-acceptance/src/test/resources/it/db.sql</value>
-						            </systemProperty>
 						        </systemProperties>
 							</configuration>
 						</plugin>

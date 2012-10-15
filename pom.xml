@@ -65,6 +65,7 @@
 		<module>myconfig-test</module>
 		<module>myconfig-core</module>
 		<module>myconfig-acceptance</module>
+		<module>myconfig-javaclient</module>
 	</modules>
 
 	<dependencyManagement>
@@ -89,6 +90,12 @@
 				<groupId>commons-fileupload</groupId>
 				<artifactId>commons-fileupload</artifactId>
 				<version>1.2.1</version>
+			</dependency>
+			<!-- HTTP client -->
+			<dependency>
+			    <groupId>org.apache.httpcomponents</groupId>
+			    <artifactId>httpclient</artifactId>
+			    <version>4.2.1</version>
 			</dependency>
 			<!-- Guava -->
 			<dependency>
@@ -227,7 +234,7 @@
 			<dependency>
 				<groupId>org.codehaus.jackson</groupId>
 				<artifactId>jackson-mapper-asl</artifactId>
-				<version>1.9.5</version>
+				<version>1.9.10</version>
 			</dependency>
 			<dependency>
 				<groupId>org.freemarker</groupId>
@@ -240,19 +247,14 @@
 				<version>2.2.2</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.2.1</version>
-			</dependency>
-			<dependency>
 				<groupId>org.codehaus.groovy</groupId>
 				<artifactId>groovy</artifactId>
 				<version>1.8.6</version>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.groovy.modules.http-builder</groupId>
-				<artifactId>http-builder</artifactId>
-				<version>0.5.2</version>
+			    <groupId>org.codehaus.groovy</groupId>
+			    <artifactId>groovy-json</artifactId>
+			    <version>2.0.5</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.ant</groupId>

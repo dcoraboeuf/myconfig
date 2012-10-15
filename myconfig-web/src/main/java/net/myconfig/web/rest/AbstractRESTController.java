@@ -4,8 +4,8 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.myconfig.core.CoreException;
 import net.myconfig.service.api.MyConfigService;
-import net.myconfig.service.exception.CoreException;
 import net.myconfig.web.support.ErrorHandler;
 import net.myconfig.web.support.ErrorMessage;
 import net.sf.jstring.Strings;

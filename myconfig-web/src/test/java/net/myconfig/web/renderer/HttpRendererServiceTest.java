@@ -5,7 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import net.myconfig.service.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.test.AbstractIntegrationTest;
 
 public class HttpRendererServiceTest extends AbstractIntegrationTest {

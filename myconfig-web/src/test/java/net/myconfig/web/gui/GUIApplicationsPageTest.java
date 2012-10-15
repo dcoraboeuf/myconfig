@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.List;
 
 import net.myconfig.core.MyConfigProfiles;
-import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.test.AbstractConfigurationTest;
 import net.myconfig.web.test.ApplicationSummaryNamePredicate;
@@ -30,7 +30,7 @@ public class GUIApplicationsPageTest extends AbstractConfigurationTest {
 	@Test
 	public void application_list () throws Exception {
 		// Initial number of applications
-		int applicationCount = ui.applications().size();
+		int applicationCount = ui.applications().getSummaries().size();
 		// Initial state
 		applicationCreate("app1");
 		applicationCreate("app2");

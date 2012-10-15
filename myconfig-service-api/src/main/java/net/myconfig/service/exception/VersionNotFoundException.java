@@ -1,5 +1,7 @@
 package net.myconfig.service.exception;
 
+import net.myconfig.core.CoreException;
+
 
 public class VersionNotFoundException extends CoreException {
 	

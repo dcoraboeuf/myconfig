@@ -1,6 +1,6 @@
 package net.myconfig.web.gui;
 
-import net.myconfig.service.model.EnvironmentConfiguration;
+import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 

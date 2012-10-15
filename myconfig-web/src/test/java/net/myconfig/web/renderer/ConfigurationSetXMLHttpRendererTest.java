@@ -10,8 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.Collections;
 
-import net.myconfig.service.model.ConfigurationSet;
-import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.core.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationValue;
 import net.myconfig.test.Helper;
 
 import org.junit.Before;

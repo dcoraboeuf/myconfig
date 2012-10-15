@@ -1,6 +1,6 @@
 package net.myconfig.web.test.support;
 
-import net.myconfig.service.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationSummary;
 
 public class ApplicationSummaryBuilder {
 

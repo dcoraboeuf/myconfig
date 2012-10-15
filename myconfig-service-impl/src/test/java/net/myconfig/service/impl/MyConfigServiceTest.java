@@ -15,6 +15,26 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ConditionalValue;
+import net.myconfig.core.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationUpdate;
+import net.myconfig.core.model.ConfigurationUpdates;
+import net.myconfig.core.model.ConfigurationValue;
+import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.EnvironmentSummary;
+import net.myconfig.core.model.IndexedValues;
+import net.myconfig.core.model.Key;
+import net.myconfig.core.model.KeyConfiguration;
+import net.myconfig.core.model.KeySummary;
+import net.myconfig.core.model.MatrixConfiguration;
+import net.myconfig.core.model.MatrixVersionConfiguration;
+import net.myconfig.core.model.Version;
+import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.model.VersionSummary;
+import net.myconfig.core.utils.MapBuilder;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
@@ -30,27 +50,7 @@ import net.myconfig.service.exception.ValidationException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.ApplicationConfiguration;
-import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.ConditionalValue;
-import net.myconfig.service.model.ConfigurationSet;
-import net.myconfig.service.model.ConfigurationUpdate;
-import net.myconfig.service.model.ConfigurationUpdates;
-import net.myconfig.service.model.ConfigurationValue;
-import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.EnvironmentSummary;
-import net.myconfig.service.model.IndexedValues;
-import net.myconfig.service.model.Key;
-import net.myconfig.service.model.KeyConfiguration;
-import net.myconfig.service.model.KeySummary;
-import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.MatrixVersionConfiguration;
-import net.myconfig.service.model.Version;
-import net.myconfig.service.model.VersionConfiguration;
-import net.myconfig.service.model.VersionSummary;
 import net.myconfig.test.AbstractIntegrationTest;
-import net.myconfig.test.MapBuilder;
 import net.sf.jstring.Strings;
 
 import org.apache.commons.lang3.StringUtils;
@@ -155,7 +155,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void applications() {
-		List<ApplicationSummary> applications = myConfigService.getApplications();
+		List<ApplicationSummary> applications = myConfigService.getApplications().getSummaries();
 		assertNotNull (applications);
 		{
 			ApplicationSummary app = applications.get(0);

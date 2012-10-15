@@ -2,16 +2,17 @@ package net.myconfig.service.api;
 
 import java.util.List;
 
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.ApplicationConfiguration;
-import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.ConfigurationSet;
-import net.myconfig.service.model.ConfigurationUpdates;
-import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.KeyConfiguration;
-import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.UserApplicationRights;
-import net.myconfig.service.model.VersionConfiguration;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
+import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationUpdates;
+import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.KeyConfiguration;
+import net.myconfig.core.model.MatrixConfiguration;
+import net.myconfig.core.model.UserApplicationRights;
+import net.myconfig.core.model.VersionConfiguration;
 
 public interface MyConfigService {
 
@@ -21,7 +22,7 @@ public interface MyConfigService {
 
 	ConfigurationSet getEnv(String application, String version, String environment);
 
-	List<ApplicationSummary> getApplications();
+	ApplicationSummaries getApplications();
 
 	ApplicationSummary createApplication(String name);
 

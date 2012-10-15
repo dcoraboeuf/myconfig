@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.myconfig.service.model.ConfigurationSet;
-import net.myconfig.service.model.ConfigurationValue;
+import net.myconfig.core.model.ConfigurationSet;
+import net.myconfig.core.model.ConfigurationValue;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package net.myconfig.service.template;
 
-import net.myconfig.service.exception.CoreException;
+import net.myconfig.core.CoreException;
 
 public class TemplateMergeException extends CoreException {
 

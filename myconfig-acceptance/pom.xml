@@ -39,6 +39,17 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>myconfig-javaclient</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+		    <groupId>org.codehaus.groovy</groupId>
+		    <artifactId>groovy-json</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 		    <groupId>com.google.guava</groupId>
 		    <artifactId>guava</artifactId>
 			<scope>test</scope>
@@ -48,16 +59,21 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.groovy.modules.http-builder</groupId>
-			<artifactId>http-builder</artifactId>
-			<scope>test</scope>
-		</dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
 			<scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -156,10 +172,6 @@
 							            <systemProperty>
 								            <name>spring.profiles.active</name>
 								            <value>it</value>
-							            </systemProperty>
-							            <systemProperty>
-							            	<name>it.db</name>
-							            	<value>${basedir}/src/test/resources/it/db.sql</value>
 							            </systemProperty>
 									    <systemProperty>
 									    	<name>jetty.port</name>

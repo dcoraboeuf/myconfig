@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.UserSummaries;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.AbstractTokenException;
 import net.myconfig.service.exception.InputException;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.UserSummary;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
@@ -66,8 +66,8 @@ public class SecurityController extends AbstractGUIPage {
 		List<UserFunction> userFunctions = Arrays.asList(UserFunction.values());
 		model.addAttribute("userFunctions", userFunctions);
 		// List of users
-		List<UserSummary> users = ui.users();
-		model.addAttribute("users", users);
+		UserSummaries users = ui.users();
+		model.addAttribute("users", users.getSummaries());
 		// OK
 		return "users";
 	}

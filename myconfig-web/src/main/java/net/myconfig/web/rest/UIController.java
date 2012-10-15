@@ -1,20 +1,19 @@
 package net.myconfig.web.rest;
 
-import java.util.List;
-
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.ApplicationConfiguration;
+import net.myconfig.core.model.ApplicationSummaries;
+import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ConfigurationUpdates;
+import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.KeyConfiguration;
+import net.myconfig.core.model.MatrixConfiguration;
+import net.myconfig.core.model.UserSummaries;
+import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.ApplicationConfiguration;
-import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.ConfigurationUpdates;
-import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.KeyConfiguration;
-import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.UserSummary;
-import net.myconfig.service.model.VersionConfiguration;
 import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
@@ -41,7 +40,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 
 	@Override
 	@RequestMapping(value = "/applications", method = RequestMethod.GET)
-	public @ResponseBody List<ApplicationSummary> applications() {
+	public @ResponseBody ApplicationSummaries applications() {
 		return getMyConfigService().getApplications();
 	}
 	
@@ -112,19 +111,19 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/key/{application}/{name}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/key/{application}/{name}/create", method = RequestMethod.POST)
 	public @ResponseBody Ack keyCreate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
 		return getMyConfigService().createKey (application, name, description);
 	}
 	
 	@Override
-	@RequestMapping(value = "/key/{application}/{name}", method = RequestMethod.POST)
+	@RequestMapping(value = "/key/{application}/{name}/update", method = RequestMethod.POST)
 	public Ack keyUpdate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
 		return getMyConfigService().updateKey (application, name, description);
 	}
 	
 	@Override
-	@RequestMapping(value = "/key/{id}/{name}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/key/{id}/{name:.*}", method = RequestMethod.DELETE)
 	public @ResponseBody Ack keyDelete(@PathVariable int id, @PathVariable String name) {
 		return getMyConfigService().deleteKey (id, name);
 	}
@@ -149,7 +148,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/security/users", method = RequestMethod.GET)
-	public @ResponseBody List<UserSummary> users() {
+	public @ResponseBody UserSummaries users() {
 		return securityService.getUserList();
 	}
 	

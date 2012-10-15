@@ -8,9 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import net.myconfig.core.model.TokenType;
 import net.myconfig.service.exception.TokenExpiredException;
 import net.myconfig.service.exception.TokenNotFoundException;
-import net.myconfig.service.model.TokenType;
 import net.myconfig.test.AbstractIntegrationTest;
 import net.myconfig.test.DBUnitHelper;
 

@@ -1,6 +1,6 @@
 package net.myconfig.service.impl;
 
-import net.myconfig.service.exception.CoreException;
+import net.myconfig.core.CoreException;
 
 public class CannotFindValidEmailException extends CoreException {
 

@@ -1,69 +1,8 @@
 package net.myconfig.web.rest;
 
-import java.util.List;
+import net.myconfig.core.MyConfigInterface;
 
-import net.myconfig.core.AppFunction;
-import net.myconfig.core.UserFunction;
-import net.myconfig.service.model.Ack;
-import net.myconfig.service.model.ApplicationConfiguration;
-import net.myconfig.service.model.ApplicationSummary;
-import net.myconfig.service.model.ConfigurationUpdates;
-import net.myconfig.service.model.EnvironmentConfiguration;
-import net.myconfig.service.model.KeyConfiguration;
-import net.myconfig.service.model.MatrixConfiguration;
-import net.myconfig.service.model.UserSummary;
-import net.myconfig.service.model.VersionConfiguration;
 
-public interface UIInterface {
-
-	List<ApplicationSummary> applications();
-
-	ApplicationSummary applicationCreate(String name);
-
-	Ack applicationDelete(int id);
-
-	ApplicationConfiguration applicationConfiguration(int id);
-
-	Ack versionCreate(int id, String name);
-
-	Ack versionDelete(int id, String name);
-
-	Ack environmentCreate(int id, String name);
-
-	Ack environmentDelete(int id, String name);
-
-	Ack keyDelete(int id, String name);
-
-	Ack keyCreate(int id, String name, String description);
-
-	Ack keyUpdate(int id, String name, String description);
-
-	MatrixConfiguration keyVersionConfiguration(int id);
-
-	Ack keyVersionAdd(int application, String version, String key);
-
-	Ack keyVersionRemove(int application, String version, String key);
-
-	VersionConfiguration versionConfiguration(int application, String version);
-
-	EnvironmentConfiguration environmentConfiguration(int application, String environment);
-
-	KeyConfiguration keyConfiguration(int application, String key);
-
-	Ack updateConfiguration(int application, ConfigurationUpdates updates);
-
-	List<UserSummary> users();
-
-	Ack userCreate(String name, String displayName, String email);
-
-	Ack userDelete(String name);
-
-	Ack userFunctionAdd(String name, UserFunction fn);
-
-	Ack userFunctionRemove(String name, UserFunction fn);
-
-	Ack appFunctionAdd(String user, int application, AppFunction fn);
-
-	Ack appFunctionRemove(String user, int application, AppFunction fn);
+public interface UIInterface extends MyConfigInterface {
 
 }
