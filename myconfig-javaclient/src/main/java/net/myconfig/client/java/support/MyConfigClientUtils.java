@@ -17,4 +17,14 @@ public class MyConfigClientUtils {
 		return out.toString("UTF-8");
 	}
 
+	public static String envAsString(MyConfigClient client, String application, String version, String environment, String format) throws IOException {
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		try {
+			client.env(out, application, version, environment, format);
+		} finally {
+			out.close();
+		}
+		return out.toString("UTF-8");
+	}
+
 }
