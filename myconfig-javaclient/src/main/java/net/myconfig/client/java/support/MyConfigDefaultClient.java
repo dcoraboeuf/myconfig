@@ -1,5 +1,7 @@
 package net.myconfig.client.java.support;
 
+import static java.lang.String.format;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -71,13 +73,15 @@ public class MyConfigDefaultClient implements MyConfigClient {
 
 	@Override
 	public Ack applicationDelete(int id) {
-		return delete(String.format("/ui/application/%d", id), Ack.class);
+		return delete(format("/ui/application/%d", id), Ack.class);
 	}
 
+	/**
+	 * GET /ui/application/{application}
+	 */
 	@Override
 	public ApplicationConfiguration applicationConfiguration(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(format("/ui/application/%d", id), ApplicationConfiguration.class);
 	}
 
 	/**
