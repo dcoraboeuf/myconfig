@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import net.myconfig.acc.client.AbstractClientUseCase;
 import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.client.java.support.MyConfigClientFactory;
+import net.myconfig.core.utils.StringsLoader;
+import net.sf.jstring.Strings;
 
 import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
@@ -26,6 +28,8 @@ public class AccUtils {
 
 	private static AccContext getContext() {
 		try {
+			// Loads the strings
+			Strings strings = new StringsLoader().load();
 			// Port to use for integration
 			String itPort = System.getProperty("it.port");
 			if (StringUtils.isBlank(itPort)) {
@@ -47,7 +51,7 @@ public class AccUtils {
 			// Creates the client for the API
 			MyConfigClient client = MyConfigClientFactory.create(url).build();
 			// OK
-			return new AccContext(url, version, client);
+			return new AccContext(url, version, client, strings);
 		} catch (IOException ex) {
 			throw new RuntimeException("Cannot get acceptance test context", ex);
 		}

@@ -77,9 +77,9 @@ class ITRestGet extends AbstractClientUseCase {
 		try {
 			client().key("myapp", "1.2", "UAT", "jdbc.usr")
 		} catch (ClientMessageException ex) {
-			def message = ex.getMessage();
+			def message = ex.getLocalizedMessage(Locale.ENGLISH)
 			def staticMessage = message[0..-37]
-			assertEquals("", staticMessage);
+			assertEquals("", staticMessage)
 		}
 	}
 	
