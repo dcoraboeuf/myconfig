@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.validation.Validator;
 
+import net.myconfig.core.utils.StringsLoader;
 import net.sf.jstring.Strings;
 
 import org.springframework.context.annotation.Bean;

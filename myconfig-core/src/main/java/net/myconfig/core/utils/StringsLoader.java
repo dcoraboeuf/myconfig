@@ -1,4 +1,4 @@
-package net.myconfig.service.config;
+package net.myconfig.core.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
