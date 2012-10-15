@@ -21,6 +21,7 @@ import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.utils.MapBuilder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -295,11 +296,16 @@ public class MyConfigDefaultClient implements MyConfigClient {
 					return mapper.readValue(content, returnType);
 				}
 			} else {
-				// FIXME Gets the localized exception?
-				throw new RuntimeException(String.format("Error while executing %s: [%d] %s",
-					request,
-					response.getStatusLine().getStatusCode(),
-					response.getStatusLine().getReasonPhrase()));
+				String content = EntityUtils.toString(response.getEntity(), "UTF-8");
+				if (StringUtils.isNotBlank(content)) {
+					throw new ClientMessageException(content);
+				} else {
+					// Generic error
+					throw new ClientServerException(
+							request,
+							response.getStatusLine().getStatusCode(),
+							response.getStatusLine().getReasonPhrase());
+				}
 			}
 		} catch (IOException e) {
 			// TODO Management of client exceptions

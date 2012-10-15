@@ -5,49 +5,19 @@ import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.fail
-
-import java.util.List;
-
 import groovyx.net.http.ContentType
-import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
-
-import net.myconfig.acc.support.AccUtils;
-import net.myconfig.client.java.MyConfigClient;
-import net.myconfig.core.model.ConfigurationUpdate;
-import net.myconfig.core.model.ConfigurationUpdates;
+import net.myconfig.acc.support.AccUtils
+import net.myconfig.client.java.MyConfigClient
+import net.myconfig.client.java.support.ClientMessageException
+import net.myconfig.core.model.ConfigurationUpdate
+import net.myconfig.core.model.ConfigurationUpdates
 
 import org.junit.BeforeClass
 import org.junit.Test
 
 class ITRestGet extends AbstractClientUseCase {
 	
-	/**		
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.user', 'DEV', '1.0 DEV jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.user', 'ACC', '1.0 ACC jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.user', 'UAT', '1.0 UAT jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.user', 'PROD', '1.0 PROD jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.user', 'DEV', '1.1 DEV jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.user', 'ACC', '1.1 ACC jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.user', 'UAT', '1.1 UAT jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.user', 'PROD', '1.1 PROD jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.user', 'DEV', '1.2 DEV jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.user', 'ACC', '1.2 ACC jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.user', 'UAT', '1.2 UAT jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.user', 'PROD', '1.2 PROD jdbc.user');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.password', 'DEV', '1.0 DEV jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.password', 'ACC', '1.0 ACC jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.password', 'UAT', '1.0 UAT jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.0', 'jdbc.password', 'PROD', '1.0 PROD jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.password', 'DEV', '1.1 DEV jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.password', 'ACC', '1.1 ACC jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.password', 'UAT', '1.1 UAT jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.1', 'jdbc.password', 'PROD', '1.1 PROD jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.password', 'DEV', '1.2 DEV jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.password', 'ACC', '1.2 ACC jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.password', 'UAT', '1.2 UAT jdbc.password');
-		INSERT INTO CONFIG (APPLICATION, VERSION, APPKEY, ENVIRONMENT, VALUE) VALUES (1, '1.2', 'jdbc.password', 'PROD', '1.2 PROD jdbc.password');
-	 */
 	@BeforeClass
 	static void initTest() {
 		MyConfigClient client = AccUtils.CONTEXT.getClient();
@@ -104,23 +74,12 @@ class ITRestGet extends AbstractClientUseCase {
 	
 	@Test
 	void get_key_not_found() {
-		http.request ( Method.GET, ContentType.TEXT ) {
-			uri.path = "key/myapp/UAT/1.2/jdbc.usr"
-			response.failure = { resp, reader ->
-				def content = reader.text
-				assertEquals(500, resp.status);
-				def expectedMessage = """\
-An error has occurred.
-Message: [S-001] Cannot find key jdbc.usr for application myapp, version 1.2 and environment UAT.
-Reference: """
-				// Removes the last 36 characters of the content
-				def modifiedContent = content[0..-37]
-				// Comparison
-				assertEquals (expectedMessage, modifiedContent); 
-			}
-			response.success = { resp ->
-				fail("Should have failed")
-			}
+		try {
+			client().key("myapp", "1.2", "UAT", "jdbc.usr")
+		} catch (ClientMessageException ex) {
+			def message = ex.getMessage();
+			def staticMessage = message[0..-37]
+			assertEquals("", staticMessage);
 		}
 	}
 	

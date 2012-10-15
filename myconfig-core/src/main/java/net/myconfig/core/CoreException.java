@@ -1,4 +1,4 @@
-package net.myconfig.service.exception;
+package net.myconfig.core;
 
 import net.sf.jstring.LocalizableException;
 

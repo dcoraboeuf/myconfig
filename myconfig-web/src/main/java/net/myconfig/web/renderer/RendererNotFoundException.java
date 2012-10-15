@@ -1,6 +1,6 @@
 package net.myconfig.web.renderer;
 
-import net.myconfig.service.exception.CoreException;
+import net.myconfig.core.CoreException;
 
 public class RendererNotFoundException extends CoreException {
 

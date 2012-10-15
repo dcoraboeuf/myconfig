@@ -29,6 +29,7 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.CoreException;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
@@ -63,7 +64,6 @@ import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
-import net.myconfig.service.exception.CoreException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
 import net.myconfig.service.exception.EnvironmentNotDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;

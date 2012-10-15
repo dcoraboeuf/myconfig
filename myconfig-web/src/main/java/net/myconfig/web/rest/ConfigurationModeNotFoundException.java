@@ -1,6 +1,6 @@
 package net.myconfig.web.rest;
 
-import net.myconfig.service.exception.CoreException;
+import net.myconfig.core.CoreException;
 
 public class ConfigurationModeNotFoundException extends CoreException {
 
