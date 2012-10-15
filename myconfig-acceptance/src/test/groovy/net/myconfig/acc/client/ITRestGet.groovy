@@ -77,9 +77,11 @@ class ITRestGet extends AbstractClientUseCase {
 		try {
 			client().key("myapp", "1.2", "UAT", "jdbc.usr")
 		} catch (ClientMessageException ex) {
-			def message = ex.getLocalizedMessage(Locale.ENGLISH)
+			def message = ex.getLocalizedMessage(strings(), Locale.ENGLISH)
 			def staticMessage = message[0..-37]
-			assertEquals("", staticMessage)
+			assertEquals("""[JC-002] An error has occurred.
+Message: [S-001] Cannot find key jdbc.usr for application myapp, version 1.2 and environment UAT.
+Reference: """, staticMessage)
 		}
 	}
 	

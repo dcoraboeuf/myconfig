@@ -7,6 +7,7 @@ import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
+import net.sf.jstring.Strings;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -15,6 +16,10 @@ public abstract class AbstractClientUseCase {
 
 	protected MyConfigClient client() {
 		return AccUtils.CONTEXT.getClient();
+	}
+	
+	protected Strings strings() {
+		return AccUtils.CONTEXT.getStrings();
 	}
 
 	protected int application_create(String appName) {
