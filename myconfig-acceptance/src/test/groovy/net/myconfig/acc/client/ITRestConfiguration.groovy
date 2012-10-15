@@ -97,5 +97,17 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		// Checks it has been deleted
 		assert client().applicationConfiguration(id).getVersionSummaryList().find { it.getName() == "2.0" } == null
 	}
+	
+	@Test
+	void createAndDeleteEnvironment() {
+		// Creates a version
+		client().environmentCreate(id, "BETA");
+		// Checks it has been created
+		assert client().applicationConfiguration(id).getEnvironmentSummaryList().find { it.getName() == "BETA" } != null
+		// Deletes the version
+		client().environmentDelete(id, "BETA");
+		// Checks it has been deleted
+		assert client().applicationConfiguration(id).getEnvironmentSummaryList().find { it.getName() == "BETA" } == null
+	}
 
 }

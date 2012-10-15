@@ -108,10 +108,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return put(String.format("/ui/environment/%d/%s", id, name), Ack.class);
 	}
 
+	/**
+	 * DELETE /ui/environment/{application}/{name}
+	 */
 	@Override
 	public Ack environmentDelete(int id, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return delete (format("/ui/environment/%d/%s", id, name), Ack.class);
 	}
 
 	@Override
