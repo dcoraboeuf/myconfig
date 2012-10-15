@@ -1,6 +1,7 @@
 package net.myconfig.client.java.support;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.utils.MapBuilder;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -225,6 +227,56 @@ public class MyConfigDefaultClient implements MyConfigClient {
 				version,
 				key
 			), String.class);
+	}
+	
+	/**
+	 * GET /get/env/{application}/{environment}/{version}/{mode}
+	 */
+	@Override
+	public void env(OutputStream out, String application, String version, String environment, String format) throws IOException {
+		env(out, String.format("/get/env/%s/%s/%s/%s", application, environment, version, format));
+	}
+	
+	/**
+	 * GET /get/env/{application}/{environment}/{version}/{mode}/{variant}
+	 */
+	@Override
+	public void env(OutputStream out, String application, String version, String environment, String format, String variant) throws IOException {
+		env(out, String.format("/get/env/%s/%s/%s/%s/%s", application, environment, version, format, variant));
+	}
+
+	protected void env(OutputStream out, String path) {
+		// Gets the HTTP client
+		HttpClient client = new DefaultHttpClient();
+		// Get request
+		HttpGet get = new HttpGet(getUrl(path));
+		// Executes the call
+		try {
+			HttpResponse response = client.execute(get);
+			// Parses the response
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				// OK response
+				HttpEntity entity = response.getEntity();
+				// Copy
+				IOUtils.copy(entity.getContent(), out);
+				// OK
+				EntityUtils.consume(entity);
+			} else {
+				String content = EntityUtils.toString(response.getEntity(), "UTF-8");
+				if (StringUtils.isNotBlank(content)) {
+					throw new ClientMessageException(content);
+				} else {
+					// Generic error
+					throw new ClientServerException(
+							get,
+							response.getStatusLine().getStatusCode(),
+							response.getStatusLine().getReasonPhrase());
+				}
+			}
+		} catch (IOException e) {
+			// TODO Management of client exceptions
+			throw new RuntimeException("Error while executing " + get, e);
+		}
 	}
 
 	protected <T> T get(String path, Class<T> returnType) {

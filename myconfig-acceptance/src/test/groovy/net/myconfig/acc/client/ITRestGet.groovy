@@ -5,11 +5,13 @@ import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.fail
+import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 import groovyx.net.http.Method
 import net.myconfig.acc.support.AccUtils
 import net.myconfig.client.java.MyConfigClient
 import net.myconfig.client.java.support.ClientMessageException
+import net.myconfig.client.java.support.MyConfigClientUtils
 import net.myconfig.core.model.ConfigurationUpdate
 import net.myconfig.core.model.ConfigurationUpdates
 
@@ -87,14 +89,11 @@ Reference: """, staticMessage)
 	
 	@Test
 	void get_env_json_concise () {
-		http.request ( Method.GET, ContentType.JSON ) {
-			uri.path = "env/myapp/UAT/1.2/json/concise"
-			response.success = { resp, json ->
-				assertEquals (2, json.size());
-				assertEquals ("1.2 UAT jdbc.user", json["jdbc.user"]); 
-				assertEquals ("1.2 UAT jdbc.password", json["jdbc.password"]); 
-			}
-		}
+		def jsonAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "json", "concise")
+		def json = new JsonSlurper().parseText(jsonAsString)
+		assertEquals (2, json.size())
+		assertEquals ("1.2 UAT jdbc.user", json["jdbc.user"]) 
+		assertEquals ("1.2 UAT jdbc.password", json["jdbc.password"])
 	}
 	
 	@Test
