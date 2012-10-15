@@ -92,10 +92,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return put (String.format("/ui/version/%d/%s", id, name), Ack.class);
 	}
 
+	/**
+	 * DELETE /ui/version/{application}/{name:.*}
+	 */
 	@Override
 	public Ack versionDelete(int id, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return delete (format("/ui/version/%d/%s", id, name), Ack.class);
 	}
 
 	/**

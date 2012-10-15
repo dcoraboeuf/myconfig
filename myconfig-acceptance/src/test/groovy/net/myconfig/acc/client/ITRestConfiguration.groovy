@@ -85,5 +85,17 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		assert [12, 12] == keyList*.getConfigCount()
 		assert [12, 12] == keyList*.getValueCount()
 	}
+	
+	@Test
+	void createAndDeleteVersion() {
+		// Creates a version
+		client().versionCreate(id, "2.0");
+		// Checks it has been created
+		assert client().applicationConfiguration(id).getVersionSummaryList().find { it.getName() == "2.0" } != null
+		// Deletes the version
+		client().versionDelete(id, "2.0");
+		// Checks it has been deleted
+		assert client().applicationConfiguration(id).getVersionSummaryList().find { it.getName() == "2.0" } == null
+	}
 
 }
