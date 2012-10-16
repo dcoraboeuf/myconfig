@@ -44,6 +44,8 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import com.netbeetle.jackson.ObjectMapperFactory;
+
 public class MyConfigDefaultClient implements MyConfigClient {
 
 	private final String url;
@@ -321,7 +323,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		HttpPost post = new HttpPost(getUrl(path));
 		if (body != null) {
 			try {
-				String json = new ObjectMapper().writeValueAsString(body);
+				String json = ObjectMapperFactory.createObjectMapper().writeValueAsString(body);
 				post.setEntity(new StringEntity(json, ContentType.create("application/json", "UTF-8")));
 			} catch (IOException e) {
 				// TODO Management of client exceptions
@@ -357,7 +359,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 					T value = (T) content;
 					return value;
 				} else {
-					ObjectMapper mapper = new ObjectMapper();
+					ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 					return mapper.readValue(content, returnType);
 				}
 			} else {

@@ -64,6 +64,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.netbeetle.jackson.ObjectMapperFactory;
+
 public class MyConfigServiceTest extends AbstractIntegrationTest {
 
 	@Autowired
@@ -1285,7 +1287,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	private String toJSON (Object o) throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 		ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
 		return writer.writeValueAsString(o);
 	}

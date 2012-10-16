@@ -6,8 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.util.List;
 
-import net.myconfig.core.model.ConfigurationUpdate;
-import net.myconfig.core.model.ConfigurationUpdates;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
@@ -18,13 +16,15 @@ import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
 import org.junit.Test;
 
+import com.netbeetle.jackson.ObjectMapperFactory;
+
 public class VersionConfigurationUpdateTest {
 	
 	@Test
 	public void parse_string () throws JsonParseException, JsonMappingException, IOException {
 		String json = "{\"updates\":[{\"environment\":\"DEV\",\"key\":\"a\",\"value\":\"dev a\"},{\"environment\":\"DEV\",\"key\":\"b\",\"value\":\"dev b\"}]}";
 
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 		ConfigurationUpdates updates = mapper.readValue(json, ConfigurationUpdates.class);
 		assertNotNull (updates);
 		List<ConfigurationUpdate> list = updates.getUpdates();
@@ -45,7 +45,7 @@ public class VersionConfigurationUpdateTest {
 	
 	@Test
 	public void parse_tree () throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 		JsonNodeFactory f = JsonNodeFactory.instance;
 		// JSON tree
 		ObjectNode root = f.objectNode();

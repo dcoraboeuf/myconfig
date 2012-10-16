@@ -6,13 +6,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import net.myconfig.core.model.Ack;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
+
+import com.netbeetle.jackson.ObjectMapperFactory;
 
 public class AckTest {
 
@@ -53,14 +54,14 @@ public class AckTest {
 
 	@Test
 	public void to_json() throws JsonGenerationException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 		String value = mapper.writeValueAsString(Ack.OK);
 		assertEquals("{\"success\":true}", value);
 	}
 
 	@Test
 	public void from_json() throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 		Ack ack = mapper.readValue("{\"success\":true}", Ack.class);
 		assertTrue(ack.isSuccess());
 	}

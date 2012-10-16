@@ -5,13 +5,16 @@ import java.io.IOException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+
 import org.codehaus.jackson.map.ObjectMapper;
+
+import com.netbeetle.jackson.ObjectMapperFactory;
 
 public abstract class AbstractJSONHttpRenderer<T> extends AbstractHttpRenderer<T> {
 
 	protected void render(Object o, HttpServletResponse response) throws IOException {
 		// JSON as UTF-8 bytes
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 		byte[] bytes = mapper.writeValueAsString(o).getBytes("UTF-8");
 		// Writes the response
 		response.setContentType("application/json");

@@ -8,7 +8,6 @@ import java.io.IOException;
 import lombok.Data;
 
 import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
@@ -37,9 +36,7 @@ public class ConstructorPropertiesAnnotationIntrospectorTest
     public void testJacksonAbleToDeserialize() throws JsonGenerationException,
         JsonMappingException, IOException
     {
-        ObjectMapper mapper = new ObjectMapper();
-        DeserializationConfig config = mapper.getDeserializationConfig().withAnnotationIntrospector(new ConstructorPropertiesAnnotationIntrospector());
-        mapper.setDeserializationConfig(config);
+        ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
         String json = mapper.writeValueAsString(instance);
         ImmutablePojo output = mapper.readValue(json, ImmutablePojo.class);
         assertThat(output, equalTo(instance));
