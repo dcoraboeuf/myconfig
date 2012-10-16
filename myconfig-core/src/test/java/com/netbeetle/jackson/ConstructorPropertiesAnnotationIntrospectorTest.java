@@ -38,8 +38,8 @@ public class ConstructorPropertiesAnnotationIntrospectorTest
         JsonMappingException, IOException
     {
         ObjectMapper mapper = new ObjectMapper();
-        DeserializationConfig config = mapper.getDeserializationConfig();
-        config.appendAnnotationIntrospector(new ConstructorPropertiesAnnotationIntrospector());
+        DeserializationConfig config = mapper.getDeserializationConfig().withAnnotationIntrospector(new ConstructorPropertiesAnnotationIntrospector());
+        mapper.setDeserializationConfig(config);
         String json = mapper.writeValueAsString(instance);
         ImmutablePojo output = mapper.readValue(json, ImmutablePojo.class);
         assertThat(output, equalTo(instance));
