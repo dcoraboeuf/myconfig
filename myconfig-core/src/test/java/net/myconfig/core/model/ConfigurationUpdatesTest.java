@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import com.netbeetle.jackson.ObjectMapperFactory;
 
-public class VersionConfigurationUpdateTest {
+public class ConfigurationUpdatesTest {
 	
 	@Test
 	public void parse_string () throws JsonParseException, JsonMappingException, IOException {
