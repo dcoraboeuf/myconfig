@@ -269,14 +269,15 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		try {
 			HttpResponse response = client.execute(get);
 			// Parses the response
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
 				// OK response
 				HttpEntity entity = response.getEntity();
 				// Copy
 				IOUtils.copy(entity.getContent(), out);
 				// OK
 				EntityUtils.consume(entity);
-			} else {
+			} else if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
 				String content = EntityUtils.toString(response.getEntity(), "UTF-8");
 				if (StringUtils.isNotBlank(content)) {
 					throw new ClientMessageException(content);
@@ -284,9 +285,15 @@ public class MyConfigDefaultClient implements MyConfigClient {
 					// Generic error
 					throw new ClientServerException(
 							get,
-							response.getStatusLine().getStatusCode(),
+							statusCode,
 							response.getStatusLine().getReasonPhrase());
 				}
+			} else {
+				// Generic error
+				throw new ClientServerException(
+						get,
+						statusCode,
+						response.getStatusLine().getReasonPhrase());
 			}
 		} catch (IOException e) {
 			// TODO Management of client exceptions
@@ -348,7 +355,8 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		try {
 			HttpResponse response = client.execute(request);
 			// Parses the response
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+			int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode == HttpStatus.SC_OK) {
 				// OK response
 				HttpEntity entity = response.getEntity();
 				// Gets the content as a JSON string
@@ -362,7 +370,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 					ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 					return mapper.readValue(content, returnType);
 				}
-			} else {
+			} else if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
 				String content = EntityUtils.toString(response.getEntity(), "UTF-8");
 				if (StringUtils.isNotBlank(content)) {
 					throw new ClientMessageException(content);
@@ -370,9 +378,15 @@ public class MyConfigDefaultClient implements MyConfigClient {
 					// Generic error
 					throw new ClientServerException(
 							request,
-							response.getStatusLine().getStatusCode(),
+							statusCode,
 							response.getStatusLine().getReasonPhrase());
 				}
+			} else {
+				// Generic error
+				throw new ClientServerException(
+						request,
+						statusCode,
+						response.getStatusLine().getReasonPhrase());
 			}
 		} catch (IOException e) {
 			// TODO Management of client exceptions
