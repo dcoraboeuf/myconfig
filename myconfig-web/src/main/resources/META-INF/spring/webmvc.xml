@@ -66,5 +66,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 		<property name="prefix" value="" />
 		<property name="suffix" value=".html" />
 	</bean>
+	
+	<!-- JSON configuration -->
+	<bean id="jsonViewResolver" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+		<property name="objectMapper">
+			<bean class="com.netbeetle.jackson.ObjectMapperFactory" factory-method="createObjectMapper" />
+		</property>
+	</bean>
 
 </beans>
