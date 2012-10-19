@@ -4,6 +4,9 @@ import java.util.List;
 
 import lombok.Data;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import com.google.common.collect.ImmutableList;
 
 @Data
@@ -17,7 +20,15 @@ public class VersionConfiguration {
 	private final List<Key> keyList;
 	private final List<IndexedValues<String>> environmentValuesPerKeyList;
 
-	public VersionConfiguration(int id, String name, String version, String previousVersion, String nextVersion, List<Key> keyList, List<IndexedValues<String>> environmentValuesPerKeyList) {
+	@JsonCreator
+	public VersionConfiguration(
+			@JsonProperty("id") int id,
+			@JsonProperty("name") String name,
+			@JsonProperty("version") String version,
+			@JsonProperty("previousVersion") String previousVersion,
+			@JsonProperty("nextVersion") String nextVersion,
+			@JsonProperty("keyList") List<Key> keyList,
+			@JsonProperty("environmentValuesPerKeyList") List<IndexedValues<String>> environmentValuesPerKeyList) {
 		this.id = id;
 		this.name = name;
 		this.version = version;

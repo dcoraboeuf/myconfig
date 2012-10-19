@@ -4,6 +4,9 @@ import java.util.Map;
 
 import lombok.Data;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 
@@ -22,7 +25,10 @@ public class IndexedValues<T> {
 	private final String name;
 	private final Map<String, T> values;
 
-	public IndexedValues(String name, Map<String, T> values) {
+	@JsonCreator
+	public IndexedValues(
+			@JsonProperty("name") String name,
+			@JsonProperty("values") Map<String, T> values) {
 		this.name = name;
 		this.values = ImmutableMap.copyOf(values);
 	}

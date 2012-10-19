@@ -169,10 +169,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return post(format("/ui/version/%d/%s/remove/%s", application, version, key), Ack.class, null);
 	}
 
+	/**
+	 * GET /ui/configuration/version/{application}/{version:.*}
+	 */
 	@Override
 	public VersionConfiguration versionConfiguration(int application, String version) {
-		// TODO Auto-generated method stub
-		return null;
+		return get (format("/ui/configuration/version/%d/%s", application, version), VersionConfiguration.class);
 	}
 
 	@Override
