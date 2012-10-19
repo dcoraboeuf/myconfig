@@ -5,6 +5,8 @@ import java.util.List;
 import lombok.Data;
 
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.google.common.collect.ImmutableList;
 
@@ -16,7 +18,12 @@ public class MatrixConfiguration {
 	private final List<MatrixVersionConfiguration> versionConfigurationList;
 	private final List<Key> keyList;
 
-	public MatrixConfiguration(int id, String name, List<MatrixVersionConfiguration> versionConfigurationList, List<Key> keyList) {
+	@JsonCreator
+	public MatrixConfiguration(
+			@JsonProperty("id") int id,
+			@JsonProperty("name") String name,
+			@JsonProperty("versionConfigurationList") List<MatrixVersionConfiguration> versionConfigurationList,
+			@JsonProperty("keyList") List<Key> keyList) {
 		this.id = id;
 		this.name = name;
 		this.versionConfigurationList = ImmutableList.copyOf(versionConfigurationList);

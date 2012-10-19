@@ -129,7 +129,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{id}/key_version", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/application/{id}/key_version", method = RequestMethod.GET)
 	public @ResponseBody MatrixConfiguration keyVersionConfiguration(@PathVariable int id) {
 		return getMyConfigService().keyVersionConfiguration(id);
 	}

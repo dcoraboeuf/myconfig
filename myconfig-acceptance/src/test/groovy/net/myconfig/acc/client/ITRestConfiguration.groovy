@@ -132,5 +132,33 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		// Checks it has been deleted
 		assert client().applicationConfiguration(id).getEnvironmentSummaryList().find { it.getName() == "mykey" } == null
 	}
+	
+	@Test
+	void matrix() {
+		// Gets the matrix
+		def matrix = client().keyVersionConfiguration(id)
+		["1.0", "1.1", "1.2"].each() {
+			version ->
+				["jdbc.user", "jdbc.password"].each() {
+					key -> 
+						assert matrix.isEnabled(version, key)
+				}
+		}
+	}
+	
+	@Test
+	void matrix_remove_and_add() {
+		// Check before test
+		def matrix = client().keyVersionConfiguration(id)
+		assert matrix.isEnabled("1.2", "jdbc.password")
+		// Remove
+		client().keyVersionRemove(id, "1.2", "jdbc.password")
+		matrix = client().keyVersionConfiguration(id)
+		assert !matrix.isEnabled("1.2", "jdbc.password")
+		// Add
+		client().keyVersionAdd(id, "1.2", "jdbc.password")
+		matrix = client().keyVersionConfiguration(id)
+		assert matrix.isEnabled("1.2", "jdbc.password")
+	}
 
 }

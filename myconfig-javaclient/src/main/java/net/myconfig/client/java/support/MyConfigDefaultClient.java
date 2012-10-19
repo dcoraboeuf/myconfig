@@ -145,10 +145,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return post(format("/ui/key/%d/%s/update", id, name), Ack.class, Collections.singletonMap("description", description));
 	}
 
+	/**
+	 * GET /ui/application/{id}/key_version
+	 */
 	@Override
 	public MatrixConfiguration keyVersionConfiguration(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return get(format("/ui/application/%d/key_version", id), MatrixConfiguration.class);
 	}
 
 	/**
@@ -156,13 +158,15 @@ public class MyConfigDefaultClient implements MyConfigClient {
 	 */
 	@Override
 	public Ack keyVersionAdd(int application, String version, String key) {
-		return post(String.format("/ui/version/%d/%s/add/%s", application, version, key), Ack.class, null);
+		return post(format("/ui/version/%d/%s/add/%s", application, version, key), Ack.class, null);
 	}
 
+	/**
+	 * POST /ui/version/{application}/{version}/remove/{key:.*}
+	 */
 	@Override
 	public Ack keyVersionRemove(int application, String version, String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return post(format("/ui/version/%d/%s/remove/%s", application, version, key), Ack.class, null);
 	}
 
 	@Override
