@@ -62,7 +62,7 @@ class ITRestGet extends AbstractClientUseCase {
 		def actualVersion = client().version()
 		def expectedVersion = AccUtils.CONTEXT.getVersion()
 		if (expectedVersion != actualVersion) {
-			fail("Expected version $version but was $content")
+			fail("Expected version $expectedVersion but was $actualVersion")
 		}
 	}
 	
