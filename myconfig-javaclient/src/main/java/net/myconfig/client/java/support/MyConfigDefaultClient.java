@@ -309,8 +309,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 						response.getStatusLine().getReasonPhrase());
 			}
 		} catch (IOException e) {
-			// TODO Management of client exceptions
-			throw new RuntimeException("Error while executing " + get, e);
+			throw new ClientGeneralException(get, e);
 		}
 	}
 
@@ -332,8 +331,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 			try {
 				post.setEntity(new UrlEncodedFormEntity(nvps));
 			} catch (UnsupportedEncodingException e) {
-				// TODO Management of client exceptions
-				throw new RuntimeException (e);
+				throw new ClientGeneralException(post, e);
 			}
 		}
 		return request(post, returnType);
@@ -346,8 +344,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 				String json = ObjectMapperFactory.createObjectMapper().writeValueAsString(body);
 				post.setEntity(new StringEntity(json, ContentType.create("application/json", "UTF-8")));
 			} catch (IOException e) {
-				// TODO Management of client exceptions
-				throw new RuntimeException (e);
+				throw new ClientGeneralException(post, e);
 			}
 		}
 		return request(post, returnType);
@@ -402,8 +399,7 @@ public class MyConfigDefaultClient implements MyConfigClient {
 						response.getStatusLine().getReasonPhrase());
 			}
 		} catch (IOException e) {
-			// TODO Management of client exceptions
-			throw new RuntimeException("Error while executing " + request, e);
+			throw new ClientGeneralException(request, e);
 		}
 	}
 
