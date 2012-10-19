@@ -10,6 +10,7 @@ import net.myconfig.acc.support.AccUtils
 import net.myconfig.client.java.MyConfigClient
 import net.myconfig.core.model.ConfigurationUpdate
 import net.myconfig.core.model.ConfigurationUpdates
+import net.myconfig.core.model.Key
 
 import org.junit.BeforeClass
 import org.junit.Test
@@ -148,17 +149,23 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	
 	@Test
 	void matrix_remove_and_add() {
-		// Check before test
-		def matrix = client().keyVersionConfiguration(id)
-		assert matrix.isEnabled("1.2", "jdbc.password")
-		// Remove
-		client().keyVersionRemove(id, "1.2", "jdbc.password")
-		matrix = client().keyVersionConfiguration(id)
-		assert !matrix.isEnabled("1.2", "jdbc.password")
-		// Add
-		client().keyVersionAdd(id, "1.2", "jdbc.password")
-		matrix = client().keyVersionConfiguration(id)
-		assert matrix.isEnabled("1.2", "jdbc.password")
+		// Another key
+		client().keyCreate(id, "key.test", "Test key")
+		try {
+			// Check before test
+			def matrix = client().keyVersionConfiguration(id)
+			assert !matrix.isEnabled("1.2", "key.test")
+			// Add
+			client().keyVersionAdd(id, "1.2", "key.test")
+			matrix = client().keyVersionConfiguration(id)
+			assert matrix.isEnabled("1.2", "key.test")
+			// Remove
+			client().keyVersionRemove(id, "1.2", "key.test")
+			matrix = client().keyVersionConfiguration(id)
+			assert !matrix.isEnabled("1.2", "key.test")
+		} finally {
+			client().keyDelete(id, "key.test")
+		}
 	}
 	
 	@Test
@@ -198,6 +205,26 @@ class ITRestConfiguration extends AbstractClientUseCase {
 						def value = values.getValues()[key]
 						assert value.isEnabled()
 						assert "$version UAT $key" == value.getValue()
+				}
+		}
+	}
+	
+	@Test
+	void keyConfiguration() {
+		def conf = client().keyConfiguration(id, "jdbc.user")
+		assert id == conf.getId()
+		assert APP == conf.getName()
+		assert ["jdbc.password", null] == [ conf.getPreviousKey(), conf.getNextKey()]
+		assert new Key("jdbc.user", "User used to connect to the database") == conf.getKey()
+		assert ["1.0", "1.1", "1.2"] == conf.getVersionList()*.getName()
+		["DEV", "ACC", "UAT", "PROD"].each {
+			env ->
+				def values = conf.getEnvironmentValuesPerVersionList().find { it -> it.getName() == env }
+				assert env == values.getName()
+				["1.0", "1.1", "1.2"].each {
+					version ->
+						def value = values.getValues()[version]
+						assert "$version $env jdbc.user" == value
 				}
 		}
 	}

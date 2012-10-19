@@ -185,10 +185,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return get (format("/ui/configuration/environment/%d/%s", application, environment), EnvironmentConfiguration.class);
 	}
 
+	/**
+	 * GET /ui/configuration/key/{application}/{key:.*}
+	 */
 	@Override
 	public KeyConfiguration keyConfiguration(int application, String key) {
-		// TODO Auto-generated method stub
-		return null;
+		return get (format("/ui/configuration/key/%d/%s", application, key), KeyConfiguration.class);
 	}
 
 	/**

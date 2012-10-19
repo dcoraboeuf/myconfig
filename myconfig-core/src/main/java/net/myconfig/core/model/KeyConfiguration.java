@@ -4,6 +4,9 @@ import java.util.List;
 
 import lombok.Data;
 
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import com.google.common.collect.ImmutableList;
 
 @Data
@@ -17,7 +20,15 @@ public class KeyConfiguration {
 	private final List<Version> versionList;
 	private final List<IndexedValues<String>> environmentValuesPerVersionList;
 
-	public KeyConfiguration(int id, String name, Key key, String previousKey, String nextKey, List<Version> versionList, List<IndexedValues<String>> environmentValuesPerVersionList) {
+	@JsonCreator
+	public KeyConfiguration(
+			@JsonProperty("id") int id,
+			@JsonProperty("name") String name,
+			@JsonProperty("key") Key key,
+			@JsonProperty("previousKey") String previousKey,
+			@JsonProperty("nextKey") String nextKey,
+			@JsonProperty("versionList") List<Version> versionList,
+			@JsonProperty("environmentValuesPerVersionList") List<IndexedValues<String>> environmentValuesPerVersionList) {
 		this.id = id;
 		this.name = name;
 		this.key = key;
