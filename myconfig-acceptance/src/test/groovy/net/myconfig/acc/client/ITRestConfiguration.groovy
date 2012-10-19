@@ -180,5 +180,26 @@ class ITRestConfiguration extends AbstractClientUseCase {
 			}
 		}
 	}
+	
+	@Test
+	void environmentConfiguration() {
+		def conf = client().environmentConfiguration(id, "UAT")
+		assert id == conf.getId()
+		assert APP == conf.getName()
+		assert ["PROD", "UAT", null] == [ conf.getPreviousEnvironment(), conf.getEnvironment(), conf.getNextEnvironment()]
+		assert ["jdbc.password", "jdbc.user"] == conf.getKeyList()*.getName()
+		["1.0", "1.1", "1.2"].each {
+			version ->
+				def values = conf.getVersionValuesPerKeyList().find { it -> it.getName() == version }
+				assert values != null
+				assert version == values.getName()
+				["jdbc.password", "jdbc.user"].each {
+					key ->
+						def value = values.getValues()[key]
+						assert value.isEnabled()
+						assert "$version UAT $key" == value.getValue()
+				}
+		}
+	}
 
 }

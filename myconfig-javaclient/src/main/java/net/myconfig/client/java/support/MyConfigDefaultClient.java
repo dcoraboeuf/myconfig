@@ -177,10 +177,12 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return get (format("/ui/configuration/version/%d/%s", application, version), VersionConfiguration.class);
 	}
 
+	/**
+	 * GET /ui/configuration/environment/{application}/{environment:.*}
+	 */
 	@Override
 	public EnvironmentConfiguration environmentConfiguration(int application, String environment) {
-		// TODO Auto-generated method stub
-		return null;
+		return get (format("/ui/configuration/environment/%d/%s", application, environment), EnvironmentConfiguration.class);
 	}
 
 	@Override
