@@ -23,6 +23,7 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.utils.MapBuilder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -191,22 +192,30 @@ public class MyConfigDefaultClient implements MyConfigClient {
 		return post (String.format("/ui/configuration/%s", application), Ack.class, updates);
 	}
 
+	/**
+	 * GET /ui/security/users
+	 */
 	@Override
 	public UserSummaries users() {
-		// TODO Auto-generated method stub
-		return null;
+		return get ("/ui/security/users", UserSummaries.class);
 	}
 
+	/**
+	 * <p>POST /ui/user/{name:.*}
+	 * <p>param: displayName
+	 * <p>param: email
+	 */
 	@Override
 	public Ack userCreate(String name, String displayName, String email) {
-		// TODO Auto-generated method stub
-		return null;
+		return post (format("/ui/user/%s", name), Ack.class, MapBuilder.<String,String>create().put("displayName", displayName).put("email", email).build());
 	}
 
+	/**
+	 * DELETE /ui/user/{name:.*}
+	 */
 	@Override
 	public Ack userDelete(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return delete (format("/ui/user/%s", name), Ack.class);
 	}
 
 	@Override

@@ -153,14 +153,14 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/user/{name:.*}", method = RequestMethod.PUT)
-	public @ResponseBody Ack userCreate(String name, @RequestParam String displayName, @RequestParam String email) {
+	@RequestMapping(value = "/user/{name:.*}", method = RequestMethod.POST)
+	public @ResponseBody Ack userCreate(@PathVariable String name, @RequestParam String displayName, @RequestParam String email) {
 		return securityService.userCreate(name, displayName, email);
 	}
 	
 	@Override
 	@RequestMapping(value = "/user/{name:.*}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack userDelete(String name) {
+	public @ResponseBody Ack userDelete(@PathVariable String name) {
 		return securityService.userDelete(name);
 	}
 

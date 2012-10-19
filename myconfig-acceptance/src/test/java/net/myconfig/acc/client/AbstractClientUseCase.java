@@ -2,6 +2,9 @@ package net.myconfig.acc.client;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import java.util.UUID;
+
 import net.myconfig.acc.support.AccUtils;
 import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.core.model.Ack;
@@ -41,5 +44,9 @@ public abstract class AbstractClientUseCase {
 				return id == o.getId();
 			}
 		}, null);
+	}
+	
+	protected String uid (String prefix) {
+		return String.format("%s_%s", prefix, UUID.randomUUID());
 	}
 }
