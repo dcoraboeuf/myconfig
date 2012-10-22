@@ -15,11 +15,6 @@ import org.junit.Test
 class ITRestSecurity extends AbstractClientUseCase {
 	
 	/**
-	 * Security client
-	 */
-	def security
-	
-	/**
 	 * Test client
 	 */
 	def itClient
@@ -29,13 +24,11 @@ class ITRestSecurity extends AbstractClientUseCase {
 	 */
 	@Before
 	void setup() {
-		// Creates a security client
-		security = new SecurityClient(AccUtils.CONTEXT.getUrl())
 		// Creates a test client
 		itClient = new IntegrationTestClient(AccUtils.CONTEXT.getUrl())
 		// Initially, security mode is 'none'
 		// It means the security can be set to 'builtin' without any authentication
-		security.setSecurityMode("builtin")
+		client().setSecurityMode("builtin")
 	}
 	
 	/**
@@ -44,9 +37,9 @@ class ITRestSecurity extends AbstractClientUseCase {
 	@After
 	void tearDown() {
 		// ... and reset the security mode to 'none'
-		security.withLogin("admin","admin").setSecurityMode("none")
+		client().withLogin("admin","admin").setSecurityMode("none")
 		// Logout
-		security.logout()
+		client().logout()
 	}
 	
 	MyConfigClient asAdmin () {
