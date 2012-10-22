@@ -164,7 +164,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		// Message content
 		String content = templateService.generate(templateId, model);
 		// Creates the message
-		return new Message(String.format(subjectFormat, user), new MessageContent(content, link));
+		return new Message(String.format(subjectFormat, user), new MessageContent(content, link, token));
 	}
 	
 	private String getMessageTitle (String message) {

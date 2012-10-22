@@ -48,7 +48,7 @@ public class MailPostTest {
 		// Service
 		MailPost post = new MailPost(sender, configurationService);
 		// Message
-		Message message = new Message("My title", new MessageContent("My content", null));
+		Message message = new Message("My title", new MessageContent("My content", null, ""));
 		// Sends
 		Ack ack = post.post(message, "destination");
 		// Checks
@@ -69,7 +69,7 @@ public class MailPostTest {
 		// Service
 		MailPost post = new MailPost(sender, configurationService);
 		// Message
-		Message message = new Message("My title", new MessageContent ("My content", null));
+		Message message = new Message("My title", new MessageContent ("My content", null, ""));
 		// Sends
 		Ack ack = post.post(message, "destination");
 		// Checks
@@ -81,7 +81,7 @@ public class MailPostTest {
 	
 	@Test
 	public void prepareMessage() throws AddressException, MessagingException {
-		Message message = new Message("My title", new MessageContent("My content", null));
+		Message message = new Message("My title", new MessageContent("My content", null, ""));
 		String destination = "destination";
 		String replyToAddress = "replyToAddress";
 		MailPost post = new MailPost(null, null);

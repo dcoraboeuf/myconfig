@@ -6,11 +6,11 @@ import net.myconfig.core.CoreException;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-public class ClientAuthorizationException extends CoreException {
+public class ClientCannotLoginException extends CoreException {
 	
 	private final String message;
 
-	public ClientAuthorizationException(Object request) {
+	public ClientCannotLoginException(Object request) {
 		super(request);
 		this.message = ObjectUtils.toString(request, "");
 	}

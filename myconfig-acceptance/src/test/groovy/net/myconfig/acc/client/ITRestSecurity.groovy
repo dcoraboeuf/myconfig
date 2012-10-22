@@ -2,7 +2,9 @@ package net.myconfig.acc.client
 
 import net.myconfig.acc.support.AccUtils
 import net.myconfig.client.java.MyConfigClient
-import net.myconfig.client.java.support.ClientAuthorizationException
+import net.myconfig.client.java.support.ClientCannotLoginException
+import net.myconfig.client.java.support.ClientForbiddenException
+import net.myconfig.core.UserFunction
 
 import org.junit.After
 import org.junit.Before
@@ -58,15 +60,35 @@ class ITRestSecurity extends AbstractClientUseCase {
 		try {
 			client().withLogin(userName, "mypassword").applicationCreate(uid("app"))
 			assert false: "Authentication should have failed"
-		} catch (ClientAuthorizationException ex) {
+		} catch (ClientCannotLoginException ex) {
 			// Expected exception
 		}
 		// Gets the token message for this user (integration test message box)
 		def message = itClient.getMessage (userEmail)
 		assert message != null
-		println message.getContent().getLink()
-		// TODO Validates the user
-		// TODO Connects as this user
+		def token = message.getContent().getToken()
+		// Validates the user
+		ack = client().userConfirm(userName, token, "mypassword")
+		assert ack.isSuccess()
+		// Connects as this user - he still cannot create an application but is now allowed to enter the application
+		try {
+			client().withLogin(userName, "mypassword").applicationCreate(uid("app"))
+			assert false: "Should have been forbidden"
+		} catch (ClientForbiddenException ex) {
+			// Expected exception
+		}
+		// As admin, assigns the app_create function
+		ack = asAdmin().userFunctionAdd(userName, UserFunction.app_create)
+		assert ack.isSuccess()
+		// Tests the creation
+		def appName = uid("app")
+		def myclient = client().withLogin(userName, "mypassword")
+		myclient.applicationCreate(appName)
+		// Checks the application has been created
+		def applications = myclient.applications()
+		// FIXME The authentication must be forced
+		// because the call to some services (/ui/applications) won't automatically trigger an authentication challenge
+		// FIXME assert applications.getSummaries().find { it.getName() == appName } != null
 	}
 
 }

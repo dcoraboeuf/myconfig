@@ -7,5 +7,6 @@ public class MessageContent {
 
 	private final String text;
 	private final String link;
+	private final String token;
 	
 }
