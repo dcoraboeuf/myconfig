@@ -7,9 +7,9 @@ import javax.mail.internet.MimeMessage;
 
 import net.myconfig.core.MyConfigProfiles;
 import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.Message;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
-import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -68,7 +68,7 @@ public class MailPost extends AbstractMessagePost {
 		mimeMessage.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(destination));
 		mimeMessage.setFrom(new InternetAddress(replyToAddress));
 		mimeMessage.setSubject(message.getTitle());
-		mimeMessage.setText(message.getContent());
+		mimeMessage.setText(message.getContent().getText());
 	}
 
 }

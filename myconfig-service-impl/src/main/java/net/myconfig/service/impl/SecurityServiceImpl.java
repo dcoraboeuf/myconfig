@@ -23,13 +23,14 @@ import javax.validation.Validator;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.Message;
+import net.myconfig.core.model.MessageContent;
 import net.myconfig.core.model.TokenType;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.UserSummary;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.service.api.UIService;
-import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
 import net.myconfig.service.api.message.MessageDestination;
 import net.myconfig.service.api.message.MessageService;
@@ -163,7 +164,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 		// Message content
 		String content = templateService.generate(templateId, model);
 		// Creates the message
-		return new Message(String.format(subjectFormat, user), content);
+		return new Message(String.format(subjectFormat, user), new MessageContent(content, link));
 	}
 	
 	private String getMessageTitle (String message) {

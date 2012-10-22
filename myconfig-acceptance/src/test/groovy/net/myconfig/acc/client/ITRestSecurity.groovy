@@ -20,12 +20,19 @@ class ITRestSecurity extends AbstractClientUseCase {
 	def security
 	
 	/**
+	 * Test client
+	 */
+	def itClient
+	
+	/**
 	 * Set-up of the security
 	 */
 	@Before
 	void setup() {
 		// Creates a security client
 		security = new SecurityClient(AccUtils.CONTEXT.getUrl())
+		// Creates a test client
+		itClient = new IntegrationTestClient(AccUtils.CONTEXT.getUrl())
 		// Initially, security mode is 'none'
 		// It means the security can be set to 'builtin' without any authentication
 		security.setSecurityMode("builtin")
@@ -61,7 +68,10 @@ class ITRestSecurity extends AbstractClientUseCase {
 		} catch (ClientAuthorizationException ex) {
 			// Expected exception
 		}
-		// TODO Gets the token message for this user (integration test message box)
+		// Gets the token message for this user (integration test message box)
+		def message = itClient.getMessage (userEmail)
+		assert message != null
+		println message.getContent().getLink()
 		// TODO Validates the user
 		// TODO Connects as this user
 	}

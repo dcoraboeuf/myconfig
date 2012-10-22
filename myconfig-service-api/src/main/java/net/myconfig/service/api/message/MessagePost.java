@@ -1,8 +1,7 @@
-package net.myconfig.service.message;
+package net.myconfig.service.api.message;
 
 import net.myconfig.core.model.Ack;
-import net.myconfig.service.api.message.Message;
-import net.myconfig.service.api.message.MessageChannel;
+import net.myconfig.core.model.Message;
 
 public interface MessagePost {
 	

@@ -2,7 +2,7 @@ package net.myconfig.service.message;
 
 import net.myconfig.core.MyConfigProfiles;
 import net.myconfig.core.model.Ack;
-import net.myconfig.service.api.message.Message;
+import net.myconfig.core.model.Message;
 import net.myconfig.service.api.message.MessageChannel;
 
 import org.slf4j.Logger;

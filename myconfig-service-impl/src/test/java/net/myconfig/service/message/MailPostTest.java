@@ -14,9 +14,10 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.Message;
+import net.myconfig.core.model.MessageContent;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
-import net.myconfig.service.api.message.Message;
 import net.myconfig.service.api.message.MessageChannel;
 
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class MailPostTest {
 		// Service
 		MailPost post = new MailPost(sender, configurationService);
 		// Message
-		Message message = new Message("My title", "My content");
+		Message message = new Message("My title", new MessageContent("My content", null));
 		// Sends
 		Ack ack = post.post(message, "destination");
 		// Checks
@@ -68,7 +69,7 @@ public class MailPostTest {
 		// Service
 		MailPost post = new MailPost(sender, configurationService);
 		// Message
-		Message message = new Message("My title", "My content");
+		Message message = new Message("My title", new MessageContent ("My content", null));
 		// Sends
 		Ack ack = post.post(message, "destination");
 		// Checks
@@ -80,7 +81,7 @@ public class MailPostTest {
 	
 	@Test
 	public void prepareMessage() throws AddressException, MessagingException {
-		Message message = new Message("My title", "My content");
+		Message message = new Message("My title", new MessageContent("My content", null));
 		String destination = "destination";
 		String replyToAddress = "replyToAddress";
 		MailPost post = new MailPost(null, null);
