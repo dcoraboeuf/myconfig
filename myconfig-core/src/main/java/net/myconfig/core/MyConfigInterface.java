@@ -67,4 +67,6 @@ public interface MyConfigInterface {
 
 	Ack setSecurityMode(String mode);
 
+	Ack userConfirm(String name, String token, String password);
+
 }

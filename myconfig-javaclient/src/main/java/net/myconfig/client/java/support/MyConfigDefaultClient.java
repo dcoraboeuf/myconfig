@@ -251,6 +251,15 @@ public class MyConfigDefaultClient extends AbstractClient<MyConfigClient> implem
 		return post(format("/ui/security/mode/%s", mode), Ack.class, null);
 	}
 	
+	/**
+	 * <p>POST /ui/user/{name}/confirm/{token}
+	 * <p>param: password
+	 */
+	@Override
+	public Ack userConfirm(String name, String token, String password) {
+		return post(format("/ui/user/%s/confirm/%s", name, token), Ack.class, Collections.singletonMap("password", password));
+	}
+	
 	@Override
 	public String key(String application, String version, String environment, String key) {
 		return get(String.format(

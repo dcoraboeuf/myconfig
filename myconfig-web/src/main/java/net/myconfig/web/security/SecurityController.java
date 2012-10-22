@@ -123,7 +123,7 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/confirm", method = RequestMethod.POST)
 	public String userConfirm(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
 		try {
-			securityService.userConfirm(name, token, password);
+			ui.userConfirm(name, token, password);
 			model.addAttribute("name", name);
 			return "userConfirmOK";
 		} catch (AbstractTokenException ex) {

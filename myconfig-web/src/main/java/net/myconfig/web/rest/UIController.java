@@ -194,5 +194,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 		securityService.setSecurityMode(mode);
 		return Ack.OK;
 	}
+	
+	@Override
+	@RequestMapping(value = "/user/{name}/confirm/{token}", method = RequestMethod.POST)
+	public @ResponseBody Ack userConfirm(@PathVariable String name, @PathVariable String token, @RequestParam String password) {
+		securityService.userConfirm(name, token, password);
+		return Ack.OK;
+	}
 
 }
