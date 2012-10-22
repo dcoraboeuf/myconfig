@@ -1,9 +1,9 @@
 package net.myconfig.client.java;
 
-public interface Client<C extends Client<C>> {
+public interface Client {
 	
 	void logout();
 	
-	C withLogin (String name, String password);
+	void login(String name, String password);
 
 }

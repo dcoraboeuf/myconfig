@@ -1,6 +1,7 @@
 package net.myconfig.web.rest;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.MyConfigRoles;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
@@ -18,6 +19,7 @@ import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Strings;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +38,15 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	public UIController(Strings strings, ErrorHandler errorHandler, MyConfigService myConfigService, SecurityService securityService) {
 		super(strings, errorHandler, myConfigService);
 		this.securityService = securityService;
+	}
+	
+	/**
+	 * Forces the login of the user for pure-UI calls.
+	 */
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	@Secured({MyConfigRoles.USER, MyConfigRoles.ADMIN})
+	public @ResponseBody Ack login() {
+		return Ack.OK;
 	}
 
 	@Override

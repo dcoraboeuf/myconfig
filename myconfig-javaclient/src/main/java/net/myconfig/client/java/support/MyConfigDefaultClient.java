@@ -31,19 +31,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-public class MyConfigDefaultClient extends AbstractClient<MyConfigClient> implements MyConfigClient {
+public class MyConfigDefaultClient extends AbstractClient implements MyConfigClient {
 
 	public MyConfigDefaultClient(String url) {
 		super(url);
-	}
-	
-	protected MyConfigDefaultClient(String url, Credentials credentials) {
-		super(url, credentials);
-	}
-
-	@Override
-	protected MyConfigDefaultClient withCredentials(Credentials credentials) {
-		return new MyConfigDefaultClient(getUrl(), credentials);
 	}
 
 	@Override

@@ -15,12 +15,12 @@ import org.junit.Test
  *
  */
 class ITRestSecurity extends AbstractClientUseCase {
-	
+
 	/**
 	 * Test client
 	 */
 	def itClient
-	
+
 	/**
 	 * Set-up of the security
 	 */
@@ -32,33 +32,36 @@ class ITRestSecurity extends AbstractClientUseCase {
 		// It means the security can be set to 'builtin' without any authentication
 		client().setSecurityMode("builtin")
 	}
-	
+
 	/**
 	 * Cancels the set-up of the security
 	 */
 	@After
 	void tearDown() {
+		// Logs as admin
+		asAdmin()
 		// ... and reset the security mode to 'none'
-		client().withLogin("admin","admin").setSecurityMode("none")
+		client().setSecurityMode("none")
 		// Logout
 		client().logout()
 	}
-	
-	MyConfigClient asAdmin () {
-		return client().withLogin("admin", "admin")
+
+	def asAdmin () {
+		client().login("admin", "admin")
 	}
-	
+
 	@Test
 	void userCreationProcess() {
 		// Creates a user
+		asAdmin()
 		def userName = uid ("user")
 		def userDisplayName = uid ("user")
 		def userEmail = uid ("user") + "@test.com"
-		def ack = asAdmin().userCreate(userName, userDisplayName, userEmail)
+		def ack = client().userCreate(userName, userDisplayName, userEmail)
 		assert ack.isSuccess()
 		// Tries to log - we do not have any password yet
 		try {
-			client().withLogin(userName, "mypassword").applicationCreate(uid("app"))
+			client().login(userName, "mypassword")
 			assert false: "Authentication should have failed"
 		} catch (ClientCannotLoginException ex) {
 			// Expected exception
@@ -71,24 +74,24 @@ class ITRestSecurity extends AbstractClientUseCase {
 		ack = client().userConfirm(userName, token, "mypassword")
 		assert ack.isSuccess()
 		// Connects as this user - he still cannot create an application but is now allowed to enter the application
+		client().login(userName, "mypassword")
 		try {
-			client().withLogin(userName, "mypassword").applicationCreate(uid("app"))
+			client().applicationCreate(uid("app"))
 			assert false: "Should have been forbidden"
 		} catch (ClientForbiddenException ex) {
 			// Expected exception
 		}
 		// As admin, assigns the app_create function
-		ack = asAdmin().userFunctionAdd(userName, UserFunction.app_create)
+		asAdmin()
+		ack = client().userFunctionAdd(userName, UserFunction.app_create)
 		assert ack.isSuccess()
 		// Tests the creation
 		def appName = uid("app")
-		def myclient = client().withLogin(userName, "mypassword")
-		myclient.applicationCreate(appName)
+		client().login(userName, "mypassword")
+		client().applicationCreate(appName)
 		// Checks the application has been created
-		def applications = myclient.applications()
-		// FIXME The authentication must be forced
-		// because the call to some services (/ui/applications) won't automatically trigger an authentication challenge
-		// FIXME assert applications.getSummaries().find { it.getName() == appName } != null
+		def applications = client().applications()
+		assert applications.getSummaries().find { it.getName() == appName } != null
 	}
 
 }

@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 import net.myconfig.core.MyConfigInterface;
 
-public interface MyConfigClient extends Client<MyConfigClient>, MyConfigInterface {
+public interface MyConfigClient extends Client, MyConfigInterface {
 	
 	String key(String application, String version, String environment, String key);
 	
