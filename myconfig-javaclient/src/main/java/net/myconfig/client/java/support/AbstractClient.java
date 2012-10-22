@@ -6,11 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.myconfig.client.java.Client;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
@@ -27,17 +31,57 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import com.netbeetle.jackson.ObjectMapperFactory;
 
-public abstract class AbstractClient {
+public abstract class AbstractClient<C extends Client<C>> implements Client<C> {
 
 	private final String url;
+	private final Credentials credentials;
 
 	public AbstractClient(String url) {
+		this (url, null);
+	}
+
+	protected AbstractClient(String url, Credentials credentials) {
 		this.url = url;
+		this.credentials = credentials;
 	}
 
 	public String getUrl() {
 		return url;
 	}
+	
+	@Override
+	public void logout() {
+		// Gets the HTTP client
+		HttpClient client = createHttpClient();
+		// Executes the call
+		try {
+			client.execute(new HttpGet(getUrl("/logout")));
+		} catch (IOException e) {
+			throw new ClientGeneralException("Logout", e);
+		}
+	}
+
+	protected DefaultHttpClient createHttpClient() {
+		DefaultHttpClient client = new DefaultHttpClient();
+		// Credentials
+		if (credentials != null) {
+			client.getCredentialsProvider().setCredentials(
+					new AuthScope(null, -1),
+                    new UsernamePasswordCredentials(credentials.getName(), credentials.getPassword()));
+		}
+		// OK
+		return client;
+	}
+	
+	@Override
+	public C withLogin(String name, String password) {
+		// Credentials
+		Credentials credentials = new Credentials(name, password);
+		// OK
+		return withCredentials(credentials);
+	}
+
+	protected abstract C withCredentials(Credentials credentials);
 
 	protected <T> T get(String path, Class<T> returnType) {
 		return request(new HttpGet(getUrl(path)), returnType);
@@ -86,7 +130,7 @@ public abstract class AbstractClient {
 
 	protected <T> T request(HttpUriRequest request, Class<T> returnType) {
 		// Gets the HTTP client
-		HttpClient client = new DefaultHttpClient();
+		HttpClient client = createHttpClient();	
 		// Executes the call
 		try {
 			HttpResponse response = client.execute(request);
@@ -98,7 +142,9 @@ public abstract class AbstractClient {
 				// Gets the content as a JSON string
 				String content = EntityUtils.toString(entity, "UTF-8");
 				// Parses the response
-				if (String.class.isAssignableFrom(returnType)) {
+				if (returnType == null) {
+					return null;
+				} else if (String.class.isAssignableFrom(returnType)) {
 					@SuppressWarnings("unchecked")
 					T value = (T) content;
 					return value;

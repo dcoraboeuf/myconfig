@@ -31,6 +31,17 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<mvc:interceptors>
 		<ref bean="localeInterceptor" />
 		<ref bean="uiInterceptor" />
+		<mvc:interceptor>
+	        <mvc:mapping path="/ui/**" />
+	        <mvc:mapping path="/security/**" />
+	        <mvc:mapping path="/get/**" />
+	        <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+	            <property name="cacheSeconds" value="0"/>
+	            <property name="useExpiresHeader" value="true"/>
+	            <property name="useCacheControlHeader" value="true"/>
+	            <property name="useCacheControlNoStore" value="true"/>
+	        </bean>
+	    </mvc:interceptor>
 	</mvc:interceptors>
 
 	<!-- Exception handler -->

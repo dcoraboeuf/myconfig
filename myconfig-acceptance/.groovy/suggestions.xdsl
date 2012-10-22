@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<projectSuggestions>
+<declaringtype type="net.myconfig.acc.client.AbstractClientUseCase">
+<method isActive="true" isStatic="false" name="client" type="net.myconfig.client.java.MyConfigClient">
+<parameters useNamedArguments="false"/>
+<doc/>
+</method>
+</declaringtype>
+</projectSuggestions>

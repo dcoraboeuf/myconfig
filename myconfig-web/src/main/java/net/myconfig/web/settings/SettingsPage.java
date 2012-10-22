@@ -11,6 +11,7 @@ import net.myconfig.service.api.security.User;
 import net.myconfig.service.exception.InputException;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
+import net.myconfig.web.security.SecurityUIInterface;
 import net.myconfig.web.support.ErrorHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +27,18 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SettingsPage extends AbstractGUIPage {
 
+	private final SecurityUIInterface securityInterface;
 	private final SecurityService securityService;
 	private final SecuritySelector securitySelector;
 	private final ConfigurationService configurationService;
 
 	@Autowired
-	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector, ConfigurationService configurationService) {
+	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector, ConfigurationService configurationService, SecurityUIInterface securityInterface) {
 		super(ui, errorHandler);
 		this.securityService = securityService;
 		this.securitySelector = securitySelector;
 		this.configurationService = configurationService;
+		this.securityInterface = securityInterface;
 	}
 
 	@ExceptionHandler(InputException.class)
@@ -75,7 +78,7 @@ public class SettingsPage extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/settings/security/mode", method = RequestMethod.POST)
 	public String setSecurityMode(@RequestParam String mode) {
 		// Saves the security mode
-		securityService.setSecurityMode(mode);
+		securityInterface.setSecurityMode(mode);
 		// OK
 		return "redirect:/";
 	}
