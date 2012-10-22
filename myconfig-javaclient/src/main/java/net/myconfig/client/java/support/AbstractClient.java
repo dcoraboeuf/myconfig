@@ -152,6 +152,8 @@ public abstract class AbstractClient<C extends Client<C>> implements Client<C> {
 					ObjectMapper mapper = ObjectMapperFactory.createObjectMapper();
 					return mapper.readValue(content, returnType);
 				}
+			} else if (statusCode == HttpStatus.SC_UNAUTHORIZED || statusCode == HttpStatus.SC_FORBIDDEN) {
+				throw new ClientAuthorizationException (request);
 			} else if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
 				String content = EntityUtils.toString(response.getEntity(), "UTF-8");
 				if (StringUtils.isNotBlank(content)) {
