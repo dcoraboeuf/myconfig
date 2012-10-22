@@ -242,6 +242,14 @@ public class MyConfigDefaultClient extends AbstractClient<MyConfigClient> implem
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/**
+	 * POST /security/mode/{mode}
+	 */
+	@Override
+	public Ack setSecurityMode(String mode) {
+		return post(format("/ui/security/mode/%s", mode), Ack.class, null);
+	}
 	
 	@Override
 	public String key(String application, String version, String environment, String key) {

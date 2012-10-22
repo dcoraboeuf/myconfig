@@ -188,4 +188,11 @@ public class UIController extends AbstractRESTController implements UIInterface 
 		return securityService.appFunctionRemove (application, user, fn);
 	}
 
+	@Override
+	@RequestMapping(value = "/security/mode/{mode}", method = RequestMethod.POST)
+	public @ResponseBody Ack setSecurityMode(@PathVariable String mode) {
+		securityService.setSecurityMode(mode);
+		return Ack.OK;
+	}
+
 }

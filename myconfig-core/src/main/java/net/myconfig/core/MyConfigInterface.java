@@ -65,4 +65,6 @@ public interface MyConfigInterface {
 
 	Ack appFunctionRemove(String user, int application, AppFunction fn);
 
+	Ack setSecurityMode(String mode);
+
 }
