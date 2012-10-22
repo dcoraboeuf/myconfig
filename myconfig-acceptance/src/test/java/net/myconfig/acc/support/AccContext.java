@@ -11,5 +11,10 @@ public class AccContext {
 	private final String version;
 	private final MyConfigClient client;
 	private final Strings strings;
+	
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

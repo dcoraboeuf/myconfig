@@ -3,6 +3,8 @@ package net.myconfig.acc.page;
 import java.io.File;
 import java.io.IOException;
 
+import net.myconfig.acc.support.AccContext;
+
 import org.apache.commons.io.FileUtils;
 
 public class DefaultPageContext implements PageContext {
@@ -10,14 +12,21 @@ public class DefaultPageContext implements PageContext {
 	private static final String ROOT_PATH = "target/acceptance";
 
 	private final String name;
+	private final AccContext context;
 
-	public DefaultPageContext(String name) {
+	public DefaultPageContext(String name, AccContext context) {
 		this.name = name;
+		this.context = context;
 	}
 
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	@Override
+	public AccContext context() {
+		return context;
 	}
 
 	@Override

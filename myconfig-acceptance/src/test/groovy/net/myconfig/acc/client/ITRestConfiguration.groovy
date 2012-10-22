@@ -6,13 +6,12 @@ import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.fail
-import net.myconfig.acc.support.AccUtils
-import net.myconfig.client.java.MyConfigClient
+import net.myconfig.client.*
 import net.myconfig.core.model.ConfigurationUpdate
 import net.myconfig.core.model.ConfigurationUpdates
 import net.myconfig.core.model.Key
 
-import org.junit.BeforeClass
+import org.junit.Before
 import org.junit.Test
 
 class ITRestConfiguration extends AbstractClientUseCase {
@@ -21,35 +20,34 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	
 	static int id
 	
-	@BeforeClass
-	static void initTest() {
-		MyConfigClient client = AccUtils.CONTEXT.getClient()
+	@Before
+	void initTest() {
 		// Deletes the application if needed
-		def summaries = client.applications().getSummaries()
+		def summaries = client().applications().getSummaries()
 		def summary = summaries.find { it -> (it.getName() == APP) }
 		if (summary != null) {
-			client.applicationDelete(summary.getId())
+			client().applicationDelete(summary.getId())
 		}
 		// Test application
-		id = client.applicationCreate(APP).getId()
+		id = client().applicationCreate(APP).getId()
 		// Versions
-		client.versionCreate(id, "1.0")
-		client.versionCreate(id, "1.1")
-		client.versionCreate(id, "1.2")
+		client().versionCreate(id, "1.0")
+		client().versionCreate(id, "1.1")
+		client().versionCreate(id, "1.2")
 		// Environments
-		client.environmentCreate(id, "DEV")
-		client.environmentCreate(id, "ACC")
-		client.environmentCreate(id, "UAT")
-		client.environmentCreate(id, "PROD")
+		client().environmentCreate(id, "DEV")
+		client().environmentCreate(id, "ACC")
+		client().environmentCreate(id, "UAT")
+		client().environmentCreate(id, "PROD")
 		// Keys
-		client.keyCreate(id, "jdbc.user", "User used to connect to the database")
-		client.keyCreate(id, "jdbc.password", "Password used to connect to the database")
+		client().keyCreate(id, "jdbc.user", "User used to connect to the database")
+		client().keyCreate(id, "jdbc.password", "Password used to connect to the database")
 		// Matrix & configuration
 		List<ConfigurationUpdate> updates = new ArrayList<ConfigurationUpdate>()
 		["1.0", "1.1", "1.2"].each() {
 			version ->
 				["jdbc.user", "jdbc.password"].each() {
-					key -> client.keyVersionAdd(id, version, key)
+					key -> client().keyVersionAdd(id, version, key)
 					["DEV", "ACC", "UAT", "PROD"].each {
 						env -> 
 							def value = "$version $env $key"
@@ -57,7 +55,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 					}
 				}
 		}
-		client.updateConfiguration(id, new ConfigurationUpdates(updates))
+		client().updateConfiguration(id, new ConfigurationUpdates(updates))
 	}
 	
 	@Test

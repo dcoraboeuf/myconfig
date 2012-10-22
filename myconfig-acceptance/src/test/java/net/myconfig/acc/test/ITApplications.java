@@ -6,7 +6,7 @@ import net.myconfig.acc.page.HomePage;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ITApplications extends AbstractUseCase {
+public class ITApplications extends AbstractGUIUseCase {
 
 	private ApplicationsPage applications;
 

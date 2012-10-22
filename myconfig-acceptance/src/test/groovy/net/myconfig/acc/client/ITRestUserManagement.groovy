@@ -6,19 +6,11 @@ import static org.junit.Assert.assertNotNull
 import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.fail
-import net.myconfig.acc.support.AccUtils
 import net.myconfig.client.java.MyConfigClient
 
-import org.junit.BeforeClass
 import org.junit.Test
 
 class ITRestUserManagement extends AbstractClientUseCase {
-	
-	
-	@BeforeClass
-	static void initTest() {
-		MyConfigClient client = AccUtils.CONTEXT.getClient()
-	}
 	
 	@Test
 	void userCreate() {

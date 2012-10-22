@@ -27,7 +27,7 @@ class ITRestSecurity extends AbstractClientUseCase {
 	@Before
 	void setup() {
 		// Creates a test client
-		itClient = new IntegrationTestClient(AccUtils.CONTEXT.getUrl())
+		itClient = new IntegrationTestClient(context().getUrl())
 		// Initially, security mode is 'none'
 		// It means the security can be set to 'builtin' without any authentication
 		client().setSecurityMode("builtin")

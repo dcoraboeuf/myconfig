@@ -23,10 +23,8 @@ public class AccUtils {
 
 	private static final int TIMEOUT = 15;
 	private static final String UID_FORMAT = "yyyyMMddHHmmssSSS";
-	
-	public static final AccContext CONTEXT = getContext();
 
-	private static AccContext getContext() {
+	public static AccContext createContext() {
 		try {
 			// Loads the strings
 			Strings strings = new StringsLoader().load();

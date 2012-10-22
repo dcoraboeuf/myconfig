@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import net.myconfig.acc.page.DefaultPageContext;
 import net.myconfig.acc.page.PageContext;
+import net.myconfig.acc.support.AbstractUseCase;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
@@ -16,7 +17,7 @@ import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 
-public abstract class AbstractUseCase {
+public abstract class AbstractGUIUseCase extends AbstractUseCase {
 
 	protected static WebDriver driver;
 
@@ -53,8 +54,8 @@ public abstract class AbstractUseCase {
 	protected PageContext pageContext;
 	
 	@Before
-	public void context() {
-		pageContext = new DefaultPageContext(getClass().getSimpleName());
+	public void initPageContext() {
+		pageContext = new DefaultPageContext(getClass().getSimpleName(), context());
 	}
 
 	protected String generateUniqueName(String prefix) {
