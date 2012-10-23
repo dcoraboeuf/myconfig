@@ -16,8 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 public abstract class AbstractGUIPage {
 
-	private static final String ACCESS_DENIED_WITH_LOGIN_VIEW = "accessDeniedWithLogin";
-	private static final String ACCESS_DENIED_ERROR_VIEW = "accessDeniedError";
 	private static final String ERROR_VIEW = "error";
 	private static final String ERROR_KEY = "error";
 	
@@ -28,31 +26,16 @@ public abstract class AbstractGUIPage {
 		this.ui = ui;
 		this.errorHandler = errorHandler;
 	}
-	
-	/**
-	 * Access denied handler
-	 */
-	@ExceptionHandler(AccessDeniedException.class)
-	public ModelAndView onAccessDenied (HttpServletRequest request, Locale locale, AccessDeniedException ex) {
-		// If user is not logged, proposes to log
-		if (errorHandler.canHandleAccessDenied() ) {
-			ModelAndView mav = new ModelAndView(ACCESS_DENIED_WITH_LOGIN_VIEW);
-			// Adds the initial URL
-			mav.addObject("url", request.getRequestURL().toString());
-			// OK
-			return mav;
-		}
-		// Else, displays a regular error page
-		else {
-			return new ModelAndView(ACCESS_DENIED_ERROR_VIEW);
-		}
-	}
 
 	/**
 	 * Generic error handler
 	 */
+	// FIXME #73 Filters on all exceptions but the AccessDeniedException
 	@ExceptionHandler(Exception.class)
 	public ModelAndView onException (HttpServletRequest request, Locale locale, Exception ex) {
+		if (ex instanceof AccessDeniedException) {
+			throw (AccessDeniedException) ex;
+		}
 		// Error message
 		ErrorMessage error = errorHandler.handleError (request, locale, ex);
 		// Model
