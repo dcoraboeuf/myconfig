@@ -13,6 +13,7 @@ import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.KeyConfiguration;
@@ -253,6 +254,14 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	@Override
 	public Ack userConfirm(String name, String token, String password) {
 		return post(format("/ui/user/%s/confirm/%s", name, token), Ack.class, Collections.singletonMap("password", password));
+	}
+	
+	/**
+	 * GET /ui/application/{application:\\d+}/users
+	 */
+	@Override
+	public ApplicationUsers applicationUsers(int application) {
+		return get(format("/ui/application/%d/users", application), ApplicationUsers.class);
 	}
 	
 	@Override

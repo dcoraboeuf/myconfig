@@ -4,6 +4,7 @@ import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.KeyConfiguration;
@@ -68,5 +69,7 @@ public interface MyConfigInterface {
 	Ack setSecurityMode(String mode);
 
 	Ack userConfirm(String name, String token, String password);
+	
+	ApplicationUsers applicationUsers(int application);
 
 }

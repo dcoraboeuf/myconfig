@@ -6,6 +6,7 @@ import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
@@ -59,5 +60,7 @@ public interface MyConfigService {
 	Ack updateKey(int application, String name, String description);
 	
 	List<UserApplicationRights> getUserApplicationRights (String user);
+
+	ApplicationUsers getApplicationUsers(int application);
 
 }

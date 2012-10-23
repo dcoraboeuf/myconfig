@@ -226,4 +226,5 @@ public interface SQL {
 
 	String USER_ENABLE = "update users set disabled = false where name = :user";
 
+	String USER_NAMES = "select name, displayName from users where verified = true and disabled = false and admin = false";
 }

@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import static net.myconfig.service.db.SQLColumns.APPLICATION;
 import static net.myconfig.service.db.SQLColumns.CONFIG_COUNT;
 import static net.myconfig.service.db.SQLColumns.DESCRIPTION;
+import static net.myconfig.service.db.SQLColumns.DISPLAYNAME;
 import static net.myconfig.service.db.SQLColumns.ENVIRONMENT;
 import static net.myconfig.service.db.SQLColumns.ENVIRONMENT_COUNT;
 import static net.myconfig.service.db.SQLColumns.ID;
@@ -36,6 +37,8 @@ import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationUserRights;
+import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConditionalValue;
 import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.core.model.ConfigurationUpdate;
@@ -51,6 +54,7 @@ import net.myconfig.core.model.KeySummary;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.MatrixVersionConfiguration;
 import net.myconfig.core.model.UserApplicationRights;
+import net.myconfig.core.model.UserName;
 import net.myconfig.core.model.Version;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.model.VersionSummary;
@@ -166,6 +170,54 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		
 		// OK
 		return new ApplicationSummaries(aclApplications);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	@AppGrant(AppFunction.app_users)
+	public ApplicationUsers getApplicationUsers(final int application) {
+		final NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		// Gets the application name
+		String name = getApplicationName(application);
+		// List of users
+		List<UserName> userNames = getJdbcTemplate().query(SQL.USER_NAMES, new RowMapper<UserName>() {
+
+			@Override
+			public UserName mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new UserName(rs.getString(NAME), rs.getString(DISPLAYNAME));
+			}
+			
+		});
+		// Gets the application rights for each user
+		List<ApplicationUserRights> users = Lists.transform(userNames, new Function<UserName, ApplicationUserRights>() {
+			@Override
+			public ApplicationUserRights apply (UserName user) {
+				// Set of allowed functions
+				Collection<AppFunction> fns = Lists.transform(
+						t.queryForList(SQL.FUNCTION_APP_LIST_FOR_USER,
+								new MapSqlParameterSource()
+									.addValue(APPLICATION, application)
+									.addValue(USER, user.getName()),
+								String.class),
+						new Function<String, AppFunction>() {
+							@Override
+							public AppFunction apply (String value) {
+								return AppFunction.valueOf(value);
+							}
+						});
+				// List of functions
+				EnumSet<AppFunction> functions;
+				if (fns.isEmpty()) {
+					functions = EnumSet.noneOf(AppFunction.class);
+				} else {
+					functions = EnumSet.copyOf(fns);
+				}
+				// OK
+				return new ApplicationUserRights(user.getName(), user.getDisplayName(), functions);
+			}
+		});
+		// OK
+		return new ApplicationUsers(application, name, users);
 	}
 	
 	@Override

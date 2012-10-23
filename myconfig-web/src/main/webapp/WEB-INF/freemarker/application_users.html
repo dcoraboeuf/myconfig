@@ -1,0 +1,47 @@
+<#include "/lib/layout.html">
+<@layout_std pageId="application_users" style=true modules=["items"] title=loc("application_users.title", application.name)>
+	<@panel>
+		<table class="items">
+			<thead>
+				<tr>
+					<th><@lh key="model.user.name" /></th>
+					<th><@lh key="model.user.displayName" /></th>
+					<#list appFunctions as appFunction>
+						<th class="app-function">
+							<p class="function app-function">${appFunction}</p>
+							<p class="info app-function"><@lh key = "AppFunction." + appFunction /></p>
+						</th>
+					</#list>
+				</tr>
+			</thead>
+			<tbody>
+				<#list application.users as user>
+					<tr>
+						<td class="item-column item-column-user-name">
+							${user.name?html}
+						</td>
+						<td class="item-column item-column-user-displayName">
+							${user.displayName?html}
+						</td>
+						<#list appFunctions as appFunction>
+							<td class="item-column app-function">
+								<#if user.functions?seq_contains(appFunction)>
+									<#assign hasfn = "yes" />
+								<#else>
+									<#assign hasfn = "no" />
+								</#if>
+								<div
+									application="${application.id}"
+									user="${user.name?html}"
+									function="${appFunction}"
+									set="${hasfn}"
+									class="app-function"
+									onclick="ApplicationUsers.assignAppFunction(this);" />
+							</td>
+						</#list>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+	</@panel>
+</@layout_std>

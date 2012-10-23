@@ -6,6 +6,7 @@ import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.KeyConfiguration;
@@ -208,6 +209,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	public @ResponseBody Ack userConfirm(@PathVariable String name, @PathVariable String token, @RequestParam String password) {
 		securityService.userConfirm(name, token, password);
 		return Ack.OK;
+	}
+	
+	@Override
+	@RequestMapping(value = "/application/{application:\\d+}/users", method = RequestMethod.GET)
+	public @ResponseBody ApplicationUsers applicationUsers(@PathVariable int application) {
+		return getMyConfigService().getApplicationUsers(application);
 	}
 
 }
