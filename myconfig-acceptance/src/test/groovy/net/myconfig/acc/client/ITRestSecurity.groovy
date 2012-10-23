@@ -1,7 +1,5 @@
 package net.myconfig.acc.client
 
-import net.myconfig.acc.support.AccUtils
-import net.myconfig.client.java.MyConfigClient
 import net.myconfig.client.java.support.ClientCannotLoginException
 import net.myconfig.client.java.support.ClientForbiddenException
 import net.myconfig.core.UserFunction
@@ -92,6 +90,19 @@ class ITRestSecurity extends AbstractClientUseCase {
 		// Checks the application has been created
 		def applications = client().applications()
 		assert applications.getSummaries().find { it.getName() == appName } != null
+		// As admin, removes the app_create function
+		asAdmin()
+		ack = client().userFunctionRemove(userName, UserFunction.app_create)
+		assert ack.isSuccess()
+		// Tries to create an app
+		appName = uid("app")
+		client().login(userName, "mypassword")
+		try {
+			client().applicationCreate(appName)
+			assert false: "Should have been forbidden"
+		} catch (ClientForbiddenException ex) {
+			// Expected exception
+		}
 	}
 
 }
