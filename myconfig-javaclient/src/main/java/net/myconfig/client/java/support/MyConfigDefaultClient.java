@@ -222,16 +222,20 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 		return post (format("/ui/user/%s/function/%s/remove", name, fn), Ack.class, null);
 	}
 
+	/**
+	 * POST /ui/user/{user}/application/{application}/function/{fn}/add
+	 */
 	@Override
 	public Ack appFunctionAdd(String user, int application, AppFunction fn) {
-		// TODO Auto-generated method stub
-		return null;
+		return post (format("/ui/user/%s/application/%d/function/%s/add", user, application, fn), Ack.class, null);
 	}
 
+	/**
+	 * POST /ui/user/{user}/application/{application}/function/{fn}/remove
+	 */
 	@Override
 	public Ack appFunctionRemove(String user, int application, AppFunction fn) {
-		// TODO Auto-generated method stub
-		return null;
+		return post (format("/ui/user/%s/application/%d/function/%s/remove", user, application, fn), Ack.class, null);
 	}
 
 	/**

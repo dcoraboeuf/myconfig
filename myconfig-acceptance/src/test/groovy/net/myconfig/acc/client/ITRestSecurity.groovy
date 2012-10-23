@@ -2,6 +2,7 @@ package net.myconfig.acc.client
 
 import net.myconfig.client.java.support.ClientCannotLoginException
 import net.myconfig.client.java.support.ClientForbiddenException
+import net.myconfig.core.AppFunction
 import net.myconfig.core.UserFunction
 
 import org.junit.After
@@ -103,6 +104,51 @@ class ITRestSecurity extends AbstractClientUseCase {
 		} catch (ClientForbiddenException ex) {
 			// Expected exception
 		}
+	}
+
+	@Test
+	void userApplicationRights() {
+		// Creates a user
+		asAdmin()
+		def userName = uid ("user")
+		def userDisplayName = uid ("user")
+		def userEmail = uid ("user") + "@test.com"
+		def ack = client().userCreate(userName, userDisplayName, userEmail)
+		assert ack.isSuccess()
+		// Gets the token message for this user (integration test message box)
+		def message = itClient.getMessage (userEmail)
+		assert message != null
+		def token = message.getContent().getToken()
+		// Validates the user
+		ack = client().userConfirm(userName, token, "mypassword")
+		assert ack.isSuccess()
+		// As admin, assigns the app_create function
+		asAdmin()
+		ack = client().userFunctionAdd(userName, UserFunction.app_create)
+		assert ack.isSuccess()
+		// Creates an application
+		def appName = uid("app")
+		client().login(userName, "mypassword")
+		def appId = client().applicationCreate(appName).getId()
+		// Checks the application has been created
+		def applications = client().applications()
+		assert applications.getSummaries().find { it.getName() == appName } != null
+		// Removes all the application rights
+		asAdmin()
+		AppFunction.values().each {
+			client().appFunctionRemove(userName, appId, it)
+		}
+		// Gets the list of applications again and checks the application cannot be seen any longer
+		client().login(userName, "mypassword")
+		applications = client().applications()
+		assert applications.getSummaries().find { it.getName() == appName } == null
+		// Re-assigns the app_view
+		asAdmin()
+		client().appFunctionAdd(userName, appId, AppFunction.app_view)
+		// Checks the application is in the list again
+		client().login(userName, "mypassword")
+		applications = client().applications()
+		assert applications.getSummaries().find { it.getName() == appName } != null
 	}
 
 }
