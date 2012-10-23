@@ -31,7 +31,7 @@ public class DefaultErrorHandlerTest {
 
 	@Before
 	public void before() {
-		handler = new DefaultErrorHandler(strings);
+		handler = new DefaultErrorHandler(strings, null);
 	}
 
 	@Test

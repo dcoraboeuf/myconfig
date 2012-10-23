@@ -6,6 +6,9 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import net.myconfig.core.CoreException;
+import net.myconfig.service.api.security.SecuritySelector;
+import net.myconfig.service.api.security.SecurityUtils;
+import net.myconfig.service.api.security.User;
 import net.sf.jstring.LocalizableException;
 import net.sf.jstring.Strings;
 
@@ -13,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,10 +25,18 @@ public class DefaultErrorHandler implements ErrorHandler {
 	private final Logger logger = LoggerFactory.getLogger("User");
 	
 	private final Strings strings;
+	private final SecuritySelector securitySelector;
 	
 	@Autowired
-	public DefaultErrorHandler(Strings strings) {
+	public DefaultErrorHandler(Strings strings, SecuritySelector securitySelector) {
 		this.strings = strings;
+		this.securitySelector = securitySelector;
+	}
+	
+	@Override
+	public boolean canHandleAccessDenied() {
+		Authentication authentication = SecurityUtils.authentication();
+		return (securitySelector.allowLogin() && (authentication == null || !authentication.isAuthenticated() || !(authentication.getDetails() instanceof User)));
 	}
 
 	@Override

@@ -12,4 +12,6 @@ public interface ErrorHandler {
 
 	String displayableError(CoreException ex, Locale locale);
 
+	boolean canHandleAccessDenied();
+
 }
