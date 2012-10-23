@@ -114,6 +114,9 @@
 	<@sec_chk_app_fn application=application.id fn="app_matrix">
 		<@layout_std_nav href="gui/matrix/${application.id}" key="matrix" />
 	</@sec_chk_app_fn>
+	<@sec_chk_app_fn application=application.id fn="app_users">
+		<@layout_std_nav href="gui/application/${application.id}/users" key="application_users" />
+	</@sec_chk_app_fn>
 </@layout_std>
 
 <#macro key_description item>

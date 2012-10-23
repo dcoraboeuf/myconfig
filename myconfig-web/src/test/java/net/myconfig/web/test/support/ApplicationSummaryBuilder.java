@@ -23,6 +23,7 @@ public class ApplicationSummaryBuilder {
 	private boolean config = true;
 	private boolean view = true;
 	private boolean matrix = true;
+	private boolean users = true;
 
 	protected ApplicationSummaryBuilder() {
 	}
@@ -63,7 +64,7 @@ public class ApplicationSummaryBuilder {
 	}
 
 	public ApplicationSummary build() {
-		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount, delete, config, view, matrix);
+		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount, delete, config, view, matrix, users);
 	}
 
 }

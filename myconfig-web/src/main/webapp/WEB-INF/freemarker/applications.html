@@ -42,6 +42,11 @@
 							<input class="item-action item-action-matrix" type="image" src="static/images/matrix.png" />
 						</form>
 					</#if>
+					<#if item.users>
+						<form class="item-action item-action-users" action="gui/application/${item.id}/users" method="get">
+							<input class="item-action item-action-users" type="image" src="static/images/application_users.png" />
+						</form>
+					</#if>
 				</@item_actions>
 				
 			</@items>

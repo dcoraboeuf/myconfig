@@ -1,9 +1,9 @@
 package net.myconfig.core.model;
 
+import lombok.Data;
+
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
-
-import lombok.Data;
 
 @Data
 public class ApplicationSummary {
@@ -21,6 +21,7 @@ public class ApplicationSummary {
 	private final boolean config;
 	private final boolean view;
 	private final boolean matrix;
+	private final boolean users;
 
 	@JsonCreator
 	public ApplicationSummary(
@@ -34,7 +35,8 @@ public class ApplicationSummary {
 			@JsonProperty("delete") boolean delete, 
 			@JsonProperty("config") boolean config, 
 			@JsonProperty("view") boolean view, 
-			@JsonProperty("matrix") boolean matrix) {
+			@JsonProperty("matrix") boolean matrix, 
+			@JsonProperty("users") boolean users) {
 		this.id = id;
 		this.name = name;
 		this.versionCount = versionCount;
@@ -46,10 +48,11 @@ public class ApplicationSummary {
 		this.config = config;
 		this.view = view;
 		this.matrix = matrix;
+		this.users = users;
 	}
 
-	public ApplicationSummary acl(boolean canDelete, boolean canConfig, boolean canView, boolean canMatrix) {
-		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount, canDelete, canConfig, canView, canMatrix);
+	public ApplicationSummary acl(boolean canDelete, boolean canConfig, boolean canView, boolean canMatrix, boolean canUsers) {
+		return new ApplicationSummary(id, name, versionCount, keyCount, environmentCount, configCount, valueCount, canDelete, canConfig, canView, canMatrix, canUsers);
 	}
 
 }

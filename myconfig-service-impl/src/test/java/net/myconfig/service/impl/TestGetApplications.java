@@ -30,8 +30,8 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, true, true, true, true),
-				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, true, true, true, true)
+				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, true, true, true, true, true),
+				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, true, true, true, true, true)
 				), list);
 	}
 	
@@ -41,8 +41,8 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, false, false),
-				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, false, false)
+				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, false, false, false),
+				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, false, false, false)
 				), list);
 	}
 	
@@ -52,8 +52,8 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, false, false),
-				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, true, false)
+				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, false, false, false),
+				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, true, false, false)
 				), list);
 	}
 	
@@ -63,7 +63,7 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, true, false)
+				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, true, false, false)
 				), list);
 	}
 	
@@ -73,7 +73,7 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, true, true, false)
+				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, true, true, false, false)
 				), list);
 	}
 	
@@ -83,7 +83,7 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, true, true, true, false)
+				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, true, true, true, false, false)
 				), list);
 	}
 

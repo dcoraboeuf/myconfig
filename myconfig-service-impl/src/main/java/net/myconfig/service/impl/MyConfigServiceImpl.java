@@ -130,7 +130,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 						rs.getInt(ENVIRONMENT_COUNT),
 						rs.getInt(CONFIG_COUNT),
 						rs.getInt(VALUE_COUNT),
-						false, false, false, false);
+						false, false, false, false, false);
 			}
 		});
 		
@@ -159,7 +159,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				boolean canConfig = hasApplicationAccess(id, AppFunction.app_config);
 				boolean canView = hasApplicationAccess(id, AppFunction.app_view);
 				boolean canMatrix = hasApplicationAccess(id, AppFunction.app_matrix);
-				return app.acl (canDelete, canConfig, canView, canMatrix);
+				boolean canUsers = hasApplicationAccess(id, AppFunction.app_users);
+				return app.acl (canDelete, canConfig, canView, canMatrix, canUsers);
 			}
 		});
 		
@@ -250,7 +251,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			grantAppFunction (id, fn);
 		}
 		// OK
-		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0, true, true, true, true);
+		return new ApplicationSummary(id, name, 0, 0, 0, 0, 0, true, true, true, true, true);
 	}
 	
 	@Override
