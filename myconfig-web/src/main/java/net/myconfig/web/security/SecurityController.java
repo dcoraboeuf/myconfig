@@ -14,6 +14,7 @@ import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +39,10 @@ public class SecurityController extends AbstractGUIPage {
 	}
 
 	@RequestMapping("/login")
-	public String login() {
+	public String login(Model model, @RequestParam(required=false, value="url") String url) {
+		if (StringUtils.isNotBlank(url)) {
+			model.addAttribute("url", url);
+		}
 		return "login";
 	}
 

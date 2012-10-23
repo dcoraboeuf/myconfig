@@ -6,6 +6,9 @@
 			<@panel>
 				<section class="form">
 					<form action="j_spring_security_check" method="POST">
+						<#if .data_model["url"]??>
+							<input type="hidden" name="url" value="${.data_model['url']?html}" />
+						</#if>
 						<table>
 							<tbody>
 								<tr>
