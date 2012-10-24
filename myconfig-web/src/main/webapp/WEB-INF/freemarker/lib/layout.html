@@ -86,7 +86,11 @@
 				<nav>
 					<a href="."><@lh key="home" /></a>
 					<#list navItems as navItem>
-						<a href="${navItem.href?html}"><@lh key=navItem.key /></a>
+						<#if navItem.enabled>
+							<a href="${navItem.href?html}"><@lh key=navItem.key /></a>
+						<#else>
+							<span><@lh key=navItem.key /></span>
+						</#if>
 					</#list>
 				</nav>
 			</#if>
@@ -98,9 +102,10 @@
 	</@layout_basic>
 </#macro>
 
-<#macro layout_std_nav href key>
+<#macro layout_std_nav href key enabled=true>
 	<#assign navItems = navItems + [{
 		"href": href,
-		"key": key
+		"key": key,
+		"enabled": enabled
 	}] />
 </#macro>

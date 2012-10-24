@@ -1,12 +1,12 @@
 <#macro application_nav id page> 
 	<@layout_std_nav href="gui/" key="applications" />
 	<@sec_chk_app_fn application=id fn="app_config">
-		<@layout_std_nav href="gui/application/${id}" key="application" />
+		<@layout_std_nav href="gui/application/${id}" key="application" enabled=(page != "application") />
 	</@sec_chk_app_fn>
 	<@sec_chk_app_fn application=id fn="app_matrix">
-		<@layout_std_nav href="gui/matrix/${id}" key="matrix" />
+		<@layout_std_nav href="gui/matrix/${id}" key="matrix" enabled=(page != "matrix") />
 	</@sec_chk_app_fn>
 	<@sec_chk_app_fn application=id fn="app_users">
-		<@layout_std_nav href="gui/application/${id}/users" key="application_users" />
+		<@layout_std_nav href="gui/application/${id}/users" key="application_users" enabled=(page != "application_users") />
 	</@sec_chk_app_fn>
 </#macro>

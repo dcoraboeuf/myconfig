@@ -110,14 +110,21 @@ section.app-title {
 article.std-page {
 	> nav {
 		background-color: @page-nav-color-bg;
-		a {
+		.menu {
 			text-decoration: none;
 			color: @page-nav-color-fg;
 			font-size: 75%;
 			padding: 3px 15px 1px 5px;
+		}
+		a {
+			.menu;
 			&:hover {
 				background-color: @page-nav-color-hover;
 			}
+		}
+		span {
+			.menu;
+			font-weight: bold;
 		}
 	}
 	> h1 {
