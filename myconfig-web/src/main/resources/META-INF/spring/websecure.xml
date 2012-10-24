@@ -7,15 +7,19 @@ http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 http://www.springframework.org/schema/security
 http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-
 	<http pattern="/ui/**">
 		<intercept-url pattern="/ui/login" access="ROLE_USER,ROLE_ADMIN"/>
+		<http-basic/>
+	</http>
+
+	<http pattern="/get/**">
 		<http-basic/>
 	</http>
 
 	<http auto-config="true" pattern="**">
 		<form-login login-page="/login"/>
 		<logout logout-url="/logout" logout-success-url="/logged-out"/>
+		<access-denied-handler error-page="/error/403" />
 	</http>
 
 	<!-- FIXME We'd better use the same access decision manager for the web access -->
