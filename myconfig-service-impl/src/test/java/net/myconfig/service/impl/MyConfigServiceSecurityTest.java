@@ -199,6 +199,19 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		List<String> envs = Lists.transform(environmentValuesPerVersionList, IndexedValues.<String> indexFn());
 		assertEquals(Arrays.asList("DEV"), envs);
 	}
+	
+	@Test(expected = AccessDeniedException.class)
+	public void getKey_not_granted() throws SQLException {
+		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_view);
+		myconfig.getKey("myapp", "1.0", "UAT", "jdbc.user");
+	}
+	
+	@Test
+	public void getKey_granted() throws SQLException {
+		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_view);
+		String value = myconfig.getKey("myapp", "1.0", "DEV", "jdbc.user");
+		assertEquals ("1.0 jdbc.user DEV", value);
+	}
 
 	@Test
 	public void getVersionConfiguration_all() throws SQLException {

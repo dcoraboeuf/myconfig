@@ -744,12 +744,13 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 
 	@Override
 	@Transactional(readOnly = true)
-	@EnvGrant(EnvFunction.env_view)
 	public String getKey(String application, String version, String environment, String key) {
 		// Checks for existing data
-		checkApplication (application);
+		int id = checkApplication (application);
 		checkVersion (application, version);
 		checkEnvironment (application, environment);
+		// Security check
+		checkEnvironmentAccess(id, environment, EnvFunction.env_view);
 		// Query
 		try {
 			return getNamedParameterJdbcTemplate().queryForObject(
