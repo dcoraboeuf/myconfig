@@ -48,11 +48,6 @@
 			<@key_create action="gui/matrix/${configuration.id}/key/create" />
 		</@form>
 	</@panel>
-	<@layout_std_nav href="gui/" key="applications" />
-	<@sec_chk_app_fn application=configuration.id fn="app_config">
-		<@layout_std_nav href="gui/application/${configuration.id}" key="application" />
-	</@sec_chk_app_fn>
-	<@sec_chk_app_fn application=configuration.id fn="app_users">
-		<@layout_std_nav href="gui/application/${configuration.id}/users" key="application_users" />
-	</@sec_chk_app_fn>
+	<#include "/application_navigation.html" />
+	<@application_nav id=configuration.id page="matrix" /> 
 </@layout_std>

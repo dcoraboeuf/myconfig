@@ -74,12 +74,9 @@
 			</table>
 		</article>
 	</@panel>
-	<@layout_std_nav href="gui/" key="applications" />
-	<@layout_std_nav href="gui/application/${environmentConfiguration.id}" key="application" />
-	<@layout_std_nav href="gui/matrix/${environmentConfiguration.id}" key="matrix" />
-	<@sec_chk_app_fn application=environmentConfiguration.id fn="app_users">
-		<@layout_std_nav href="gui/application/${environmentConfiguration.id}/users" key="application_users" />
-	</@sec_chk_app_fn>
+	
+	<#include "/application_navigation.html" />
+	<@application_nav id=environmentConfiguration.id page="environmentConfiguration" /> 
 	
 	<@configuration_dialog />
 	

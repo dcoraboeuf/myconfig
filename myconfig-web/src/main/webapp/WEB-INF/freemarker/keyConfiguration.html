@@ -72,12 +72,9 @@
 			</table>
 		</article>
 	</@panel>
-	<@layout_std_nav href="gui/" key="applications" />
-	<@layout_std_nav href="gui/application/${keyConfiguration.id}" key="application" />
-	<@layout_std_nav href="gui/matrix/${keyConfiguration.id}" key="matrix" />
-	<@sec_chk_app_fn application=keyConfiguration.id fn="app_users">
-		<@layout_std_nav href="gui/application/${keyConfiguration.id}/users" key="application_users" />
-	</@sec_chk_app_fn>
+	
+	<#include "/application_navigation.html" />
+	<@application_nav id=keyConfiguration.id page="keyConfiguration" /> 
 	
 	<@configuration_dialog />
 	
