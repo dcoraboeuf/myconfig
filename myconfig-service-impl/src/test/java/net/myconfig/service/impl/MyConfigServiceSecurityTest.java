@@ -174,6 +174,12 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		myconfig.getEnvironmentConfiguration(1, "UAT");
 	}
 
+	@Test(expected = AccessDeniedException.class)
+	public void getEnv_not_granted() throws SQLException {
+		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config);
+		myconfig.getEnv("myapp", "1.0", "UAT");
+	}
+
 	@Test
 	public void getKeyConfiguration_all() throws SQLException {
 		asAdmin();

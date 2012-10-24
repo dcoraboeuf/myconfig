@@ -768,12 +768,13 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
-	@EnvGrant(EnvFunction.env_view)
-	public ConfigurationSet getEnv(String application, String version, @EnvGrantParam String environment) {
+	public ConfigurationSet getEnv(String application, String version, String environment) {
 		// Checks for existing data
-		checkApplication (application);
+		int id = checkApplication (application);
 		checkVersion (application, version);
 		checkEnvironment (application, environment);
+		// Checks for security
+		checkEnvironmentAccess(id, environment, EnvFunction.env_view);
 		// List of configuration documented values
 		List<ConfigurationValue> values = getNamedParameterJdbcTemplate().query(SQL.GET_ENV, 
 				new MapSqlParameterSource()
@@ -793,9 +794,10 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		return new ConfigurationSet(application, environment, version, values);
 	}
 
-	protected void checkApplication(String application) {
-		check (
+	protected int checkApplication(String application) {
+		return checkWithID (
 				SQL.APPLICATION_EXISTS,
+				ID,
 				new MapSqlParameterSource(NAME, application),
 				new ApplicationNotFoundException(application));
 	}
@@ -848,6 +850,17 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(sql, sqlParameterSource);
 		if (list.isEmpty()) {
 			throw exception;
+		}
+	}
+
+	protected int checkWithID(String sql, String idColumn,
+			SqlParameterSource sqlParameterSource,
+			CoreException exception) {
+		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(sql, sqlParameterSource);
+		if (list.isEmpty()) {
+			throw exception;
+		} else {
+			return (Integer) list.get(0).get(idColumn);
 		}
 	}
 
