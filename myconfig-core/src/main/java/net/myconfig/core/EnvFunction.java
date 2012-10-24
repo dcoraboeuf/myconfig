@@ -8,6 +8,10 @@ public enum EnvFunction {
 	/**
 	 * Configuration for this environment, for all versions and keys
 	 */
-	env_config; 
+	env_config,
+	/**
+	 * Deletion of this environment
+	 */
+	env_delete; 
 
 }
