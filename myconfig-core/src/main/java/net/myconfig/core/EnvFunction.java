@@ -12,6 +12,10 @@ public enum EnvFunction {
 	/**
 	 * Deletion of this environment
 	 */
-	env_delete; 
+	env_delete,
+	/**
+	 * Management of the users for this environment
+	 */
+	env_users; 
 
 }
