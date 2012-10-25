@@ -420,8 +420,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.app_config)
-	public Ack deleteEnvironment(int id, String name) {
+	@EnvGrant(EnvFunction.env_delete)
+	public Ack deleteEnvironment(int id, @EnvGrantParam String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
 		return Ack.one (count);

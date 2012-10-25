@@ -252,6 +252,31 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		asUser();
 		myconfig.createEnvironment(1, "NO_ENVCREATE");
 	}
+	
+	@Test
+	public void deleteEnvironment_admin() throws SQLException {
+		asAdmin();
+		myconfig.createEnvironment(1, "DEL_ENV_ADMIN");
+		Ack ack = myconfig.deleteEnvironment(1, "DEL_ENV_ADMIN");
+		assertTrue (ack.isSuccess());
+	}
+	
+	@Test
+	public void deleteEnvironment_granted() throws SQLException {
+		asAdmin();
+		myconfig.createEnvironment(1, "DEL_ENV_GRANTED");
+		asUser().grant(1, "DEL_ENV_GRANTED", EnvFunction.env_delete);
+		Ack ack = myconfig.deleteEnvironment(1, "DEL_ENV_GRANTED");
+		assertTrue (ack.isSuccess());
+	}
+
+	@Test(expected = AccessDeniedException.class)
+	public void deleteEnvironment_not_granted() throws SQLException {
+		asAdmin();
+		myconfig.createEnvironment(1, "DEL_ENV_NOT_GRANTED");
+		asUser();
+		myconfig.deleteEnvironment(1, "DEL_ENV_NOT_GRANTED");
+	}
 
 	// TODO Ack createVersion(int id, String name);
 	//
