@@ -24,6 +24,10 @@ public enum AppFunction {
 	 */
 	app_delete,
 	/**
+	 * Creation of an environment for the application
+	 */
+	app_envcreate,
+	/**
 	 * Granting rights for users for this application
 	 */
 	app_users;

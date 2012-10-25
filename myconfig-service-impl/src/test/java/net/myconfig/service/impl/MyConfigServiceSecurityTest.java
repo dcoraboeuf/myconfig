@@ -232,12 +232,30 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		List<String> envs = Lists.transform(environmentValuesPerKeyList, IndexedValues.<String> indexFn());
 		assertEquals(Arrays.asList("DEV"), envs);
 	}
+	
+	@Test
+	public void createEnvironment_admin() throws SQLException {
+		asAdmin();
+		Ack ack = myconfig.createEnvironment(1, "ADMIN");
+		assertTrue (ack.isSuccess());
+	}
+	
+	@Test
+	public void createEnvironment_granted() throws SQLException {
+		asUser().grant(1, AppFunction.app_envcreate);
+		Ack ack = myconfig.createEnvironment(1, "ENVCREATE");
+		assertTrue (ack.isSuccess());
+	}
+	
+	@Test(expected = AccessDeniedException.class)
+	public void createEnvironment_not_granted() throws SQLException {
+		asUser();
+		myconfig.createEnvironment(1, "NO_ENVCREATE");
+	}
 
 	// TODO Ack createVersion(int id, String name);
 	//
 	// TODO Ack deleteVersion(int id, String name);
-	//
-	// TODO Ack createEnvironment(int id, String name);
 	//
 	// TODO Ack deleteEnvironment(int id, String name);
 	//

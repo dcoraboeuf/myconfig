@@ -346,7 +346,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.app_config)
+	@AppGrant(AppFunction.app_envcreate)
 	public Ack createEnvironment(int id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
