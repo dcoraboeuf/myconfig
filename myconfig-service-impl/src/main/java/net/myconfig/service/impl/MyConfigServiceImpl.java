@@ -47,6 +47,8 @@ import net.myconfig.core.model.ConfigurationValue;
 import net.myconfig.core.model.Environment;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.EnvironmentSummary;
+import net.myconfig.core.model.EnvironmentUserRights;
+import net.myconfig.core.model.EnvironmentUsers;
 import net.myconfig.core.model.IndexedValues;
 import net.myconfig.core.model.Key;
 import net.myconfig.core.model.KeyConfiguration;
@@ -218,6 +220,55 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		});
 		// OK
 		return new ApplicationUsers(application, name, users);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	@EnvGrant(EnvFunction.env_users)
+	public EnvironmentUsers getEnvironmentUsers(final int application, @EnvGrantParam final String environment) {
+		final NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		// Gets the application name
+		String applicationName = getApplicationName(application);
+		// List of users
+		List<UserName> userNames = getJdbcTemplate().query(SQL.USER_NAMES, new RowMapper<UserName>() {
+
+			@Override
+			public UserName mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new UserName(rs.getString(NAME), rs.getString(DISPLAYNAME));
+			}
+			
+		});
+		// Gets the environment rights for each user and this applications
+		List<EnvironmentUserRights> users = Lists.transform(userNames, new Function<UserName, EnvironmentUserRights>() {
+			@Override
+			public EnvironmentUserRights apply (UserName user) {
+				// Set of allowed functions
+				Collection<EnvFunction> fns = Lists.transform(
+						t.queryForList(SQL.FUNCTION_ENV_LIST_FOR_USER_AND_APPLICATION,
+								new MapSqlParameterSource()
+									.addValue(APPLICATION, application)
+									.addValue(USER, user.getName())
+									.addValue(ENVIRONMENT, environment),
+								String.class),
+						new Function<String, EnvFunction>() {
+							@Override
+							public EnvFunction apply (String value) {
+								return EnvFunction.valueOf(value);
+							}
+						});
+				// List of functions
+				EnumSet<EnvFunction> functions;
+				if (fns.isEmpty()) {
+					functions = EnumSet.noneOf(EnvFunction.class);
+				} else {
+					functions = EnumSet.copyOf(fns);
+				}
+				// OK
+				return new EnvironmentUserRights(user.getName(), user.getDisplayName(), functions);
+			}
+		});
+		// OK
+		return new EnvironmentUsers(application, applicationName, environment, users);
 	}
 	
 	@Override

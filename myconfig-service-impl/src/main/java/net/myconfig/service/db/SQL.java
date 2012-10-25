@@ -189,9 +189,11 @@ public interface SQL {
 	String FUNCTION_APP_LIST_FOR_USER = "select grantedfunction from appgrants where user = :user and application = :application";
 	String GRANT_APP_FUNCTION = "insert into appgrants (user, application, grantedfunction) values (:user, :application, :grantedfunction)";
 	String UNGRANT_APP_FUNCTION = "delete from appgrants where user = :user and application = :application and grantedfunction = :grantedfunction";
+	String UNGRANT_ENV_FUNCTION = "delete from envgrants where user = :user and application = :application and environment = :environment and grantedfunction = :grantedfunction";
 
 	String FUNCTION_ENV	= "select grantedfunction from envgrants where (user = :user or user = '*') and application = :application and environment = :environment and grantedfunction = :grantedfunction";
 	String GRANT_ENV_FUNCTION = "insert into envgrants (user, application, environment, grantedfunction) values (:user, :application, :environment, :grantedfunction)";
+	String FUNCTION_ENV_LIST_FOR_USER_AND_APPLICATION = "select grantedfunction from envgrants where user = :user and application = :application and environment = :environment";
 	
 	String USER = "select * from users where name = :name and password = :password and verified = true and disabled = false";
 	String USER_SUMMARIES = "select name, displayname, email, admin, verified, disabled from users order by admin desc, name asc";

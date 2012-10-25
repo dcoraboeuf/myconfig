@@ -1,6 +1,7 @@
 package net.myconfig.service.api.security;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.UserSummaries;
@@ -50,5 +51,9 @@ public interface SecurityService {
 	Ack appFunctionAdd(int application, String user, AppFunction fn);
 
 	Ack appFunctionRemove(int application, String user, AppFunction fn);
+
+	Ack envFunctionAdd(int application, String user, String environment, EnvFunction fn);
+
+	Ack envFunctionRemove(int application, String user, String environment, EnvFunction fn);
 
 }
