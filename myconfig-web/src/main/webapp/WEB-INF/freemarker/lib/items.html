@@ -113,9 +113,9 @@
 	</form>
 </#macro>
 
-<#macro item_edit item action itemField="id">
+<#macro item_edit item action itemField="id" icon="edit.png">
 	<form class="item-action item-action-edit" action="${action}/${item[itemField]?html}" method="get">
-		<input class="item-action item-action-edit" type="image" src="static/images/edit.png" />
+		<input class="item-action item-action-edit" type="image" src="static/images/${icon}" />
 	</form>
 </#macro>
 

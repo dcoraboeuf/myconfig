@@ -10,6 +10,12 @@
 	</#if>
 </#macro>
 
+<#macro sec_chk_env_fn application environment fn>
+	<#if chk_env_fn(application,environment,fn)>
+		<#nested>
+	</#if>
+</#macro>
+
 <#macro sec_login>
 	<#if secAllowLogin()>
 		<#if secLogged()>
