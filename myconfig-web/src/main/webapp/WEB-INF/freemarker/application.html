@@ -89,7 +89,9 @@
 									<@item_column field="name" item=item />
 									<@item_missing_count item=item action="gui/configuration/environment/${application.id}" actionItemField="name" />
 									<@item_actions item=item>
-										<@item_delete item=item action="gui/application/${application.id}/environment/delete" formField="name" promptField="name" promptKey="environment.delete" />
+										<@sec_chk_env_fn application=application.id environment=item.name fn="env_delete">
+											<@item_delete item=item action="gui/application/${application.id}/environment/delete" formField="name" promptField="name" promptKey="environment.delete" />
+										</@sec_chk_env_fn>
 										<@sec_chk_env_fn application=application.id environment=item.name fn="env_config">
 											<@item_edit item=item action="gui/configuration/environment/${application.id}" itemField="name" />
 										</@sec_chk_env_fn>
