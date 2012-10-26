@@ -73,7 +73,6 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		if (profile != null && !profile.isAdmin()) {
 			String user = profile.getName();
 			// Grant
-			// FIXME Uses the GrantService
 			getNamedParameterJdbcTemplate().update(
 					SQL.GRANT_APP_FUNCTION,
 					new MapSqlParameterSource()
@@ -88,7 +87,6 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		if (profile != null && !profile.isAdmin()) {
 			String user = profile.getName();
 			// Grant
-			// FIXME Uses the GrantService
 			getNamedParameterJdbcTemplate().update(
 					SQL.GRANT_ENV_FUNCTION,
 					new MapSqlParameterSource()
