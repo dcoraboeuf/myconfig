@@ -168,6 +168,13 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		assertNotNull(c);
 	}
 
+	@Test
+	public void getEnvironmentConfiguration_granted_though_config() throws SQLException {
+		asUser().grant(1, AppFunction.app_view).grant(1, "UAT", EnvFunction.env_config);
+		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "UAT");
+		assertNotNull(c);
+	}
+
 	@Test(expected = AccessDeniedException.class)
 	public void getEnvironmentConfiguration_not_granted() throws SQLException {
 		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config);
