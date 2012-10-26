@@ -2,15 +2,18 @@ package net.myconfig.service.impl;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import org.dbunit.dataset.DataSetException;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.test.AbstractIntegrationTest;
+import net.myconfig.test.DBUnitHelper;
+
+import org.dbunit.dataset.DataSetException;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ConfigurationServiceTest extends AbstractIntegrationTest {
 
@@ -41,6 +44,39 @@ public class ConfigurationServiceTest extends AbstractIntegrationTest {
 		assertRecordNotExists("select * from configuration where name = 'app.replyto.name'");
 		service.setParameter(ConfigurationKey.APP_REPLYTO_NAME, "value2");
 		assertRecordExists("select * from configuration where name = 'app.replyto.name' and value = 'value2'");
+	}
+	
+	@Test
+	public void caching_read() throws SQLException {
+		// Sets the initial value
+		service.setParameter(ConfigurationKey.APP_REPLYTO_ADDRESS, "address1");
+		// Gets the value
+		assertEquals("address1", service.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
+		// Updates the value directly in the database
+		Connection con = DBUnitHelper.getConnection().getConnection();
+		PreparedStatement ps = con.prepareStatement("update configuration set value = ? where name = ?");
+		try {
+			ps.setString(1, "address2");
+			ps.setString(2, ConfigurationKey.APP_REPLYTO_ADDRESS.getKey());
+			ps.executeUpdate();
+		} finally {
+			ps.close();
+		}
+		con.commit();
+		// The initial value in still in cache
+		assertEquals("address1", service.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
+	}
+	
+	@Test
+	public void caching_read_and_update() throws SQLException {
+		// Sets the initial value
+		service.setParameter(ConfigurationKey.APP_REPLYTO_ADDRESS, "address1");
+		// Gets the value
+		assertEquals("address1", service.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
+		// Updates the value
+		service.setParameter(ConfigurationKey.APP_REPLYTO_ADDRESS, "address2");
+		// The value has been updated
+		assertEquals("address2", service.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
 	}
 
 }
