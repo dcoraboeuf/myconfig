@@ -569,7 +569,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
-	@EnvGrant(EnvFunction.env_view)
+	@EnvGrant(EnvFunction.env_config)
 	public EnvironmentConfiguration getEnvironmentConfiguration(int application, @EnvGrantParam String environment) {
 		checkApplication(application);
 		checkEnvironment(application, environment);
@@ -639,9 +639,17 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			versionConfigurationList.add(versionConditionalValues);
 		}
 		
-		// Previous & next version
+		// Previous version
 		String previousEnvironment = getFirstItem(SQL.ENVIRONMENT_PREVIOUS, environmentCriteria, String.class);
+		while (previousEnvironment != null && !hasEnvironmentAccess(application, previousEnvironment, EnvFunction.env_config)) {
+			previousEnvironment = getFirstItem(SQL.ENVIRONMENT_PREVIOUS, environmentCriteria.addValue(ENVIRONMENT, previousEnvironment), String.class);
+		}
+		// Next version
+		environmentCriteria.addValue(ENVIRONMENT, environment);
 		String nextEnvironment = getFirstItem(SQL.ENVIRONMENT_NEXT, environmentCriteria, String.class);
+		while (nextEnvironment != null && !hasEnvironmentAccess(application, nextEnvironment, EnvFunction.env_config)) {
+			nextEnvironment = getFirstItem(SQL.ENVIRONMENT_NEXT, environmentCriteria.addValue(ENVIRONMENT, nextEnvironment), String.class);
+		}
 		// OK
 		return new EnvironmentConfiguration(application, name, environment, previousEnvironment, nextEnvironment, keyList, versionConfigurationList);
 	}
