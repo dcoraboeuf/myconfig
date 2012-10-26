@@ -15,11 +15,13 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.GrantService;
+import net.myconfig.service.cache.CacheNames;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.impl.AbstractDaoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +36,8 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 		super(dataSource, validator);
 	}
 
-	// FIXME Cache
 	@Override
+	@Cacheable(CacheNames.USER_FUNCTIONS)
 	public EnumSet<UserFunction> getUserFunctions(String name) {
 		List<UserFunction> fns = Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, name), String.class),
 				new Function<String, UserFunction>() {
@@ -51,14 +53,14 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 		}
 	}
 
-	// FIXME Cache
 	@Override
+	@Cacheable(CacheNames.USER_FUNCTION)
 	public boolean hasUserFunction(String name, UserFunction fn) {
 		return getFirstItem(SQL.FUNCTION_USER, new MapSqlParameterSource(USER, name).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
 	}
 
-	// FIXME Cache
 	@Override
+	// FIXME @Cacheable(CacheNames.APP_FUNCTION)
 	public boolean hasAppFunction(String name, int application, AppFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_APP, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
 		if (!ok && fn.hasParents()) {
@@ -74,8 +76,8 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 		}
 	}
 
-	// FIXME Cache
 	@Override
+	// FIXME @Cacheable(CacheNames.ENV_FUNCTION)
 	public boolean hasEnvFunction(String name, int application, String environment, EnvFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_ENV, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(ENVIRONMENT, environment).addValue(GRANTEDFUNCTION, fn.name()),
 				String.class) != null;

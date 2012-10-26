@@ -5,6 +5,7 @@ import javax.validation.Validator;
 
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.cache.CacheNames;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 
@@ -24,7 +25,7 @@ public class ConfigurationServiceImpl extends AbstractDaoService implements Conf
 	}
 
 	@Override
-	@Cacheable("configuration")
+	@Cacheable(CacheNames.CONFIGURATION)
 	@Transactional(readOnly = true)
 	public String getParameter(ConfigurationKey configurationKey) {
 		String value = getFirstItem(SQL.CONFIGURATION_VALUE, new MapSqlParameterSource(SQLColumns.NAME, configurationKey.getKey()), String.class);
@@ -36,7 +37,7 @@ public class ConfigurationServiceImpl extends AbstractDaoService implements Conf
 	}
 
 	@Override
-	@CacheEvict(value = "configuration", key = "#configurationKey")
+	@CacheEvict(value = CacheNames.CONFIGURATION, key = "#configurationKey")
 	@Transactional
 	public void setParameter(ConfigurationKey configurationKey, String value) {
 		String name = configurationKey.getKey();

@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
@@ -67,6 +68,8 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 
 	@Autowired
 	protected AuthenticationService authenticationService;
+	
+	private static final AtomicInteger userId = new AtomicInteger();
 
 	@Before
 	public void cleanContext() {
@@ -83,7 +86,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	}
 
 	protected UserGrant asUser() throws SQLException {
-		return asUser("user");
+		return asUser("user" + userId.incrementAndGet());
 	}
 
 	protected UserGrant asUser(String name) throws SQLException {
