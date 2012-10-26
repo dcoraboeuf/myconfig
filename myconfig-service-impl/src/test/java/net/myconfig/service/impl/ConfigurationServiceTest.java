@@ -2,14 +2,11 @@ package net.myconfig.service.impl;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
 import net.myconfig.test.AbstractIntegrationTest;
-import net.myconfig.test.DBUnitHelper;
 
 import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
@@ -53,16 +50,7 @@ public class ConfigurationServiceTest extends AbstractIntegrationTest {
 		// Gets the value
 		assertEquals("address1", service.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
 		// Updates the value directly in the database
-		Connection con = DBUnitHelper.getConnection().getConnection();
-		PreparedStatement ps = con.prepareStatement("update configuration set value = ? where name = ?");
-		try {
-			ps.setString(1, "address2");
-			ps.setString(2, ConfigurationKey.APP_REPLYTO_ADDRESS.getKey());
-			ps.executeUpdate();
-		} finally {
-			ps.close();
-		}
-		con.commit();
+		execute("update configuration set value = ? where name = ?", "address2", ConfigurationKey.APP_REPLYTO_ADDRESS.getKey());
 		// The initial value in still in cache
 		assertEquals("address1", service.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
 	}

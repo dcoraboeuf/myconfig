@@ -3,16 +3,21 @@ package net.myconfig.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.myconfig.core.MyConfigProfiles;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.ITable;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
@@ -27,11 +32,32 @@ import org.springframework.transaction.annotation.Transactional;
 @ActiveProfiles(profiles = { MyConfigProfiles.TEST })
 public abstract class AbstractIntegrationTest extends AbstractJUnit4SpringContextTests {
 
+	private final Logger logger = LoggerFactory.getLogger(AbstractIntegrationTest.class);
+
 	private static final String TABLE_TEST = "test";
 
 	protected ITable getTable(String name, String sql, Object... parameters) throws DataSetException, SQLException {
 		IDatabaseConnection databaseConnection = DBUnitHelper.getConnection();
 		return databaseConnection.createQueryTable(name, String.format(sql, parameters));
+	}
+
+	protected void execute(String sql, Object... params) throws SQLException {
+		logger.debug("SQL: {} {}", sql, StringUtils.join(params));
+		Connection c = DBUnitHelper.getConnection().getConnection();
+		try {
+			PreparedStatement ps = c.prepareStatement(sql);
+			try {
+				int index = 1;
+				for (Object param : params) {
+					ps.setObject(index++, param);
+				}
+				ps.executeUpdate();
+			} finally {
+				ps.close();
+			}
+		} finally {
+			c.commit();
+		}
 	}
 
 	protected <T> List<T> getInitialSituation(int expectedCount,

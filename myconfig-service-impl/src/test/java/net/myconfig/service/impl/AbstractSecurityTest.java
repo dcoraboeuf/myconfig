@@ -1,7 +1,5 @@
 package net.myconfig.service.impl;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,15 +8,14 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.MyConfigRoles;
 import net.myconfig.core.UserFunction;
+import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.security.UserAuthentication;
 import net.myconfig.test.AbstractIntegrationTest;
-import net.myconfig.test.DBUnitHelper;
 
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -72,6 +69,9 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	protected AuthenticationService authenticationService;
 	
 	@Autowired
+	protected MyConfigService myConfigService;
+	
+	@Autowired
 	private CacheManager cacheManager;
 	
 	private static final AtomicInteger userId = new AtomicInteger(100);
@@ -99,7 +99,13 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	}
 
 	protected UserGrant asUser() throws SQLException {
-		return asUser("user" + userId.incrementAndGet());
+		return asUser(userName());
+	}
+
+	protected String userName() {
+		String name = "user" + userId.incrementAndGet();
+		logger.debug("** User name: {}", name);
+		return name;
 	}
 
 	protected UserGrant asUser(String name) throws SQLException {
@@ -113,25 +119,6 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		execute("delete from usergrants where user = ?", name);
 		execute("delete from appgrants where user = ?", name);
 		execute("delete from envgrants where user = ?", name);
-	}
-
-	private void execute(String sql, Object... params) throws SQLException {
-		logger.debug("SQL: {} {}", sql, StringUtils.join(params));
-		Connection c = DBUnitHelper.getConnection().getConnection();
-		try {
-			PreparedStatement ps = c.prepareStatement(sql);
-			try {
-				int index = 1;
-				for (Object param : params) {
-					ps.setObject(index++, param);
-				}
-				ps.executeUpdate();
-			} finally {
-				ps.close();
-			}
-		} finally {
-			c.commit();
-		}
 	}
 
 	private void asUser(User user) {
