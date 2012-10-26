@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import net.myconfig.core.AppFunction;
@@ -23,6 +24,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -69,10 +71,21 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	@Autowired
 	protected AuthenticationService authenticationService;
 	
-	private static final AtomicInteger userId = new AtomicInteger();
+	@Autowired
+	private CacheManager cacheManager;
+	
+	private static final AtomicInteger userId = new AtomicInteger(100);
 
 	@Before
-	public void cleanContext() {
+	public void cleanContext() throws SQLException {
+		// Makes sure the initial security manager is set to 'builtin'
+		asAdmin();
+		securityService.setSecurityMode("builtin");
+		// Clears all caches
+		Collection<String> names = cacheManager.getCacheNames();
+		for (String name : names) {
+			cacheManager.getCache(name).clear();
+		}
 		// No context
 		SecurityContextImpl context = new SecurityContextImpl();
 		context.setAuthentication(new AnonymousAuthenticationToken("anonymous", "anonymous", AuthorityUtils.createAuthorityList(MyConfigRoles.ANONYMOUS)));
