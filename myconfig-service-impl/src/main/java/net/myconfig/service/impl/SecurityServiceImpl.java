@@ -45,6 +45,7 @@ import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.api.template.TemplateModel;
 import net.myconfig.service.api.template.TemplateService;
+import net.myconfig.service.cache.CacheNames;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
@@ -56,6 +57,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -95,6 +98,12 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_setup)
+	@Caching(evict = {
+			@CacheEvict(value = CacheNames.USER_FUNCTIONS, allEntries = true),
+			@CacheEvict(value = CacheNames.USER_FUNCTION, allEntries = true)
+			// FIXME Clears app functions cache
+			// FIXME Clears env functions cache
+	})
 	public void setSecurityMode(String mode) {
 		logger.info("[security] Changing security mode to {}", mode);
 		String currentMode = securitySelector.getSecurityMode();
@@ -204,6 +213,10 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	@Override
+	@Caching(evict = {
+		@CacheEvict(CacheNames.USER_FUNCTION),
+		@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
+	})
 	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionAdd(String name, UserFunction fn) {
@@ -213,6 +226,10 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	@Override
+	@Caching(evict = {
+			@CacheEvict(CacheNames.USER_FUNCTION),
+			@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
+		})
 	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionRemove(String name, UserFunction fn) {
