@@ -7,6 +7,7 @@ import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.EnvironmentUsers;
 import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
@@ -71,5 +72,11 @@ public interface MyConfigInterface {
 	Ack userConfirm(String name, String token, String password);
 	
 	ApplicationUsers applicationUsers(int application);
+
+	EnvironmentUsers environmentUsers(int application, String environment);
+
+	Ack envFunctionAdd(String user, int application, String environment, EnvFunction fn);
+
+	Ack envFunctionRemove(String user, int application, String environment, EnvFunction fn);
 
 }

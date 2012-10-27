@@ -21,6 +21,7 @@ import javax.sql.DataSource;
 import javax.validation.Validator;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.Message;
@@ -35,6 +36,8 @@ import net.myconfig.service.api.message.MessageChannel;
 import net.myconfig.service.api.message.MessageDestination;
 import net.myconfig.service.api.message.MessageService;
 import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.EnvGrant;
+import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
@@ -231,6 +234,23 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@AppGrant(AppFunction.app_users)
 	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	@EnvGrant(EnvFunction.env_users)
+	public Ack envFunctionAdd(int application, String user, @EnvGrantParam String environment, EnvFunction fn) {
+		envFunctionRemove(application, user, environment, fn);
+		int count = getNamedParameterJdbcTemplate().update(SQL.GRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	@EnvGrant(EnvFunction.env_users)
+	public Ack envFunctionRemove(int application, String user, @EnvGrantParam String environment, EnvFunction fn) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
 	}
 

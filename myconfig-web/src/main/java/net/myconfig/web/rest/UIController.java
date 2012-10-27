@@ -1,6 +1,7 @@
 package net.myconfig.web.rest;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
@@ -9,6 +10,7 @@ import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.EnvironmentUsers;
 import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
@@ -215,6 +217,24 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/application/{application:\\d+}/users", method = RequestMethod.GET)
 	public @ResponseBody ApplicationUsers applicationUsers(@PathVariable int application) {
 		return getMyConfigService().getApplicationUsers(application);
+	}
+	
+	@Override
+	@RequestMapping(value = "/application/{application:\\d+}/environment/{environment}/users", method = RequestMethod.GET)
+	public @ResponseBody EnvironmentUsers environmentUsers(@PathVariable int application, @PathVariable String environment) {
+		return getMyConfigService().getEnvironmentUsers(application, environment);
+	}
+	
+	@Override
+	@RequestMapping(value = "/user/{user}/application/{application}/environment/{environment}/function/{fn}/add", method = RequestMethod.POST)
+	public @ResponseBody Ack envFunctionAdd(@PathVariable String user, @PathVariable int application, @PathVariable String environment, @PathVariable EnvFunction fn) {
+		return securityService.envFunctionAdd (application, user, environment, fn);
+	}
+	
+	@Override
+	@RequestMapping(value = "/user/{user}/application/{application}/environment/{environment}/function/{fn}/remove", method = RequestMethod.POST)
+	public @ResponseBody Ack envFunctionRemove(@PathVariable String user, @PathVariable int application, @PathVariable String environment, @PathVariable EnvFunction fn) {
+		return securityService.envFunctionRemove (application, user, environment, fn);
 	}
 
 }

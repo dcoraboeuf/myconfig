@@ -10,6 +10,7 @@ import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.EnvironmentUsers;
 import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserApplicationRights;
@@ -62,5 +63,7 @@ public interface MyConfigService {
 	List<UserApplicationRights> getUserApplicationRights (String user);
 
 	ApplicationUsers getApplicationUsers(int application);
+
+	EnvironmentUsers getEnvironmentUsers(int application, String environment);
 
 }

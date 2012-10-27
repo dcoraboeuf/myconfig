@@ -8,6 +8,7 @@ import java.util.Collections;
 
 import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
@@ -16,6 +17,7 @@ import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
+import net.myconfig.core.model.EnvironmentUsers;
 import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
@@ -240,6 +242,22 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	}
 
 	/**
+	 * POST /ui/user/{user}/application/{application}/environment/{environment}/function/{fn}/add
+	 */
+	@Override
+	public Ack envFunctionAdd(String user, int application, String environment, EnvFunction fn) {
+		return post (format("/ui/user/%s/application/%d/environment/%s/function/%s/add", user, application, environment, fn), Ack.class, null);
+	}
+
+	/**
+	 * POST /ui/user/{user}/application/{application}/environment/{environment}/function/{fn}/remove
+	 */
+	@Override
+	public Ack envFunctionRemove(String user, int application, String environment, EnvFunction fn) {
+		return post (format("/ui/user/%s/application/%d/environment/%s/function/%s/remove", user, application, environment, fn), Ack.class, null);
+	}
+
+	/**
 	 * POST /security/mode/{mode}
 	 */
 	@Override
@@ -262,6 +280,14 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	@Override
 	public ApplicationUsers applicationUsers(int application) {
 		return get(format("/ui/application/%d/users", application), ApplicationUsers.class);
+	}
+	
+	/**
+	 * GET /ui/application/{application:\\d+}/environment/{environment}/users
+	 */
+	@Override
+	public EnvironmentUsers environmentUsers(int application, String environment) {
+		return get(format("/ui/application/%d/environment/%s/users", application, environment), EnvironmentUsers.class);
 	}
 	
 	@Override

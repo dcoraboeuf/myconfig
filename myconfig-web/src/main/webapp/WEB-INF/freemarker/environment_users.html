@@ -1,0 +1,50 @@
+<#include "/lib/layout.html">
+<@layout_std pageId="environment_users" style=true script=true modules=["items"] title=loc("environment_users.title", context.application, context.environment)>
+	<@panel>
+		<table class="items">
+			<thead>
+				<tr>
+					<th><@lh key="model.user.name" /></th>
+					<th><@lh key="model.user.displayName" /></th>
+					<#list envFunctions as envFunction>
+						<th class="env-function">
+							<p class="function env-function">${envFunction}</p>
+							<p class="info env-function"><@lh key = "EnvFunction." + envFunction /></p>
+						</th>
+					</#list>
+				</tr>
+			</thead>
+			<tbody>
+				<#list context.users as user>
+					<tr>
+						<td class="item-column item-column-user-name">
+							${user.name?html}
+						</td>
+						<td class="item-column item-column-user-displayName">
+							${user.displayName?html}
+						</td>
+						<#list envFunctions as envFunction>
+							<td class="item-column env-function">
+								<#if user.functions?seq_contains(envFunction)>
+									<#assign hasfn = "yes" />
+								<#else>
+									<#assign hasfn = "no" />
+								</#if>
+								<div
+									application="${context.id}"
+									environment="${context.environment?html}"
+									user="${user.name?html}"
+									function="${envFunction}"
+									set="${hasfn}"
+									class="env-function"
+									onclick="EnvironmentUsers.assignEnvFunction(this);" />
+							</td>
+						</#list>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
+	</@panel>
+	<#include "/application_navigation.html" />
+	<@application_nav id=context.id page="environment_users" /> 
+</@layout_std>

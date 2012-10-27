@@ -81,27 +81,32 @@
 					</td>
 					<td>
 						<@panel title="application.environments">
-							<@items_crud
+							<@items_table
 								id="environments"
-								columns=[{
-									"header": "model.environment.name",
-									"field": "name"
-									}, {
-									"header": "application.environment.missingCount",
-									"special": "missing_count",
-									"action": "gui/configuration/environment/${application.id}",
-									"actionItemField": "name"
-									}]
-								list=application.environmentSummaryList
-								deleteAction="gui/application/${application.id}/environment/delete"
-								deleteField="name"
-								deletePromptKey="environment.delete"
-								editAction="gui/configuration/environment/${application.id}"
-								editField="name"
-								createId="environment-create"
-								createAction="gui/application/${application.id}/environment/create"
-								errorKey="environment_error"
-								/>
+								headers=[ "model.environment.name", "application.environment.missingCount" ]
+								actions=true>
+								<@items items=application.environmentSummaryList ; item>
+									<@item_column field="name" item=item />
+									<@item_missing_count item=item action="gui/configuration/environment/${application.id}" actionItemField="name" />
+									<@item_actions item=item>
+										<@sec_chk_env_fn application=application.id environment=item.name fn="env_delete">
+											<@item_delete item=item action="gui/application/${application.id}/environment/delete" formField="name" promptField="name" promptKey="environment.delete" />
+										</@sec_chk_env_fn>
+										<@sec_chk_env_fn application=application.id environment=item.name fn="env_config">
+											<@item_edit item=item action="gui/configuration/environment/${application.id}" itemField="name" />
+										</@sec_chk_env_fn>
+										<@sec_chk_env_fn application=application.id environment=item.name fn="env_users">
+											<@item_edit item=item action="gui/application/${application.id}/environment/users" itemField="name" icon="environment_users.png" />
+										</@sec_chk_env_fn>
+									</@item_actions>
+								</@items>
+								<@items_commands>
+									<@sec_chk_app_fn application=application.id fn="app_envcreate">
+										<@item_create id="environment-create" action="gui/application/${application.id}/environment/create" label="general.create.label" maxlength="80" size="20" submit="general.create" />
+									</@sec_chk_app_fn>
+									<@item_error key="environment_error" />
+								</@items_commands>
+							</@items_table>
 						</@panel>
 					</td>
 					<td valign="top">

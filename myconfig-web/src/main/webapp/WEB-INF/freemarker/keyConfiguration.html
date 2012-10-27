@@ -49,7 +49,11 @@
 						<th class="configuration-column-header-0"><@lh key="model.version" /> x <@lh key="model.environment" /></th>
 						<#list keyConfiguration.environmentValuesPerVersionList as environmentConfiguration>
 							<th class="configuration-column-header">
-								<a href="gui/configuration/environment/${keyConfiguration.id}/${environmentConfiguration.name?html}">${environmentConfiguration.name?html}</a>
+								<#if chk_env_fn(keyConfiguration.id, environmentConfiguration.name, "env_config")>
+									<a href="gui/configuration/environment/${keyConfiguration.id}/${environmentConfiguration.name?html}">${environmentConfiguration.name?html}</a>
+								<#else>
+									${environmentConfiguration.name?html}
+								</#if>
 							</th>
 						</#list>
 					</tr>

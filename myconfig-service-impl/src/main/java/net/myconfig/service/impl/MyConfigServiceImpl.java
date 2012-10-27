@@ -47,6 +47,8 @@ import net.myconfig.core.model.ConfigurationValue;
 import net.myconfig.core.model.Environment;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.EnvironmentSummary;
+import net.myconfig.core.model.EnvironmentUserRights;
+import net.myconfig.core.model.EnvironmentUsers;
 import net.myconfig.core.model.IndexedValues;
 import net.myconfig.core.model.Key;
 import net.myconfig.core.model.KeyConfiguration;
@@ -222,6 +224,55 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
+	@EnvGrant(EnvFunction.env_users)
+	public EnvironmentUsers getEnvironmentUsers(final int application, @EnvGrantParam final String environment) {
+		final NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		// Gets the application name
+		String applicationName = getApplicationName(application);
+		// List of users
+		List<UserName> userNames = getJdbcTemplate().query(SQL.USER_NAMES, new RowMapper<UserName>() {
+
+			@Override
+			public UserName mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return new UserName(rs.getString(NAME), rs.getString(DISPLAYNAME));
+			}
+			
+		});
+		// Gets the environment rights for each user and this applications
+		List<EnvironmentUserRights> users = Lists.transform(userNames, new Function<UserName, EnvironmentUserRights>() {
+			@Override
+			public EnvironmentUserRights apply (UserName user) {
+				// Set of allowed functions
+				Collection<EnvFunction> fns = Lists.transform(
+						t.queryForList(SQL.FUNCTION_ENV_LIST_FOR_USER_AND_APPLICATION,
+								new MapSqlParameterSource()
+									.addValue(APPLICATION, application)
+									.addValue(USER, user.getName())
+									.addValue(ENVIRONMENT, environment),
+								String.class),
+						new Function<String, EnvFunction>() {
+							@Override
+							public EnvFunction apply (String value) {
+								return EnvFunction.valueOf(value);
+							}
+						});
+				// List of functions
+				EnumSet<EnvFunction> functions;
+				if (fns.isEmpty()) {
+					functions = EnumSet.noneOf(EnvFunction.class);
+				} else {
+					functions = EnumSet.copyOf(fns);
+				}
+				// OK
+				return new EnvironmentUserRights(user.getName(), user.getDisplayName(), functions);
+			}
+		});
+		// OK
+		return new EnvironmentUsers(application, applicationName, environment, users);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
 	public ApplicationConfiguration getApplicationConfiguration(int application) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
@@ -346,7 +397,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.app_config)
+	@AppGrant(AppFunction.app_envcreate)
 	public Ack createEnvironment(int id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
@@ -369,8 +420,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	@AppGrant(AppFunction.app_config)
-	public Ack deleteEnvironment(int id, String name) {
+	@EnvGrant(EnvFunction.env_delete)
+	public Ack deleteEnvironment(int id, @EnvGrantParam String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
 		return Ack.one (count);
@@ -518,7 +569,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional(readOnly = true)
-	@EnvGrant(EnvFunction.env_view)
+	@EnvGrant(EnvFunction.env_config)
 	public EnvironmentConfiguration getEnvironmentConfiguration(int application, @EnvGrantParam String environment) {
 		checkApplication(application);
 		checkEnvironment(application, environment);
@@ -588,9 +639,17 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			versionConfigurationList.add(versionConditionalValues);
 		}
 		
-		// Previous & next version
+		// Previous version
 		String previousEnvironment = getFirstItem(SQL.ENVIRONMENT_PREVIOUS, environmentCriteria, String.class);
+		while (previousEnvironment != null && !hasEnvironmentAccess(application, previousEnvironment, EnvFunction.env_config)) {
+			previousEnvironment = getFirstItem(SQL.ENVIRONMENT_PREVIOUS, environmentCriteria.addValue(ENVIRONMENT, previousEnvironment), String.class);
+		}
+		// Next version
+		environmentCriteria.addValue(ENVIRONMENT, environment);
 		String nextEnvironment = getFirstItem(SQL.ENVIRONMENT_NEXT, environmentCriteria, String.class);
+		while (nextEnvironment != null && !hasEnvironmentAccess(application, nextEnvironment, EnvFunction.env_config)) {
+			nextEnvironment = getFirstItem(SQL.ENVIRONMENT_NEXT, environmentCriteria.addValue(ENVIRONMENT, nextEnvironment), String.class);
+		}
 		// OK
 		return new EnvironmentConfiguration(application, name, environment, previousEnvironment, nextEnvironment, keyList, versionConfigurationList);
 	}

@@ -77,8 +77,19 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	// FIXME Cache
 	@Override
 	public boolean hasEnvFunction(String name, int application, String environment, EnvFunction fn) {
-		return getFirstItem(SQL.FUNCTION_ENV, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(ENVIRONMENT, environment).addValue(GRANTEDFUNCTION, fn.name()),
+		boolean ok = getFirstItem(SQL.FUNCTION_ENV, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(ENVIRONMENT, environment).addValue(GRANTEDFUNCTION, fn.name()),
 				String.class) != null;
+		if (!ok && fn.hasParents()) {
+			for (EnvFunction parentFn: fn.getParents()) {
+				ok = hasEnvFunction(name, application, environment, parentFn);
+				if (ok) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			return ok;
+		}
 	}
 
 }
