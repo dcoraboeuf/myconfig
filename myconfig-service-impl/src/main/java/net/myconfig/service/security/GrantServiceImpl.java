@@ -86,7 +86,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 
 	@Override
-	// FIXME @Cacheable(CacheNames.ENV_FUNCTION)
+	@Cacheable(CacheNames.ENV_FUNCTION)
 	@Transactional(readOnly = true)
 	public boolean hasEnvFunction(int application, String name, String environment, EnvFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_ENV, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(ENVIRONMENT, environment).addValue(GRANTEDFUNCTION, fn.name()),
@@ -178,6 +178,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 	
 	@Override
+	@CacheEvict(CacheNames.ENV_FUNCTION)
 	@Transactional
 	public Ack envFunctionAdd(int application, String user, String environment, EnvFunction fn) {
 		envFunctionRemove(application, user, environment, fn);
@@ -186,6 +187,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 	
 	@Override
+	@CacheEvict(CacheNames.ENV_FUNCTION)
 	@Transactional
 	public Ack envFunctionRemove(int application, String user, String environment, EnvFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));

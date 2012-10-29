@@ -25,6 +25,6 @@ public interface CacheNames {
 	/**
 	 * Key: user name + application id + environment + function
 	 */
-	// FIXME String ENV_FUNCTION = "envFunction";
+	String ENV_FUNCTION = "envFunction";
 
 }
