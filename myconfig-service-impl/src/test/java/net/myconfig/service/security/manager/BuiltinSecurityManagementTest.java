@@ -245,7 +245,7 @@ public class BuiltinSecurityManagementTest {
 	@Test
 	public void hasAppFunction_user() {
 		User user = UserBuilder.create("user").build();		
-		when(grantService.hasAppFunction("user", 2, AppFunction.app_view)).thenReturn(true);
+		when(grantService.hasAppFunction(2, "user", AppFunction.app_view)).thenReturn(true);
 		
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getDetails()).thenReturn(user);
@@ -285,7 +285,7 @@ public class BuiltinSecurityManagementTest {
 	@Test
 	public void hasEnvFunction_user() {
 		User user = UserBuilder.create("user").build();	
-		when(grantService.hasEnvFunction("user", 2, "UAT", EnvFunction.env_view)).thenReturn(true);
+		when(grantService.hasEnvFunction(2, "user", "UAT", EnvFunction.env_view)).thenReturn(true);
 		
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getDetails()).thenReturn(user);

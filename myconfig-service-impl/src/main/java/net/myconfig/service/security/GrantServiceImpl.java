@@ -70,11 +70,11 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	// FIXME @Cacheable(CacheNames.APP_FUNCTION)
 	@Transactional(readOnly = true)
-	public boolean hasAppFunction(String name, int application, AppFunction fn) {
+	public boolean hasAppFunction(int application, String name, AppFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_APP, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
 		if (!ok && fn.hasParents()) {
 			for (AppFunction parentFn: fn.getParents()) {
-				ok = hasAppFunction(name, application, parentFn);
+				ok = hasAppFunction(application, name, parentFn);
 				if (ok) {
 					return true;
 				}
@@ -88,12 +88,12 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	// FIXME @Cacheable(CacheNames.ENV_FUNCTION)
 	@Transactional(readOnly = true)
-	public boolean hasEnvFunction(String name, int application, String environment, EnvFunction fn) {
+	public boolean hasEnvFunction(int application, String name, String environment, EnvFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_ENV, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(ENVIRONMENT, environment).addValue(GRANTEDFUNCTION, fn.name()),
 				String.class) != null;
 		if (!ok && fn.hasParents()) {
 			for (EnvFunction parentFn: fn.getParents()) {
-				ok = hasEnvFunction(name, application, environment, parentFn);
+				ok = hasEnvFunction(application, name, environment, parentFn);
 				if (ok) {
 					return true;
 				}

@@ -11,9 +11,9 @@ public interface GrantService {
 
 	boolean hasUserFunction(String name, UserFunction fn);
 
-	boolean hasAppFunction(String name, int application, AppFunction fn);
+	boolean hasAppFunction(int application, String name, AppFunction fn);
 
-	boolean hasEnvFunction(String name, int application, String environment, EnvFunction fn);
+	boolean hasEnvFunction(int application, String name, String environment, EnvFunction fn);
 
 	EnumSet<UserFunction> getUserFunctions(String name);
 
