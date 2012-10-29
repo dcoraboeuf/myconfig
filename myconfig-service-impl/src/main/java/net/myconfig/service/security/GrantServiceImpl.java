@@ -5,6 +5,7 @@ import static net.myconfig.service.db.SQLColumns.ENVIRONMENT;
 import static net.myconfig.service.db.SQLColumns.GRANTEDFUNCTION;
 import static net.myconfig.service.db.SQLColumns.USER;
 
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -123,6 +125,54 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	public Ack userFunctionRemove(String name, UserFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	public Ack appFunctionAdd(int application, String user, AppFunction fn) {
+		appFunctionRemove(application, user, fn);
+		int count = getNamedParameterJdbcTemplate().update(
+				SQL.GRANT_APP_FUNCTION,
+				new MapSqlParameterSource()
+					.addValue(APPLICATION, application)
+					.addValue(SQLColumns.USER, user)
+					.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public EnumSet<AppFunction> getAppFunctions(int application, String name) {
+		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		// Set of allowed functions
+		Collection<AppFunction> fns = Lists.transform(
+				t.queryForList(SQL.FUNCTION_APP_LIST_FOR_USER,
+						new MapSqlParameterSource()
+							.addValue(APPLICATION, application)
+							.addValue(USER, name),
+						String.class),
+				new Function<String, AppFunction>() {
+					@Override
+					public AppFunction apply (String value) {
+						return AppFunction.valueOf(value);
+					}
+				});
+		// List of functions
+		EnumSet<AppFunction> functions;
+		if (fns.isEmpty()) {
+			functions = EnumSet.noneOf(AppFunction.class);
+		} else {
+			functions = EnumSet.copyOf(fns);
+		}
+		// OK
+		return functions;
 	}
 
 }

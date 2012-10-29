@@ -21,4 +21,10 @@ public interface GrantService {
 
 	Ack userFunctionRemove(String name, UserFunction fn);
 
+	Ack appFunctionAdd(int application, String user, AppFunction fn);
+
+	Ack appFunctionRemove(int application, String user, AppFunction fn);
+
+	EnumSet<AppFunction> getAppFunctions(int application, String name);
+
 }

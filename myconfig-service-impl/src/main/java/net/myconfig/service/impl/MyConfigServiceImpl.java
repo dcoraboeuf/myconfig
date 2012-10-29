@@ -64,6 +64,7 @@ import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.EnvGrant;
 import net.myconfig.service.api.security.EnvGrantParam;
+import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.db.SQL;
@@ -109,8 +110,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	private final String versionNumber;
 
 	@Autowired
-	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource, Validator validator, SecuritySelector securitySelector) {
-		super(dataSource, validator, securitySelector);
+	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource, Validator validator, SecuritySelector securitySelector, GrantService grantService) {
+		super(dataSource, validator, securitySelector, grantService);
 		this.versionNumber = versionNumber;
 	}
 	
@@ -178,7 +179,6 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_users)
 	public ApplicationUsers getApplicationUsers(final int application) {
-		final NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Gets the application name
 		String name = getApplicationName(application);
 		// List of users
@@ -194,26 +194,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		List<ApplicationUserRights> users = Lists.transform(userNames, new Function<UserName, ApplicationUserRights>() {
 			@Override
 			public ApplicationUserRights apply (UserName user) {
-				// Set of allowed functions
-				Collection<AppFunction> fns = Lists.transform(
-						t.queryForList(SQL.FUNCTION_APP_LIST_FOR_USER,
-								new MapSqlParameterSource()
-									.addValue(APPLICATION, application)
-									.addValue(USER, user.getName()),
-								String.class),
-						new Function<String, AppFunction>() {
-							@Override
-							public AppFunction apply (String value) {
-								return AppFunction.valueOf(value);
-							}
-						});
-				// List of functions
-				EnumSet<AppFunction> functions;
-				if (fns.isEmpty()) {
-					functions = EnumSet.noneOf(AppFunction.class);
-				} else {
-					functions = EnumSet.copyOf(fns);
-				}
+				EnumSet<AppFunction> functions= grantService.getAppFunctions (application, user.getName());
 				// OK
 				return new ApplicationUserRights(user.getName(), user.getDisplayName(), functions);
 			}
@@ -935,25 +916,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			String name = (String) idName.get(NAME);
 			// Is this application allowed for administration of users?
 			if (hasApplicationAccess(id, AppFunction.app_users)) {
-				// Set of allowed functions
-				Collection<AppFunction> fns = Lists.transform(
-						getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTION_APP_LIST_FOR_USER,
-								new MapSqlParameterSource()
-									.addValue(APPLICATION, id)
-									.addValue(USER, user),
-								String.class),
-						new Function<String, AppFunction>() {
-							@Override
-							public AppFunction apply (String value) {
-								return AppFunction.valueOf(value);
-							}
-						});
-				// OK
-				if (fns.isEmpty()) {
-					result.add(new UserApplicationRights(id, name, EnumSet.noneOf(AppFunction.class)));
-				} else {
-					result.add(new UserApplicationRights(id, name, EnumSet.copyOf(fns)));
-				}
+				EnumSet<AppFunction> fns = grantService.getAppFunctions(id, user);
+				result.add(new UserApplicationRights(id, name, fns));
 			}
 		}
 		// OK

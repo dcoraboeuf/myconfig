@@ -225,20 +225,15 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 	
 	@Override
-	@Transactional
 	@AppGrant(AppFunction.app_users)
 	public Ack appFunctionAdd(int application, String user, AppFunction fn) {
-		appFunctionRemove(application, user, fn);
-		int count = getNamedParameterJdbcTemplate().update(SQL.GRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
-		return Ack.one(count);
+		return grantService.appFunctionAdd(application, user, fn);
 	}
 	
 	@Override
-	@Transactional
 	@AppGrant(AppFunction.app_users)
 	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
-		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
-		return Ack.one(count);
+		return grantService.appFunctionRemove (application, user, fn);
 	}
 	
 	@Override

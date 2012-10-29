@@ -9,6 +9,7 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Environment;
+import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
@@ -26,10 +27,12 @@ import com.google.common.collect.Iterables;
 public abstract class AbstractSecureService extends AbstractDaoService {
 
 	private final SecuritySelector securitySelector;
+	protected final GrantService grantService;
 
-	public AbstractSecureService(DataSource dataSource, Validator validator, SecuritySelector securitySelector) {
+	public AbstractSecureService(DataSource dataSource, Validator validator, SecuritySelector securitySelector, GrantService grantService) {
 		super(dataSource, validator);
 		this.securitySelector = securitySelector;
+		this.grantService = grantService;
 	}
 
 	protected void checkEnvironmentAccess(int application, String environment, EnvFunction fn) {
@@ -73,12 +76,7 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		if (profile != null && !profile.isAdmin()) {
 			String user = profile.getName();
 			// Grant
-			getNamedParameterJdbcTemplate().update(
-					SQL.GRANT_APP_FUNCTION,
-					new MapSqlParameterSource()
-						.addValue(SQLColumns.USER, user)
-						.addValue(SQLColumns.APPLICATION, application)
-						.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+			grantService.appFunctionAdd(application, user, fn);
 		}
 	}
 
@@ -87,6 +85,7 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		if (profile != null && !profile.isAdmin()) {
 			String user = profile.getName();
 			// Grant
+			// FIXME Uses the GrantService
 			getNamedParameterJdbcTemplate().update(
 					SQL.GRANT_ENV_FUNCTION,
 					new MapSqlParameterSource()
