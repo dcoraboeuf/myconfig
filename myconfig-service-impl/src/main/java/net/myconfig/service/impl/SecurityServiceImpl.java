@@ -213,28 +213,15 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	}
 
 	@Override
-	@Caching(evict = {
-		@CacheEvict(CacheNames.USER_FUNCTION),
-		@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
-	})
-	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionAdd(String name, UserFunction fn) {
-		userFunctionRemove(name, fn);
-		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_ADD, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
-		return Ack.one(count);
+		return grantService.userFunctionAdd (name, fn);
 	}
 
 	@Override
-	@Caching(evict = {
-			@CacheEvict(CacheNames.USER_FUNCTION),
-			@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
-		})
-	@Transactional
 	@UserGrant(UserFunction.security_users)
 	public Ack userFunctionRemove(String name, UserFunction fn) {
-		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
-		return Ack.one(count);
+		return grantService.userFunctionRemove (name, fn);
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import java.util.EnumSet;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
 
 public interface GrantService {
 
@@ -15,5 +16,9 @@ public interface GrantService {
 	boolean hasEnvFunction(String name, int application, String environment, EnvFunction fn);
 
 	EnumSet<UserFunction> getUserFunctions(String name);
+
+	Ack userFunctionAdd(String name, UserFunction fn);
+
+	Ack userFunctionRemove(String name, UserFunction fn);
 
 }

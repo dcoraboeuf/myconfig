@@ -14,6 +14,7 @@ import javax.validation.Validator;
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Ack;
 import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.cache.CacheNames;
 import net.myconfig.service.db.SQL;
@@ -21,9 +22,12 @@ import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.impl.AbstractDaoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -38,6 +42,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 
 	@Override
 	@Cacheable(CacheNames.USER_FUNCTIONS)
+	@Transactional(readOnly = true)
 	public EnumSet<UserFunction> getUserFunctions(String name) {
 		List<UserFunction> fns = Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, name), String.class),
 				new Function<String, UserFunction>() {
@@ -55,12 +60,14 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 
 	@Override
 	@Cacheable(CacheNames.USER_FUNCTION)
+	@Transactional(readOnly = true)
 	public boolean hasUserFunction(String name, UserFunction fn) {
 		return getFirstItem(SQL.FUNCTION_USER, new MapSqlParameterSource(USER, name).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
 	}
 
 	@Override
 	// FIXME @Cacheable(CacheNames.APP_FUNCTION)
+	@Transactional(readOnly = true)
 	public boolean hasAppFunction(String name, int application, AppFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_APP, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
 		if (!ok && fn.hasParents()) {
@@ -78,6 +85,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 
 	@Override
 	// FIXME @Cacheable(CacheNames.ENV_FUNCTION)
+	@Transactional(readOnly = true)
 	public boolean hasEnvFunction(String name, int application, String environment, EnvFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_ENV, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(ENVIRONMENT, environment).addValue(GRANTEDFUNCTION, fn.name()),
 				String.class) != null;
@@ -92,6 +100,29 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 		} else {
 			return ok;
 		}
+	}
+
+	@Override
+	@Caching(evict = {
+			@CacheEvict(CacheNames.USER_FUNCTION),
+			@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
+		})
+	@Transactional
+	public Ack userFunctionAdd(String name, UserFunction fn) {
+		userFunctionRemove(name, fn);
+		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_ADD, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+
+	@Override
+	@Caching(evict = {
+			@CacheEvict(CacheNames.USER_FUNCTION),
+			@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
+		})
+	@Transactional
+	public Ack userFunctionRemove(String name, UserFunction fn) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
 	}
 
 }
