@@ -7,6 +7,7 @@ import javax.validation.Validator;
 
 import net.myconfig.core.model.Event;
 import net.myconfig.service.api.EventService;
+import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.db.SQLUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,18 +36,24 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	public static final int LENGTH_MESSAGE = 600;
 	
 	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, identifier, oldvalue, newvalue, message) values (:security, :user, :creation, :category, :identifier, :oldvalue, :newvalue, :message)";
+	
+	private final SecuritySelector securitySelector;
 
 	@Autowired
-	public EventServiceImpl(DataSource dataSource, Validator validator) {
+	public EventServiceImpl(DataSource dataSource, Validator validator, SecuritySelector securitySelector) {
 		super(dataSource, validator);
+		this.securitySelector = securitySelector;
 	}
 
 	@Override
 	@Transactional
 	public void saveEvent(Event event) {
-		// FIXME Gets the security information
-		String security = "todosec";
-		String user = "todouser";
+		// Gets the security information
+		String security = securitySelector.getSecurityMode();
+		String user = securitySelector.getCurrentUserName();
+		if (user == null) {
+			user = "-";
+		}
 		// Prepares the record
 		// Saves into the database
 		getNamedParameterJdbcTemplate().update(
