@@ -20,7 +20,7 @@ public interface CacheNames {
 	/**
 	 * Key: user name + application id + function
 	 */
-	// FIXME String APP_FUNCTION = "appFunction";
+	String APP_FUNCTION = "appFunction";
 
 	/**
 	 * Key: user name + application id + environment + function

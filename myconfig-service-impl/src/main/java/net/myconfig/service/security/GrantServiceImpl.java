@@ -68,7 +68,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 
 	@Override
-	// FIXME @Cacheable(CacheNames.APP_FUNCTION)
+	@Cacheable(CacheNames.APP_FUNCTION)
 	@Transactional(readOnly = true)
 	public boolean hasAppFunction(int application, String name, AppFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_APP, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
@@ -128,6 +128,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 	
 	@Override
+	@CacheEvict(CacheNames.APP_FUNCTION)
 	@Transactional
 	public Ack appFunctionAdd(int application, String user, AppFunction fn) {
 		appFunctionRemove(application, user, fn);
@@ -141,6 +142,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 	
 	@Override
+	@CacheEvict(CacheNames.APP_FUNCTION)
 	@Transactional
 	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
