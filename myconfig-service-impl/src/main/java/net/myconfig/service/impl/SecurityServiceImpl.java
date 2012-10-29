@@ -2,7 +2,6 @@ package net.myconfig.service.impl;
 
 import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
-import static net.myconfig.service.db.SQLColumns.APPLICATION;
 import static net.myconfig.service.db.SQLColumns.DISABLED;
 import static net.myconfig.service.db.SQLColumns.DISPLAYNAME;
 import static net.myconfig.service.db.SQLColumns.EMAIL;
@@ -240,17 +239,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Transactional
 	@EnvGrant(EnvFunction.env_users)
 	public Ack envFunctionAdd(int application, String user, @EnvGrantParam String environment, EnvFunction fn) {
-		envFunctionRemove(application, user, environment, fn);
-		int count = getNamedParameterJdbcTemplate().update(SQL.GRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
-		return Ack.one(count);
+		return grantService.envFunctionAdd(application, user, environment, fn);
 	}
 	
 	@Override
 	@Transactional
 	@EnvGrant(EnvFunction.env_users)
 	public Ack envFunctionRemove(int application, String user, @EnvGrantParam String environment, EnvFunction fn) {
-		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
-		return Ack.one(count);
+		return grantService.envFunctionAdd(application, user, environment, fn);
 	}
 
 	@Override

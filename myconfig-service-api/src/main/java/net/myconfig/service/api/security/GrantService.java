@@ -25,6 +25,12 @@ public interface GrantService {
 
 	Ack appFunctionRemove(int application, String user, AppFunction fn);
 
-	EnumSet<AppFunction> getAppFunctions(int application, String name);
+	EnumSet<AppFunction> getAppFunctions(int application, String user);
+
+	Ack envFunctionAdd(int application, String user, String environment, EnvFunction fn);
+
+	Ack envFunctionRemove(int application, String user, String environment, EnvFunction fn);
+
+	EnumSet<EnvFunction> getEnvFunctions(int application, String user, String environment);
 
 }

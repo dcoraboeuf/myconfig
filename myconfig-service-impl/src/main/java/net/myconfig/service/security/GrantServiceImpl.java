@@ -174,5 +174,48 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 		// OK
 		return functions;
 	}
+	
+	@Override
+	@Transactional
+	public Ack envFunctionAdd(int application, String user, String environment, EnvFunction fn) {
+		envFunctionRemove(application, user, environment, fn);
+		int count = getNamedParameterJdbcTemplate().update(SQL.GRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional
+	public Ack envFunctionRemove(int application, String user, String environment, EnvFunction fn) {
+		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+		return Ack.one(count);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public EnumSet<EnvFunction> getEnvFunctions(int application, String user, String environment) {
+		// Set of allowed functions
+		Collection<EnvFunction> fns = Lists.transform(
+				getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTION_ENV_LIST_FOR_USER_AND_APPLICATION,
+						new MapSqlParameterSource()
+							.addValue(APPLICATION, application)
+							.addValue(USER, user)
+							.addValue(ENVIRONMENT, environment),
+						String.class),
+				new Function<String, EnvFunction>() {
+					@Override
+					public EnvFunction apply (String value) {
+						return EnvFunction.valueOf(value);
+					}
+				});
+		// List of functions
+		EnumSet<EnvFunction> functions;
+		if (fns.isEmpty()) {
+			functions = EnumSet.noneOf(EnvFunction.class);
+		} else {
+			functions = EnumSet.copyOf(fns);
+		}
+		// OK
+		return functions;
+	}
 
 }

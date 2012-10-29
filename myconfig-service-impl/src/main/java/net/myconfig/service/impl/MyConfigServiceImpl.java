@@ -10,7 +10,6 @@ import static net.myconfig.service.db.SQLColumns.ID;
 import static net.myconfig.service.db.SQLColumns.KEY;
 import static net.myconfig.service.db.SQLColumns.KEY_COUNT;
 import static net.myconfig.service.db.SQLColumns.NAME;
-import static net.myconfig.service.db.SQLColumns.USER;
 import static net.myconfig.service.db.SQLColumns.VALUE;
 import static net.myconfig.service.db.SQLColumns.VALUE_COUNT;
 import static net.myconfig.service.db.SQLColumns.VERSION;
@@ -19,7 +18,6 @@ import static net.myconfig.service.db.SQLColumns.VERSION_COUNT;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
@@ -207,7 +205,6 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_users)
 	public EnvironmentUsers getEnvironmentUsers(final int application, @EnvGrantParam final String environment) {
-		final NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Gets the application name
 		String applicationName = getApplicationName(application);
 		// List of users
@@ -223,27 +220,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		List<EnvironmentUserRights> users = Lists.transform(userNames, new Function<UserName, EnvironmentUserRights>() {
 			@Override
 			public EnvironmentUserRights apply (UserName user) {
-				// Set of allowed functions
-				Collection<EnvFunction> fns = Lists.transform(
-						t.queryForList(SQL.FUNCTION_ENV_LIST_FOR_USER_AND_APPLICATION,
-								new MapSqlParameterSource()
-									.addValue(APPLICATION, application)
-									.addValue(USER, user.getName())
-									.addValue(ENVIRONMENT, environment),
-								String.class),
-						new Function<String, EnvFunction>() {
-							@Override
-							public EnvFunction apply (String value) {
-								return EnvFunction.valueOf(value);
-							}
-						});
-				// List of functions
-				EnumSet<EnvFunction> functions;
-				if (fns.isEmpty()) {
-					functions = EnumSet.noneOf(EnvFunction.class);
-				} else {
-					functions = EnumSet.copyOf(fns);
-				}
+				EnumSet<EnvFunction> functions = grantService.getEnvFunctions(application, user.getName(), environment);
 				// OK
 				return new EnvironmentUserRights(user.getName(), user.getDisplayName(), functions);
 			}

@@ -13,10 +13,7 @@ import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
-import net.myconfig.service.db.SQL;
-import net.myconfig.service.db.SQLColumns;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 
@@ -85,14 +82,7 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		if (profile != null && !profile.isAdmin()) {
 			String user = profile.getName();
 			// Grant
-			// FIXME Uses the GrantService
-			getNamedParameterJdbcTemplate().update(
-					SQL.GRANT_ENV_FUNCTION,
-					new MapSqlParameterSource()
-						.addValue(SQLColumns.USER, user)
-						.addValue(SQLColumns.APPLICATION, application)
-						.addValue(SQLColumns.ENVIRONMENT, name)
-						.addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
+			grantService.envFunctionAdd(application, user, name, fn);
 		}
 	}
 
