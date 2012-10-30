@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import java.sql.SQLException;
 
 import net.myconfig.core.model.Event;
+import net.myconfig.core.model.EventCategory;
 import net.myconfig.service.api.EventService;
 import net.myconfig.test.AbstractIntegrationTest;
 
@@ -17,10 +18,10 @@ public class EventServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void save() throws DataSetException, SQLException {
-		assertRecordNotExists("select id from events where category = '%s'", "save");
-		Event e = new Event("save", "id", "old", "new", "message");
+		assertRecordNotExists("select id from events where category = '%s'", EventCategory.CONFIGURATION_SET.name());
+		Event e = new Event(EventCategory.CONFIGURATION_SET, "id", "old", "new", "message");
 		eventService.saveEvent(e);
-		assertRecordCount(1, "select id from events where category = '%s'", "save");
+		assertRecordCount(1, "select id from events where category = '%s'", EventCategory.CONFIGURATION_SET.name());
 	}
 
 }

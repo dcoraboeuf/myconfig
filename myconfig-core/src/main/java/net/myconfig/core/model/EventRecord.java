@@ -8,7 +8,7 @@ import org.joda.time.DateTime;
 public class EventRecord {
 	
 	private final int id;
-	private final String security;
+	private final EventCategory security;
 	private final String user;
 	private final DateTime creation;
 	private final String category;

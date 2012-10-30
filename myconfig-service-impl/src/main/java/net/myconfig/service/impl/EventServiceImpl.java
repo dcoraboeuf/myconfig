@@ -29,7 +29,6 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 
 	public static final int LENGTH_SECURITY = 10;
 	public static final int LENGTH_USER = 80;
-	public static final int LENGTH_CATEGORY = 80;
 	public static final int LENGTH_IDENTIDIER = 80;
 	public static final int LENGTH_OLDVALUE = 200;
 	public static final int LENGTH_NEWVALUE = 200;
@@ -62,7 +61,7 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 					.addValue(SECURITY, substring(security, 0, LENGTH_SECURITY))
 					.addValue(USER, substring(user, 0, LENGTH_USER))
 					.addValue(CREATION, SQLUtils.now())
-					.addValue(CATEGORY, substring(event.getCategory(), 0, LENGTH_CATEGORY))
+					.addValue(CATEGORY, event.getCategory().name())
 					.addValue(IDENTIFIER, substring(event.getIdentifier(), 0, LENGTH_IDENTIDIER))
 					.addValue(OLDVALUE, substring(event.getOldValue(), 0, LENGTH_OLDVALUE))
 					.addValue(NEWVALUE, substring(event.getNewValue(), 0, LENGTH_NEWVALUE))
