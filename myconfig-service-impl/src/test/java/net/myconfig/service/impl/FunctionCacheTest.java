@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 
 import net.myconfig.core.AppFunction;
+import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.GrantService;
 
@@ -70,6 +71,36 @@ public class FunctionCacheTest extends AbstractSecurityTest {
 		grantService.appFunctionRemove(appId, user, AppFunction.app_view);
 		// Gets the value from the cache again (not changed)
 		assertFalse(grantService.hasAppFunction(appId, user, AppFunction.app_view));
+	}
+	
+	@Test
+	public void envFunctionCached_tampering() throws SQLException {
+		// Creates a user
+		String user = createUser();
+		int appId = myConfigService.createApplication(appName()).getId();
+		myConfigService.createEnvironment(appId, "TEST");
+		securityService.envFunctionAdd(appId, user, "TEST", EnvFunction.env_view);
+		// Gets the value
+		assertTrue(grantService.hasEnvFunction(appId, user, "TEST", EnvFunction.env_view));
+		// Tampering
+		execute("delete from envgrants where user = ?", user);
+		// Gets the value from the cache again (not changed)
+		assertTrue(grantService.hasEnvFunction(appId, user, "TEST", EnvFunction.env_view));
+	}
+	
+	@Test
+	public void envFunctionCached_cached() throws SQLException {
+		// Creates a user
+		String user = createUser();
+		int appId = myConfigService.createApplication(appName()).getId();
+		myConfigService.createEnvironment(appId, "TEST");
+		securityService.envFunctionAdd(appId, user, "TEST", EnvFunction.env_view);
+		// Gets the value
+		assertTrue(grantService.hasEnvFunction(appId, user, "TEST", EnvFunction.env_view));
+		// Update
+		grantService.envFunctionRemove(appId, user, "TEST", EnvFunction.env_view);
+		// Gets the value from the cache again (not changed)
+		assertFalse(grantService.hasEnvFunction(appId, user, "TEST", EnvFunction.env_view));
 	}
 
 	protected String createUser() throws SQLException {
