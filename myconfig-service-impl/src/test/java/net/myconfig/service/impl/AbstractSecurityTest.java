@@ -73,8 +73,9 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	
 	@Autowired
 	private CacheManager cacheManager;
-	
+
 	private static final AtomicInteger userId = new AtomicInteger(100);
+	private static final AtomicInteger appId = new AtomicInteger(100);
 
 	@Before
 	public void cleanContext() throws SQLException {
@@ -105,6 +106,12 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	protected String userName() {
 		String name = "user" + userId.incrementAndGet();
 		logger.debug("** User name: {}", name);
+		return name;
+	}
+
+	protected String appName() {
+		String name = "app" + appId.incrementAndGet();
+		logger.debug("** App name: {}", name);
 		return name;
 	}
 
