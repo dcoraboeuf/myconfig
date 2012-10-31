@@ -41,7 +41,7 @@ public class ConfigurationServiceImpl extends AbstractDaoService implements Conf
 	@Override
 	@CacheEvict(value = CacheNames.CONFIGURATION, key = "#configurationKey")
 	@Transactional
-	@Audit(EventCategory.CONFIGURATION_SET)
+	@Audit(category = EventCategory.CONFIGURATION_SET, identifier = "#configurationKey", message = "#value")
 	public void setParameter(ConfigurationKey configurationKey, String value) {
 		String name = configurationKey.getKey();
 		String existingValue = getFirstItem(SQL.CONFIGURATION_VALUE, new MapSqlParameterSource(SQLColumns.NAME, name), String.class);

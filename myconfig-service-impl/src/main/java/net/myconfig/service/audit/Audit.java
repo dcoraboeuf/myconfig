@@ -15,6 +15,10 @@ import net.myconfig.core.model.EventCategory;
 @Documented
 public @interface Audit {
 	
-	EventCategory value();
+	EventCategory category();
+	
+	String identifier();
+	
+	String message();
 
 }
