@@ -47,6 +47,7 @@ import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.EnvironmentSummary;
 import net.myconfig.core.model.EnvironmentUserRights;
 import net.myconfig.core.model.EnvironmentUsers;
+import net.myconfig.core.model.EventCategory;
 import net.myconfig.core.model.IndexedValues;
 import net.myconfig.core.model.Key;
 import net.myconfig.core.model.KeyConfiguration;
@@ -65,6 +66,7 @@ import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
+import net.myconfig.service.audit.Audit;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
@@ -295,6 +297,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.app_create)
+	@Audit(category = EventCategory.APPLICATION_CREATE, identifier = "#name") 
 	public ApplicationSummary createApplication(String name) {
 		validate(ApplicationValidation.class, NAME, name);
 		KeyHolder keyHolder = new GeneratedKeyHolder();

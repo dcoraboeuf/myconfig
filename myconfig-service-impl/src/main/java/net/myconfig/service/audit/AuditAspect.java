@@ -6,6 +6,7 @@ import net.myconfig.core.model.EventCategory;
 import net.myconfig.service.api.EventService;
 
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -67,6 +68,9 @@ public class AuditAspect {
 	}
 
 	protected String evaluate(ProceedingJoinPoint pjp, String expression) {
+		if (StringUtils.isBlank(expression)) {
+			return null;
+		}
 		// Parsing
 		Expression parsedExpression = elParser.parseExpression(expression);
 		// Context
