@@ -20,5 +20,7 @@ public @interface Audit {
 	String identifier();
 	
 	String message() default "";
+	
+	String result() default "";
 
 }

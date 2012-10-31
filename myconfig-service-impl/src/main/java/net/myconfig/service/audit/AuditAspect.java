@@ -20,6 +20,7 @@ import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -49,10 +50,19 @@ public class AuditAspect {
 
 	@Around("auditedMethod() && @annotation(audit)")
 	public Object audit(ProceedingJoinPoint pjp, Audit audit) throws Throwable {
-		logger.debug("[audit] {} audit for {}", audit, pjp);
 		// Regular call
 		Object retVal = pjp.proceed();
-		// TODO If the result must be evaluated for success
+		// If the result must be evaluated for success
+		String result = audit.result();
+		if (StringUtils.isNotBlank(result)) {
+			boolean resultOK = evaluateResult (result, retVal);
+			if (!resultOK) {
+				// No need to register any event
+				return retVal;
+			}
+		}
+		// OK
+		logger.debug("[audit] {} audit for {}", audit, pjp);
 		// Category
 		EventCategory category = audit.category();
 		// Identifier
@@ -65,6 +75,16 @@ public class AuditAspect {
 		eventService.saveEvent(event);
 		// Returned value
 		return retVal;
+	}
+
+	protected boolean evaluateResult(String result, Object retVal) {
+		// Parsing
+		Expression resultExpression = elParser.parseExpression(result);
+		// Context
+		EvaluationContext context = new StandardEvaluationContext();
+		context.setVariable("result", retVal);
+		// Evaluation
+		return (Boolean) resultExpression.getValue(context);
 	}
 
 	protected String evaluate(ProceedingJoinPoint pjp, String expression) {
@@ -81,7 +101,7 @@ public class AuditAspect {
 		return ObjectUtils.toString(value, null);
 	}
 
-	private EvaluationContext getEvaluationContext(ProceedingJoinPoint pjp) {
+	protected EvaluationContext getEvaluationContext(ProceedingJoinPoint pjp) {
 		return new ProceedingJoinPointEvaluationContext(pjp, parameterNameDiscoverer);
 	}
 

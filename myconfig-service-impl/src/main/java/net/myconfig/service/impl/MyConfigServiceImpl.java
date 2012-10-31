@@ -321,7 +321,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_delete)
-	@Audit(category = EventCategory.APPLICATION_DELETE, identifier = "#id")
+	@Audit(category = EventCategory.APPLICATION_DELETE, identifier = "#id", result = "#result.success")
 	public Ack deleteApplication(int id) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource (ID, id));
 		return Ack.one (count);
@@ -330,7 +330,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
-	@Audit(category = EventCategory.VERSION_CREATE, identifier = "#id", message = "#name")
+	@Audit(category = EventCategory.VERSION_CREATE, identifier = "#id", message = "#name", result = "#result.success")
 	public Ack createVersion(int id, String name) {
 		validate(VersionValidation.class, NAME, name);
 		checkApplication(id);
@@ -352,7 +352,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
-	@Audit(category = EventCategory.VERSION_DELETE, identifier = "#id", message = "#name")
+	@Audit(category = EventCategory.VERSION_DELETE, identifier = "#id", message = "#name", result = "#result.success")
 	public Ack deleteVersion(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
@@ -362,7 +362,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_envcreate)
-	@Audit(category = EventCategory.ENVIRONMENT_CREATE, identifier = "#id", message = "#name") 
+	@Audit(category = EventCategory.ENVIRONMENT_CREATE, identifier = "#id", message = "#name", result = "#result.success") 
 	public Ack createEnvironment(int id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
@@ -386,7 +386,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@EnvGrant(EnvFunction.env_delete)
-	@Audit(category = EventCategory.ENVIRONMENT_DELETE, identifier = "#id", message = "#name")
+	@Audit(category = EventCategory.ENVIRONMENT_DELETE, identifier = "#id", message = "#name", result = "#result.success")
 	public Ack deleteEnvironment(int id, @EnvGrantParam String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
@@ -396,7 +396,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
-	@Audit(category = EventCategory.KEY_CREATE, identifier = "#id + '-' + #name", message = "#description") 
+	@Audit(category = EventCategory.KEY_CREATE, identifier = "#id + '-' + #name", message = "#description", result = "#result.success") 
 	public Ack createKey(int id, String name, String description) {
 		validate(KeyValidation.class, NAME, name);
 		validate(KeyValidation.class, DESCRIPTION, description);
@@ -413,7 +413,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
-	@Audit(category = EventCategory.KEY_UPDATE, identifier = "#id + '-' + #name", message = "#description")
+	@Audit(category = EventCategory.KEY_UPDATE, identifier = "#id + '-' + #name", message = "#description", result = "#result.success")
 	public Ack updateKey(int application, String name, String description) {
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(application);
@@ -430,7 +430,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
-	@Audit(category = EventCategory.KEY_DELETE, identifier = "#id", message = "#name")
+	@Audit(category = EventCategory.KEY_DELETE, identifier = "#id", message = "#name", result = "#result.success")
 	public Ack deleteKey(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
@@ -736,7 +736,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
-	@Audit(category = EventCategory.MATRIX_ADD, identifier = "#id", message = "#version + '-' + #key")
+	@Audit(category = EventCategory.MATRIX_ADD, identifier = "#id", message = "#version + '-' + #key", result = "#result.success")
 	public Ack addKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
@@ -758,7 +758,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
-	@Audit(category = EventCategory.MATRIX_REMOVE, identifier = "#id", message = "#version + '-' + #key")
+	@Audit(category = EventCategory.MATRIX_REMOVE, identifier = "#id", message = "#version + '-' + #key", result = "#result.success")
 	public Ack removeKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
