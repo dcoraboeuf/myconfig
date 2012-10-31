@@ -359,6 +359,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_envcreate)
+	@Audit(category = EventCategory.ENVIRONMENT_CREATE, identifier = "#id", message = "#name") 
 	public Ack createEnvironment(int id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
@@ -391,6 +392,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
+	@Audit(category = EventCategory.KEY_CREATE, identifier = "#id + '-' + #name", message = "#description") 
 	public Ack createKey(int id, String name, String description) {
 		validate(KeyValidation.class, NAME, name);
 		validate(KeyValidation.class, DESCRIPTION, description);
