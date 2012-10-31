@@ -19,8 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class EventServiceImpl extends AbstractDaoService implements EventService {
 
 	private static final String MESSAGE = "message";
-	private static final String NEWVALUE = "newvalue";
-	private static final String OLDVALUE = "oldvalue";
 	private static final String IDENTIFIER = "identifier";
 	private static final String CATEGORY = "category";
 	private static final String CREATION = "creation";
@@ -29,12 +27,10 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 
 	public static final int LENGTH_SECURITY = 10;
 	public static final int LENGTH_USER = 80;
-	public static final int LENGTH_IDENTIDIER = 80;
-	public static final int LENGTH_OLDVALUE = 200;
-	public static final int LENGTH_NEWVALUE = 200;
+	public static final int LENGTH_IDENTIFIER = 80;
 	public static final int LENGTH_MESSAGE = 600;
 	
-	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, identifier, oldvalue, newvalue, message) values (:security, :user, :creation, :category, :identifier, :oldvalue, :newvalue, :message)";
+	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, identifier, message) values (:security, :user, :creation, :category, :identifier, :message)";
 	
 	private final SecuritySelector securitySelector;
 
@@ -62,9 +58,7 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 					.addValue(USER, substring(user, 0, LENGTH_USER))
 					.addValue(CREATION, SQLUtils.now())
 					.addValue(CATEGORY, event.getCategory().name())
-					.addValue(IDENTIFIER, substring(event.getIdentifier(), 0, LENGTH_IDENTIDIER))
-					.addValue(OLDVALUE, substring(event.getOldValue(), 0, LENGTH_OLDVALUE))
-					.addValue(NEWVALUE, substring(event.getNewValue(), 0, LENGTH_NEWVALUE))
+					.addValue(IDENTIFIER, substring(event.getIdentifier(), 0, LENGTH_IDENTIFIER))
 					.addValue(MESSAGE, substring(event.getMessage(), 0, LENGTH_MESSAGE))
 				);
 	}

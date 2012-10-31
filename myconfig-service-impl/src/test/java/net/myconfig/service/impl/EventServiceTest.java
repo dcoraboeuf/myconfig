@@ -19,7 +19,7 @@ public class EventServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void save() throws DataSetException, SQLException {
 		assertRecordNotExists("select id from events where category = '%s'", EventCategory.CONFIGURATION_SET.name());
-		Event e = new Event(EventCategory.CONFIGURATION_SET, "id", "old", "new", "message");
+		Event e = new Event(EventCategory.CONFIGURATION_SET, "id", "message");
 		eventService.saveEvent(e);
 		assertRecordCount(1, "select id from events where category = '%s'", EventCategory.CONFIGURATION_SET.name());
 	}
