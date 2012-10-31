@@ -321,6 +321,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_delete)
+	@Audit(category = EventCategory.APPLICATION_DELETE, identifier = "#id")
 	public Ack deleteApplication(int id) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource (ID, id));
 		return Ack.one (count);
@@ -329,6 +330,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
+	@Audit(category = EventCategory.VERSION_CREATE, identifier = "#id", message = "#name")
 	public Ack createVersion(int id, String name) {
 		validate(VersionValidation.class, NAME, name);
 		checkApplication(id);
@@ -350,6 +352,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
+	@Audit(category = EventCategory.VERSION_DELETE, identifier = "#id", message = "#name")
 	public Ack deleteVersion(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
@@ -383,6 +386,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@EnvGrant(EnvFunction.env_delete)
+	@Audit(category = EventCategory.ENVIRONMENT_DELETE, identifier = "#id", message = "#name")
 	public Ack deleteEnvironment(int id, @EnvGrantParam String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
@@ -425,6 +429,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
+	@Audit(category = EventCategory.KEY_DELETE, identifier = "#id", message = "#name")
 	public Ack deleteKey(int id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
