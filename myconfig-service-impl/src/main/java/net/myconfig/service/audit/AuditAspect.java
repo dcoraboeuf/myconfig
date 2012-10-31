@@ -2,6 +2,7 @@ package net.myconfig.service.audit;
 
 
 import net.myconfig.core.model.Event;
+import net.myconfig.core.model.EventAction;
 import net.myconfig.core.model.EventCategory;
 import net.myconfig.service.api.EventService;
 
@@ -63,14 +64,27 @@ public class AuditAspect {
 		}
 		// OK
 		logger.debug("[audit] {} audit for {}", audit, pjp);
-		// Category
+		// Category & action
 		EventCategory category = audit.category();
-		// Identifier
-		String identifier = evaluate(pjp, audit.identifier());
+		EventAction action = audit.action();
+		Event event;
 		// Message
 		String message = evaluate(pjp, audit.message());
-		// Creates the event
-		Event event = new Event(category, identifier, message);
+		// Identifier OR Application
+		String identifierExpression = audit.identifier();
+		if (StringUtils.isNotBlank(identifierExpression)) {
+			String identifier = evaluate(pjp, identifierExpression);
+			// Creates the event
+			event = new Event(category, action, identifier, message);
+		} else {
+			// Keys
+			String application = evaluate(pjp, audit.application());
+			String environment = evaluate(pjp, audit.environment());
+			String version = evaluate(pjp, audit.version());
+			String key = evaluate(pjp, audit.key());
+			// Creates the event
+			event = new Event(category, action, application, environment, version, key, message);
+		}
 		// Records the event
 		eventService.saveEvent(event);
 		// Returned value

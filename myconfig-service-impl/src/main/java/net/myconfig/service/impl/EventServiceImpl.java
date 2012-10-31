@@ -20,7 +20,12 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 
 	private static final String MESSAGE = "message";
 	private static final String IDENTIFIER = "identifier";
+	private static final String APPLICATION = "application";
+	private static final String ENVIRONMENT = "environment";
+	private static final String VERSION = "version";
+	private static final String KEY = "appkey";
 	private static final String CATEGORY = "category";
+	private static final String ACTION = "action";
 	private static final String CREATION = "creation";
 	private static final String USER = "user";
 	private static final String SECURITY = "security";
@@ -30,7 +35,7 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	public static final int LENGTH_IDENTIFIER = 80;
 	public static final int LENGTH_MESSAGE = 600;
 	
-	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, identifier, message) values (:security, :user, :creation, :category, :identifier, :message)";
+	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, action, identifier, application, environment, version, appkey, message) values (:security, :user, :creation, :category, :action, :identifier, :application, :environment, :version, :appkey, :message)";
 	
 	private final SecuritySelector securitySelector;
 
@@ -58,7 +63,12 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 					.addValue(USER, substring(user, 0, LENGTH_USER))
 					.addValue(CREATION, SQLUtils.now())
 					.addValue(CATEGORY, event.getCategory().name())
+					.addValue(ACTION, event.getAction().name())
 					.addValue(IDENTIFIER, substring(event.getIdentifier(), 0, LENGTH_IDENTIFIER))
+					.addValue(APPLICATION, substring(event.getApplication(), 0, LENGTH_IDENTIFIER))
+					.addValue(ENVIRONMENT, substring(event.getEnvironment(), 0, LENGTH_IDENTIFIER))
+					.addValue(VERSION, substring(event.getVersion(), 0, LENGTH_IDENTIFIER))
+					.addValue(KEY, substring(event.getKey(), 0, LENGTH_IDENTIFIER))
 					.addValue(MESSAGE, substring(event.getMessage(), 0, LENGTH_MESSAGE))
 				);
 	}

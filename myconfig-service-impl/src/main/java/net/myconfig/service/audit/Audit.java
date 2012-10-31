@@ -7,6 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import net.myconfig.core.model.EventAction;
 import net.myconfig.core.model.EventCategory;
 
 @Target(ElementType.METHOD)
@@ -17,7 +18,17 @@ public @interface Audit {
 	
 	EventCategory category();
 	
-	String identifier();
+	EventAction action();
+	
+	String identifier() default "";
+	
+	String application() default "";
+	
+	String environment() default "";
+	
+	String version() default "";
+	
+	String key() default "";
 	
 	String message() default "";
 	

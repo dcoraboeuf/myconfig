@@ -3,6 +3,7 @@ package net.myconfig.service.impl;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.core.model.EventAction;
 import net.myconfig.core.model.EventCategory;
 import net.myconfig.service.api.ConfigurationKey;
 import net.myconfig.service.api.ConfigurationService;
@@ -41,7 +42,7 @@ public class ConfigurationServiceImpl extends AbstractDaoService implements Conf
 	@Override
 	@CacheEvict(value = CacheNames.CONFIGURATION, key = "#configurationKey")
 	@Transactional
-	@Audit(category = EventCategory.CONFIGURATION_SET, identifier = "#configurationKey", message = "#value")
+	@Audit(category = EventCategory.CONFIGURATION, action = EventAction.UPDATE, identifier = "#configurationKey", message = "#value")
 	public void setParameter(ConfigurationKey configurationKey, String value) {
 		String name = configurationKey.getKey();
 		String existingValue = getFirstItem(SQL.CONFIGURATION_VALUE, new MapSqlParameterSource(SQLColumns.NAME, name), String.class);
