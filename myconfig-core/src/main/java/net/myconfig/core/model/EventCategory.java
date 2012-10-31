@@ -18,6 +18,12 @@ public enum EventCategory {
 	
 	KEY_CREATE,
 	
-	KEY_DELETE;
+	KEY_DELETE,
+	
+	KEY_UPDATE,
+	
+	MATRIX_REMOVE,
+	
+	MATRIX_ADD;
 
 }

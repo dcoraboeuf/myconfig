@@ -413,6 +413,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
+	@Audit(category = EventCategory.KEY_UPDATE, identifier = "#id + '-' + #name", message = "#description")
 	public Ack updateKey(int application, String name, String description) {
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(application);
@@ -698,6 +699,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
+	// FIXME Audit for the update of the configuration
 	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
@@ -734,6 +736,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
+	@Audit(category = EventCategory.MATRIX_ADD, identifier = "#id", message = "#version + '-' + #key")
 	public Ack addKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
@@ -755,6 +758,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
+	@Audit(category = EventCategory.MATRIX_REMOVE, identifier = "#id", message = "#version + '-' + #key")
 	public Ack removeKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
