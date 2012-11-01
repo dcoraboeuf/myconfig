@@ -705,7 +705,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		application = "#application",
 		environment = "#item.environment",
 		version = "#item.version",
-		key = "#item.key")	
+		key = "#item.key",
+		result = "#result.success")	
 	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
