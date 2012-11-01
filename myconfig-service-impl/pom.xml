@@ -121,11 +121,6 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy</artifactId>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -135,21 +130,6 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-		<plugins>			
-			<!-- Compiles the Groovy integration tests -->
-			<plugin>
-				<groupId>org.codehaus.gmaven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>groovy-compile</id>
-						<goals>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
 	</build>
 
 </project>

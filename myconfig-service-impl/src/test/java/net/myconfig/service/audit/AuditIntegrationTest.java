@@ -1,19 +1,21 @@
-package net.myconfig.service.audit
+package net.myconfig.service.audit;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
 
-import net.myconfig.core.UserFunction;
-import net.myconfig.core.model.ConfigurationUpdate;
-import net.myconfig.core.model.ConfigurationUpdates;
-import net.myconfig.service.impl.AbstractSecurityTest;
-
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.dataset.DataSetException;
 import org.junit.Test;
 
-class AuditIntegrationTest extends AbstractSecurityTest {
+import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.ConfigurationUpdate;
+import net.myconfig.core.model.ConfigurationUpdates;
+import net.myconfig.core.model.Key;
+import net.myconfig.service.impl.AbstractSecurityTest;
+
+public class AuditIntegrationTest extends AbstractSecurityTest {
+
 	
 	@Test
 	public void createApplication_admin() throws DataSetException, SQLException {
@@ -44,21 +46,26 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		// Application
 		String appName = appName();
 		int id = myConfigService.createApplication(appName).getId();
+		// Data
+		String[] envs = { "DEV", "PROD" };
+		String[] versions = { "1", "2" };
+		Key[] keys = { new Key("key1", "Key 1"), new Key("key2", "Key 2") };
 		// Environment
-		myConfigService.createEnvironment(id, "DEV");
-		myConfigService.createEnvironment(id, "PROD");
+		for (String env: envs) {
+			myConfigService.createEnvironment(id, env);
+		}
 		// Keys
-		myConfigService.createKey(id, "key1", "Key 1");
-		myConfigService.createKey(id, "key2", "Key 2");
+		for (Key key: keys) {
+			myConfigService.createKey(id, key.getName(), key.getDescription());
+		}
 		// Versions
-		myConfigService.createVersion(id, "1");
-		myConfigService.createVersion(id, "2");
+		for (String version: versions) {
+			myConfigService.createVersion(id, version);
+		}
 		// Matrix
-		["1", "2"].each {
-			version ->
-			["key1", "key2"].each {
-				key ->
-				myConfigService.addKeyVersion(id, version, key);
+		for (Key key: keys) {
+			for (String version: versions) {
+				myConfigService.addKeyVersion(id, version, key.getName());
 			}
 		}
 		// Configuration
@@ -76,53 +83,48 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		myConfigService.updateConfiguration(id, updates);
 		// Assertions
 		// - application
-		assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
+		assertRecordExists("select id from events where security = 'builtin' and user = '%s'" +
 				" and category = 'APPLICATION' and action = 'CREATE' and identifier is null" +
-				" and application = '${appName}' and environment is null and version is null and appkey is null" +
-				" and message is null");
+				" and application = '%s' and environment is null and version is null and appkey is null" +
+				" and message is null", user, appName);
 		// - environments
-		["DEV", "PROD"].each {
-			assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
+		for (String env: envs) {
+			assertRecordExists("select id from events where security = 'builtin' and user = '%s'" +
 				" and category = 'ENVIRONMENT' and action = 'CREATE' and identifier is null" +
-				" and application = '${id}' and environment = '${it}' and version is null and appkey is null" +
-				" and message is null");
+				" and application = '%s' and environment = '%s' and version is null and appkey is null" +
+				" and message is null", user, id, env);
 		}
 		// - versions
-		["1", "2"].each {
-			assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
+		for (String version: versions) {
+			assertRecordExists("select id from events where security = 'builtin' and user = '%s'" +
 				" and category = 'VERSION' and action = 'CREATE' and identifier is null" +
-				" and application = '${id}' and environment is null and version  = '${it}' and appkey is null" +
-				" and message is null");
+				" and application = '%s' and environment is null and version  = '%s' and appkey is null" +
+				" and message is null", user, id, version);
 		}
 		// - keys
-		[[name:"key1",description:"Key 1"], [name:"key2",description:"Key 2"]].each {
-			assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
+		for (Key key: keys) {
+			assertRecordExists("select id from events where security = 'builtin' and user = '%s'" +
 				" and category = 'KEY' and action = 'CREATE' and identifier is null" +
-				" and application = '${id}' and environment is null and version is null and appkey  = '${it.name}'" +
-				" and message = '${it.description}'");
+				" and application = '%s' and environment is null and version is null and appkey  = '%s'" +
+				" and message = '%s'", user, id, key.getName(), key.getDescription());
 		}
 		// - matrix
-		["1", "2"].each {
-			version ->
-			["key1", "key2"].each {
-				key ->
-				assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
+		for (String version: versions) {
+			for (Key key: keys) {
+				assertRecordExists("select id from events where security = 'builtin' and user = '%s'" +
 					" and category = 'MATRIX' and action = 'CREATE' and identifier is null" +
-					" and application = '${id}' and environment is null and version = '${version}' and appkey  = '${key}'" +
-					" and message is null");
+					" and application = '%s' and environment is null and version = '%s' and appkey  = '%s'" +
+					" and message is null", user, id, version, key.getName());
 			}
 		}
 		// -configuration
-		["1", "2"].each {
-			version ->
-			["key1", "key2"].each {
-				key ->
-				["DEV", "PROD"].each {
-					env ->
-					assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
+		for (String version: versions) {
+			for (Key key: keys) {
+				for (String env: envs) {
+					assertRecordExists("select id from events where security = 'builtin' and user = '%s'" +
 						" and category = 'CONFIG_VALUE' and action = 'UPDATE' and identifier is null" +
-						" and application = '${id}' and environment = '${env}' and version = '${version}' and appkey  = '${key}'" +
-						" and message is null");
+						" and application = '%s' and environment = '%s' and version = '%s' and appkey  = '%s'" +
+						" and message is null", user, id, env, version, key.getName());
 				}
 			}
 		}
