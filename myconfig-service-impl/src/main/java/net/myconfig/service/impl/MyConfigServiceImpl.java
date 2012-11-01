@@ -414,7 +414,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
-	@Audit(category = EventCategory.KEY, action = EventAction.UPDATE, application = "#id", key = "#name", message = "#description", result = "#result.success")
+	@Audit(category = EventCategory.KEY, action = EventAction.UPDATE, application = "#application", key = "#name", message = "#description", result = "#result.success")
 	public Ack updateKey(int application, String name, String description) {
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(application);
@@ -743,7 +743,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
-	@Audit(category = EventCategory.MATRIX, action = EventAction.CREATE, application= "#id", version = "#version", key = "#key", result = "#result.success")
+	@Audit(category = EventCategory.MATRIX, action = EventAction.CREATE, application= "#application", version = "#version", key = "#key", result = "#result.success")
 	public Ack addKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
@@ -765,7 +765,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
-	@Audit(category = EventCategory.MATRIX, action = EventAction.DELETE, application= "#id", version = "#version", key = "#key", result = "#result.success")
+	@Audit(category = EventCategory.MATRIX, action = EventAction.DELETE, application= "#application", version = "#version", key = "#key", result = "#result.success")
 	public Ack removeKeyVersion(int application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);

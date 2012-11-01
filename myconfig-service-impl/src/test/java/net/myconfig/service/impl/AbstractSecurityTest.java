@@ -56,6 +56,10 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 			execute("insert into envgrants (user, application, environment, grantedfunction) values (?, ?, ?, ?)", name, application, environment, fn.name());
 			return this;
 		}
+		
+		public String getName() {
+			return name;
+		}
 
 	}
 

@@ -147,6 +147,7 @@ public class AuditAspect {
 		Expression parsedExpression = elParser.parseExpression(expression);
 		// Evaluation
 		Object value = parsedExpression.getValue(evaluationContext);
+		// FIXME Checks for empty string
 		// Conversion to a string
 		return ObjectUtils.toString(value, null);
 	}
