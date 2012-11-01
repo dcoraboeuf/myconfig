@@ -20,6 +20,8 @@ public @interface Audit {
 	
 	EventAction action();
 	
+	String collection() default "";
+	
 	String identifier() default "";
 	
 	String application() default "";

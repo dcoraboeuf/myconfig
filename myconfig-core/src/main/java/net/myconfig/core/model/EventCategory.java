@@ -12,6 +12,8 @@ public enum EventCategory {
 	
 	KEY,
 	
-	MATRIX;
+	MATRIX,
+	
+	CONFIG_VALUE;
 
 }

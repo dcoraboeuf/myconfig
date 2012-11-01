@@ -700,7 +700,12 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
-	// FIXME Audit for the update of the configuration
+	@Audit(category = EventCategory.CONFIG_VALUE, action = EventAction.UPDATE,
+		collection = "#updates.updates",
+		application = "#application",
+		environment = "#item.environment",
+		version = "#item.version",
+		key = "#item.key")	
 	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
