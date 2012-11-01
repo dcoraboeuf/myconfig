@@ -1,5 +1,6 @@
 package net.myconfig.service.audit;
 
+import static java.util.Arrays.asList;
 import static net.myconfig.core.model.EventAction.UPDATE;
 import static net.myconfig.core.model.EventCategory.CONFIGURATION;
 import static org.junit.Assert.assertFalse;
@@ -11,7 +12,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.Event;
+import net.myconfig.core.model.Version;
 import net.myconfig.service.api.EventService;
+import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.impl.AuditedImpl;
 
 import org.junit.Before;
@@ -63,6 +66,24 @@ public class AuditTest {
 	public void allKeys() {
 		proxy.allKeys(10, "myenv", "myversion", "mykey");
 		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE, "10", "myenv", "myversion", "mykey", null));
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void expressionMismatch() {
+		proxy.expressionMismatch(10);
+	}
+	
+	@Test(expected = ApplicationNotFoundException.class)
+	public void withException() {
+		proxy.withException(10);
+	}
+	
+	@Test
+	public void withCollection() {
+		Ack ack = proxy.withCollection(10, new CollectionItems(asList(new Version("1"), new Version("2"))));
+		assertTrue(ack.isSuccess());
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE, "10", null, "1", null, null));
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE, "10", null, "2", null, null));
 	}
 
 }

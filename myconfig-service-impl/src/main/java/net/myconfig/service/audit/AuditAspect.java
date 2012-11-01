@@ -147,9 +147,13 @@ public class AuditAspect {
 		Expression parsedExpression = elParser.parseExpression(expression);
 		// Evaluation
 		Object value = parsedExpression.getValue(evaluationContext);
-		// FIXME Checks for empty string
+		String sValue = ObjectUtils.toString(value, null);
+		// Checks for empty string
+		if (StringUtils.isBlank(sValue)) {
+			throw new IllegalStateException(String.format("Audit expression returned blank or null: %s", sValue));
+		}
 		// Conversion to a string
-		return ObjectUtils.toString(value, null);
+		return sValue;
 	}
 
 	protected EvaluationContext getEvaluationContext(ProceedingJoinPoint pjp) {
