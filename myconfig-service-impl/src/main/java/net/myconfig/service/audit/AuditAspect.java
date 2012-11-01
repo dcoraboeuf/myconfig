@@ -75,7 +75,7 @@ public class AuditAspect {
 		EventCategory category = audit.category();
 		EventAction action = audit.action();
 		// Message
-		String message = evaluate(audit.message(), evaluationContext);
+		String message = evaluate(audit.message(), evaluationContext, false);
 		// Gets the list of events
 		Collection<Event> events = getEvents(audit, evaluationContext, category, action, message);
 		// Records the event
@@ -140,6 +140,10 @@ public class AuditAspect {
 	}
 
 	protected String evaluate(String expression, EvaluationContext evaluationContext) {
+		return evaluate (expression, evaluationContext, true);
+	}
+
+	protected String evaluate(String expression, EvaluationContext evaluationContext, boolean required) {
 		if (StringUtils.isBlank(expression)) {
 			return null;
 		}
@@ -149,7 +153,7 @@ public class AuditAspect {
 		Object value = parsedExpression.getValue(evaluationContext);
 		String sValue = ObjectUtils.toString(value, null);
 		// Checks for empty string
-		if (StringUtils.isBlank(sValue)) {
+		if (required && StringUtils.isBlank(sValue)) {
 			throw new IllegalStateException(String.format("Audit expression returned blank or null: %s", sValue));
 		}
 		// Conversion to a string

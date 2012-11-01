@@ -45,7 +45,19 @@ public class AuditTest {
 	@Test
 	public void identifierAndMessage() {
 		proxy.identifierAndMessage(10, "My message");
-		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE, "10", "[10] My message"));
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE, "10", "My message"));
+	}
+
+	@Test
+	public void identifierAndEmptyMessage() {
+		proxy.identifierAndMessage(10, "");
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE, "10", ""));
+	}
+
+	@Test
+	public void identifierAndNullMessage() {
+		proxy.identifierAndMessage(10, null);
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE, "10", null));
 	}
 
 	@Test

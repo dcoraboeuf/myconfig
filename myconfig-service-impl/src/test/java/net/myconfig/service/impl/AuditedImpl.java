@@ -20,7 +20,7 @@ public class AuditedImpl implements AuditedInterface {
 	}
 
 	@Override
-	@Audit(category = EventCategory.CONFIGURATION, action = EventAction.UPDATE, identifier = "#id", message = "'[' + #id + '] ' + #message")
+	@Audit(category = EventCategory.CONFIGURATION, action = EventAction.UPDATE, identifier = "#id", message = "#message")
 	public void identifierAndMessage(int id, String message) {
 	}
 
