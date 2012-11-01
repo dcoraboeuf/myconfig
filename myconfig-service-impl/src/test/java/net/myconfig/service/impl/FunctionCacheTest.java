@@ -103,11 +103,4 @@ public class FunctionCacheTest extends AbstractSecurityTest {
 		assertFalse(grantService.hasEnvFunction(appId, user, "TEST", EnvFunction.env_view));
 	}
 
-	protected String createUser() throws SQLException {
-		asAdmin();
-		String user = userName();
-		securityService.userCreate(user, "User", user + "@test.com");
-		return user;
-	}
-
 }

@@ -14,6 +14,14 @@ public enum EventCategory {
 	
 	MATRIX,
 	
-	CONFIG_VALUE;
+	CONFIG_VALUE,
+	
+	USER_FUNCTION,
+	
+	APP_FUNCTION,
+	
+	ENV_FUNCTION,
+	
+	USER;
 
 }

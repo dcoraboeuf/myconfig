@@ -132,6 +132,13 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		execute("delete from envgrants where user = ?", name);
 	}
 
+	protected String createUser() throws SQLException {
+		asAdmin();
+		String user = userName();
+		securityService.userCreate(user, "User", user + "@test.com");
+		return user;
+	}
+
 	private void asUser(User user) {
 		SecurityContextImpl context = new SecurityContextImpl();
 

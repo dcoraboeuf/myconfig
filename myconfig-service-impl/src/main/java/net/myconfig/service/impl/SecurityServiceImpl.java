@@ -23,6 +23,8 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
+import net.myconfig.core.model.EventAction;
+import net.myconfig.core.model.EventCategory;
 import net.myconfig.core.model.Message;
 import net.myconfig.core.model.MessageContent;
 import net.myconfig.core.model.TokenType;
@@ -44,6 +46,7 @@ import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.api.template.TemplateModel;
 import net.myconfig.service.api.template.TemplateService;
+import net.myconfig.service.audit.Audit;
 import net.myconfig.service.cache.CacheNames;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
@@ -225,12 +228,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	
 	@Override
 	@AppGrant(AppFunction.app_users)
+	@Audit(category = EventCategory.APP_FUNCTION, action = EventAction.CREATE, identifier = "#application", message = "#user + ' -> ' + #fn")
 	public Ack appFunctionAdd(int application, String user, AppFunction fn) {
 		return grantService.appFunctionAdd(application, user, fn);
 	}
 	
 	@Override
 	@AppGrant(AppFunction.app_users)
+	@Audit(category = EventCategory.APP_FUNCTION, action = EventAction.DELETE, identifier = "#application", message = "#user + ' -> ' + #fn")
 	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
 		return grantService.appFunctionRemove (application, user, fn);
 	}
