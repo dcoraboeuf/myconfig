@@ -322,7 +322,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	
 	@Override
 	@Transactional
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.UPDATE, user = "#name", message = "'FORGOTTEN'")
 	public void userForgottenSet(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.FORGOTTEN_PASSWORD, name);

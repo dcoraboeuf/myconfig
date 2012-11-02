@@ -252,4 +252,25 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 				and category = 'USER' and action = 'UPDATE'
 				and targetUser = '${user}' and message = 'CONFIRM'""")
 	}
+	
+	@Test
+	public void userForgotten() {
+		// Creates a user as admin
+		String user = createUser()
+		// Validates the user
+		verify(user, "oldpassword")
+		// Use forgotten
+		anonymous()
+		securityService.userForgotten(userEmail(user))
+		// Gets the latest message for this user
+		Message message = post.getMessage (userEmail (user))
+		assert message != null
+		String token = message.getContent().getToken()
+		// Asks for reset
+		securityService.userForgottenSet(user, token, "newpassword")
+		// Checks for audit
+		assertRecordExists("""select id from events where security = 'builtin' and user = '-'
+				and category = 'USER' and action = 'UPDATE'
+				and targetUser = '${user}' and message = 'FORGOTTEN'""")
+	}
 }

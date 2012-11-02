@@ -163,6 +163,12 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	}
 	
 	protected void verifyAndLog (String name, String password) throws SQLException {
+		verify(name, password);
+		// Logs
+		asUser(name);
+	}
+
+	protected void verify(String name, String password) {
 		// Gets the last message for this user
 		Message message = post.getMessage(userEmail(name));
 		assertNotNull(message);
@@ -170,7 +176,5 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		// Verification
 		anonymous();
 		securityService.userConfirm(name, token, password);
-		// Logs
-		asUser(name);
 	}
 }
