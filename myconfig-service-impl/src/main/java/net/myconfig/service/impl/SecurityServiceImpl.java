@@ -102,9 +102,9 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@UserGrant(UserFunction.security_setup)
 	@Caching(evict = {
 			@CacheEvict(value = CacheNames.USER_FUNCTIONS, allEntries = true),
-			@CacheEvict(value = CacheNames.USER_FUNCTION, allEntries = true)
-			// FIXME Clears app functions cache
-			// FIXME Clears env functions cache
+			@CacheEvict(value = CacheNames.USER_FUNCTION, allEntries = true),
+			@CacheEvict(value = CacheNames.APP_FUNCTION, allEntries = true),
+			@CacheEvict(value = CacheNames.ENV_FUNCTION, allEntries = true)
 	})
 	public void setSecurityMode(String mode) {
 		logger.info("[security] Changing security mode to {}", mode);
