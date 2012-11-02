@@ -143,6 +143,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
+	// TODO Audit
 	public Ack userCreate(String name, String displayName, String email) {
 		validate(UserValidation.class, NAME, name);
 		validate(UserValidation.class, DISPLAYNAME, displayName);
@@ -205,6 +206,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
+	// TODO Audit
 	public Ack userDelete(String name) {
 		MapSqlParameterSource param = new MapSqlParameterSource(SQLColumns.NAME, name);
 		getNamedParameterJdbcTemplate().update(SQL.USER_FUNCTIONS_DELETE, param);
@@ -216,12 +218,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@UserGrant(UserFunction.security_users)
+	// TODO Audit
 	public Ack userFunctionAdd(String name, UserFunction fn) {
 		return grantService.userFunctionAdd (name, fn);
 	}
 
 	@Override
 	@UserGrant(UserFunction.security_users)
+	// TODO Audit
 	public Ack userFunctionRemove(String name, UserFunction fn) {
 		return grantService.userFunctionRemove (name, fn);
 	}
@@ -278,6 +282,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
+	// TODO Audit
 	public void userReset(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.RESET_USER, name);
@@ -292,6 +297,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
+	// TODO Audit
 	public void userChangePassword(String name, String token, String oldPassword, String newPassword) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.USER_CHANGE_PASSWORD, name);
@@ -306,6 +312,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
+	// TODO Audit
 	public void userConfirm(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.NEW_USER, name);
@@ -315,6 +322,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	
 	@Override
 	@Transactional
+	// TODO Audit
 	public void userForgottenSet(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.FORGOTTEN_PASSWORD, name);
@@ -340,6 +348,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	
 	@Override
 	@Transactional
+	// TODO Audit
 	public void updateUserData(String password, String displayName, String email) {
 		// Validation
 		validate(UserValidation.class, DISPLAYNAME, displayName);
@@ -413,6 +422,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
+	// TODO Audit
 	public void userDisable(String name) {
 		getNamedParameterJdbcTemplate().update(SQL.USER_DISABLE, new MapSqlParameterSource(USER, name));
 	}
@@ -420,6 +430,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
+	// TODO Audit
 	public void userEnable(String name) {
 		getNamedParameterJdbcTemplate().update(SQL.USER_ENABLE, new MapSqlParameterSource(USER, name));
 	}
