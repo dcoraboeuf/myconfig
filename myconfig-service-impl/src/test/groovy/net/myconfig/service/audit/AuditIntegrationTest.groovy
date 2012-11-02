@@ -3,6 +3,7 @@ package net.myconfig.service.audit
 import java.sql.SQLException
 
 import net.myconfig.core.AppFunction
+import net.myconfig.core.EnvFunction
 import net.myconfig.core.UserFunction
 import net.myconfig.core.model.Ack
 import net.myconfig.core.model.ConfigurationUpdate
@@ -136,12 +137,32 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		Ack ack = securityService.appFunctionAdd(id, user, AppFunction.app_matrix);
 		assert ack.isSuccess()
 		assertRecordExists("select id from events where security = 'builtin' and user = 'admin'" +
-				" and category = 'APP_FUNCTION' and action = 'CREATE' and identifier = '%s'" +
+				" and category = 'APP_FUNCTION' and action = 'CREATE' and application = '%s'" +
 				" and message = '%s -> %s'", id, user, AppFunction.app_matrix);
 		ack = securityService.appFunctionRemove(id, user, AppFunction.app_matrix);
 		assert ack.isSuccess()
 		assertRecordExists("select id from events where security = 'builtin' and user = 'admin'" +
-				" and category = 'APP_FUNCTION' and action = 'DELETE' and identifier = '%s'" +
+				" and category = 'APP_FUNCTION' and action = 'DELETE' and application = '%s'" +
 				" and message = '%s -> %s'", id, user, AppFunction.app_matrix);
+	}
+
+	@Test
+	public void envFunctions() throws SQLException, DataSetException {
+		asAdmin();
+		int id = myConfigService.createApplication(appName()).getId();
+		myConfigService.createEnvironment(id, "TEST")
+		String user = createUser();
+		Ack ack = securityService.envFunctionAdd(id, user, "TEST", EnvFunction.env_view);
+		assert ack.isSuccess()
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'ENV_FUNCTION' and action = 'CREATE' and application = '%s'
+				and environment = 'TEST'
+				and message = '%s -> %s'""", id, user, EnvFunction.env_view);
+		ack = securityService.envFunctionRemove(id, user, "TEST", EnvFunction.env_view);
+		assert ack.isSuccess()
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'ENV_FUNCTION' and action = 'DELETE' and application = '%s'
+				and environment = 'TEST'
+				and message = '%s -> %s'""", id, user, EnvFunction.env_view);
 	}
 }
