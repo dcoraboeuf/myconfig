@@ -1,5 +1,6 @@
 package net.myconfig.service.impl;
 
+import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.EventAction;
 import net.myconfig.core.model.EventCategory;
@@ -50,6 +51,12 @@ public class AuditedImpl implements AuditedInterface {
 	@Override
 	@Audit(category = EventCategory.CONFIGURATION, action = EventAction.UPDATE, application = "#id")
 	public void expressionMismatch(int application) {
+	}
+	
+	@Override
+	@Audit(category = EventCategory.USER_FUNCTION, action = EventAction.CREATE, user = "#user", function = "#function", result = "#result.success")
+	public Ack userAndFunctionOnly(String user, UserFunction function) {
+		return Ack.OK;
 	}
 
 }

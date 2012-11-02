@@ -110,27 +110,42 @@ public class AuditAspect {
 	}
 
 	protected Event getSingleEvent(Audit audit, EvaluationContext evaluationContext, EventCategory category, EventAction action, String message) {
-		Event event;
-		// Identifier OR Application
+		Event event = new Event(category, action).withMessage(message);
+		// Identifier
 		String identifierExpression = audit.identifier();
 		if (StringUtils.isNotBlank(identifierExpression)) {
 			String identifier = evaluate(identifierExpression, evaluationContext);
-			// Creates the event
-			event = new Event(category, action, identifier, message);
-		} else {
-			// Keys
-			String application = evaluate(audit.application(), evaluationContext);
-			String environment = evaluate(audit.environment(), evaluationContext);
-			String version = evaluate(audit.version(), evaluationContext);
-			String key = evaluate(audit.key(), evaluationContext);
-			// Creates the event
-			event = new Event(category, action, application, environment, version, key, message);
+			event = event.withIdentifier(identifier);
+		}
+		// Application
+		String applicationExpression = audit.application();
+		if (StringUtils.isNotBlank(applicationExpression)) {
+			String application = evaluate(applicationExpression, evaluationContext);
+			event = event.withApplication(application);
+		}
+		// Environment
+		String environmentExpression = audit.environment();
+		if (StringUtils.isNotBlank(environmentExpression)) {
+			String environment = evaluate(environmentExpression, evaluationContext);
+			event = event.withEnvironment(environment);
+		}
+		// Version
+		String versionExpression = audit.version();
+		if (StringUtils.isNotBlank(versionExpression)) {
+			String version = evaluate(versionExpression, evaluationContext);
+			event = event.withVersion(version);
+		}
+		// Key
+		String keyExpression = audit.key();
+		if (StringUtils.isNotBlank(keyExpression)) {
+			String key = evaluate(keyExpression, evaluationContext);
+			event = event.withKey(key);
 		}
 		// User
 		String userExpression = audit.user();
 		if (StringUtils.isNotBlank(userExpression)) {
 			String user = evaluate(userExpression, evaluationContext);
-			event = event.withUser(user);
+			event = event.withTargetUser(user);
 		}
 		// Function
 		String fnExpression = audit.function();

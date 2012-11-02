@@ -165,4 +165,21 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 				and environment = 'TEST'
 				and targetUser = '%s' and fn = '%s'""", id, user, EnvFunction.env_view);
 	}
+
+	@Test
+	public void userFunctions() throws SQLException, DataSetException {
+		asAdmin();
+		int id = myConfigService.createApplication(appName()).getId();
+		String user = createUser();
+		Ack ack = securityService.userFunctionAdd(user, UserFunction.app_create)
+		assert ack.isSuccess()
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'USER_FUNCTION' and action = 'CREATE'
+				and targetUser = '${user}' and fn = 'app_create'""")
+		ack = securityService.userFunctionRemove(user, UserFunction.app_create)
+		assert ack.isSuccess()
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'USER_FUNCTION' and action = 'DELETE'
+				and targetUser = '${user}' and fn = 'app_create'""")
+	}
 }

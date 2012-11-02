@@ -1,5 +1,6 @@
 package net.myconfig.service.audit;
 
+import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 
 public interface AuditedInterface {
@@ -19,5 +20,7 @@ public interface AuditedInterface {
 	void withException(int id);
 	
 	void expressionMismatch(int application);
+	
+	Ack userAndFunctionOnly (String user, UserFunction function);
 
 }

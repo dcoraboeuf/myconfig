@@ -218,14 +218,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@UserGrant(UserFunction.security_users)
-	// TODO Audit
+	@Audit(category = EventCategory.USER_FUNCTION, action = EventAction.CREATE, user = "#name", function = "#fn", result = "#result.success")
 	public Ack userFunctionAdd(String name, UserFunction fn) {
 		return grantService.userFunctionAdd (name, fn);
 	}
 
 	@Override
 	@UserGrant(UserFunction.security_users)
-	// TODO Audit
+	@Audit(category = EventCategory.USER_FUNCTION, action = EventAction.DELETE, user = "#name", function = "#fn", result = "#result.success")
 	public Ack userFunctionRemove(String name, UserFunction fn) {
 		return grantService.userFunctionRemove (name, fn);
 	}
