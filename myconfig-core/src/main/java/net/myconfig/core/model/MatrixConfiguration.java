@@ -13,14 +13,14 @@ import com.google.common.collect.ImmutableList;
 @Data
 public class MatrixConfiguration {
 
-	private final int id;
+	private final String id;
 	private final String name;
 	private final List<MatrixVersionConfiguration> versionConfigurationList;
 	private final List<Key> keyList;
 
 	@JsonCreator
 	public MatrixConfiguration(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("name") String name,
 			@JsonProperty("versionConfigurationList") List<MatrixVersionConfiguration> versionConfigurationList,
 			@JsonProperty("keyList") List<Key> keyList) {

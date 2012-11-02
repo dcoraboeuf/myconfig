@@ -8,7 +8,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @Data
 public class ApplicationSummary {
 
-	private final int id;
+	private final String id;
 	private final String name;
 
 	private final int versionCount;
@@ -25,7 +25,7 @@ public class ApplicationSummary {
 
 	@JsonCreator
 	public ApplicationSummary(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("name") String name,
 			@JsonProperty("versionCount") int versionCount,
 			@JsonProperty("keyCount") int keyCount,

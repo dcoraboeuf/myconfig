@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 @Data
 public class VersionConfiguration {
 
-	private final int id;
+	private final String id;
 	private final String name;
 	private final String version;
 	private final String previousVersion;
@@ -22,7 +22,7 @@ public class VersionConfiguration {
 
 	@JsonCreator
 	public VersionConfiguration(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("name") String name,
 			@JsonProperty("version") String version,
 			@JsonProperty("previousVersion") String previousVersion,

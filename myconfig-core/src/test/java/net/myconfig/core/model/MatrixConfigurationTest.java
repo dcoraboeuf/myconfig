@@ -32,7 +32,7 @@ public class MatrixConfigurationTest {
 	}
 
 	protected MatrixConfiguration createTestConfiguration() {
-		return new MatrixConfiguration(1, "myapp",
+		return new MatrixConfiguration("myapp", "myapp",
 				Arrays.asList(
 						new MatrixVersionConfiguration(
 								"1.0",

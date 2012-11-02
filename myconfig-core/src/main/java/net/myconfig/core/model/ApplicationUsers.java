@@ -12,13 +12,13 @@ import com.google.common.collect.ImmutableList;
 @Data
 public class ApplicationUsers {
 
-	private final int id;
+	private final String id;
 	private final String name;
 	private final List<ApplicationUserRights> users;
 
 	@JsonCreator
 	public ApplicationUsers(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("name") String name,
 			@JsonProperty("users") List<ApplicationUserRights> users) {
 		this.id = id;

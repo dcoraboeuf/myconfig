@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 @Data
 public class EnvironmentConfiguration {
 
-	private final int id;
+	private final String id;
 	private final String name;
 	private final String environment;
 	private final String previousEnvironment;
@@ -22,7 +22,7 @@ public class EnvironmentConfiguration {
 
 	@JsonCreator
 	public EnvironmentConfiguration(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("name") String name,
 			@JsonProperty("environment") String environment,
 			@JsonProperty("previousEnvironment") String previousEnvironment,

@@ -12,14 +12,14 @@ import com.google.common.collect.ImmutableList;
 @Data
 public class EnvironmentUsers {
 
-	private final int id;
+	private final String id;
 	private final String application;
 	private final String environment;
 	private final List<EnvironmentUserRights> users;
 
 	@JsonCreator
 	public EnvironmentUsers(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("application") String application,
 			@JsonProperty("environment") String environment,
 			@JsonProperty("users") List<EnvironmentUserRights> users) {

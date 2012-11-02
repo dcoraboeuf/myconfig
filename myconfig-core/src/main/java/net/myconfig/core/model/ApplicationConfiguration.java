@@ -2,17 +2,17 @@ package net.myconfig.core.model;
 
 import java.util.List;
 
+import lombok.Data;
+
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
-
-import lombok.Data;
 
 import com.google.common.collect.ImmutableList;
 
 @Data
 public class ApplicationConfiguration {
 
-	private final int id;
+	private final String id;
 	private final String name;
 	private final List<VersionSummary> versionSummaryList;
 	private final List<EnvironmentSummary> environmentSummaryList;
@@ -20,7 +20,7 @@ public class ApplicationConfiguration {
 
 	@JsonCreator
 	public ApplicationConfiguration(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("name") String name,
 			@JsonProperty("versionSummaryList") List<VersionSummary> versionSummaryList,
 			@JsonProperty("environmentSummaryList") List<EnvironmentSummary> environmentSummaryList,

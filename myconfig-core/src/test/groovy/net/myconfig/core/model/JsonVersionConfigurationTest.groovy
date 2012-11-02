@@ -11,7 +11,7 @@ class JsonVersionConfigurationTest {
 		def mapper = ObjectMapperFactory.createObjectMapper()
 		// Creates the configuration
 		def conf = new VersionConfiguration(
-			1,
+			"myapp",
 			"myapp",
 			"1.1",
 			"1.1",
@@ -28,11 +28,11 @@ class JsonVersionConfigurationTest {
 	
 	@Test
 	void deser() {
-		def json = """{"id":1,"name":"myapp","version":"1.1","previousVersion":"1.1","nextVersion":"1.2","keyList":[{"name":"key1","description":"Key 1"},{"name":"key 2","description":"Key 2"}],"environmentValuesPerKeyList":[{"name":"DEV","values":{"key1":"DEV key1","key2":"DEV key2"}},{"name":"PROD","values":{"key1":"PROD key1"}}]}"""
+		def json = """{"id":"myapp","name":"myapp","version":"1.1","previousVersion":"1.1","nextVersion":"1.2","keyList":[{"name":"key1","description":"Key 1"},{"name":"key 2","description":"Key 2"}],"environmentValuesPerKeyList":[{"name":"DEV","values":{"key1":"DEV key1","key2":"DEV key2"}},{"name":"PROD","values":{"key1":"PROD key1"}}]}"""
 		def mapper = ObjectMapperFactory.createObjectMapper()
 		// Creates the expected configuration
 		def conf = new VersionConfiguration(
-			1,
+			"myapp",
 			"myapp",
 			"1.1",
 			"1.1",

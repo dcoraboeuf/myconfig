@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableList;
 @Data
 public class KeyConfiguration {
 
-	private final int id;
+	private final String id;
 	private final String name;
 	private final Key key;
 	private final String previousKey;
@@ -22,7 +22,7 @@ public class KeyConfiguration {
 
 	@JsonCreator
 	public KeyConfiguration(
-			@JsonProperty("id") int id,
+			@JsonProperty("id") String id,
 			@JsonProperty("name") String name,
 			@JsonProperty("key") Key key,
 			@JsonProperty("previousKey") String previousKey,
