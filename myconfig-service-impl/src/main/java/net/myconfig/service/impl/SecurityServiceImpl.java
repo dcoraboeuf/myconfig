@@ -297,7 +297,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.UPDATE, user = "#name", message = "'PASSWORD'")
 	public void userChangePassword(String name, String token, String oldPassword, String newPassword) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.USER_CHANGE_PASSWORD, name);

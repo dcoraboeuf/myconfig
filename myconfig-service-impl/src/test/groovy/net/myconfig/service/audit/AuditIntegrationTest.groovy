@@ -10,17 +10,12 @@ import net.myconfig.core.model.ConfigurationUpdate
 import net.myconfig.core.model.ConfigurationUpdates
 import net.myconfig.core.model.Message
 import net.myconfig.service.impl.AbstractSecurityTest
-import net.myconfig.service.message.TestPost
 
 import org.dbunit.DatabaseUnitException
 import org.dbunit.dataset.DataSetException
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
 
 class AuditIntegrationTest extends AbstractSecurityTest {
-	
-	@Autowired
-	private TestPost post;
 
 	@Test
 	public void createApplication_admin() throws DataSetException, SQLException {
@@ -224,5 +219,25 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		assertRecordExists("""select id from events where security = 'builtin' and user = '-'
 				and category = 'USER' and action = 'UPDATE'
 				and targetUser = '${user}' and message = 'RESET'""")
+	}
+	
+	@Test
+	public void userChangePassword() {
+		// Creates a user as admin
+		String user = createUser()
+		// Verifies this user & logs
+		verifyAndLog(user, "oldpassword")
+		// Requests for password change
+		securityService.userChangePassword()
+		// Gets the latest message for this user
+		Message message = post.getMessage (userEmail (user))
+		assert message != null
+		String token = message.getContent().getToken()
+		// Changes the password
+		securityService.userChangePassword(user, token, "oldpassword", "newpassword")
+		// Checks for audit
+		assertRecordExists("""select id from events where security = 'builtin' and user = '${user}'
+				and category = 'USER' and action = 'UPDATE'
+				and targetUser = '${user}' and message = 'PASSWORD'""")
 	}
 }

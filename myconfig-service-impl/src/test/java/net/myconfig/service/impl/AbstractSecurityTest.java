@@ -1,5 +1,7 @@
 package net.myconfig.service.impl;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,11 +10,13 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.MyConfigRoles;
 import net.myconfig.core.UserFunction;
+import net.myconfig.core.model.Message;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
+import net.myconfig.service.message.TestPost;
 import net.myconfig.service.security.UserAuthentication;
 import net.myconfig.test.AbstractIntegrationTest;
 
@@ -77,6 +81,9 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	
 	@Autowired
 	private CacheManager cacheManager;
+	
+	@Autowired
+	protected TestPost post;
 
 	private static final AtomicInteger userId = new AtomicInteger(100);
 	private static final AtomicInteger appId = new AtomicInteger(100);
@@ -124,7 +131,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	}
 
 	protected UserGrant asUser(String name) throws SQLException {
-		User user = new User(name, "User", "user@myconfig.net", false, true, false);
+		User user = new User(name, "User", userEmail(name), false, true, false);
 		clearGrants(name);
 		asUser(user);
 		return new UserGrant(name);
@@ -153,5 +160,16 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		Authentication authentication = Mockito.mock(Authentication.class);
 		context.setAuthentication(new UserAuthentication(user, authentication));
 		SecurityContextHolder.setContext(context);
+	}
+	
+	protected void verifyAndLog (String name, String password) throws SQLException {
+		// Gets the last message for this user
+		Message message = post.getMessage(userEmail(name));
+		assertNotNull(message);
+		String token = message.getContent().getToken();
+		// Verification
+		securityService.userConfirm(name, token, password);
+		// Logs
+		asUser(name);
 	}
 }
