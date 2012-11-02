@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.StringUtils.substring;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 import javax.validation.Validator;
@@ -19,6 +20,7 @@ import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.db.SQLUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +98,7 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	}
 	
 	@Override
-	public Collection<EventRecord> filter(EventFilter eventFilter) {
+	public Collection<EventRecord> filter(EventFilter filter) {
 		if (!securitySelector.isAdmin(SecurityUtils.authentication())) {
 			throw new AccessDeniedException("Only administrators can access audit events");
 		}
@@ -104,10 +106,24 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 		StringBuilder sql = new StringBuilder("SELECT * FROM events");
 		// Associated parameters
 		MapSqlParameterSource params = new MapSqlParameterSource();
+		// Criteria
+		AtomicInteger count = new AtomicInteger(0);
+		filter (count, sql, params, IDENTIFIER, filter.getIdentifier());
+		filter (count, sql, params, APPLICATION, filter.getApplication());
+		filter (count, sql, params, ENVIRONMENT, filter.getEnvironment());
+		filter (count, sql, params, VERSION, filter.getVersion());
+		filter (count, sql, params, KEY, filter.getKey());
+		filter (count, sql, params, TARGET_USER, filter.getTargetUser());
+		filter (count, sql, params, FUNCTION, filter.getFunction());
+		filter (count, sql, params, MESSAGE, filter.getMessage());
+		filter (count, sql, params, SECURITY, filter.getSecurity());
+		filter (count, sql, params, USER, filter.getUser());
+		filter (count, sql, params, CATEGORY, filter.getCategory());
+		filter (count, sql, params, ACTION, filter.getAction());
 		// Ordering
 		sql.append(" ORDER BY ID DESC");
 		// Limit
-		sql.append(" LIMIT " + eventFilter.getLimit() + " OFFSET " + eventFilter.getOffset());
+		sql.append(" LIMIT " + filter.getLimit() + " OFFSET " + filter.getOffset());
 		// Log
 		logger.debug("Audit SQL: {}", sql);
 		// Query
@@ -130,6 +146,32 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 				return new EventRecord(rs.getInt(ID), rs.getString(SECURITY), rs.getString(USER), utcCreation, event);
 			}
 		});
+	}
+
+	protected void filter(AtomicInteger count, StringBuilder sql, MapSqlParameterSource params, String column, String value) {
+		filter (count, sql, params, true, column, value);
+	}
+
+	protected void filter(AtomicInteger count, StringBuilder sql, MapSqlParameterSource params, String column, Enum<?> value) {
+		filter (count, sql, params, false, column, value != null ? value.name() : null);
+	}
+
+	protected void filter(AtomicInteger count, StringBuilder sql, MapSqlParameterSource params, boolean like, String column, String value) {
+		if (StringUtils.isNotBlank(value)) {
+		// SQL
+			if (count.getAndIncrement() == 0) {
+				sql.append(" WHERE ");
+			} else {
+				sql.append(" AND ");
+			}
+			String operator = like ? "LIKE" : "=";
+			sql.append("(").append(column).append(" ").append(operator).append(" :").append(column).append(")");
+			// Value
+			if (like && !StringUtils.contains(value, "%")) {
+				value = "%" + value + "%";
+			}
+			params.addValue(column, value);
+		}
 	}
 
 }
