@@ -312,7 +312,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.UPDATE, user = "#name", message = "'CONFIRM'")
 	public void userConfirm(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.NEW_USER, name);

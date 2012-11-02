@@ -168,6 +168,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		assertNotNull(message);
 		String token = message.getContent().getToken();
 		// Verification
+		anonymous();
 		securityService.userConfirm(name, token, password);
 		// Logs
 		asUser(name);

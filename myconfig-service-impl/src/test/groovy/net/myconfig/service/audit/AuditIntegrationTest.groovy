@@ -240,4 +240,16 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 				and category = 'USER' and action = 'UPDATE'
 				and targetUser = '${user}' and message = 'PASSWORD'""")
 	}
+	
+	@Test
+	public void userConfirm() {
+		// Creates a user as admin
+		String user = createUser()
+		// Verifies this user & logs
+		verifyAndLog(user, "oldpassword")
+		// Checks for audit
+		assertRecordExists("""select id from events where security = 'builtin' and user = '-'
+				and category = 'USER' and action = 'UPDATE'
+				and targetUser = '${user}' and message = 'CONFIRM'""")
+	}
 }
