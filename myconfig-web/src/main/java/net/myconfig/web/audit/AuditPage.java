@@ -1,7 +1,10 @@
 package net.myconfig.web.audit;
 
+import java.util.Arrays;
 import java.util.Collection;
 
+import net.myconfig.core.model.EventAction;
+import net.myconfig.core.model.EventCategory;
 import net.myconfig.core.model.EventFilter;
 import net.myconfig.core.model.EventRecord;
 import net.myconfig.service.api.EventService;
@@ -36,8 +39,12 @@ public class AuditPage extends AbstractGUIPage {
 	}
 
 	protected void filter(Model model, EventFilter eventFilter) {
+		// Records
 		Collection<EventRecord> records = eventService.filter (eventFilter);
 		model.addAttribute("records", records);
+		// Static data
+		model.addAttribute("categories", Arrays.asList(EventCategory.values()));
+		model.addAttribute("actions", Arrays.asList(EventAction.values()));
 	}
 
 }

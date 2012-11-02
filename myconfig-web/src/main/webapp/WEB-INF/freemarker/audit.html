@@ -1,6 +1,47 @@
 <#include "/lib/layout.html">
 
-<@layout_std pageId="audit" modules=["items"]>
+<#macro audit_filter name size=16 maxlength=20>
+	<label for="${name}">${loc("audit.record.${name}")}</label>
+	<input name="${name}" id="${name}" type="text" size="${size}" maxlength="${maxlength}" />
+</#macro>
+
+<@layout_std pageId="audit" style=true modules=["items"]>
+	<@panel>
+		<form class="filter" action="gui/audit" method="post">
+			<p>
+				<!-- Category -->
+				<label for="category"><@lh key="audit.record.category" /></label>
+				<select id="category" name="category">
+					<option value="">-</option>
+					<#list categories as category>
+						<option value="${category?html}">${category?html}</option>
+					</#list>
+				</select>
+				<!-- Action -->
+				<label for="action"><@lh key="audit.record.action" /></label>
+				<select id="action" name="action">
+					<option value="">-</option>
+					<#list actions as action>
+						<option value="${action?html}">${action?html}</option>
+					</#list>
+				</select>
+			</p>
+			<p>
+				<@audit_filter name="application" />
+				<@audit_filter name="environment" />
+				<@audit_filter name="version" />
+				<@audit_filter name="key" />
+			</p><p>
+				<@audit_filter name="identifier" />
+				<@audit_filter name="targetUser" />
+				<@audit_filter name="function" />
+				<@audit_filter name="message" size=30 maxlength=80 />
+			</p>
+			<!-- OK -->
+			<input type="submit" value="<@lh key='audit.filter.submit' />" />
+			<input type="button" value="<@lh key='audit.filter.clear' />" onclick="location = 'gui/audit'" />
+		</form>
+	</@panel>
 	<@panel>
 		<table class="items">
 			<thead>
