@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component
-@Profile(MyConfigProfiles.IT)
+@Profile({MyConfigProfiles.TEST, MyConfigProfiles.IT})
 public class TestPost extends AbstractMessagePost {
 	
 	private final Map<String, Message> messages = new LinkedHashMap<String, Message>();
@@ -33,6 +33,10 @@ public class TestPost extends AbstractMessagePost {
 	public synchronized Ack post(Message message, String destination) {
 		messages.put(destination, message);
 		return Ack.OK;
+	}
+	
+	public Message getMessage (String email) {
+		return messages.get(email);
 	}
 
 }

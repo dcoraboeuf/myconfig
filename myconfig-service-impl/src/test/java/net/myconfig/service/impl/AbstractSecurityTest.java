@@ -92,6 +92,10 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 			cacheManager.getCache(name).clear();
 		}
 		// No context
+		anonymous();
+	}
+	
+	protected void anonymous() {
 		SecurityContextImpl context = new SecurityContextImpl();
 		context.setAuthentication(new AnonymousAuthenticationToken("anonymous", "anonymous", AuthorityUtils.createAuthorityList(MyConfigRoles.ANONYMOUS)));
 		SecurityContextHolder.setContext(context);
@@ -135,8 +139,12 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	protected String createUser() throws SQLException {
 		asAdmin();
 		String user = userName();
-		securityService.userCreate(user, "User", user + "@test.com");
+		securityService.userCreate(user, "User", userEmail(user));
 		return user;
+	}
+
+	protected String userEmail(String user) {
+		return user + "@test.com";
 	}
 
 	private void asUser(User user) {

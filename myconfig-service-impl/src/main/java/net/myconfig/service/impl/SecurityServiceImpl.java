@@ -143,7 +143,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.CREATE, user = "#name", message = "#displayName")
 	public Ack userCreate(String name, String displayName, String email) {
 		validate(UserValidation.class, NAME, name);
 		validate(UserValidation.class, DISPLAYNAME, displayName);
@@ -206,7 +206,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.DELETE, user = "#name", result = "#result.success")
 	public Ack userDelete(String name) {
 		MapSqlParameterSource param = new MapSqlParameterSource(SQLColumns.NAME, name);
 		getNamedParameterJdbcTemplate().update(SQL.USER_FUNCTIONS_DELETE, param);
@@ -282,7 +282,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 
 	@Override
 	@Transactional
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.UPDATE, user = "#name", message = "'RESET'")
 	public void userReset(String name, String token, String password) {
 		// Consumes the token
 		tokenService.consumesToken(token, TokenType.RESET_USER, name);

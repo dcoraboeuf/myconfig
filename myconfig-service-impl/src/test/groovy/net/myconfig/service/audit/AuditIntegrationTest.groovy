@@ -8,13 +8,19 @@ import net.myconfig.core.UserFunction
 import net.myconfig.core.model.Ack
 import net.myconfig.core.model.ConfigurationUpdate
 import net.myconfig.core.model.ConfigurationUpdates
+import net.myconfig.core.model.Message
 import net.myconfig.service.impl.AbstractSecurityTest
+import net.myconfig.service.message.TestPost
 
 import org.dbunit.DatabaseUnitException
 import org.dbunit.dataset.DataSetException
 import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
 
 class AuditIntegrationTest extends AbstractSecurityTest {
+	
+	@Autowired
+	private TestPost post;
 
 	@Test
 	public void createApplication_admin() throws DataSetException, SQLException {
@@ -181,5 +187,42 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
 				and category = 'USER_FUNCTION' and action = 'DELETE'
 				and targetUser = '${user}' and fn = 'app_create'""")
+	}
+	
+	@Test
+	public void userCreate() {
+		String user = createUser();
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'USER' and action = 'CREATE'
+				and targetUser = '${user}'""")
+	}
+	
+	@Test
+	public void userDelete() {
+		String user = createUser();
+		Ack ack = securityService.userDelete(user);
+		assert ack.isSuccess()
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'USER' and action = 'DELETE'
+				and targetUser = '${user}'""")
+	}
+	
+	@Test
+	public void userReset() {
+		// Creates a user as admin
+		String user = createUser()
+		// Asks for reset
+		securityService.userReset(user)
+		// Gets the latest message for this user
+		Message message = post.getMessage (userEmail (user))
+		assert message != null
+		String token = message.getContent().getToken()
+		// Asks for reset
+		anonymous()
+		securityService.userReset(user, token, "newPassword")
+		// Checks for audit
+		assertRecordExists("""select id from events where security = 'builtin' and user = '-'
+				and category = 'USER' and action = 'UPDATE'
+				and targetUser = '${user}' and message = 'RESET'""")
 	}
 }
