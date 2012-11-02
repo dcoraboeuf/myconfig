@@ -422,7 +422,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.UPDATE, user = "#name", message = "'DISABLED'")
 	public void userDisable(String name) {
 		getNamedParameterJdbcTemplate().update(SQL.USER_DISABLE, new MapSqlParameterSource(USER, name));
 	}
@@ -430,7 +430,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.security_users)
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.UPDATE, user = "#name", message = "'ENABLED'")
 	public void userEnable(String name) {
 		getNamedParameterJdbcTemplate().update(SQL.USER_ENABLE, new MapSqlParameterSource(USER, name));
 	}

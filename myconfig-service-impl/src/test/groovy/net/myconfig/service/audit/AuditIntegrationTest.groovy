@@ -287,4 +287,22 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 				and category = 'USER' and action = 'UPDATE'
 				and message = 'UPDATE New display name,newemail@test.com'""")
 	}
+	
+	@Test
+	public void userDisableEnable() {
+		// Creates a user as admin
+		String user = createUser()
+		// Disables
+		securityService.userDisable(user)
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'USER' and action = 'UPDATE'
+				and targetUser = '${user}'
+				and message = 'DISABLED'""")
+		// Enables
+		securityService.userEnable(user)
+		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
+				and category = 'USER' and action = 'UPDATE'
+				and targetUser = '${user}'
+				and message = 'ENABLED'""")
+	}
 }
