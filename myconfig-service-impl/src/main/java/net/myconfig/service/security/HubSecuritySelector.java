@@ -95,6 +95,11 @@ public class HubSecuritySelector implements SecuritySelector {
 	public boolean supports(Class<?> authentication) {
 		return getSecurityManagement().supports(authentication);
 	}
+	
+	@Override
+	public boolean isAdmin(Authentication authentication) {
+		return getSecurityManagement().isAdmin(authentication);
+	}
 
 	@Override
 	public boolean hasUserFunction(Authentication authentication, UserFunction fn) {

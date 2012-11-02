@@ -53,6 +53,11 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 	public boolean allowLogin() {
 		return false;
 	}
+	
+	@Override
+	public boolean isAdmin(Authentication authentication) {
+		return true;
+	}
 
 	@Override
 	public boolean hasUserFunction(Authentication authentication, UserFunction fn) {

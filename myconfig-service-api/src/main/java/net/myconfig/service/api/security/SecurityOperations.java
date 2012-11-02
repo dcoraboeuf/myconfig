@@ -21,6 +21,8 @@ public interface SecurityOperations {
 
 	boolean supports(Class<?> authentication);
 
+	boolean isAdmin(Authentication authentication);
+
 	boolean hasUserFunction(Authentication authentication, UserFunction fn);
 
 	boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn);

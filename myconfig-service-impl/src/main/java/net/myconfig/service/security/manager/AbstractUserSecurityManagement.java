@@ -94,6 +94,12 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 			}
 		}
 	}
+	
+	@Override
+	public boolean isAdmin(Authentication authentication) {
+		User user = getUserToken(authentication);
+		return user != null && user.isAdmin();
+	}
 
 	@Override
 	public boolean hasUserFunction(Authentication authentication, UserFunction fn) {

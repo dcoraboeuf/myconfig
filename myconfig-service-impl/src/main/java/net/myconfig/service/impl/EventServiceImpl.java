@@ -16,6 +16,7 @@ import net.myconfig.core.model.EventFilter;
 import net.myconfig.core.model.EventRecord;
 import net.myconfig.service.api.EventService;
 import net.myconfig.service.api.security.SecuritySelector;
+import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.db.SQLUtils;
 
 import org.joda.time.DateTime;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -94,8 +96,10 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	}
 	
 	@Override
-	// FIXME Secures for administrator only
 	public Collection<EventRecord> filter(EventFilter eventFilter) {
+		if (!securitySelector.isAdmin(SecurityUtils.authentication())) {
+			throw new AccessDeniedException("Only administrators can access audit events");
+		}
 		// SQL to build
 		StringBuilder sql = new StringBuilder("SELECT * FROM events");
 		// Associated parameters
