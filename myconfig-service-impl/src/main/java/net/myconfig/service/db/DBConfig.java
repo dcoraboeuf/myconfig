@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DBConfig {
 	
-	public static final int VERSION = 8;
+	public static final int VERSION = 9;
 	
 	@Autowired
 	private DataSource dataSource;

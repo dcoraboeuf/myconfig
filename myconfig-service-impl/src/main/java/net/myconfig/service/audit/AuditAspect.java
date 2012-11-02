@@ -126,6 +126,18 @@ public class AuditAspect {
 			// Creates the event
 			event = new Event(category, action, application, environment, version, key, message);
 		}
+		// User
+		String userExpression = audit.user();
+		if (StringUtils.isNotBlank(userExpression)) {
+			String user = evaluate(userExpression, evaluationContext);
+			event = event.withUser(user);
+		}
+		// Function
+		String fnExpression = audit.function();
+		if (StringUtils.isNotBlank(fnExpression)) {
+			String fn = evaluate(fnExpression, evaluationContext);
+			event = event.withFunction(fn);
+		}
 		// OK
 		return event;
 	}

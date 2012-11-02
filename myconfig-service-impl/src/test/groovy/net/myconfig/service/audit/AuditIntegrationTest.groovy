@@ -138,12 +138,12 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		assert ack.isSuccess()
 		assertRecordExists("select id from events where security = 'builtin' and user = 'admin'" +
 				" and category = 'APP_FUNCTION' and action = 'CREATE' and application = '%s'" +
-				" and message = '%s -> %s'", id, user, AppFunction.app_matrix);
+				" and targetUser = '%s' and fn = '%s'", id, user, AppFunction.app_matrix);
 		ack = securityService.appFunctionRemove(id, user, AppFunction.app_matrix);
 		assert ack.isSuccess()
 		assertRecordExists("select id from events where security = 'builtin' and user = 'admin'" +
 				" and category = 'APP_FUNCTION' and action = 'DELETE' and application = '%s'" +
-				" and message = '%s -> %s'", id, user, AppFunction.app_matrix);
+				" and targetUser = '%s' and fn = '%s'", id, user, AppFunction.app_matrix);
 	}
 
 	@Test
@@ -157,12 +157,12 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
 				and category = 'ENV_FUNCTION' and action = 'CREATE' and application = '%s'
 				and environment = 'TEST'
-				and message = '%s -> %s'""", id, user, EnvFunction.env_view);
+				and targetUser = '%s' and fn = '%s'""", id, user, EnvFunction.env_view);
 		ack = securityService.envFunctionRemove(id, user, "TEST", EnvFunction.env_view);
 		assert ack.isSuccess()
 		assertRecordExists("""select id from events where security = 'builtin' and user = 'admin'
 				and category = 'ENV_FUNCTION' and action = 'DELETE' and application = '%s'
 				and environment = 'TEST'
-				and message = '%s -> %s'""", id, user, EnvFunction.env_view);
+				and targetUser = '%s' and fn = '%s'""", id, user, EnvFunction.env_view);
 	}
 }

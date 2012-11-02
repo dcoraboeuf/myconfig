@@ -14,7 +14,7 @@ import net.myconfig.core.model.EventCategory;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface Audit {
+public @interface Audit {	
 	
 	EventCategory category();
 	
@@ -33,6 +33,10 @@ public @interface Audit {
 	String key() default "";
 	
 	String message() default "";
+	
+	String user() default "";
+	
+	String function() default "";
 	
 	String result() default "";
 

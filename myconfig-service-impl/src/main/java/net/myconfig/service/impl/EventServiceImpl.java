@@ -29,13 +29,16 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	private static final String CREATION = "creation";
 	private static final String USER = "user";
 	private static final String SECURITY = "security";
+	private static final String TARGET_USER = "targetUser";
+	private static final String FUNCTION = "fn";
 
 	public static final int LENGTH_SECURITY = 10;
 	public static final int LENGTH_USER = 80;
 	public static final int LENGTH_IDENTIFIER = 80;
 	public static final int LENGTH_MESSAGE = 600;
+	public static final int LENGTH_FUNCTION = 20;
 	
-	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, action, identifier, application, environment, version, appkey, message) values (:security, :user, :creation, :category, :action, :identifier, :application, :environment, :version, :appkey, :message)";
+	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, action, identifier, application, environment, version, appkey, message, targetUser, fn) values (:security, :user, :creation, :category, :action, :identifier, :application, :environment, :version, :appkey, :message, :targetUser, :fn)";
 	
 	private final SecuritySelector securitySelector;
 
@@ -70,6 +73,8 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 					.addValue(VERSION, substring(event.getVersion(), 0, LENGTH_IDENTIFIER))
 					.addValue(KEY, substring(event.getKey(), 0, LENGTH_IDENTIFIER))
 					.addValue(MESSAGE, substring(event.getMessage(), 0, LENGTH_MESSAGE))
+					.addValue(TARGET_USER, substring(event.getTargetUser(), 0, LENGTH_USER))
+					.addValue(FUNCTION, substring(event.getFunction(), 0, LENGTH_FUNCTION))
 				);
 	}
 
