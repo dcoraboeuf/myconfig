@@ -348,7 +348,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	
 	@Override
 	@Transactional
-	// TODO Audit
+	@Audit(category = EventCategory.USER, action = EventAction.UPDATE, message = "'UPDATE ' + #displayName + ',' + #email")
 	public void updateUserData(String password, String displayName, String email) {
 		// Validation
 		validate(UserValidation.class, DISPLAYNAME, displayName);

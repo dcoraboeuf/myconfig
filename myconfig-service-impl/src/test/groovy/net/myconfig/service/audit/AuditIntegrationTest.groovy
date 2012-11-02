@@ -273,4 +273,18 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 				and category = 'USER' and action = 'UPDATE'
 				and targetUser = '${user}' and message = 'FORGOTTEN'""")
 	}
+	
+	@Test
+	public void userChangeData() {
+		// Creates a user as admin
+		String user = createUser()
+		// Verifies this user & logs
+		verifyAndLog(user, "oldpassword")
+		// Changes the data
+		securityService.updateUserData("oldpassword", "New display name", "newemail@test.com")
+		// Checks for audit
+		assertRecordExists("""select id from events where security = 'builtin' and user = '${user}'
+				and category = 'USER' and action = 'UPDATE'
+				and message = 'UPDATE New display name,newemail@test.com'""")
+	}
 }
