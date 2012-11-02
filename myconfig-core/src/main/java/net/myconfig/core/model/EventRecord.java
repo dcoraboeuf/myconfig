@@ -11,8 +11,6 @@ public class EventRecord {
 	private final String security;
 	private final String user;
 	private final DateTime creation;
-	private final EventCategory category;
-	private final String identifier;
-	private final String message;
+	private final Event event;
 
 }

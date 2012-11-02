@@ -1,11 +1,15 @@
 package net.myconfig.service.api;
 
+import java.util.Collection;
+
 import net.myconfig.core.model.Event;
+import net.myconfig.core.model.EventFilter;
+import net.myconfig.core.model.EventRecord;
 
 public interface EventService {
 	
 	void saveEvent (Event event);
-	
-	// TODO Gets a list of events according to some criterias
+
+	Collection<EventRecord> filter(EventFilter eventFilter);
 
 }

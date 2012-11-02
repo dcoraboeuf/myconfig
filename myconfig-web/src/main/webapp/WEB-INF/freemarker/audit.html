@@ -1,6 +1,44 @@
 <#include "/lib/layout.html">
 
-<@layout_std pageId="audit">
+<@layout_std pageId="audit" modules=["items"]>
 	<@panel>
+		<table class="items">
+			<thead>
+				<th><@lh key="audit.record.id" /></th>
+				<th><@lh key="audit.record.creation" /></th>
+				<th><@lh key="audit.record.security" /></th>
+				<th><@lh key="audit.record.user" /></th>
+				<th><@lh key="audit.record.category" /></th>
+				<th><@lh key="audit.record.action" /></th>
+				<th><@lh key="audit.record.identifier" /></th>
+				<th><@lh key="audit.record.application" /></th>
+				<th><@lh key="audit.record.environment" /></th>
+				<th><@lh key="audit.record.version" /></th>
+				<th><@lh key="audit.record.key" /></th>
+				<th><@lh key="audit.record.targetUser" /></th>
+				<th><@lh key="audit.record.function" /></th>
+				<th><@lh key="audit.record.message" /></th>
+			</thead>
+			<tbody>
+				<#list records as record>
+					<tr class="item <@item_row_class index=record_index />">
+						<td class="audit_id">${record.id}</td>
+						<td class="audit_creation">${record.creation?string?html}</td>
+						<td class="audit_security">${record.security?html}</td>
+						<td class="audit_user">${record.user?html}</td>
+						<td class="audit_category">${record.event.category?html}</td>
+						<td class="audit_action">${record.event.action?html}</td>
+						<td class="audit_identifier">${record.event.identifier!"-"?html}</td>
+						<td class="audit_application">${record.event.application!"-"?html}</td>
+						<td class="audit_environment">${record.event.environment!"-"?html}</td>
+						<td class="audit_version">${record.event.version!"-"?html}</td>
+						<td class="audit_key">${record.event.key!"-"?html}</td>
+						<td class="audit_targetUser">${record.event.targetUser!"-"?html}</td>
+						<td class="audit_function">${record.event.function!"-"?html}</td>
+						<td class="audit_message">${record.event.message!"-"?html}</td>
+					</tr>
+				</#list>
+			</tbody>
+		</table>
 	</@panel>
 </@layout_std>

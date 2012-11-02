@@ -70,7 +70,7 @@ public class TokenServiceImpl extends AbstractDaoService implements TokenService
 							.addValue(TOKENTYPE, type.name())
 							.addValue(TOKENKEY, key),
 						Timestamp.class);
-				DateTime utcCreation = new DateTime(creation.getTime(), DateTimeZone.UTC);
+				DateTime utcCreation = SQLUtils.getDateTime(creation);
 				DateTime utcNow = DateTime.now(DateTimeZone.UTC);
 				Days days = Days.daysBetween(utcCreation, utcNow);
 				if (days.isGreaterThan(Days.days(EXPIRATION_DELAY))) {
