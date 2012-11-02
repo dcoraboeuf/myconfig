@@ -37,8 +37,18 @@ public class AuditPage extends AbstractGUIPage {
 		// OK
 		return "audit";
 	}
+	
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public String onFilter(Model model, EventFilter filter) {
+		// Filtering
+		filter (model, filter);
+		// OK
+		return "audit";
+	}
 
 	protected void filter(Model model, EventFilter eventFilter) {
+		// Filter
+		model.addAttribute("filter", eventFilter);
 		// Records
 		Collection<EventRecord> records = eventService.filter (eventFilter);
 		model.addAttribute("records", records);

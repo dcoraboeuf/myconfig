@@ -2,7 +2,7 @@
 
 <#macro audit_filter name size=16 maxlength=20>
 	<label for="${name}">${loc("audit.record.${name}")}</label>
-	<input name="${name}" id="${name}" type="text" size="${size}" maxlength="${maxlength}" />
+	<input name="${name}" id="${name}" type="text" size="${size}" maxlength="${maxlength}" value="${filter[name]!''}" />
 </#macro>
 
 <@layout_std pageId="audit" style=true modules=["items"]>
@@ -14,7 +14,7 @@
 				<select id="category" name="category">
 					<option value="">-</option>
 					<#list categories as category>
-						<option value="${category?html}">${category?html}</option>
+						<@select_option value=category text=category selection=filter.category!"" />
 					</#list>
 				</select>
 				<!-- Action -->
@@ -22,9 +22,13 @@
 				<select id="action" name="action">
 					<option value="">-</option>
 					<#list actions as action>
-						<option value="${action?html}">${action?html}</option>
+						<@select_option value=action text=action selection=filter.action!"" />
 					</#list>
 				</select>
+			</p>
+			<p>
+				<@audit_filter name="security" />
+				<@audit_filter name="user" />
 			</p>
 			<p>
 				<@audit_filter name="application" />

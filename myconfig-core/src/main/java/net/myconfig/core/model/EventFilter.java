@@ -1,21 +1,25 @@
 package net.myconfig.core.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.Value;
+import lombok.Data;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Value
+@Data
 public class EventFilter {
-	
+
 	private static final int LIMIT_DEFAULT = 100;
-	
-	private final int limit;
-	private final int offset;
-	
-	public EventFilter () {
-		this.limit = LIMIT_DEFAULT;
-		this.offset = 0;
-	}
+
+	private int limit = LIMIT_DEFAULT;
+	private int offset = 0;
+	private String security;
+	private String user;
+	private EventCategory category;
+	private EventAction action;
+	private String identifier;
+	private String application;
+	private String environment;
+	private String version;
+	private String key;
+	private String targetUser;
+	private String function;
+	private String message;
 
 }
