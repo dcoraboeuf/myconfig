@@ -58,9 +58,9 @@ public class HubAccessDecisionManagerTest {
 	public void checkApplicationGrant() {
 		Authentication authentication = mock(Authentication.class);
 		AppFunction fn = AppFunction.app_view;
-		when(selector.hasApplicationFunction(authentication, 1, fn)).thenReturn(true);
-		assertTrue(manager.checkApplicationGrant(authentication, 1, fn));
-		verify(selector, times(1)).hasApplicationFunction(authentication, 1, fn);
+		when(selector.hasApplicationFunction(authentication, "A", fn)).thenReturn(true);
+		assertTrue(manager.checkApplicationGrant(authentication, "A", fn));
+		verify(selector, times(1)).hasApplicationFunction(authentication, "A", fn);
 	}
 
 	@Test
@@ -131,10 +131,10 @@ public class HubAccessDecisionManagerTest {
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		when(invocation.getMethod()).thenReturn(method);
 		when(invocation.getThis()).thenReturn(target);
-		when(invocation.getArguments()).thenReturn(new Integer[] { 1 });
+		when(invocation.getArguments()).thenReturn(new String[] { "A" });
 
 		Authentication authentication = mock(Authentication.class);
-		when(selector.hasApplicationFunction(authentication, 1, AppFunction.app_view)).thenReturn(true);
+		when(selector.hasApplicationFunction(authentication, "A", AppFunction.app_view)).thenReturn(true);
 
 		manager.decide(authentication, invocation, null);
 	}
@@ -196,10 +196,10 @@ public class HubAccessDecisionManagerTest {
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		when(invocation.getMethod()).thenReturn(method);
 		when(invocation.getThis()).thenReturn(target);
-		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV" });
+		when(invocation.getArguments()).thenReturn(new Object[] { "A", "DEV" });
 
 		Authentication authentication = mock(Authentication.class);
-		when(selector.hasEnvironmentFunction(authentication, 1, "DEV", EnvFunction.env_view)).thenReturn(true);
+		when(selector.hasEnvironmentFunction(authentication, "A", "DEV", EnvFunction.env_view)).thenReturn(true);
 
 		manager.decide(authentication, invocation, null);
 	}
@@ -216,7 +216,7 @@ public class HubAccessDecisionManagerTest {
 		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV" });
 
 		Authentication authentication = mock(Authentication.class);
-		when(selector.hasEnvironmentFunction(authentication, 1, "DEV", EnvFunction.env_view)).thenReturn(false);
+		when(selector.hasEnvironmentFunction(authentication, "A", "DEV", EnvFunction.env_view)).thenReturn(false);
 
 		manager.decide(authentication, invocation, null);
 	}

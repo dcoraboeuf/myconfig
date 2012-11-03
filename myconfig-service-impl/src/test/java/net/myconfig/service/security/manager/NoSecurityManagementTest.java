@@ -16,7 +16,7 @@ import org.springframework.security.core.Authentication;
 
 public class NoSecurityManagementTest {
 
-	private static final int[] APPLICATIONS = { 1, 2, 10 };
+	private static final String[] APPLICATIONS = { "A", "BB", "CCC" };
 	private static final String[] ENVIRONMENTS = { "DEV", "TEST", "UAT", "PROD" };
 
 	private final NoSecurityManagement mgr = new NoSecurityManagement();
@@ -75,7 +75,7 @@ public class NoSecurityManagementTest {
 	@Test
 	public void hasApplicationFunction() {
 		Authentication authentication = mock(Authentication.class);
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (AppFunction fn : AppFunction.values()) {
 				assertTrue(mgr.hasApplicationFunction(authentication, application, fn));
 			}
@@ -85,7 +85,7 @@ public class NoSecurityManagementTest {
 	@Test
 	public void hasEnvFunction_admin() {
 		Authentication authentication = mock(Authentication.class);
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (String environment : ENVIRONMENTS) {
 				for (EnvFunction fn : EnvFunction.values()) {
 					assertTrue(mgr.hasEnvironmentFunction(authentication, application, environment, fn));

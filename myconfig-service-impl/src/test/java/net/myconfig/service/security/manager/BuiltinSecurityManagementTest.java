@@ -32,7 +32,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class BuiltinSecurityManagementTest {
 
-	private static final int[] APPLICATIONS = { 1, 2, 10 };
+	private static final String[] APPLICATIONS = { "A", "BB", "CCC" };
 	private static final String[] ENVIRONMENTS = { "DEV", "TEST", "UAT", "PROD" };
 
 	private BuiltinSecurityManagement mgr;
@@ -235,7 +235,7 @@ public class BuiltinSecurityManagementTest {
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getDetails()).thenReturn(user);
 		
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (AppFunction fn : AppFunction.values()) {
 				assertEquals(true, mgr.hasApplicationFunction(authentication, application, fn));
 			}
@@ -245,21 +245,21 @@ public class BuiltinSecurityManagementTest {
 	@Test
 	public void hasAppFunction_user() {
 		User user = UserBuilder.create("user").build();		
-		when(grantService.hasAppFunction(2, "user", AppFunction.app_view)).thenReturn(true);
+		when(grantService.hasAppFunction("BB", "user", AppFunction.app_view)).thenReturn(true);
 		
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getDetails()).thenReturn(user);
 		
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (AppFunction fn : AppFunction.values()) {
-				assertEquals(application == 2 && fn == AppFunction.app_view, mgr.hasApplicationFunction(authentication, application, fn));
+				assertEquals("BB".equals(application) && fn == AppFunction.app_view, mgr.hasApplicationFunction(authentication, application, fn));
 			}
 		}
 	}
 
 	@Test
 	public void hasAppFunction_none() {
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (AppFunction fn : AppFunction.values()) {
 				assertFalse(mgr.hasApplicationFunction(null, application, fn));
 			}
@@ -273,7 +273,7 @@ public class BuiltinSecurityManagementTest {
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getDetails()).thenReturn(user);
 		
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (String environment : ENVIRONMENTS) {
 				for (EnvFunction fn : EnvFunction.values()) {
 					assertEquals(true, mgr.hasEnvironmentFunction(authentication, application, environment, fn));
@@ -285,15 +285,15 @@ public class BuiltinSecurityManagementTest {
 	@Test
 	public void hasEnvFunction_user() {
 		User user = UserBuilder.create("user").build();	
-		when(grantService.hasEnvFunction(2, "user", "UAT", EnvFunction.env_view)).thenReturn(true);
+		when(grantService.hasEnvFunction("BB", "user", "UAT", EnvFunction.env_view)).thenReturn(true);
 		
 		Authentication authentication = mock(Authentication.class);
 		when(authentication.getDetails()).thenReturn(user);
 		
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (String environment : ENVIRONMENTS) {
 				for (EnvFunction fn : EnvFunction.values()) {
-					assertEquals(application == 2 && "UAT".equals(environment) && fn == EnvFunction.env_view, mgr.hasEnvironmentFunction(authentication, application, environment, fn));
+					assertEquals("BB".equals(application) && "UAT".equals(environment) && fn == EnvFunction.env_view, mgr.hasEnvironmentFunction(authentication, application, environment, fn));
 				}
 			}
 		}
@@ -301,7 +301,7 @@ public class BuiltinSecurityManagementTest {
 
 	@Test
 	public void hasEnvFunction_none() {
-		for (int application : APPLICATIONS) {
+		for (String application : APPLICATIONS) {
 			for (String environment : ENVIRONMENTS) {
 				for (EnvFunction fn : EnvFunction.values()) {
 					assertFalse(mgr.hasEnvironmentFunction(null, application, environment, fn));

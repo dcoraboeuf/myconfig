@@ -110,9 +110,9 @@ public class HubSecuritySelectorTest {
 		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
 		Authentication authentication = mock(Authentication.class);
-		when(manager2.hasApplicationFunction(authentication, 10, AppFunction.app_users)).thenReturn(true);
+		when(manager2.hasApplicationFunction(authentication, "A", AppFunction.app_users)).thenReturn(true);
 
-		boolean actual = selector.hasApplicationFunction(authentication, 10, AppFunction.app_users);
+		boolean actual = selector.hasApplicationFunction(authentication, "A", AppFunction.app_users);
 
 		assertTrue(actual);
 	}
@@ -122,9 +122,9 @@ public class HubSecuritySelectorTest {
 		when(configurationService.getParameter(ConfigurationKey.SECURITY_MODE)).thenReturn("manager2");
 
 		Authentication authentication = mock(Authentication.class);
-		when(manager2.hasEnvironmentFunction(authentication, 10, "UAT", EnvFunction.env_config)).thenReturn(true);
+		when(manager2.hasEnvironmentFunction(authentication, "A", "UAT", EnvFunction.env_config)).thenReturn(true);
 
-		boolean actual = selector.hasEnvironmentFunction(authentication, 10, "UAT", EnvFunction.env_config);
+		boolean actual = selector.hasEnvironmentFunction(authentication, "A", "UAT", EnvFunction.env_config);
 
 		assertTrue(actual);
 	}
