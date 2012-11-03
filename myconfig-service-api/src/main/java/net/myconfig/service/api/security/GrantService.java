@@ -11,9 +11,9 @@ public interface GrantService {
 
 	boolean hasUserFunction(String name, UserFunction fn);
 
-	boolean hasAppFunction(int application, String name, AppFunction fn);
+	boolean hasAppFunction(String application, String name, AppFunction fn);
 
-	boolean hasEnvFunction(int application, String name, String environment, EnvFunction fn);
+	boolean hasEnvFunction(String application, String name, String environment, EnvFunction fn);
 
 	EnumSet<UserFunction> getUserFunctions(String name);
 
@@ -21,16 +21,16 @@ public interface GrantService {
 
 	Ack userFunctionRemove(String name, UserFunction fn);
 
-	Ack appFunctionAdd(int application, String user, AppFunction fn);
+	Ack appFunctionAdd(String application, String user, AppFunction fn);
 
-	Ack appFunctionRemove(int application, String user, AppFunction fn);
+	Ack appFunctionRemove(String application, String user, AppFunction fn);
 
-	EnumSet<AppFunction> getAppFunctions(int application, String user);
+	EnumSet<AppFunction> getAppFunctions(String application, String user);
 
-	Ack envFunctionAdd(int application, String user, String environment, EnvFunction fn);
+	Ack envFunctionAdd(String application, String user, String environment, EnvFunction fn);
 
-	Ack envFunctionRemove(int application, String user, String environment, EnvFunction fn);
+	Ack envFunctionRemove(String application, String user, String environment, EnvFunction fn);
 
-	EnumSet<EnvFunction> getEnvFunctions(int application, String user, String environment);
+	EnumSet<EnvFunction> getEnvFunctions(String application, String user, String environment);
 
 }

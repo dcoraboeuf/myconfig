@@ -2,7 +2,7 @@ package net.myconfig.service.exception;
 
 public abstract class VersionInputException extends ApplicationRelatedException {
 
-	public VersionInputException(int id, Object... params) {
+	public VersionInputException(String id, Object... params) {
 		super(id, params);
 	}
 

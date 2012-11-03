@@ -2,7 +2,7 @@ package net.myconfig.service.exception;
 
 public abstract class EnvironmentInputException extends ApplicationRelatedException {
 
-	public EnvironmentInputException(int id, Object... params) {
+	public EnvironmentInputException(String id, Object... params) {
 		super(id, params);
 	}
 

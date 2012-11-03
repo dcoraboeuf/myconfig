@@ -2,14 +2,14 @@ package net.myconfig.service.exception;
 
 public abstract class ApplicationRelatedException extends InputException {
 
-	private final int id;
+	private final String id;
 
-	public ApplicationRelatedException(int id, Object... params) {
+	public ApplicationRelatedException(String id, Object... params) {
 		super(params);
 		this.id = id;
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 

@@ -9,6 +9,13 @@ public class ApplicationValidation {
 	@NotNull
 	@NotBlank
 	@Trimmed
+	@Size(min = 1, max = 16)
+	@Pattern(regexp = ValidationConstants.ID_REGEXP, message = ValidationConstants.ID_REGEXP_MESSAGE)
+	public String id;
+	
+	@NotNull
+	@NotBlank
+	@Trimmed
 	@Size(min = 1, max = 80)
 	@Pattern(regexp = ValidationConstants.NAME_REGEXP, message = ValidationConstants.NAME_REGEXP_MESSAGE)
 	public String name;

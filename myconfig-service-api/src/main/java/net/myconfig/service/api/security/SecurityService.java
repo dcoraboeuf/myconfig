@@ -48,12 +48,12 @@ public interface SecurityService {
 
 	void updateUserData(String password, String displayName, String email);
 
-	Ack appFunctionAdd(int application, String user, AppFunction fn);
+	Ack appFunctionAdd(String application, String user, AppFunction fn);
 
-	Ack appFunctionRemove(int application, String user, AppFunction fn);
+	Ack appFunctionRemove(String application, String user, AppFunction fn);
 
-	Ack envFunctionAdd(int application, String user, String environment, EnvFunction fn);
+	Ack envFunctionAdd(String application, String user, String environment, EnvFunction fn);
 
-	Ack envFunctionRemove(int application, String user, String environment, EnvFunction fn);
+	Ack envFunctionRemove(String application, String user, String environment, EnvFunction fn);
 
 }

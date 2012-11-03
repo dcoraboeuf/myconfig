@@ -25,9 +25,9 @@ public interface SecurityOperations {
 
 	boolean hasUserFunction(Authentication authentication, UserFunction fn);
 
-	boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn);
+	boolean hasApplicationFunction(Authentication authentication, String application, AppFunction fn);
 
-	boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn);
+	boolean hasEnvironmentFunction(Authentication authentication, String application, String environment, EnvFunction fn);
 
 	boolean allowLogin();
 
