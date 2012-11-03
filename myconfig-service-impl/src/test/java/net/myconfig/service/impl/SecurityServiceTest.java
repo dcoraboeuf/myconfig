@@ -136,7 +136,7 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					"[S-012] [V-006] User name is invalid: must be sequence of ASCII letters, dash(-), underscore(_) and/or spaces ( )",
+					"[S-012] [V-006] User name is invalid: must be a sequence of ASCII letters, dash(-), underscore(_) and/or spaces ( )",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
