@@ -77,7 +77,7 @@ public class HubAccessDecisionManagerTest {
 
 	@Test
 	public void annotation_at_implementation_level() throws SecurityException, NoSuchMethodException {
-		Method method = SampleAPI.class.getMethod("app_call", Integer.TYPE);
+		Method method = SampleAPI.class.getMethod("app_call", String.class);
 
 		Object target = new SampleImpl();
 
@@ -124,7 +124,7 @@ public class HubAccessDecisionManagerTest {
 
 	@Test
 	public void decide_app_ok() throws SecurityException, NoSuchMethodException {
-		Method method = SampleAPI.class.getMethod("app_call", Integer.TYPE);
+		Method method = SampleAPI.class.getMethod("app_call", String.class);
 
 		SampleImpl target = new SampleImpl();
 
@@ -141,14 +141,14 @@ public class HubAccessDecisionManagerTest {
 
 	@Test(expected = EnvGrantParamMissingException.class)
 	public void decide_env_no_param() throws SecurityException, NoSuchMethodException {
-		Method method = SampleAPI.class.getMethod("env_call_missing_param", Integer.TYPE);
+		Method method = SampleAPI.class.getMethod("env_call_missing_param", String.class);
 
 		SampleImpl target = new SampleImpl();
 
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		when(invocation.getMethod()).thenReturn(method);
 		when(invocation.getThis()).thenReturn(target);
-		when(invocation.getArguments()).thenReturn(new Object[] { 1 });
+		when(invocation.getArguments()).thenReturn(new Object[] { "A" });
 
 		Authentication authentication = mock(Authentication.class);
 
@@ -157,14 +157,14 @@ public class HubAccessDecisionManagerTest {
 
 	@Test(expected = EnvGrantParamMissingException.class)
 	public void decide_env_no_annotation() throws SecurityException, NoSuchMethodException {
-		Method method = SampleAPI.class.getMethod("env_call_no_annotation", Integer.TYPE, String.class);
+		Method method = SampleAPI.class.getMethod("env_call_no_annotation", String.class, String.class);
 
 		SampleImpl target = new SampleImpl();
 
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		when(invocation.getMethod()).thenReturn(method);
 		when(invocation.getThis()).thenReturn(target);
-		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV" });
+		when(invocation.getArguments()).thenReturn(new Object[] { "A", "DEV" });
 
 		Authentication authentication = mock(Authentication.class);
 
@@ -173,14 +173,14 @@ public class HubAccessDecisionManagerTest {
 
 	@Test(expected = GrantParamAlreadyDefinedException.class)
 	public void decide_env_too_much() throws SecurityException, NoSuchMethodException {
-		Method method = SampleAPI.class.getMethod("env_call_too_much", Integer.TYPE, String.class, String.class);
+		Method method = SampleAPI.class.getMethod("env_call_too_much", String.class, String.class, String.class);
 
 		SampleImpl target = new SampleImpl();
 
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		when(invocation.getMethod()).thenReturn(method);
 		when(invocation.getThis()).thenReturn(target);
-		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV", "x" });
+		when(invocation.getArguments()).thenReturn(new Object[] { "A", "DEV", "x" });
 
 		Authentication authentication = mock(Authentication.class);
 
@@ -189,7 +189,7 @@ public class HubAccessDecisionManagerTest {
 
 	@Test
 	public void decide_env_ok() throws SecurityException, NoSuchMethodException {
-		Method method = SampleAPI.class.getMethod("env_call_ok", Integer.TYPE, String.class);
+		Method method = SampleAPI.class.getMethod("env_call_ok", String.class, String.class);
 
 		SampleImpl target = new SampleImpl();
 
@@ -206,14 +206,14 @@ public class HubAccessDecisionManagerTest {
 
 	@Test(expected = AccessDeniedException.class)
 	public void decide_env_not_granted() throws SecurityException, NoSuchMethodException {
-		Method method = SampleAPI.class.getMethod("env_call_ok", Integer.TYPE, String.class);
+		Method method = SampleAPI.class.getMethod("env_call_ok", String.class, String.class);
 
 		SampleImpl target = new SampleImpl();
 
 		MethodInvocation invocation = mock(MethodInvocation.class);
 		when(invocation.getMethod()).thenReturn(method);
 		when(invocation.getThis()).thenReturn(target);
-		when(invocation.getArguments()).thenReturn(new Object[] { 1, "DEV" });
+		when(invocation.getArguments()).thenReturn(new Object[] { "A", "DEV" });
 
 		Authentication authentication = mock(Authentication.class);
 		when(selector.hasEnvironmentFunction(authentication, "A", "DEV", EnvFunction.env_view)).thenReturn(false);

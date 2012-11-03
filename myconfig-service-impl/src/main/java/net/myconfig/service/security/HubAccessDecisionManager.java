@@ -102,25 +102,26 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 
 	protected String getParamDesignedByAnnotation(MethodInvocation invocation, Class<?> annotationClass) {
 		Method method = getTargetMethod(invocation);
-		String environment = null;
+		String parameterValue = null;
 		Annotation[][] allParamAnnotations = method.getParameterAnnotations();
-		for (int i = 1; i < invocation.getArguments().length; i++) {
+		Object[] arguments = invocation.getArguments();
+		for (int i = 0; i < arguments.length; i++) {
 			Class<?> paramType = method.getParameterTypes()[i];
 			if (String.class.isAssignableFrom(paramType)) {
 				Annotation[] paramAnnotations = allParamAnnotations[i];
 				if (paramAnnotations != null) {
 					for (Annotation paramAnnotation : paramAnnotations) {
 						if (annotationClass.isInstance(paramAnnotation)) {
-							if (environment != null) {
+							if (parameterValue != null) {
 								throw new GrantParamAlreadyDefinedException(method.getName(), annotationClass);
 							}
-							environment = (String) invocation.getArguments()[i];
+							parameterValue = (String) arguments[i];
 						}
 					}
 				}
 			}
 		}
-		return environment;
+		return parameterValue;
 	}
 
 	/**
