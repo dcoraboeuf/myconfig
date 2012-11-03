@@ -19,39 +19,39 @@ public interface MyConfigInterface {
 
 	ApplicationSummaries applications();
 
-	ApplicationSummary applicationCreate(String name);
+	ApplicationSummary applicationCreate(String id, String name);
 
-	Ack applicationDelete(int id);
+	Ack applicationDelete(String id);
 
-	ApplicationConfiguration applicationConfiguration(int id);
+	ApplicationConfiguration applicationConfiguration(String id);
 
-	Ack versionCreate(int id, String name);
+	Ack versionCreate(String id, String name);
 
-	Ack versionDelete(int id, String name);
+	Ack versionDelete(String id, String name);
 
-	Ack environmentCreate(int id, String name);
+	Ack environmentCreate(String id, String name);
 
-	Ack environmentDelete(int id, String name);
+	Ack environmentDelete(String id, String name);
 
-	Ack keyDelete(int id, String name);
+	Ack keyDelete(String id, String name);
 
-	Ack keyCreate(int id, String name, String description);
+	Ack keyCreate(String id, String name, String description);
 
-	Ack keyUpdate(int id, String name, String description);
+	Ack keyUpdate(String id, String name, String description);
 
-	MatrixConfiguration keyVersionConfiguration(int id);
+	MatrixConfiguration keyVersionConfiguration(String id);
 
-	Ack keyVersionAdd(int application, String version, String key);
+	Ack keyVersionAdd(String application, String version, String key);
 
-	Ack keyVersionRemove(int application, String version, String key);
+	Ack keyVersionRemove(String application, String version, String key);
 
-	VersionConfiguration versionConfiguration(int application, String version);
+	VersionConfiguration versionConfiguration(String application, String version);
 
-	EnvironmentConfiguration environmentConfiguration(int application, String environment);
+	EnvironmentConfiguration environmentConfiguration(String application, String environment);
 
-	KeyConfiguration keyConfiguration(int application, String key);
+	KeyConfiguration keyConfiguration(String application, String key);
 
-	Ack updateConfiguration(int application, ConfigurationUpdates updates);
+	Ack updateConfiguration(String application, ConfigurationUpdates updates);
 
 	UserSummaries users();
 
@@ -63,20 +63,20 @@ public interface MyConfigInterface {
 
 	Ack userFunctionRemove(String name, UserFunction fn);
 
-	Ack appFunctionAdd(String user, int application, AppFunction fn);
+	Ack appFunctionAdd(String user, String application, AppFunction fn);
 
-	Ack appFunctionRemove(String user, int application, AppFunction fn);
+	Ack appFunctionRemove(String user, String application, AppFunction fn);
 
 	Ack setSecurityMode(String mode);
 
 	Ack userConfirm(String name, String token, String password);
 	
-	ApplicationUsers applicationUsers(int application);
+	ApplicationUsers applicationUsers(String application);
 
-	EnvironmentUsers environmentUsers(int application, String environment);
+	EnvironmentUsers environmentUsers(String application, String environment);
 
-	Ack envFunctionAdd(String user, int application, String environment, EnvFunction fn);
+	Ack envFunctionAdd(String user, String application, String environment, EnvFunction fn);
 
-	Ack envFunctionRemove(String user, int application, String environment, EnvFunction fn);
+	Ack envFunctionRemove(String user, String application, String environment, EnvFunction fn);
 
 }
