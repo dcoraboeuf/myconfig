@@ -171,7 +171,7 @@ public class HubAccessDecisionManagerTest {
 		manager.decide(authentication, invocation, null);
 	}
 
-	@Test(expected = EnvGrantParamAlreadyDefinedException.class)
+	@Test(expected = GrantParamAlreadyDefinedException.class)
 	public void decide_env_too_much() throws SecurityException, NoSuchMethodException {
 		Method method = SampleAPI.class.getMethod("env_call_too_much", Integer.TYPE, String.class, String.class);
 

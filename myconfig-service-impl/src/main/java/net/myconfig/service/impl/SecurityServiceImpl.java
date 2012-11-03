@@ -233,14 +233,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@AppGrant(AppFunction.app_users)
 	@Audit(category = EventCategory.APP_FUNCTION, action = EventAction.CREATE, application = "#application", user = "#user", function = "#fn", result = "#result.success")
-	public Ack appFunctionAdd(int application, String user, AppFunction fn) {
+	public Ack appFunctionAdd(String application, String user, AppFunction fn) {
 		return grantService.appFunctionAdd(application, user, fn);
 	}
 	
 	@Override
 	@AppGrant(AppFunction.app_users)
 	@Audit(category = EventCategory.APP_FUNCTION, action = EventAction.DELETE, application = "#application", user = "#user", function = "#fn", result = "#result.success")
-	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
+	public Ack appFunctionRemove(String application, String user, AppFunction fn) {
 		return grantService.appFunctionRemove (application, user, fn);
 	}
 	
@@ -248,7 +248,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Transactional
 	@EnvGrant(EnvFunction.env_users)
 	@Audit(category = EventCategory.ENV_FUNCTION, action = EventAction.CREATE, application = "#application", environment = "#environment", user = "#user", function = "#fn", result = "#result.success")
-	public Ack envFunctionAdd(int application, String user, @EnvGrantParam String environment, EnvFunction fn) {
+	public Ack envFunctionAdd(String application, String user, @EnvGrantParam String environment, EnvFunction fn) {
 		return grantService.envFunctionAdd(application, user, environment, fn);
 	}
 	
@@ -256,7 +256,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Transactional
 	@EnvGrant(EnvFunction.env_users)
 	@Audit(category = EventCategory.ENV_FUNCTION, action = EventAction.DELETE, application = "#application", environment = "#environment", user = "#user", function = "#fn", result = "#result.success")
-	public Ack envFunctionRemove(int application, String user, @EnvGrantParam String environment, EnvFunction fn) {
+	public Ack envFunctionRemove(String application, String user, @EnvGrantParam String environment, EnvFunction fn) {
 		return grantService.envFunctionAdd(application, user, environment, fn);
 	}
 

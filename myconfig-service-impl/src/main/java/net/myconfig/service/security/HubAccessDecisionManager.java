@@ -8,6 +8,7 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.AppGrantParam;
 import net.myconfig.service.api.security.EnvGrant;
 import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.SecuritySelector;
@@ -65,7 +66,7 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 	protected boolean applicationGranted(Authentication authentication, MethodInvocation invocation) {
 		AppGrant grant = getAnnotation(invocation, AppGrant.class);
 		if (grant != null) {
-			int application = (Integer) invocation.getArguments()[0];
+			String application = getApplicationParameter(invocation);
 			return checkApplicationGrant(authentication, application, grant.value());
 		} else {
 			return false;
@@ -75,40 +76,58 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 	protected boolean environmentGranted(Authentication authentication, MethodInvocation invocation) {
 		EnvGrant grant = getAnnotation(invocation, EnvGrant.class);
 		if (grant != null) {
-			int application = (Integer) invocation.getArguments()[0];
-			Method method = getTargetMethod(invocation);
-			String environment = null;
-			Annotation[][] allParamAnnotations = method.getParameterAnnotations();
-			for (int i = 1; i < invocation.getArguments().length; i++) {
-				Class<?> paramType = method.getParameterTypes()[i];
-				if (String.class.isAssignableFrom(paramType)) {
-					Annotation[] paramAnnotations = allParamAnnotations[i];
-					if (paramAnnotations != null) {
-						for (Annotation paramAnnotation : paramAnnotations) {
-							if (paramAnnotation instanceof EnvGrantParam) {
-								if (environment != null) {
-									throw new EnvGrantParamAlreadyDefinedException(method.getName());
-								}
-								environment = (String) invocation.getArguments()[i];
-							}
-						}
-					}
-				}
-			}
-			if (StringUtils.isBlank(environment)) {
-				throw new EnvGrantParamMissingException(invocation.getMethod().getName());
-			}
+			String application = getApplicationParameter(invocation);
+			String environment = getEnvironmentParameter(invocation);
 			return checkEnvironmentGrant(authentication, application, environment, grant.value());
 		} else {
 			return false;
 		}
 	}
 
+	protected String getApplicationParameter(MethodInvocation invocation) {
+		String application = getParamDesignedByAnnotation(invocation, AppGrantParam.class);
+		if (StringUtils.isBlank(application)) {
+			throw new AppGrantParamMissingException(invocation.getMethod().getName());
+		}
+		return application;
+	}
+
+	protected String getEnvironmentParameter(MethodInvocation invocation) {
+		String environment = getParamDesignedByAnnotation(invocation, EnvGrantParam.class);
+		if (StringUtils.isBlank(environment)) {
+			throw new EnvGrantParamMissingException(invocation.getMethod().getName());
+		}
+		return environment;
+	}
+
+	protected String getParamDesignedByAnnotation(MethodInvocation invocation, Class<?> annotationClass) {
+		Method method = getTargetMethod(invocation);
+		String environment = null;
+		Annotation[][] allParamAnnotations = method.getParameterAnnotations();
+		for (int i = 1; i < invocation.getArguments().length; i++) {
+			Class<?> paramType = method.getParameterTypes()[i];
+			if (String.class.isAssignableFrom(paramType)) {
+				Annotation[] paramAnnotations = allParamAnnotations[i];
+				if (paramAnnotations != null) {
+					for (Annotation paramAnnotation : paramAnnotations) {
+						if (annotationClass.isInstance(paramAnnotation)) {
+							if (environment != null) {
+								throw new GrantParamAlreadyDefinedException(method.getName(), annotationClass);
+							}
+							environment = (String) invocation.getArguments()[i];
+						}
+					}
+				}
+			}
+		}
+		return environment;
+	}
+
 	/**
 	 * Checks if the current authentication has access to the environment
 	 * function for the given application ID and the environment.
 	 */
-	protected boolean checkEnvironmentGrant(Authentication authentication, int application, String environment, EnvFunction fn) {
+	protected boolean checkEnvironmentGrant(Authentication authentication, String application, String environment, EnvFunction fn) {
 		return securitySelector.hasEnvironmentFunction(authentication, application, environment, fn);
 	}
 
@@ -116,7 +135,7 @@ public class HubAccessDecisionManager implements AccessDecisionManager {
 	 * Checks if the current authentication has access to the application
 	 * function for the given application ID.
 	 */
-	protected boolean checkApplicationGrant(Authentication authentication, int application, AppFunction fn) {
+	protected boolean checkApplicationGrant(Authentication authentication, String application, AppFunction fn) {
 		return securitySelector.hasApplicationFunction(authentication, application, fn);
 	}
 

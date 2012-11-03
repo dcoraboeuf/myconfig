@@ -65,12 +65,12 @@ public class NoSecurityManagement extends AbstractSecurityManagement {
 	}
 
 	@Override
-	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
+	public boolean hasApplicationFunction(Authentication authentication, String application, AppFunction fn) {
 		return true;
 	}
 
 	@Override
-	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
+	public boolean hasEnvironmentFunction(Authentication authentication, String application, String environment, EnvFunction fn) {
 		return true;
 	}
 }

@@ -108,13 +108,13 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 	}
 
 	@Override
-	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
+	public boolean hasApplicationFunction(Authentication authentication, String application, AppFunction fn) {
 		User user = getUserToken(authentication);
 		return user != null && (user.isAdmin() || grantService.hasAppFunction(application, user.getName(), fn));
 	}
 
 	@Override
-	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
+	public boolean hasEnvironmentFunction(Authentication authentication, String application, String environment, EnvFunction fn) {
 		User user = getUserToken(authentication);
 		return user != null && (user.isAdmin() || grantService.hasEnvFunction(application, user.getName(), environment, fn));
 	}

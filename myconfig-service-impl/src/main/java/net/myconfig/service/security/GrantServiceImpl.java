@@ -70,7 +70,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	@Cacheable(CacheNames.APP_FUNCTION)
 	@Transactional(readOnly = true)
-	public boolean hasAppFunction(int application, String name, AppFunction fn) {
+	public boolean hasAppFunction(String application, String name, AppFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_APP, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(GRANTEDFUNCTION, fn.name()), String.class) != null;
 		if (!ok && fn.hasParents()) {
 			for (AppFunction parentFn: fn.getParents()) {
@@ -88,7 +88,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	@Cacheable(CacheNames.ENV_FUNCTION)
 	@Transactional(readOnly = true)
-	public boolean hasEnvFunction(int application, String name, String environment, EnvFunction fn) {
+	public boolean hasEnvFunction(String application, String name, String environment, EnvFunction fn) {
 		boolean ok = getFirstItem(SQL.FUNCTION_ENV, new MapSqlParameterSource(USER, name).addValue(APPLICATION, application).addValue(ENVIRONMENT, environment).addValue(GRANTEDFUNCTION, fn.name()),
 				String.class) != null;
 		if (!ok && fn.hasParents()) {
@@ -130,7 +130,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	@CacheEvict(CacheNames.APP_FUNCTION)
 	@Transactional
-	public Ack appFunctionAdd(int application, String user, AppFunction fn) {
+	public Ack appFunctionAdd(String application, String user, AppFunction fn) {
 		appFunctionRemove(application, user, fn);
 		int count = getNamedParameterJdbcTemplate().update(
 				SQL.GRANT_APP_FUNCTION,
@@ -144,14 +144,14 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	@CacheEvict(CacheNames.APP_FUNCTION)
 	@Transactional
-	public Ack appFunctionRemove(int application, String user, AppFunction fn) {
+	public Ack appFunctionRemove(String application, String user, AppFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_APP_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public EnumSet<AppFunction> getAppFunctions(int application, String name) {
+	public EnumSet<AppFunction> getAppFunctions(String application, String name) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Set of allowed functions
 		Collection<AppFunction> fns = Lists.transform(
@@ -180,7 +180,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	@CacheEvict(CacheNames.ENV_FUNCTION)
 	@Transactional
-	public Ack envFunctionAdd(int application, String user, String environment, EnvFunction fn) {
+	public Ack envFunctionAdd(String application, String user, String environment, EnvFunction fn) {
 		envFunctionRemove(application, user, environment, fn);
 		int count = getNamedParameterJdbcTemplate().update(SQL.GRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
@@ -189,14 +189,14 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	@Override
 	@CacheEvict(CacheNames.ENV_FUNCTION)
 	@Transactional
-	public Ack envFunctionRemove(int application, String user, String environment, EnvFunction fn) {
+	public Ack envFunctionRemove(String application, String user, String environment, EnvFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.UNGRANT_ENV_FUNCTION, new MapSqlParameterSource().addValue(APPLICATION, application).addValue(SQLColumns.USER, user).addValue(SQLColumns.ENVIRONMENT, environment).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
 		return Ack.one(count);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public EnumSet<EnvFunction> getEnvFunctions(int application, String user, String environment) {
+	public EnumSet<EnvFunction> getEnvFunctions(String application, String user, String environment) {
 		// Set of allowed functions
 		Collection<EnvFunction> fns = Lists.transform(
 				getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTION_ENV_LIST_FOR_USER_AND_APPLICATION,

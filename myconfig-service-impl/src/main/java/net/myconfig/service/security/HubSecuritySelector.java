@@ -107,12 +107,12 @@ public class HubSecuritySelector implements SecuritySelector {
 	}
 
 	@Override
-	public boolean hasApplicationFunction(Authentication authentication, int application, AppFunction fn) {
+	public boolean hasApplicationFunction(Authentication authentication, String application, AppFunction fn) {
 		return getSecurityManagement().hasApplicationFunction(authentication, application, fn);
 	}
 
 	@Override
-	public boolean hasEnvironmentFunction(Authentication authentication, int application, String environment, EnvFunction fn) {
+	public boolean hasEnvironmentFunction(Authentication authentication, String application, String environment, EnvFunction fn) {
 		return getSecurityManagement().hasEnvironmentFunction(authentication, application, environment, fn);
 	}
 

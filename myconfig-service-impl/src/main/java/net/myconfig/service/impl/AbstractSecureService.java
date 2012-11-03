@@ -32,7 +32,7 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		this.grantService = grantService;
 	}
 
-	protected void checkEnvironmentAccess(int application, String environment, EnvFunction fn) {
+	protected void checkEnvironmentAccess(String application, String environment, EnvFunction fn) {
 		if (!hasEnvironmentAccess(application, environment, fn)) {
 			throw new AccessDeniedException(String.format("Function %s is denied for environment %s in application %s", fn, environment, application));
 		}
@@ -45,21 +45,21 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		return securitySelector.hasUserFunction(authentication, fn);
 	}
 
-	protected boolean hasApplicationAccess(int application, AppFunction fn) {
+	protected boolean hasApplicationAccess(String application, AppFunction fn) {
 		// Gets the authentication
 		Authentication authentication = SecurityUtils.authentication();
 		// Check
 		return securitySelector.hasApplicationFunction(authentication, application, fn);
 	}
 
-	protected boolean hasEnvironmentAccess(int application, String environment, EnvFunction fn) {
+	protected boolean hasEnvironmentAccess(String application, String environment, EnvFunction fn) {
 		// Gets the authentication
 		Authentication authentication = SecurityUtils.authentication();
 		// Check
 		return securitySelector.hasEnvironmentFunction(authentication, application, environment, fn);
 	}
 
-	protected ImmutableList<Environment> filterEnvironments(final int application, List<Environment> environments) {
+	protected ImmutableList<Environment> filterEnvironments(final String application, List<Environment> environments) {
 		return ImmutableList.copyOf(Iterables.filter(environments, new Predicate<Environment>() {
 			@Override
 			public boolean apply(Environment env) {
@@ -68,7 +68,7 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		}));
 	}
 
-	protected void grantAppFunction(int application, AppFunction fn) {
+	protected void grantAppFunction(String application, AppFunction fn) {
 		User profile = securitySelector.getCurrentProfile();
 		if (profile != null && !profile.isAdmin()) {
 			String user = profile.getName();
@@ -77,7 +77,7 @@ public abstract class AbstractSecureService extends AbstractDaoService {
 		}
 	}
 
-	protected void grantEnvFunction(int application, String name, EnvFunction fn) {
+	protected void grantEnvFunction(String application, String name, EnvFunction fn) {
 		User profile = securitySelector.getCurrentProfile();
 		if (profile != null && !profile.isAdmin()) {
 			String user = profile.getName();
