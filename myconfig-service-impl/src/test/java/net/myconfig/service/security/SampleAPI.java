@@ -10,14 +10,14 @@ public interface SampleAPI {
 	@UserGrant(UserFunction.app_list)
 	void user_call();
 	
-	void app_call(int application);
+	void app_call(String application);
 	
-	void env_call_missing_param(int application);
+	void env_call_missing_param(String application);
 	
-	void env_call_ok(int application, String environment);
+	void env_call_ok(String application, String environment);
 	
-	void env_call_no_annotation(int application, String environment);
+	void env_call_no_annotation(String application, String environment);
 	
-	void env_call_too_much(int application, String environment, String other);
+	void env_call_too_much(String application, String environment, String other);
 
 }

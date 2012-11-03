@@ -37,6 +37,7 @@ import net.myconfig.service.api.message.MessageChannel;
 import net.myconfig.service.api.message.MessageDestination;
 import net.myconfig.service.api.message.MessageService;
 import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.AppGrantParam;
 import net.myconfig.service.api.security.EnvGrant;
 import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.GrantService;
@@ -233,14 +234,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Override
 	@AppGrant(AppFunction.app_users)
 	@Audit(category = EventCategory.APP_FUNCTION, action = EventAction.CREATE, application = "#application", user = "#user", function = "#fn", result = "#result.success")
-	public Ack appFunctionAdd(String application, String user, AppFunction fn) {
+	public Ack appFunctionAdd(@AppGrantParam String application, String user, AppFunction fn) {
 		return grantService.appFunctionAdd(application, user, fn);
 	}
 	
 	@Override
 	@AppGrant(AppFunction.app_users)
 	@Audit(category = EventCategory.APP_FUNCTION, action = EventAction.DELETE, application = "#application", user = "#user", function = "#fn", result = "#result.success")
-	public Ack appFunctionRemove(String application, String user, AppFunction fn) {
+	public Ack appFunctionRemove(@AppGrantParam String application, String user, AppFunction fn) {
 		return grantService.appFunctionRemove (application, user, fn);
 	}
 	

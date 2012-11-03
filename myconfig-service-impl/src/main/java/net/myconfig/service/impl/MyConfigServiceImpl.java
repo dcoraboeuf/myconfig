@@ -62,6 +62,7 @@ import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.model.VersionSummary;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
+import net.myconfig.service.api.security.AppGrantParam;
 import net.myconfig.service.api.security.EnvGrant;
 import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.GrantService;
@@ -175,7 +176,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_users)
-	public ApplicationUsers getApplicationUsers(final String id) {
+	public ApplicationUsers getApplicationUsers(@AppGrantParam final String id) {
 		// Gets the application name
 		String name = getApplicationName(id);
 		// List of users
@@ -231,7 +232,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
-	public ApplicationConfiguration getApplicationConfiguration(String id) {
+	public ApplicationConfiguration getApplicationConfiguration(@AppGrantParam String id) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// ID
 		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource(APPLICATION, id);
@@ -318,7 +319,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_delete)
 	@Audit(category = EventCategory.APPLICATION, action = EventAction.DELETE, application = "#id", result = "#result.success")
-	public Ack deleteApplication(String id) {
+	public Ack deleteApplication(@AppGrantParam String id) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource (ID, id));
 		return Ack.one (count);
 	}
@@ -327,7 +328,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.VERSION, action = EventAction.CREATE, application = "#id", version = "#name", result = "#result.success")
-	public Ack createVersion(String id, String name) {
+	public Ack createVersion(@AppGrantParam String id, String name) {
 		validate(VersionValidation.class, NAME, name);
 		checkApplication(id);
 		try {
@@ -349,7 +350,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.VERSION, action = EventAction.DELETE, application = "#id", version = "#name", result = "#result.success")
-	public Ack deleteVersion(String id, String name) {
+	public Ack deleteVersion(@AppGrantParam String id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
 		return Ack.one (count);
@@ -359,7 +360,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_envcreate)
 	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.CREATE, application = "#id", environment = "#name", result = "#result.success") 
-	public Ack createEnvironment(String id, String name) {
+	public Ack createEnvironment(@AppGrantParam String id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
 		try {
@@ -393,7 +394,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.CREATE, application = "#id", key = "#name", message = "#description", result = "#result.success") 
-	public Ack createKey(String id, String name, String description) {
+	public Ack createKey(@AppGrantParam String id, String name, String description) {
 		validate(KeyValidation.class, NAME, name);
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(id);
@@ -410,7 +411,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.UPDATE, application = "#application", key = "#name", message = "#description", result = "#result.success")
-	public Ack updateKey(String application, String name, String description) {
+	public Ack updateKey(@AppGrantParam String application, String name, String description) {
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(application);
 		checkKey(application, name);
@@ -427,7 +428,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.DELETE, application = "#id", key = "#name", result = "#result.success")
-	public Ack deleteKey(String id, String name) {
+	public Ack deleteKey(@AppGrantParam String id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
 		return Ack.one (count);
@@ -436,7 +437,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_matrix)
-	public MatrixConfiguration keyVersionConfiguration(String id) {
+	public MatrixConfiguration keyVersionConfiguration(@AppGrantParam String id) {
 		checkApplication(id);
 		// Criteria
 		MapSqlParameterSource idCriteria = new MapSqlParameterSource("application", id);
@@ -475,7 +476,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
-	public VersionConfiguration getVersionConfiguration(String application, String version) {
+	public VersionConfiguration getVersionConfiguration(@AppGrantParam String application, String version) {
 		checkApplication(application);
 		checkVersion(application, version);
 		// Application name
@@ -622,7 +623,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
-	public KeyConfiguration getKeyConfiguration(String application, String keyName) {
+	public KeyConfiguration getKeyConfiguration(@AppGrantParam String application, String keyName) {
 		checkApplication(application);
 		checkKey(application, keyName);
 		
@@ -739,7 +740,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
 	@Audit(category = EventCategory.MATRIX, action = EventAction.CREATE, application= "#application", version = "#version", key = "#key", result = "#result.success")
-	public Ack addKeyVersion(String application, String version, String key) {
+	public Ack addKeyVersion(@AppGrantParam String application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
 		checkKey(application, key);
@@ -761,7 +762,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
 	@Audit(category = EventCategory.MATRIX, action = EventAction.DELETE, application= "#application", version = "#version", key = "#key", result = "#result.success")
-	public Ack removeKeyVersion(String application, String version, String key) {
+	public Ack removeKeyVersion(@AppGrantParam String application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
 		checkKey(application, key);
