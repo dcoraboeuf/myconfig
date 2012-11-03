@@ -73,70 +73,70 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	@Test
 	public void createApplication_admin() throws DataSetException, SQLException {
 		asAdmin();
-		ApplicationSummary app = myconfig.createApplication("xxx1");
+		String id = "APP_ADMIN";
+		ApplicationSummary app = myconfig.createApplication(id, "xxx1");
 		assertNotNull(app);
-		int id = app.getId();
 		// Checks the grants
-		assertRecordNotExists("select * from appgrants where user = 'admin' and application = %d", id);
+		assertRecordNotExists("select * from appgrants where user = 'admin' and application = '%s'", id);
 	}
 
 	@Test
 	public void createApplication_user_granted() throws DataSetException, SQLException {
 		asUser("userx").grant(UserFunction.app_create);
-		ApplicationSummary app = myconfig.createApplication("xxx2");
+		String id = "APP_USER_GRANTED";
+		ApplicationSummary app = myconfig.createApplication(id, "xxx2");
 		assertNotNull(app);
-		int id = app.getId();
 		// Checks the grants
-		assertRecordCount(AppFunction.values().length, "select * from appgrants where user = 'userx' and application = %d", id);
+		assertRecordCount(AppFunction.values().length, "select * from appgrants where user = 'userx' and application = '%s'", id);
 		for (AppFunction fn : AppFunction.values()) {
-			assertRecordExists("select * from appgrants where user = 'userx' and application = %d and grantedfunction = '%s'", id, fn.name());
+			assertRecordExists("select * from appgrants where user = 'userx' and application = '%s' and grantedfunction = '%s'", id, fn.name());
 		}
 	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void createApplication_user_not_granted() throws SQLException {
 		asUser();
-		myconfig.createApplication("xxx");
+		myconfig.createApplication("APP_USER_NOT_GRANTED", "xxx");
 	}
 
 	@Test
 	public void deleteApplication_admin() throws SQLException {
 		asAdmin();
-		Ack ack = myconfig.deleteApplication(10);
+		Ack ack = myconfig.deleteApplication("X");
 		assertFalse(ack.isSuccess());
 	}
 
 	@Test
 	public void deleteApplication_user_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_delete);
-		Ack ack = myconfig.deleteApplication(1);
+		asUser().grant("APP", AppFunction.app_delete);
+		Ack ack = myconfig.deleteApplication("APP");
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void deleteApplication_user_not_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_delete);
-		myconfig.deleteApplication(10);
+		asUser().grant("APP", AppFunction.app_delete);
+		myconfig.deleteApplication("X");
 	}
 
 	@Test
 	public void getApplicationConfiguration_admin() throws SQLException {
 		asAdmin();
-		ApplicationConfiguration conf = myconfig.getApplicationConfiguration(1);
+		ApplicationConfiguration conf = myconfig.getApplicationConfiguration("APP");
 		assertNotNull(conf);
 	}
 
 	@Test
 	public void getApplicationConfiguration_user_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view);
-		ApplicationConfiguration conf = myconfig.getApplicationConfiguration(1);
+		asUser().grant("APP", AppFunction.app_view);
+		ApplicationConfiguration conf = myconfig.getApplicationConfiguration("APP");
 		assertNotNull(conf);
 	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void getApplicationConfiguration_user_not_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view);
-		myconfig.getApplicationConfiguration(10);
+		asUser().grant("APP", AppFunction.app_view);
+		myconfig.getApplicationConfiguration("X");
 	}
 
 	@Test
@@ -144,29 +144,29 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		asAdmin();
 		ConfigurationUpdates updates = new ConfigurationUpdates(asList(new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"), new ConfigurationUpdate("UAT", "1.0", "jdbc.password",
 				"uatpwd")));
-		myconfig.updateConfiguration(1, updates);
+		myconfig.updateConfiguration("APP", updates);
 	}
 
 	@Test
 	public void updateConfiguration_user_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config).grant(1, "UAT", EnvFunction.env_config);
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_config).grant("APP", "UAT", EnvFunction.env_config);
 		ConfigurationUpdates updates = new ConfigurationUpdates(asList(new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"), new ConfigurationUpdate("UAT", "1.0", "jdbc.password",
 				"uatpwd")));
-		myconfig.updateConfiguration(1, updates);
+		myconfig.updateConfiguration("APP", updates);
 	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void updateConfiguration_user_not_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config);
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_config);
 		ConfigurationUpdates updates = new ConfigurationUpdates(asList(new ConfigurationUpdate("DEV", "1.0", "jdbc.password", "devpwd"), new ConfigurationUpdate("UAT", "1.0", "jdbc.password",
 				"uatpwd")));
-		myconfig.updateConfiguration(1, updates);
+		myconfig.updateConfiguration("APP", updates);
 	}
 
 	@Test
 	public void getEnvironmentConfiguration_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "UAT", EnvFunction.env_config);
-		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "UAT");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "UAT", EnvFunction.env_config);
+		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration("APP", "UAT");
 		assertNotNull(c);
 		assertNull(c.getPreviousEnvironment());
 		assertNull(c.getNextEnvironment());
@@ -174,8 +174,8 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test
 	public void getEnvironmentConfiguration_granted_next() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "PROD", EnvFunction.env_config).grant(1, "UAT", EnvFunction.env_config);
-		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "PROD");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "PROD", EnvFunction.env_config).grant("APP", "UAT", EnvFunction.env_config);
+		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration("APP", "PROD");
 		assertNotNull(c);
 		assertNull(c.getPreviousEnvironment());
 		assertEquals("UAT", c.getNextEnvironment());
@@ -183,8 +183,8 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test
 	public void getEnvironmentConfiguration_granted_previous() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "PROD", EnvFunction.env_config).grant(1, "DEV", EnvFunction.env_config);
-		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "PROD");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "PROD", EnvFunction.env_config).grant("APP", "DEV", EnvFunction.env_config);
+		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration("APP", "PROD");
 		assertNotNull(c);
 		assertEquals("DEV", c.getPreviousEnvironment());
 		assertNull(c.getNextEnvironment());
@@ -192,8 +192,8 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test
 	public void getEnvironmentConfiguration_granted_next_and_previous() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config).grant(1, "PROD", EnvFunction.env_config).grant(1, "UAT", EnvFunction.env_config);
-		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "PROD");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_config).grant("APP", "PROD", EnvFunction.env_config).grant("APP", "UAT", EnvFunction.env_config);
+		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration("APP", "PROD");
 		assertNotNull(c);
 		assertEquals("DEV", c.getPreviousEnvironment());
 		assertEquals("UAT", c.getNextEnvironment());
@@ -201,8 +201,8 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test
 	public void getEnvironmentConfiguration_granted_next_and_previous_jump() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "ACC", EnvFunction.env_config).grant(1, "PROD", EnvFunction.env_config).grant(1, "UAT", EnvFunction.env_config);
-		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration(1, "PROD");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "ACC", EnvFunction.env_config).grant("APP", "PROD", EnvFunction.env_config).grant("APP", "UAT", EnvFunction.env_config);
+		EnvironmentConfiguration c = myconfig.getEnvironmentConfiguration("APP", "PROD");
 		assertNotNull(c);
 		assertEquals("ACC", c.getPreviousEnvironment());
 		assertEquals("UAT", c.getNextEnvironment());
@@ -210,41 +210,41 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test(expected = AccessDeniedException.class)
 	public void getEnvironmentConfiguration_not_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config);
-		myconfig.getEnvironmentConfiguration(1, "UAT");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_config);
+		myconfig.getEnvironmentConfiguration("APP", "UAT");
 	}
 
 	@Test
 	public void getEnv_admin() throws SQLException {
 		asAdmin();
-		ConfigurationSet env = myconfig.getEnv("myapp", "1.0", "DEV");
+		ConfigurationSet env = myconfig.getEnv("APP", "1.0", "DEV");
 		assertNotNull(env);
 	}
 
 	@Test
 	public void getEnv_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_view);
-		ConfigurationSet env = myconfig.getEnv("myapp", "1.0", "DEV");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_view);
+		ConfigurationSet env = myconfig.getEnv("APP", "1.0", "DEV");
 		assertNotNull(env);
 	}
 
 	@Test
 	public void getEnv_granted_through_config() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config);
-		ConfigurationSet env = myconfig.getEnv("myapp", "1.0", "DEV");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_config);
+		ConfigurationSet env = myconfig.getEnv("APP", "1.0", "DEV");
 		assertNotNull(env);
 	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void getEnv_not_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_config);
-		myconfig.getEnv("myapp", "1.0", "UAT");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_config);
+		myconfig.getEnv("APP", "1.0", "UAT");
 	}
 
 	@Test
 	public void getKeyConfiguration_all() throws SQLException {
 		asAdmin();
-		KeyConfiguration c = myconfig.getKeyConfiguration(1, "jdbc.user");
+		KeyConfiguration c = myconfig.getKeyConfiguration("APP", "jdbc.user");
 		assertNotNull(c);
 		List<IndexedValues<String>> environmentValuesPerVersionList = c.getEnvironmentValuesPerVersionList();
 		List<String> envs = Lists.transform(environmentValuesPerVersionList, IndexedValues.<String> indexFn());
@@ -253,8 +253,8 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test
 	public void getKeyConfiguration_restricted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_view);
-		KeyConfiguration c = myconfig.getKeyConfiguration(1, "jdbc.user");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_view);
+		KeyConfiguration c = myconfig.getKeyConfiguration("APP", "jdbc.user");
 		assertNotNull(c);
 		List<IndexedValues<String>> environmentValuesPerVersionList = c.getEnvironmentValuesPerVersionList();
 		List<String> envs = Lists.transform(environmentValuesPerVersionList, IndexedValues.<String> indexFn());
@@ -263,21 +263,21 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	
 	@Test(expected = AccessDeniedException.class)
 	public void getKey_not_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_view);
-		myconfig.getKey("myapp", "1.0", "UAT", "jdbc.user");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_view);
+		myconfig.getKey("APP", "1.0", "UAT", "jdbc.user");
 	}
 	
 	@Test
 	public void getKey_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_view);
-		String value = myconfig.getKey("myapp", "1.0", "DEV", "jdbc.user");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_view);
+		String value = myconfig.getKey("APP", "1.0", "DEV", "jdbc.user");
 		assertEquals ("1.0 jdbc.user DEV", value);
 	}
 
 	@Test
 	public void getVersionConfiguration_all() throws SQLException {
 		asAdmin();
-		VersionConfiguration c = myconfig.getVersionConfiguration(1, "1.0");
+		VersionConfiguration c = myconfig.getVersionConfiguration("APP", "1.0");
 		assertNotNull(c);
 		List<IndexedValues<String>> environmentValuesPerKeyList = c.getEnvironmentValuesPerKeyList();
 		List<String> envs = Lists.transform(environmentValuesPerKeyList, IndexedValues.<String> indexFn());
@@ -286,8 +286,8 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 
 	@Test
 	public void getVersionConfiguration_restricted() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, "DEV", EnvFunction.env_view);
-		VersionConfiguration c = myconfig.getVersionConfiguration(1, "1.0");
+		asUser().grant("APP", AppFunction.app_view).grant("APP", "DEV", EnvFunction.env_view);
+		VersionConfiguration c = myconfig.getVersionConfiguration("APP", "1.0");
 		assertNotNull(c);
 		List<IndexedValues<String>> environmentValuesPerKeyList = c.getEnvironmentValuesPerKeyList();
 		List<String> envs = Lists.transform(environmentValuesPerKeyList, IndexedValues.<String> indexFn());
@@ -297,46 +297,46 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 	@Test
 	public void createEnvironment_admin() throws SQLException {
 		asAdmin();
-		Ack ack = myconfig.createEnvironment(1, "ADMIN");
+		Ack ack = myconfig.createEnvironment("APP", "ADMIN");
 		assertTrue (ack.isSuccess());
 	}
 	
 	@Test
 	public void createEnvironment_granted() throws SQLException {
-		asUser().grant(1, AppFunction.app_envcreate);
-		Ack ack = myconfig.createEnvironment(1, "ENVCREATE");
+		asUser().grant("APP", AppFunction.app_envcreate);
+		Ack ack = myconfig.createEnvironment("APP", "ENVCREATE");
 		assertTrue (ack.isSuccess());
 	}
 	
 	@Test(expected = AccessDeniedException.class)
 	public void createEnvironment_not_granted() throws SQLException {
 		asUser();
-		myconfig.createEnvironment(1, "NO_ENVCREATE");
+		myconfig.createEnvironment("APP", "NO_ENVCREATE");
 	}
 	
 	@Test
 	public void deleteEnvironment_admin() throws SQLException {
 		asAdmin();
-		myconfig.createEnvironment(1, "DEL_ENV_ADMIN");
-		Ack ack = myconfig.deleteEnvironment(1, "DEL_ENV_ADMIN");
+		myconfig.createEnvironment("APP", "DEL_ENV_ADMIN");
+		Ack ack = myconfig.deleteEnvironment("APP", "DEL_ENV_ADMIN");
 		assertTrue (ack.isSuccess());
 	}
 	
 	@Test
 	public void deleteEnvironment_granted() throws SQLException {
 		asAdmin();
-		myconfig.createEnvironment(1, "DEL_ENV_GRANTED");
-		asUser().grant(1, "DEL_ENV_GRANTED", EnvFunction.env_delete);
-		Ack ack = myconfig.deleteEnvironment(1, "DEL_ENV_GRANTED");
+		myconfig.createEnvironment("APP", "DEL_ENV_GRANTED");
+		asUser().grant("APP", "DEL_ENV_GRANTED", EnvFunction.env_delete);
+		Ack ack = myconfig.deleteEnvironment("APP", "DEL_ENV_GRANTED");
 		assertTrue (ack.isSuccess());
 	}
 
 	@Test(expected = AccessDeniedException.class)
 	public void deleteEnvironment_not_granted() throws SQLException {
 		asAdmin();
-		myconfig.createEnvironment(1, "DEL_ENV_NOT_GRANTED");
+		myconfig.createEnvironment("APP", "DEL_ENV_NOT_GRANTED");
 		asUser();
-		myconfig.deleteEnvironment(1, "DEL_ENV_NOT_GRANTED");
+		myconfig.deleteEnvironment("APP", "DEL_ENV_NOT_GRANTED");
 	}
 
 	// TODO Ack createVersion(int id, String name);

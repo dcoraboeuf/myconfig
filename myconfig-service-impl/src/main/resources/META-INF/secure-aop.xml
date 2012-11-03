@@ -9,8 +9,8 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
 	<global-method-security access-decision-manager-ref="hubAccessDecisionManager">
 		<protect-pointcut expression="execution(@net.myconfig.service.api.security.UserGrant * net.myconfig.service.impl.*.*(..))" access="user" />
-		<protect-pointcut expression="execution(@net.myconfig.service.api.security.AppGrant * net.myconfig.service.impl.*.*(int,..))" access="application" />
-		<protect-pointcut expression="execution(@net.myconfig.service.api.security.EnvGrant * net.myconfig.service.impl.*.*(int,..))" access="environment" />
+		<protect-pointcut expression="execution(@net.myconfig.service.api.security.AppGrant * net.myconfig.service.impl.*.*(..))" access="application" />
+		<protect-pointcut expression="execution(@net.myconfig.service.api.security.EnvGrant * net.myconfig.service.impl.*.*(..))" access="environment" />
 	</global-method-security>
 
 </beans:beans>

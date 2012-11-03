@@ -1,41 +1,41 @@
 <dataset>
 
-	<APPLICATION id="1" name="myapp" />
+	<APPLICATION id="APP" name="myapp" />
 	
-	<VERSION application="1" name="1.0" />
-	<VERSION application="1" name="1.1" />
+	<VERSION application="APP" name="1.0" />
+	<VERSION application="APP" name="1.1" />
 	
-	<ENVIRONMENT application="1" name="DEV" />
-	<ENVIRONMENT application="1" name="ACC" />
-	<ENVIRONMENT application="1" name="UAT" />
-	<ENVIRONMENT application="1" name="PROD" />
+	<ENVIRONMENT application="APP" name="DEV" />
+	<ENVIRONMENT application="APP" name="ACC" />
+	<ENVIRONMENT application="APP" name="UAT" />
+	<ENVIRONMENT application="APP" name="PROD" />
 	
-	<APPKEY application="1" name="jdbc.user" description="User used to connect to the database" />
-	<APPKEY application="1" name="jdbc.password" description="Password used to connect to the database" />
-	<APPKEY application="1" name="jdbc.url" description="URL used to connect to the database" />
+	<APPKEY application="APP" name="jdbc.user" description="User used to connect to the database" />
+	<APPKEY application="APP" name="jdbc.password" description="Password used to connect to the database" />
+	<APPKEY application="APP" name="jdbc.url" description="URL used to connect to the database" />
 	
-	<VERSION_KEY application="1" version="1.0" appkey="jdbc.user" />
-	<VERSION_KEY application="1" version="1.0" appkey="jdbc.password" />
-	<VERSION_KEY application="1" version="1.1" appkey="jdbc.user" />
-	<VERSION_KEY application="1" version="1.1" appkey="jdbc.password" />
+	<VERSION_KEY application="APP" version="1.0" appkey="jdbc.user" />
+	<VERSION_KEY application="APP" version="1.0" appkey="jdbc.password" />
+	<VERSION_KEY application="APP" version="1.1" appkey="jdbc.user" />
+	<VERSION_KEY application="APP" version="1.1" appkey="jdbc.password" />
 	
-	<CONFIG application="1" version="1.0" appkey="jdbc.user" environment="DEV" value="1.0 jdbc.user DEV" />
-	<CONFIG application="1" version="1.0" appkey="jdbc.user" environment="ACC" value="1.0 jdbc.user ACC" />
-	<CONFIG application="1" version="1.0" appkey="jdbc.user" environment="UAT" value="1.0 jdbc.user UAT" />
-	<CONFIG application="1" version="1.0" appkey="jdbc.user" environment="PROD" value="1.0 jdbc.user PROD" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.user" environment="DEV" value="1.1 jdbc.user DEV" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.user" environment="ACC" value="1.1 jdbc.user ACC" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.user" environment="UAT" value="1.1 jdbc.user UAT" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.user" environment="PROD" value="1.1 jdbc.user PROD" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.user" environment="DEV" value="1.0 jdbc.user DEV" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.user" environment="ACC" value="1.0 jdbc.user ACC" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.user" environment="UAT" value="1.0 jdbc.user UAT" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.user" environment="PROD" value="1.0 jdbc.user PROD" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.user" environment="DEV" value="1.1 jdbc.user DEV" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.user" environment="ACC" value="1.1 jdbc.user ACC" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.user" environment="UAT" value="1.1 jdbc.user UAT" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.user" environment="PROD" value="1.1 jdbc.user PROD" />
 	
-	<CONFIG application="1" version="1.0" appkey="jdbc.password" environment="DEV" value="1.0 jdbc.password DEV" />
-	<CONFIG application="1" version="1.0" appkey="jdbc.password" environment="ACC" value="1.0 jdbc.password ACC" />
-	<CONFIG application="1" version="1.0" appkey="jdbc.password" environment="UAT" value="1.0 jdbc.password UAT" />
-	<CONFIG application="1" version="1.0" appkey="jdbc.password" environment="PROD" value="1.0 jdbc.password PROD" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.password" environment="DEV" value="1.1 jdbc.password DEV" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.password" environment="ACC" value="1.1 jdbc.password ACC" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.password" environment="UAT" value="1.1 jdbc.password UAT" />
-	<CONFIG application="1" version="1.1" appkey="jdbc.password" environment="PROD" value="1.1 jdbc.password PROD" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.password" environment="DEV" value="1.0 jdbc.password DEV" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.password" environment="ACC" value="1.0 jdbc.password ACC" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.password" environment="UAT" value="1.0 jdbc.password UAT" />
+	<CONFIG application="APP" version="1.0" appkey="jdbc.password" environment="PROD" value="1.0 jdbc.password PROD" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.password" environment="DEV" value="1.1 jdbc.password DEV" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.password" environment="ACC" value="1.1 jdbc.password ACC" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.password" environment="UAT" value="1.1 jdbc.password UAT" />
+	<CONFIG application="APP" version="1.1" appkey="jdbc.password" environment="PROD" value="1.1 jdbc.password PROD" />
 	
 	<CONFIGURATION name="security.mode" value="builtin" />
 	
