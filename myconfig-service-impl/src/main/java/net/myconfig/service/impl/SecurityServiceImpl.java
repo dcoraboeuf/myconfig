@@ -249,7 +249,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Transactional
 	@EnvGrant(EnvFunction.env_users)
 	@Audit(category = EventCategory.ENV_FUNCTION, action = EventAction.CREATE, application = "#application", environment = "#environment", user = "#user", function = "#fn", result = "#result.success")
-	public Ack envFunctionAdd(String application, String user, @EnvGrantParam String environment, EnvFunction fn) {
+	public Ack envFunctionAdd(@AppGrantParam String application, String user, @EnvGrantParam String environment, EnvFunction fn) {
 		return grantService.envFunctionAdd(application, user, environment, fn);
 	}
 	
@@ -257,7 +257,7 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Transactional
 	@EnvGrant(EnvFunction.env_users)
 	@Audit(category = EventCategory.ENV_FUNCTION, action = EventAction.DELETE, application = "#application", environment = "#environment", user = "#user", function = "#fn", result = "#result.success")
-	public Ack envFunctionRemove(String application, String user, @EnvGrantParam String environment, EnvFunction fn) {
+	public Ack envFunctionRemove(@AppGrantParam String application, String user, @EnvGrantParam String environment, EnvFunction fn) {
 		return grantService.envFunctionAdd(application, user, environment, fn);
 	}
 

@@ -204,7 +204,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_users)
-	public EnvironmentUsers getEnvironmentUsers(final String id, @EnvGrantParam final String environment) {
+	public EnvironmentUsers getEnvironmentUsers(@AppGrantParam final String id, @EnvGrantParam final String environment) {
 		// Gets the application name
 		String applicationName = getApplicationName(id);
 		// List of users
@@ -384,7 +384,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@EnvGrant(EnvFunction.env_delete)
 	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.DELETE, application = "#id", environment = "#name", result = "#result.success")
-	public Ack deleteEnvironment(String id, @EnvGrantParam String name) {
+	public Ack deleteEnvironment(@AppGrantParam String id, @EnvGrantParam String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
 		return Ack.one (count);
@@ -536,7 +536,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_config)
-	public EnvironmentConfiguration getEnvironmentConfiguration(String application, @EnvGrantParam String environment) {
+	public EnvironmentConfiguration getEnvironmentConfiguration(@AppGrantParam String application, @EnvGrantParam String environment) {
 		checkApplication(application);
 		checkEnvironment(application, environment);
 		// Application name
