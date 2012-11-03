@@ -40,15 +40,12 @@ import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
-import net.myconfig.service.exception.EnvironmentNotDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
-import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.ValidationException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
-import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.test.AbstractIntegrationTest;
 import net.sf.jstring.Strings;
@@ -67,6 +64,8 @@ import org.springframework.beans.factory.annotation.Value;
 import com.netbeetle.jackson.ObjectMapperFactory;
 
 public class MyConfigServiceTest extends AbstractIntegrationTest {
+
+	private static final String APP = "APP";
 
 	@Autowired
 	private MyConfigService myConfigService;
@@ -95,13 +94,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void get_key_ok() {
-		String value = myConfigService.getKey("myapp", "1.1", "UAT", "jdbc.user");
+		String value = myConfigService.getKey(APP, "1.1", "UAT", "jdbc.user");
 		assertEquals ("1.1 jdbc.user UAT", value);
 	}
 	
 	@Test(expected = KeyNotFoundException.class)
 	public void get_key_not_found() {
-		myConfigService.getKey("myapp", "1.1", "UAT", "jdbc.usr");
+		myConfigService.getKey(APP, "1.1", "UAT", "jdbc.usr");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
@@ -111,17 +110,17 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = VersionNotFoundException.class)
 	public void get_key_noversion() {
-		myConfigService.getKey("myapp", "1.x", "UAT", "jdbc.user");
+		myConfigService.getKey(APP, "1.x", "UAT", "jdbc.user");
 	}
 	
 	@Test(expected = EnvironmentNotFoundException.class)
 	public void get_key_noenv() {
-		myConfigService.getKey("myapp", "1.1", "xxx", "jdbc.user");
+		myConfigService.getKey(APP, "1.1", "xxx", "jdbc.user");
 	}
 	
 	@Test
 	public void get_env () {
-		ConfigurationSet set = myConfigService.getEnv("myapp", "1.1", "UAT");
+		ConfigurationSet set = myConfigService.getEnv(APP, "1.1", "UAT");
 		assertNotNull (set);
 		List<ConfigurationValue> values = set.getValues();
 		assertNotNull (values);
@@ -147,12 +146,12 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = VersionNotFoundException.class)
 	public void get_env_no_version () {
-		myConfigService.getEnv("myapp", "1.x", "UAT");
+		myConfigService.getEnv(APP, "1.x", "UAT");
 	}
 	
 	@Test(expected = EnvironmentNotFoundException.class)
 	public void get_env_no_environment () {
-		myConfigService.getEnv("myapp", "1.1", "XXX");
+		myConfigService.getEnv(APP, "1.1", "XXX");
 	}
 	
 	@Test
@@ -161,17 +160,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertNotNull (applications);
 		{
 			ApplicationSummary app = applications.get(0);
-			assertEquals (2, app.getId());
-			assertEquals ("anotherapp", app.getName());
-			assertEquals (2, app.getVersionCount());
-			assertEquals (2, app.getKeyCount());
-			assertEquals (4, app.getEnvironmentCount());
-			assertEquals (12, app.getConfigCount());
-			assertEquals (0, app.getValueCount());
-		}
-		{
-			ApplicationSummary app = applications.get(1);
-			assertEquals (1, app.getId());
+			assertEquals ("APP", app.getId());
 			assertEquals ("myapp", app.getName());
 			assertEquals (4, app.getVersionCount());
 			assertEquals (3, app.getKeyCount());
@@ -179,23 +168,33 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 			assertEquals (40, app.getConfigCount());
 			assertEquals (28, app.getValueCount());
 		}
+		{
+			ApplicationSummary app = applications.get(1);
+			assertEquals ("APP2", app.getId());
+			assertEquals ("anotherapp", app.getName());
+			assertEquals (2, app.getVersionCount());
+			assertEquals (2, app.getKeyCount());
+			assertEquals (4, app.getEnvironmentCount());
+			assertEquals (12, app.getConfigCount());
+			assertEquals (0, app.getValueCount());
+		}
 	}
 	
 	@Test
 	public void applicationCreate () {
-		doApplicationCreate("test");
+		doApplicationCreate("APP_CREATE", "test");
 	}
 	
 	@Test
 	public void applicationCreate_special_characters () {
-		doApplicationCreate("te - _ s.t");
+		doApplicationCreate("APP_SPECIAL", "te - _ s.t");
 	}
 
-	protected void doApplicationCreate(String name) {
-		ApplicationSummary summary = myConfigService.createApplication(name);
+	protected void doApplicationCreate(String id, String name) {
+		ApplicationSummary summary = myConfigService.createApplication(id, name);
 		assertNotNull (summary);
 		assertEquals (name, summary.getName());
-		assertTrue (summary.getId() > 0);
+		assertEquals (id, summary.getId());
 		assertEquals (0, summary.getVersionCount());
 		assertEquals (0, summary.getKeyCount());
 		assertEquals (0, summary.getEnvironmentCount());
@@ -206,7 +205,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void applicationCreate_null () {
 		try {
-			myConfigService.createApplication(null);
+			myConfigService.createApplication("A", null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -215,10 +214,12 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		}
 	}
 	
+	// FIXME Unit tests on the application ID
+	
 	@Test
 	public void applicationCreate_blank () {
 		try {
-			myConfigService.createApplication("");
+			myConfigService.createApplication("A", "");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -230,7 +231,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void applicationCreate_spaces () {
 		try {
-			myConfigService.createApplication("     ");
+			myConfigService.createApplication("A", "     ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -242,11 +243,11 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void applicationCreate_unrecognized_characters () {
 		try {
-			myConfigService.createApplication("<te/st\u00E9>");
+			myConfigService.createApplication("A", "<te/st\u00E9>");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
-					"[S-012] [V-001] Application name is invalid: must be sequence of ASCII letters, dash(-), underscore(_) and/or spaces ( )",
+					"[S-012] [V-001] Application name is invalid: must be a sequence of ASCII letters, dash(-), underscore(_) and/or spaces ( )",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
@@ -254,7 +255,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void applicationCreate_trim () {
 		try {
-			myConfigService.createApplication("  myapp   ");
+			myConfigService.createApplication("A", "  myapp   ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -266,7 +267,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void applicationCreate_too_long () {
 		try {
-			myConfigService.createApplication(StringUtils.repeat("x", 81));
+			myConfigService.createApplication("A", StringUtils.repeat("x", 81));
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -275,37 +276,39 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		}
 	}
 	
+	// FIXME Unit test for duplicated application ID
+	
 	@Test(expected = ApplicationNameAlreadyDefinedException.class)
 	public void applicationCreate_not_unique () {
-		myConfigService.createApplication("test2");
-		myConfigService.createApplication("test2");
+		myConfigService.createApplication("A", "test2");
+		myConfigService.createApplication("B", "test2");
 	}
 
 	@Test
 	public void applicationDelete () {
-		int id = myConfigService.createApplication("test3").getId();
-		Ack ack = myConfigService.deleteApplication(id);
+		myConfigService.createApplication("app_delete", "test3").getId();
+		Ack ack = myConfigService.deleteApplication("app_delete");
 		assertNotNull (ack);
 		assertTrue (ack.isSuccess());
 	}
 
 	@Test
 	public void applicationDelete_cannot () {
-		Ack ack = myConfigService.deleteApplication(-1);
+		Ack ack = myConfigService.deleteApplication("app_xxx");
 		assertNotNull (ack);
 		assertFalse (ack.isSuccess());
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_configuration_noapp () {
-		myConfigService.getApplicationConfiguration(10);
+		myConfigService.getApplicationConfiguration("app_xxx");
 	}
 		
 	@Test
 	public void application_configuration () {
-		ApplicationConfiguration app = myConfigService.getApplicationConfiguration(1);
+		ApplicationConfiguration app = myConfigService.getApplicationConfiguration(APP);
 		assertNotNull (app);
-		assertEquals (1, app.getId());
+		assertEquals (APP, app.getId());
 		assertEquals ("myapp", app.getName());
 		// Versions
 		List<VersionSummary> versions = app.getVersionSummaryList();
@@ -335,17 +338,17 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void version_create () throws DataSetException, SQLException {
 		// Checks the table
-		assertRecordNotExists ("select * from version where application = 1 and name = '1.4'");
-		Ack ack = myConfigService.createVersion(1, "1.4");
+		assertRecordNotExists ("select * from version where application = 'APP' and name = '1.4'");
+		Ack ack = myConfigService.createVersion(APP, "1.4");
 		assertTrue (ack.isSuccess());
 		// Checks the table
-		assertRecordExists ("select * from version where application = 1 and name = '1.4'");
+		assertRecordExists ("select * from version where application = 'APP' and name = '1.4'");
 	}
 
 	@Test
 	public void version_create_null () {
 		try {
-			myConfigService.createVersion(1, null);
+			myConfigService.createVersion(APP, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -357,7 +360,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void version_create_spaces () {
 		try {
-			myConfigService.createVersion(1, " ");
+			myConfigService.createVersion(APP, " ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -369,7 +372,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void version_create_trim () {
 		try {
-			myConfigService.createVersion(1, " myversion ");
+			myConfigService.createVersion(APP, " myversion ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -381,7 +384,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void version_create_blank () {
 		try {
-			myConfigService.createVersion(1, "");
+			myConfigService.createVersion(APP, "");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -393,7 +396,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void version_create_too_long () {
 		try {
-			myConfigService.createVersion(1, StringUtils.repeat("x", 81));
+			myConfigService.createVersion(APP, StringUtils.repeat("x", 81));
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -404,46 +407,46 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_create_noapp () {
-		myConfigService.createVersion(10, "1.3");
+		myConfigService.createVersion("app_xxx", "1.3");
 	}
 	
 	@Test(expected = VersionAlreadyDefinedException.class)
 	public void version_create_exists () {
-		myConfigService.createVersion(1, "1.1");
+		myConfigService.createVersion(APP, "1.1");
 	}
 	
 	@Test
 	public void version_delete () throws DataSetException, SQLException {
-		myConfigService.createVersion(1, "2.0");
-		assertRecordExists("select * from version where application = 1 and name = '2.0'");
-		Ack ack = myConfigService.deleteVersion(1, "2.0");
+		myConfigService.createVersion(APP, "2.0");
+		assertRecordExists("select * from version where application = 'APP' and name = '2.0'");
+		Ack ack = myConfigService.deleteVersion(APP, "2.0");
 		assertTrue (ack.isSuccess());
-		assertRecordNotExists("select * from version where application = 1 and name = '2.0'");
+		assertRecordNotExists("select * from version where application = 'APP' and name = '2.0'");
 	}
 	
 	@Test
 	public void version_delete_none () throws DataSetException, SQLException {
-		Ack ack = myConfigService.deleteVersion(1, "2.1");
+		Ack ack = myConfigService.deleteVersion(APP, "2.1");
 		assertFalse (ack.isSuccess());
 	}
 	
 	@Test (expected= ApplicationNotFoundException.class)
 	public void version_delete_noapp () {
-		myConfigService.deleteVersion(10, "1.0");
+		myConfigService.deleteVersion("app_xxx", "1.0");
 	}
 	
 	@Test
 	public void environment_create () throws DataSetException, SQLException {
-		Ack ack = myConfigService.createEnvironment(1, "TEST");
+		Ack ack = myConfigService.createEnvironment(APP, "TEST");
 		assertTrue (ack.isSuccess());
 		// Checks the table
-		assertRecordExists ("select * from environment where application = 1 and name = 'TEST'");
+		assertRecordExists ("select * from environment where application = 'APP' and name = 'TEST'");
 	}
 
 	@Test
 	public void environment_create_null () {
 		try {
-			myConfigService.createEnvironment(1, null);
+			myConfigService.createEnvironment(APP, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -455,7 +458,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void environment_create_spaces () {
 		try {
-			myConfigService.createEnvironment(1, "  ");
+			myConfigService.createEnvironment(APP, "  ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -467,7 +470,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void environment_create_trim () {
 		try {
-			myConfigService.createEnvironment(1, " myenv  ");
+			myConfigService.createEnvironment(APP, " myenv  ");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -479,7 +482,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void environment_create_blank () {
 		try {
-			myConfigService.createEnvironment(1, "");
+			myConfigService.createEnvironment(APP, "");
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -491,7 +494,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void environment_create_too_long () {
 		try {
-			myConfigService.createEnvironment(1, StringUtils.repeat("x", 81));
+			myConfigService.createEnvironment(APP, StringUtils.repeat("x", 81));
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -502,46 +505,46 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void environment_create_noapp () {
-		myConfigService.createEnvironment(10, "TEST");
+		myConfigService.createEnvironment("app_xxx", "TEST");
 	}
 	
 	@Test(expected = EnvironmentAlreadyDefinedException.class)
 	public void environment_create_exists () {
-		myConfigService.createEnvironment(1, "DEV");
+		myConfigService.createEnvironment(APP, "DEV");
 	}
 	
 	@Test
 	public void environment_delete () throws DataSetException, SQLException {
-		myConfigService.createEnvironment(1, "TEST2");
-		assertRecordExists("select * from environment where application = 1 and name = 'TEST2'");
-		Ack ack = myConfigService.deleteEnvironment(1, "TEST2");
+		myConfigService.createEnvironment(APP, "TEST2");
+		assertRecordExists("select * from environment where application = 'APP' and name = 'TEST2'");
+		Ack ack = myConfigService.deleteEnvironment(APP, "TEST2");
 		assertTrue (ack.isSuccess());
-		assertRecordNotExists("select * from environment where application = 1 and name = 'TEST2'");
+		assertRecordNotExists("select * from environment where application = 'APP' and name = 'TEST2'");
 	}
 	
 	@Test
 	public void environment_delete_none () {
-		Ack ack = myConfigService.deleteEnvironment(1, "TEST3");
+		Ack ack = myConfigService.deleteEnvironment(APP, "TEST3");
 		assertFalse (ack.isSuccess());
 	}
 	
 	@Test (expected= ApplicationNotFoundException.class)
 	public void environment_delete_noapp () {
-		myConfigService.deleteEnvironment(10, "TEST");
+		myConfigService.deleteEnvironment("app_xxx", "TEST");
 	}
 	
 	@Test
 	public void key_create () throws DataSetException, SQLException {
-		Ack ack = myConfigService.createKey(1, "key1", "Description for key 1");
+		Ack ack = myConfigService.createKey(APP, "key1", "Description for key 1");
 		assertTrue (ack.isSuccess());
 		// Checks the table
-		assertRecordExists("select * from appkey where application = 1 and name = 'key1' and description = 'Description for key 1'");
+		assertRecordExists("select * from appkey where application = 'APP' and name = 'key1' and description = 'Description for key 1'");
 	}
 	
 	@Test
 	public void key_create_null () {
 		try {
-			myConfigService.createKey(1, null, null);
+			myConfigService.createKey(APP, null, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -553,7 +556,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_spaces () {
 		try {
-			myConfigService.createKey(1, "  ", null);
+			myConfigService.createKey(APP, "  ", null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -565,7 +568,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_trim () {
 		try {
-			myConfigService.createKey(1, " mykey  ", null);
+			myConfigService.createKey(APP, " mykey  ", null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -577,7 +580,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_blank () {
 		try {
-			myConfigService.createKey(1, "", null);
+			myConfigService.createKey(APP, "", null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -589,7 +592,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_too_long () {
 		try {
-			myConfigService.createKey(1, StringUtils.repeat("x", 81), null);
+			myConfigService.createKey(APP, StringUtils.repeat("x", 81), null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -601,7 +604,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_description_too_long () {
 		try {
-			myConfigService.createKey(1, StringUtils.repeat("x", 80), StringUtils.repeat("x", 501));
+			myConfigService.createKey(APP, StringUtils.repeat("x", 80), StringUtils.repeat("x", 501));
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -612,62 +615,62 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void key_create_noapp () {
-		myConfigService.createKey(10, "key2", "Description for key 2");
+		myConfigService.createKey("app_xxx", "key2", "Description for key 2");
 	}
 	
 	@Test(expected = KeyAlreadyDefinedException.class)
 	public void key_create_exists () {
-		myConfigService.createKey(1, "jdbc.user", "New description");
+		myConfigService.createKey(APP, "jdbc.user", "New description");
 	}
 
 	@Test(expected = ApplicationNotFoundException.class)
 	public void key_update_noapp() {
-		myConfigService.updateKey(10, "key1", "xxx");
+		myConfigService.updateKey("app_xxx", "key1", "xxx");
 	}
 
-	@Test(expected = KeyNotDefinedException.class)
+	@Test(expected = KeyNotFoundException.class)
 	public void key_update_nokey() {
-		myConfigService.updateKey(2, "keyx", "xxx");
+		myConfigService.updateKey("APP2", "keyx", "xxx");
 	}
 
 	@Test(expected = ValidationException.class)
 	public void key_update_baddescription() {
-		myConfigService.updateKey(2, "key1", "    ");
+		myConfigService.updateKey("APP2", "key1", "    ");
 	}
 
 	@Test
 	public void key_update() throws DataSetException, SQLException {
-		assertRecordExists("select * from appkey where application = 2 and name = 'key1' and description = 'Key 1'");
-		myConfigService.updateKey(2, "key1", "xxx");
-		assertRecordExists("select * from appkey where application = 2 and name = 'key1' and description = 'xxx'");
+		assertRecordExists("select * from appkey where application = 'APP2' and name = 'key1' and description = 'Key 1'");
+		myConfigService.updateKey("APP2", "key1", "xxx");
+		assertRecordExists("select * from appkey where application = 'APP2' and name = 'key1' and description = 'xxx'");
 	}
 	
 	@Test
 	public void key_delete () throws DataSetException, SQLException {
-		myConfigService.createKey(1, "key3", "Description for key 3");
-		assertRecordExists("select * from appkey where application = 1 and name = 'key3' and description = 'Description for key 3'");
-		Ack ack = myConfigService.deleteKey(1, "key3");
+		myConfigService.createKey(APP, "key3", "Description for key 3");
+		assertRecordExists("select * from appkey where application = 'APP' and name = 'key3' and description = 'Description for key 3'");
+		Ack ack = myConfigService.deleteKey(APP, "key3");
 		assertTrue (ack.isSuccess());
-		assertRecordNotExists("select * from appkey where application = 1 and name = 'key3' and description = 'Description for key 3'");
+		assertRecordNotExists("select * from appkey where application = 'APP' and name = 'key3' and description = 'Description for key 3'");
 	}
 	
 	@Test
 	public void key_delete_none () {
-		Ack ack = myConfigService.deleteKey(1, "key4");
+		Ack ack = myConfigService.deleteKey(APP, "key4");
 		assertFalse (ack.isSuccess());
 	}
 	
 	@Test (expected= ApplicationNotFoundException.class)
 	public void key_delete_noapp () {
-		myConfigService.deleteKey(10, "key5");
+		myConfigService.deleteKey("app_xxx", "key5");
 	}
 	
 	@Test
 	public void matrix () throws JsonGenerationException, JsonMappingException, IOException {
-		MatrixConfiguration configuration = myConfigService.keyVersionConfiguration(1);
+		MatrixConfiguration configuration = myConfigService.keyVersionConfiguration(APP);
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new MatrixConfiguration(1, "myapp",
+				new MatrixConfiguration(APP, "myapp",
 					Arrays.asList(
 							new MatrixVersionConfiguration(
 									"1.0",
@@ -691,16 +694,16 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void matrix_no_app () {
-		myConfigService.keyVersionConfiguration(-1);
+		myConfigService.keyVersionConfiguration("app_xxx");
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration() throws JsonGenerationException, JsonMappingException, IOException {
-		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(1, "DEV");
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "DEV");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new EnvironmentConfiguration(1, "myapp", "DEV", "ACC", "PROD",
+				new EnvironmentConfiguration(APP, "myapp", "DEV", "ACC", "PROD",
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.url", "URL used to connect to the database"),
@@ -746,10 +749,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
-		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(2, "DEV");
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration("APP2", "DEV");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new EnvironmentConfiguration(2, "anotherapp", "DEV", "ACC", "PROD",
+				new EnvironmentConfiguration("APP2", "anotherapp", "DEV", "ACC", "PROD",
 					Arrays.asList(
 							new Key("key1", "Key 1"),
 							new Key("key2", "Key 2")),
@@ -774,10 +777,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
-		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(1, "UAT");
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "UAT");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new EnvironmentConfiguration(1, "myapp", "UAT", "PROD", null,
+				new EnvironmentConfiguration(APP, "myapp", "UAT", "PROD", null,
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.url", "URL used to connect to the database"),
@@ -819,10 +822,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
-		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(1, "ACC");
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "ACC");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new EnvironmentConfiguration(1, "myapp", "ACC", null, "DEV",
+				new EnvironmentConfiguration(APP, "myapp", "ACC", null, "DEV",
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.url", "URL used to connect to the database"),
@@ -863,21 +866,21 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 
 	@Test(expected = ApplicationNotFoundException.class)
 	public void environment_configuration_no_app() {
-		myConfigService.getEnvironmentConfiguration(0, "");
+		myConfigService.getEnvironmentConfiguration("app_xxx", "");
 	}
 	
-	@Test(expected = EnvironmentNotDefinedException.class)
+	@Test(expected = EnvironmentNotFoundException.class)
 	public void environment_configuration_no_version() {
-		myConfigService.getEnvironmentConfiguration(1, "xxx");
+		myConfigService.getEnvironmentConfiguration(APP, "xxx");
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void key_configuration() throws JsonGenerationException, JsonMappingException, IOException {
-		KeyConfiguration configuration = myConfigService.getKeyConfiguration(1, "jdbc.url");
+		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.url");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new KeyConfiguration(1, "myapp", new Key("jdbc.url", "URL used to connect to the database"), "jdbc.password", "jdbc.user",
+				new KeyConfiguration(APP, "myapp", new Key("jdbc.url", "URL used to connect to the database"), "jdbc.password", "jdbc.user",
 					Arrays.asList(
 							new Version("1.2"),
 							new Version("1.3")),
@@ -910,10 +913,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void key_configuration_no_previous() throws JsonGenerationException, JsonMappingException, IOException {
-		KeyConfiguration configuration = myConfigService.getKeyConfiguration(1, "jdbc.password");
+		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.password");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new KeyConfiguration(1, "myapp", new Key("jdbc.password", "Password used to connect to the database"), null, "jdbc.url",
+				new KeyConfiguration(APP, "myapp", new Key("jdbc.password", "Password used to connect to the database"), null, "jdbc.url",
 					Arrays.asList(
 							new Version("1.0"),
 							new Version("1.1"),
@@ -956,10 +959,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void key_configuration_no_next() throws JsonGenerationException, JsonMappingException, IOException {
-		KeyConfiguration configuration = myConfigService.getKeyConfiguration(1, "jdbc.user");
+		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.user");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new KeyConfiguration(1, "myapp", new Key("jdbc.user", "User used to connect to the database"), "jdbc.url", null,
+				new KeyConfiguration(APP, "myapp", new Key("jdbc.user", "User used to connect to the database"), "jdbc.url", null,
 					Arrays.asList(
 							new Version("1.0"),
 							new Version("1.1"),
@@ -1001,21 +1004,21 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 
 	@Test(expected = ApplicationNotFoundException.class)
 	public void key_configuration_no_app() {
-		myConfigService.getKeyConfiguration(0, "");
+		myConfigService.getKeyConfiguration("app_xxx", "");
 	}
 	
-	@Test(expected = KeyNotDefinedException.class)
+	@Test(expected = KeyNotFoundException.class)
 	public void key_configuration_no_version() {
-		myConfigService.getKeyConfiguration(1, "xxx");
+		myConfigService.getKeyConfiguration(APP, "xxx");
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.1");
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(APP, "1.1");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(1, "myapp", "1.1", "1.0", "1.2",
+				new VersionConfiguration(APP, "myapp", "1.1", "1.0", "1.2",
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
@@ -1052,10 +1055,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(2, "1.0.1");
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration("APP2", "1.0.1");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(2, "anotherapp", "1.0.1", "1.0.0", null,
+				new VersionConfiguration("APP2", "anotherapp", "1.0.1", "1.0.0", null,
 					Arrays.asList(
 							new Key("key1", "Key 1"),
 							new Key("key2", "Key 2")),
@@ -1080,10 +1083,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.3");
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(APP, "1.3");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(1, "myapp", "1.3", "1.2", null,
+				new VersionConfiguration(APP, "myapp", "1.3", "1.2", null,
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.url", "URL used to connect to the database"),
@@ -1109,10 +1112,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
-		VersionConfiguration configuration = myConfigService.getVersionConfiguration(1, "1.0");
+		VersionConfiguration configuration = myConfigService.getVersionConfiguration(APP, "1.0");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new VersionConfiguration(1, "myapp", "1.0", null, "1.1",
+				new VersionConfiguration(APP, "myapp", "1.0", null, "1.1",
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database"),
 							new Key("jdbc.user", "User used to connect to the database")),
@@ -1144,123 +1147,123 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_configuration_no_app() {
-		myConfigService.getVersionConfiguration(0, "");
+		myConfigService.getVersionConfiguration("app_xxx", "");
 	}
 	
-	@Test(expected = VersionNotDefinedException.class)
+	@Test(expected = VersionNotFoundException.class)
 	public void version_configuration_no_version() {
-		myConfigService.getVersionConfiguration(1, "1.x");
+		myConfigService.getVersionConfiguration(APP, "1.x");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_configuration_update_no_app () {
-		myConfigService.updateConfiguration(0, null);
+		myConfigService.updateConfiguration("app_xxx", null);
 	}
 	
-	@Test(expected = VersionNotDefinedException.class)
+	@Test(expected = VersionNotFoundException.class)
 	public void configuration_update_no_version () {
-		myConfigService.updateConfiguration(1, new ConfigurationUpdates(Arrays.asList(
+		myConfigService.updateConfiguration(APP, new ConfigurationUpdates(Arrays.asList(
 				new ConfigurationUpdate("UAT", "1.x", "jdbc.user", "xxx")
 				)));
 	}
 	
-	@Test(expected = EnvironmentNotDefinedException.class)
+	@Test(expected = EnvironmentNotFoundException.class)
 	public void configuration_update_no_environment () {
-		myConfigService.updateConfiguration(1, new ConfigurationUpdates(Arrays.asList(
+		myConfigService.updateConfiguration(APP, new ConfigurationUpdates(Arrays.asList(
 				new ConfigurationUpdate("XXX", "1.0", "jdbc.user", "xxx")
 				)));
 	}
 	
-	@Test(expected = KeyNotDefinedException.class)
+	@Test(expected = KeyNotFoundException.class)
 	public void configuration_update_no_key () {
-		myConfigService.updateConfiguration(1, new ConfigurationUpdates(Arrays.asList(
+		myConfigService.updateConfiguration(APP, new ConfigurationUpdates(Arrays.asList(
 				new ConfigurationUpdate("UAT", "1.0", "jdbc.xxx", "xxx")
 				)));
 	}
 	
 	@Test
 	public void configuration_update_none () throws DataSetException, SQLException {
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
-		Ack ack = myConfigService.updateConfiguration(1, new ConfigurationUpdates(
+		assertRecordCount (8, "select * from config where application = 'APP' and version = '1.0'");
+		Ack ack = myConfigService.updateConfiguration(APP, new ConfigurationUpdates(
 			Arrays.<ConfigurationUpdate>asList()
 		));
 		assertTrue (ack.isSuccess());
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.0'");
+		assertRecordCount (8, "select * from config where application = 'APP' and version = '1.0'");
 	}
 	
 	@Test
 	public void configuration_update_several () throws DataSetException, SQLException {
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
-		assertRecordValue ("1.1 jdbc.password UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
-		assertRecordValue ("1.1 jdbc.user UAT", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
-		Ack ack = myConfigService.updateConfiguration(1, new ConfigurationUpdates(
+		assertRecordCount (8, "select * from config where application = 'APP' and version = '1.1'");
+		assertRecordValue ("1.1 jdbc.password UAT", "value", "select value from config where application = 'APP' and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
+		assertRecordValue ("1.1 jdbc.user UAT", "value", "select value from config where application = 'APP' and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
+		Ack ack = myConfigService.updateConfiguration(APP, new ConfigurationUpdates(
 			Arrays.asList(
 				new ConfigurationUpdate ("UAT", "1.1", "jdbc.user", "x1"),
 				new ConfigurationUpdate ("UAT", "1.1", "jdbc.password", "x2")
 			)
 		));
 		assertTrue (ack.isSuccess());
-		assertRecordCount (8, "select * from config where application = 1 and version = '1.1'");
-		assertRecordValue ("x2", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
-		assertRecordValue ("x1", "value", "select value from config where application = 1 and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
+		assertRecordCount (8, "select * from config where application = 'APP' and version = '1.1'");
+		assertRecordValue ("x2", "value", "select value from config where application = 'APP' and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.password'");
+		assertRecordValue ("x1", "value", "select value from config where application = 'APP' and version = '1.1' and environment = 'UAT' and appkey = 'jdbc.user'");
 	}
 	
 	@Test
 	public void version_key_add () throws DataSetException, SQLException {
-		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and appkey = 'jdbc.url'");
-		Ack ack = myConfigService.addKeyVersion(1, "1.1", "jdbc.url");
+		assertRecordNotExists("select * from version_key where application = 'APP' and version = '1.1' and appkey = 'jdbc.url'");
+		Ack ack = myConfigService.addKeyVersion(APP, "1.1", "jdbc.url");
 		assertTrue (ack.isSuccess());
-		assertRecordExists("select * from version_key where application = 1 and version = '1.1' and appkey = 'jdbc.url'");
+		assertRecordExists("select * from version_key where application = 'APP' and version = '1.1' and appkey = 'jdbc.url'");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_key_add_noapp () throws DataSetException, SQLException {
-		myConfigService.addKeyVersion(-1, "1.1", "jdbc.url");
+		myConfigService.addKeyVersion("app_xxx", "1.1", "jdbc.url");
 	}
 	
-	@Test(expected = VersionNotDefinedException.class)
+	@Test(expected = VersionNotFoundException.class)
 	public void version_key_add_noversion () throws DataSetException, SQLException {
-		myConfigService.addKeyVersion(1, "1.X", "jdbc.url");
+		myConfigService.addKeyVersion(APP, "1.X", "jdbc.url");
 	}
 	
-	@Test(expected = KeyNotDefinedException.class)
+	@Test(expected = KeyNotFoundException.class)
 	public void version_key_add_nokey () throws DataSetException, SQLException {
-		myConfigService.addKeyVersion(1, "1.0", "jdbc.xxx");
+		myConfigService.addKeyVersion(APP, "1.0", "jdbc.xxx");
 	}
 	
 	@Test(expected = KeyAlreadyInVersionException.class)
 	public void version_key_add_duplicate () throws DataSetException, SQLException {
-		assertRecordExists("select * from version_key where application = 1 and version = '1.2' and appkey = 'jdbc.url'");
-		myConfigService.addKeyVersion(1, "1.2", "jdbc.url");
+		assertRecordExists("select * from version_key where application = 'APP' and version = '1.2' and appkey = 'jdbc.url'");
+		myConfigService.addKeyVersion(APP, "1.2", "jdbc.url");
 	}
 	
 	@Test
 	public void version_key_remove () throws DataSetException, SQLException {
-		assertRecordExists("select * from version_key where application = 1 and version = '1.0' and appkey = 'jdbc.password'");
-		Ack ack = myConfigService.removeKeyVersion(1, "1.0", "jdbc.password");
+		assertRecordExists("select * from version_key where application = 'APP' and version = '1.0' and appkey = 'jdbc.password'");
+		Ack ack = myConfigService.removeKeyVersion(APP, "1.0", "jdbc.password");
 		assertTrue (ack.isSuccess());
-		assertRecordNotExists("select * from version_key where application = 1 and version = '1.0' and appkey = 'jdbc.password'");
+		assertRecordNotExists("select * from version_key where application = 'APP' and version = '1.0' and appkey = 'jdbc.password'");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void version_key_remove_noapp () throws DataSetException, SQLException {
-		myConfigService.removeKeyVersion(-1, "1.1", "jdbc.url");
+		myConfigService.removeKeyVersion("app_xxx", "1.1", "jdbc.url");
 	}
 	
-	@Test(expected = VersionNotDefinedException.class)
+	@Test(expected = VersionNotFoundException.class)
 	public void version_key_remove_noversion () throws DataSetException, SQLException {
-		myConfigService.removeKeyVersion(1, "1.X", "jdbc.url");
+		myConfigService.removeKeyVersion(APP, "1.X", "jdbc.url");
 	}
 	
-	@Test(expected = KeyNotDefinedException.class)
+	@Test(expected = KeyNotFoundException.class)
 	public void version_key_remove_nokey () throws DataSetException, SQLException {
-		myConfigService.removeKeyVersion(1, "1.0", "jdbc.xxx");
+		myConfigService.removeKeyVersion(APP, "1.0", "jdbc.xxx");
 	}
 	
 	@Test
 	public void version_key_remove_none () throws DataSetException, SQLException {
-		assertRecordNotExists("select * from version_key where application = 1 and version = '1.1' and appkey = 'jdbc.url'");
-		Ack ack = myConfigService.removeKeyVersion(1, "1.1", "jdbc.url");
+		assertRecordNotExists("select * from version_key where application = 'APP' and version = '1.1' and appkey = 'jdbc.url'");
+		Ack ack = myConfigService.removeKeyVersion(APP, "1.1", "jdbc.url");
 		assertFalse (ack.isSuccess());
 	}
 	

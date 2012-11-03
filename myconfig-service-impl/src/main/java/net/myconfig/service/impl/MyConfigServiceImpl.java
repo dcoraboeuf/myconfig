@@ -77,7 +77,6 @@ import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
-import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
@@ -797,7 +796,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				String.class
 				);
 		} catch (EmptyResultDataAccessException ex) {
-			throw new KeyNotFoundException (id, version, environment, key);
+			throw new KeyNotFoundException (id, key);
 		}
 	}
 	
@@ -847,7 +846,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		check (
 				SQL.KEY_EXISTS_BY_ID,
 				new MapSqlParameterSource(NAME, key).addValue(APPLICATION, application),
-				new KeyNotDefinedException(application, key));
+				new KeyNotFoundException(application, key));
 	}
 
 	protected void checkEnvironment(String application, String environment) {

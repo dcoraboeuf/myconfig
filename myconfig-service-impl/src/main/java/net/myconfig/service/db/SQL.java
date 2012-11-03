@@ -3,16 +3,15 @@ package net.myconfig.service.db;
 public interface SQL {
 
 	String GET_KEY = "select c.value " +
-			"from config c, application a " +
-			"where a.name = :application " +
-			"and a.id = c.application " +
+			"from config c " +
+			"where c.application = :application " +
 			"and c.version = :version " +
 			"and c.environment = :environment " +
 			"and c.appkey = :appkey";
 	
 	String GET_ENV = "select c.appkey, k.description, c.value " +
-			"from config c, application a, appkey k " +
-			"where a.name = :application and a.id = c.application " +
+			"from config c, appkey k " +
+			"where c.application = :application " +
 			"and k.application = c.application and k.name = c.appkey " +
 			"and c.version = :version " +
 			"and c.environment = :environment " +
@@ -28,7 +27,7 @@ public interface SQL {
 			"	and vk.application = a.id) as configCount, " +
 			"(select COUNT(*) from config where application = a.id) as valueCount " +
 			"from application a  " +
-			"order by a.name";
+			"order by a.id";
 	
 	String APPLICATIONS_FOR_USER_RIGHTS = "select a.id, a.name from application a order by a.name";
 	
