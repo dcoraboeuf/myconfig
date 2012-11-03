@@ -50,9 +50,9 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		// Applications functions
 		for (AppFunction fn : AppFunction.values()) {
 			if (fn == app_view) {
-				assertTrue(grantService.hasAppFunction(1, "admin", fn));
+				assertTrue(grantService.hasAppFunction("A", "admin", fn));
 			} else {
-				assertFalse(grantService.hasAppFunction(1, "admin", fn));
+				assertFalse(grantService.hasAppFunction("A", "admin", fn));
 			}
 		}
 		// TODO Environment functions
@@ -101,14 +101,14 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		// Applications functions
 		for (AppFunction fn : AppFunction.values()) {
 			if (fn == app_delete || fn == app_config || fn == app_view) {
-				assertTrue(grantService.hasAppFunction(1, "user1", fn));
+				assertTrue(grantService.hasAppFunction("A", "user1", fn));
 			} else {
-				assertFalse(grantService.hasAppFunction(1, "user1", fn));
+				assertFalse(grantService.hasAppFunction("A", "user1", fn));
 			}
 		}
 		// No other app
 		for (AppFunction fn : AppFunction.values()) {
-			assertFalse(grantService.hasAppFunction(2, "user1", fn));
+			assertFalse(grantService.hasAppFunction("BB", "user1", fn));
 		}
 		// TODO Environment functions
 	}
@@ -131,14 +131,14 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 		// Applications functions
 		for (AppFunction fn : AppFunction.values()) {
 			if (fn == app_view) {
-				assertTrue(grantService.hasAppFunction(1, "user2", fn));
+				assertTrue(grantService.hasAppFunction("A", "user2", fn));
 			} else {
-				assertFalse(grantService.hasAppFunction(1, "user2", fn));
+				assertFalse(grantService.hasAppFunction("A", "user2", fn));
 			}
 		}
 		// No other app
 		for (AppFunction fn : AppFunction.values()) {
-			assertFalse(grantService.hasAppFunction(2, "user2", fn));
+			assertFalse(grantService.hasAppFunction("BB", "user2", fn));
 		}
 		// TODO Environment functions
 	}

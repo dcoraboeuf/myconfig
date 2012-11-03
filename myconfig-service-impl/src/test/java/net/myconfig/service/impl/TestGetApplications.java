@@ -30,8 +30,8 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, true, true, true, true, true),
-				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, true, true, true, true, true)
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, true, true, true, true, true),
+				new ApplicationSummary("BB", "app2", 0, 0, 0, 0, 0, true, true, true, true, true)
 				), list);
 	}
 	
@@ -41,49 +41,49 @@ public class TestGetApplications extends AbstractSecurityTest {
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, false, false, false),
-				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, false, false, false)
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, false, false, false, false, false),
+				new ApplicationSummary("BB", "app2", 0, 0, 0, 0, 0, false, false, false, false, false)
 				), list);
 	}
 	
 	@Test
 	public void app_list_some_grant() throws SQLException {
-		asUser().grant(UserFunction.app_list).grant(2, AppFunction.app_view);
+		asUser().grant(UserFunction.app_list).grant("BB", AppFunction.app_view);
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, false, false, false),
-				new ApplicationSummary(2, "app2", 0, 0, 0, 0, 0, false, false, true, false, false)
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, false, false, false, false, false),
+				new ApplicationSummary("BB", "app2", 0, 0, 0, 0, 0, false, false, true, false, false)
 				), list);
 	}
 	
 	@Test
 	public void app_view_no_other_grant() throws SQLException {
-		asUser().grant(1, AppFunction.app_view);
+		asUser().grant("A", AppFunction.app_view);
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, false, true, false, false)
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, false, false, true, false, false)
 				), list);
 	}
 	
 	@Test
 	public void app_view_and_config() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, AppFunction.app_config);
+		asUser().grant("A", AppFunction.app_view).grant("A", AppFunction.app_config);
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, false, true, true, false, false)
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, false, true, true, false, false)
 				), list);
 	}
 	
 	@Test
 	public void app_view_and_config_and_delete() throws SQLException {
-		asUser().grant(1, AppFunction.app_view).grant(1, AppFunction.app_config).grant(1, AppFunction.app_delete);
+		asUser().grant("A", AppFunction.app_view).grant("A", AppFunction.app_config).grant("A", AppFunction.app_delete);
 		List<ApplicationSummary> list = service.getApplications().getSummaries();
 		assertNotNull(list);
 		assertEquals (asList(
-				new ApplicationSummary(1, "app1", 0, 0, 0, 0, 0, true, true, true, false, false)
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, true, true, true, false, false)
 				), list);
 	}
 

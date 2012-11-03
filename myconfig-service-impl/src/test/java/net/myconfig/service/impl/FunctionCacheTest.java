@@ -49,7 +49,7 @@ public class FunctionCacheTest extends AbstractSecurityTest {
 	public void appFunctionCached_tampering() throws SQLException {
 		// Creates a user
 		String user = createUser();
-		int appId = myConfigService.createApplication(appName()).getId();
+		String appId = myConfigService.createApplication(appId(), appName()).getId();
 		securityService.appFunctionAdd(appId, user, AppFunction.app_view);
 		// Gets the value
 		assertTrue(grantService.hasAppFunction(appId, user, AppFunction.app_view));
@@ -63,7 +63,7 @@ public class FunctionCacheTest extends AbstractSecurityTest {
 	public void appFunctionCached_cached() throws SQLException {
 		// Creates a user
 		String user = createUser();
-		int appId = myConfigService.createApplication(appName()).getId();
+		String appId = myConfigService.createApplication(appId(), appName()).getId();
 		securityService.appFunctionAdd(appId, user, AppFunction.app_view);
 		// Gets the value
 		assertTrue(grantService.hasAppFunction(appId, user, AppFunction.app_view));
@@ -77,7 +77,7 @@ public class FunctionCacheTest extends AbstractSecurityTest {
 	public void envFunctionCached_tampering() throws SQLException {
 		// Creates a user
 		String user = createUser();
-		int appId = myConfigService.createApplication(appName()).getId();
+		String appId = myConfigService.createApplication(appId(), appName()).getId();
 		myConfigService.createEnvironment(appId, "TEST");
 		securityService.envFunctionAdd(appId, user, "TEST", EnvFunction.env_view);
 		// Gets the value
@@ -92,7 +92,7 @@ public class FunctionCacheTest extends AbstractSecurityTest {
 	public void envFunctionCached_cached() throws SQLException {
 		// Creates a user
 		String user = createUser();
-		int appId = myConfigService.createApplication(appName()).getId();
+		String appId = myConfigService.createApplication(appId(), appName()).getId();
 		myConfigService.createEnvironment(appId, "TEST");
 		securityService.envFunctionAdd(appId, user, "TEST", EnvFunction.env_view);
 		// Gets the value

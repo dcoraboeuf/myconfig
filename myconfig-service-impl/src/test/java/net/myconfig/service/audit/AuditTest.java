@@ -79,26 +79,26 @@ public class AuditTest {
 
 	@Test
 	public void allKeys() {
-		proxy.allKeys(10, "myenv", "myversion", "mykey");
-		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE).withApplication("10").withEnvironment("myenv").withVersion("myversion").withKey("mykey"));
+		proxy.allKeys("AA", "myenv", "myversion", "mykey");
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE).withApplication("AA").withEnvironment("myenv").withVersion("myversion").withKey("mykey"));
 	}
 	
 	@Test(expected = IllegalStateException.class)
 	public void expressionMismatch() {
-		proxy.expressionMismatch(10);
+		proxy.expressionMismatch("AA");
 	}
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void withException() {
-		proxy.withException(10);
+		proxy.withException("AA");
 	}
 	
 	@Test
 	public void withCollection() {
-		Ack ack = proxy.withCollection(10, new CollectionItems(asList(new Version("1"), new Version("2"))));
+		Ack ack = proxy.withCollection("AA", new CollectionItems(asList(new Version("1"), new Version("2"))));
 		assertTrue(ack.isSuccess());
-		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE).withApplication("10").withVersion("1"));
-		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE).withApplication("10").withVersion("2"));
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE).withApplication("AA").withVersion("1"));
+		verify(eventService, times(1)).saveEvent(new Event(CONFIGURATION, UPDATE).withApplication("AA").withVersion("2"));
 	}
 	
 	@Test

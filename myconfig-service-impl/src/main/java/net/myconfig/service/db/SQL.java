@@ -32,7 +32,7 @@ public interface SQL {
 	
 	String APPLICATIONS_FOR_USER_RIGHTS = "select a.id, a.name from application a order by a.name";
 	
-	String APPLICATION_CREATE = "insert into application (name) values (:name)";
+	String APPLICATION_CREATE = "insert into application (id, name) values (:id, :name)";
 
 	String APPLICATION_DELETE = "delete from application where id = :id";
 

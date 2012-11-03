@@ -51,12 +51,12 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 			return this;
 		}
 
-		public UserGrant grant(int application, AppFunction fn) throws SQLException {
+		public UserGrant grant(String application, AppFunction fn) throws SQLException {
 			execute("insert into appgrants (user, application, grantedfunction) values (?, ?, ?)", name, application, fn.name());
 			return this;
 		}
 
-		public UserGrant grant(int application, String environment, EnvFunction fn) throws SQLException {
+		public UserGrant grant(String application, String environment, EnvFunction fn) throws SQLException {
 			execute("insert into envgrants (user, application, environment, grantedfunction) values (?, ?, ?, ?)", name, application, environment, fn.name());
 			return this;
 		}
@@ -87,6 +87,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 
 	private static final AtomicInteger userId = new AtomicInteger(100);
 	private static final AtomicInteger appId = new AtomicInteger(100);
+	private static final AtomicInteger appName = new AtomicInteger(100);
 
 	@Before
 	public void cleanContext() throws SQLException {
@@ -124,8 +125,14 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		return name;
 	}
 
-	protected String appName() {
+	protected String appId() {
 		String name = "app" + appId.incrementAndGet();
+		logger.debug("** App ID: {}", name);
+		return name;
+	}
+
+	protected String appName() {
+		String name = "appName" + appName.incrementAndGet();
 		logger.debug("** App name: {}", name);
 		return name;
 	}

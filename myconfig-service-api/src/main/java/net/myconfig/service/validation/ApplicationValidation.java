@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 
 public class ApplicationValidation {
 	
+	// FIXME Unit tests for the validation
 	@NotNull
 	@NotBlank
 	@Trimmed

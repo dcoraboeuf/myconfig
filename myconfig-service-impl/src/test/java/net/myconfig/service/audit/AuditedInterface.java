@@ -13,13 +13,13 @@ public interface AuditedInterface {
 	
 	Ack identifierAndResult (int id);
 	
-	void allKeys(int application, String environment, String version, String key);
+	void allKeys(String application, String environment, String version, String key);
 	
-	Ack withCollection (int application, CollectionItems items);
+	Ack withCollection (String application, CollectionItems items);
 	
-	void withException(int id);
+	void withException(String id);
 	
-	void expressionMismatch(int application);
+	void expressionMismatch(String application);
 	
 	Ack userAndFunctionOnly (String user, UserFunction function);
 

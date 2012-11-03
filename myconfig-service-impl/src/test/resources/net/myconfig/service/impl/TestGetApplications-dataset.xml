@@ -1,7 +1,7 @@
 <dataset>
 
-	<APPLICATION id="1" name="app1" />
-	<APPLICATION id="2" name="app2" />
+	<APPLICATION id="A" name="app1" />
+	<APPLICATION id="BB" name="app2" />
 	
 	<CONFIGURATION name="security.mode" value="builtin" />
 	
