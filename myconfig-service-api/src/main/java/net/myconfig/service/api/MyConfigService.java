@@ -26,44 +26,44 @@ public interface MyConfigService {
 
 	ApplicationSummaries getApplications();
 
-	ApplicationSummary createApplication(String name);
+	ApplicationSummary createApplication(String id, String name);
 
-	Ack deleteApplication(int id);
+	Ack deleteApplication(String id);
 
-	ApplicationConfiguration getApplicationConfiguration(int id);
+	ApplicationConfiguration getApplicationConfiguration(String id);
 
-	Ack createVersion(int id, String name);
+	Ack createVersion(String id, String name);
 
-	Ack deleteVersion(int id, String name);
+	Ack deleteVersion(String id, String name);
 
-	Ack createEnvironment(int id, String name);
+	Ack createEnvironment(String id, String name);
 
-	Ack deleteEnvironment(int id, String name);
+	Ack deleteEnvironment(String id, String name);
 
-	Ack deleteKey(int id, String name);
+	Ack deleteKey(String id, String name);
 
-	Ack createKey(int id, String name, String description);
+	Ack createKey(String id, String name, String description);
 
-	MatrixConfiguration keyVersionConfiguration(int id);
+	MatrixConfiguration keyVersionConfiguration(String id);
 
-	Ack addKeyVersion(int application, String version, String key);
+	Ack addKeyVersion(String application, String version, String key);
 
-	Ack removeKeyVersion(int application, String version, String key);
+	Ack removeKeyVersion(String application, String version, String key);
 
-	VersionConfiguration getVersionConfiguration(int application, String version);
+	VersionConfiguration getVersionConfiguration(String application, String version);
 
-	EnvironmentConfiguration getEnvironmentConfiguration(int application, String environment);
+	EnvironmentConfiguration getEnvironmentConfiguration(String application, String environment);
 	
-	KeyConfiguration getKeyConfiguration(int application, String key);
+	KeyConfiguration getKeyConfiguration(String application, String key);
 
-	Ack updateConfiguration(int application, ConfigurationUpdates updates);
+	Ack updateConfiguration(String application, ConfigurationUpdates updates);
 
-	Ack updateKey(int application, String name, String description);
+	Ack updateKey(String application, String name, String description);
 	
 	List<UserApplicationRights> getUserApplicationRights (String user);
 
-	ApplicationUsers getApplicationUsers(int application);
+	ApplicationUsers getApplicationUsers(String application);
 
-	EnvironmentUsers getEnvironmentUsers(int application, String environment);
+	EnvironmentUsers getEnvironmentUsers(String application, String environment);
 
 }
