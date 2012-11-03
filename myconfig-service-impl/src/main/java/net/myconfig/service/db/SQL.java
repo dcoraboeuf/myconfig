@@ -149,16 +149,10 @@ public interface SQL {
 
 	String APPLICATION_EXISTS = "select id from application where name = :name";
 
-	String VERSION_EXISTS_BY_ID = "select v.name " +
+	String VERSION_EXISTS = "select v.name " +
 			"from version v " +
 			"where v.name = :name " +
 			"and v.application = :application";
-
-	String VERSION_EXISTS = "select v.name " +
-			"from version v, application a " +
-			"where v.name = :name " +
-			"and v.application = a.id " +
-			"and a.name = :application";
 
 	String KEY_EXISTS_BY_ID = "select name " +
 			"from appkey " +
@@ -166,12 +160,6 @@ public interface SQL {
 			"and application = :application";
 
 	String ENVIRONMENT_EXISTS = "select e.name " +
-			"from environment e, application a " +
-			"where e.name = :name " +
-			"and e.application = a.id " +
-			"and a.name = :application";
-
-	String ENVIRONMENT_EXISTS_BY_ID = "select e.name " +
 			"from environment e " +
 			"where e.name = :name " +
 			"and e.application = :application";

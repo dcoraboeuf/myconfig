@@ -73,14 +73,12 @@ import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
-import net.myconfig.service.exception.EnvironmentNotDefinedException;
 import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
 import net.myconfig.service.exception.KeyNotDefinedException;
 import net.myconfig.service.exception.KeyNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
-import net.myconfig.service.exception.VersionNotDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
@@ -95,8 +93,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -131,7 +127,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			public ApplicationSummary mapRow(ResultSet rs, int i)
 					throws SQLException {
 				return new ApplicationSummary(
-						rs.getInt(ID),
+						rs.getString(ID),
 						rs.getString(NAME),
 						rs.getInt(VERSION_COUNT),
 						rs.getInt(KEY_COUNT),
@@ -162,7 +158,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		List<ApplicationSummary> aclApplications = Lists.transform(filteredApplications, new Function<ApplicationSummary, ApplicationSummary>() {
 			@Override
 			public ApplicationSummary apply(ApplicationSummary app) {
-				int id = app.getId();
+				String id = app.getId();
 				boolean canDelete = hasApplicationAccess(id, AppFunction.app_delete);
 				boolean canConfig = hasApplicationAccess(id, AppFunction.app_config);
 				boolean canView = hasApplicationAccess(id, AppFunction.app_view);
@@ -179,9 +175,9 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_users)
-	public ApplicationUsers getApplicationUsers(final int application) {
+	public ApplicationUsers getApplicationUsers(final String id) {
 		// Gets the application name
-		String name = getApplicationName(application);
+		String name = getApplicationName(id);
 		// List of users
 		List<UserName> userNames = getJdbcTemplate().query(SQL.USER_NAMES, new RowMapper<UserName>() {
 
@@ -195,21 +191,21 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		List<ApplicationUserRights> users = Lists.transform(userNames, new Function<UserName, ApplicationUserRights>() {
 			@Override
 			public ApplicationUserRights apply (UserName user) {
-				EnumSet<AppFunction> functions= grantService.getAppFunctions (application, user.getName());
+				EnumSet<AppFunction> functions= grantService.getAppFunctions (id, user.getName());
 				// OK
 				return new ApplicationUserRights(user.getName(), user.getDisplayName(), functions);
 			}
 		});
 		// OK
-		return new ApplicationUsers(application, name, users);
+		return new ApplicationUsers(id, name, users);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_users)
-	public EnvironmentUsers getEnvironmentUsers(final int application, @EnvGrantParam final String environment) {
+	public EnvironmentUsers getEnvironmentUsers(final String id, @EnvGrantParam final String environment) {
 		// Gets the application name
-		String applicationName = getApplicationName(application);
+		String applicationName = getApplicationName(id);
 		// List of users
 		List<UserName> userNames = getJdbcTemplate().query(SQL.USER_NAMES, new RowMapper<UserName>() {
 
@@ -223,24 +219,24 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		List<EnvironmentUserRights> users = Lists.transform(userNames, new Function<UserName, EnvironmentUserRights>() {
 			@Override
 			public EnvironmentUserRights apply (UserName user) {
-				EnumSet<EnvFunction> functions = grantService.getEnvFunctions(application, user.getName(), environment);
+				EnumSet<EnvFunction> functions = grantService.getEnvFunctions(id, user.getName(), environment);
 				// OK
 				return new EnvironmentUserRights(user.getName(), user.getDisplayName(), functions);
 			}
 		});
 		// OK
-		return new EnvironmentUsers(application, applicationName, environment, users);
+		return new EnvironmentUsers(id, applicationName, environment, users);
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
-	public ApplicationConfiguration getApplicationConfiguration(int application) {
+	public ApplicationConfiguration getApplicationConfiguration(String id) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// ID
-		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource(APPLICATION, application);
+		MapSqlParameterSource applicationCriteria = new MapSqlParameterSource(APPLICATION, id);
 		// Gets the name
-		String name = getApplicationName(application);
+		String name = getApplicationName(id);
 		// Versions	
 		List<VersionSummary> versionSummaryList = t.query(SQL.VERSION_SUMMARIES, applicationCriteria, new RowMapper<VersionSummary>(){
 			@Override
@@ -281,11 +277,11 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			}
 		});
 		// OK
-		return new ApplicationConfiguration(application, name,
+		return new ApplicationConfiguration(id, name,
 				versionSummaryList, environmentSummaryList, keySummaryList);
 	}
 
-	protected String getApplicationName(int id) {
+	protected String getApplicationName(String id) {
 		String name;
 		try {
 			name = getNamedParameterJdbcTemplate().queryForObject(SQL.APPLICATION_NAME, new MapSqlParameterSource("id", id), String.class);
@@ -299,18 +295,17 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@UserGrant(UserFunction.app_create)
 	@Audit(category = EventCategory.APPLICATION, action = EventAction.CREATE, application = "#name") 
-	public ApplicationSummary createApplication(String name) {
+	public ApplicationSummary createApplication(String id, String name) {
+		validate(ApplicationValidation.class, ID, id);
 		validate(ApplicationValidation.class, NAME, name);
-		KeyHolder keyHolder = new GeneratedKeyHolder();
 		try {
 			getNamedParameterJdbcTemplate().update(
 				SQL.APPLICATION_CREATE,
-				new MapSqlParameterSource(NAME, name),
-				keyHolder);
+				new MapSqlParameterSource(ID,id).addValue(NAME, name));
 		} catch (DuplicateKeyException ex) {
+			// FIXME Duplication on ID or NAME is possible
 			throw new ApplicationNameAlreadyDefinedException (name);
 		}
-		int id = keyHolder.getKey().intValue();
 		// Initial grants
 		for (AppFunction fn : AppFunction.values()) {
 			grantAppFunction (id, fn);
@@ -323,7 +318,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_delete)
 	@Audit(category = EventCategory.APPLICATION, action = EventAction.DELETE, application = "#id", result = "#result.success")
-	public Ack deleteApplication(int id) {
+	public Ack deleteApplication(String id) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.APPLICATION_DELETE, new MapSqlParameterSource (ID, id));
 		return Ack.one (count);
 	}
@@ -332,7 +327,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.VERSION, action = EventAction.CREATE, application = "#id", version = "#name", result = "#result.success")
-	public Ack createVersion(int id, String name) {
+	public Ack createVersion(String id, String name) {
 		validate(VersionValidation.class, NAME, name);
 		checkApplication(id);
 		try {
@@ -344,7 +339,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		}
 	}
 
-	protected MapSqlParameterSource idNameSource(int id, String name) {
+	protected MapSqlParameterSource idNameSource(String id, String name) {
 		return new MapSqlParameterSource()
 			.addValue(ID, id)
 			.addValue(NAME, name);
@@ -354,7 +349,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.VERSION, action = EventAction.DELETE, application = "#id", version = "#name", result = "#result.success")
-	public Ack deleteVersion(int id, String name) {
+	public Ack deleteVersion(String id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.VERSION_DELETE, idNameSource(id, name));
 		return Ack.one (count);
@@ -364,7 +359,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_envcreate)
 	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.CREATE, application = "#id", environment = "#name", result = "#result.success") 
-	public Ack createEnvironment(int id, String name) {
+	public Ack createEnvironment(String id, String name) {
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
 		try {
@@ -388,7 +383,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@EnvGrant(EnvFunction.env_delete)
 	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.DELETE, application = "#id", environment = "#name", result = "#result.success")
-	public Ack deleteEnvironment(int id, @EnvGrantParam String name) {
+	public Ack deleteEnvironment(String id, @EnvGrantParam String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
 		return Ack.one (count);
@@ -398,7 +393,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.CREATE, application = "#id", key = "#name", message = "#description", result = "#result.success") 
-	public Ack createKey(int id, String name, String description) {
+	public Ack createKey(String id, String name, String description) {
 		validate(KeyValidation.class, NAME, name);
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(id);
@@ -415,7 +410,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.UPDATE, application = "#application", key = "#name", message = "#description", result = "#result.success")
-	public Ack updateKey(int application, String name, String description) {
+	public Ack updateKey(String application, String name, String description) {
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(application);
 		checkKey(application, name);
@@ -432,7 +427,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.DELETE, application = "#id", key = "#name", result = "#result.success")
-	public Ack deleteKey(int id, String name) {
+	public Ack deleteKey(String id, String name) {
 		checkApplication(id);
 		int count = getNamedParameterJdbcTemplate().update(SQL.KEY_DELETE, idNameSource(id, name));
 		return Ack.one (count);
@@ -441,7 +436,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_matrix)
-	public MatrixConfiguration keyVersionConfiguration(int id) {
+	public MatrixConfiguration keyVersionConfiguration(String id) {
 		checkApplication(id);
 		// Criteria
 		MapSqlParameterSource idCriteria = new MapSqlParameterSource("application", id);
@@ -480,7 +475,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
-	public VersionConfiguration getVersionConfiguration(int application, String version) {
+	public VersionConfiguration getVersionConfiguration(String application, String version) {
 		checkApplication(application);
 		checkVersion(application, version);
 		// Application name
@@ -540,7 +535,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@EnvGrant(EnvFunction.env_config)
-	public EnvironmentConfiguration getEnvironmentConfiguration(int application, @EnvGrantParam String environment) {
+	public EnvironmentConfiguration getEnvironmentConfiguration(String application, @EnvGrantParam String environment) {
 		checkApplication(application);
 		checkEnvironment(application, environment);
 		// Application name
@@ -627,7 +622,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
-	public KeyConfiguration getKeyConfiguration(int application, String keyName) {
+	public KeyConfiguration getKeyConfiguration(String application, String keyName) {
 		checkApplication(application);
 		checkKey(application, keyName);
 		
@@ -707,7 +702,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		version = "#item.version",
 		key = "#item.key",
 		result = "#result.success")	
-	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
+	public Ack updateConfiguration(String application, ConfigurationUpdates updates) {
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		// Checks
 		checkApplication(application);
@@ -744,7 +739,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
 	@Audit(category = EventCategory.MATRIX, action = EventAction.CREATE, application= "#application", version = "#version", key = "#key", result = "#result.success")
-	public Ack addKeyVersion(int application, String version, String key) {
+	public Ack addKeyVersion(String application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
 		checkKey(application, key);
@@ -766,7 +761,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)
 	@Audit(category = EventCategory.MATRIX, action = EventAction.DELETE, application= "#application", version = "#version", key = "#key", result = "#result.success")
-	public Ack removeKeyVersion(int application, String version, String key) {
+	public Ack removeKeyVersion(String application, String version, String key) {
 		checkApplication(application);
 		checkVersion(application, version);
 		checkKey(application, key);
@@ -782,11 +777,11 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 
 	@Override
 	@Transactional(readOnly = true)
-	public String getKey(String application, String version, String environment, String key) {
+	public String getKey(String id, String version, String environment, String key) {
 		// Checks for existing data
-		int id = checkApplication (application);
-		checkVersion (application, version);
-		checkEnvironment (application, environment);
+		checkApplication (id);
+		checkVersion (id, version);
+		checkEnvironment (id, environment);
 		// Security check
 		checkEnvironmentAccess(id, environment, EnvFunction.env_view);
 		// Query
@@ -794,30 +789,30 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			return getNamedParameterJdbcTemplate().queryForObject(
 				SQL.GET_KEY,
 				new MapSqlParameterSource()
-					.addValue(APPLICATION, application)
+					.addValue(APPLICATION, id)
 					.addValue(VERSION, version)
 					.addValue(ENVIRONMENT, environment)
 					.addValue(KEY, key),
 				String.class
 				);
 		} catch (EmptyResultDataAccessException ex) {
-			throw new KeyNotFoundException (application, version, environment, key);
+			throw new KeyNotFoundException (id, version, environment, key);
 		}
 	}
 	
 	@Override
 	@Transactional(readOnly = true)
-	public ConfigurationSet getEnv(String application, String version, String environment) {
+	public ConfigurationSet getEnv(String id, String version, String environment) {
 		// Checks for existing data
-		int id = checkApplication (application);
-		checkVersion (application, version);
-		checkEnvironment (application, environment);
+		checkApplication (id);
+		checkVersion (id, version);
+		checkEnvironment (id, environment);
 		// Checks for security
 		checkEnvironmentAccess(id, environment, EnvFunction.env_view);
 		// List of configuration documented values
 		List<ConfigurationValue> values = getNamedParameterJdbcTemplate().query(SQL.GET_ENV, 
 				new MapSqlParameterSource()
-					.addValue(APPLICATION, application)
+					.addValue(APPLICATION, id)
 					.addValue(VERSION, version)
 					.addValue(ENVIRONMENT, environment),
 				new RowMapper<ConfigurationValue> () {
@@ -830,18 +825,10 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 					}
 				});
 		// OK
-		return new ConfigurationSet(application, environment, version, values);
+		return new ConfigurationSet(id, environment, version, values);
 	}
 
-	protected int checkApplication(String application) {
-		return checkWithID (
-				SQL.APPLICATION_EXISTS,
-				ID,
-				new MapSqlParameterSource(NAME, application),
-				new ApplicationNotFoundException(application));
-	}
-
-	protected void checkApplication(int id) {
+	protected void checkApplication(String id) {
 		check (
 				SQL.APPLICATION_NAME,
 				new MapSqlParameterSource(ID, id),
@@ -855,14 +842,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				new VersionNotFoundException(application, version));
 	}
 
-	protected void checkVersion(int application, String version) {
-		check (
-				SQL.VERSION_EXISTS_BY_ID,
-				new MapSqlParameterSource(NAME, version).addValue(APPLICATION, application),
-				new VersionNotDefinedException(application, version));
-	}
-
-	protected void checkKey(int application, String key) {
+	protected void checkKey(String application, String key) {
 		check (
 				SQL.KEY_EXISTS_BY_ID,
 				new MapSqlParameterSource(NAME, key).addValue(APPLICATION, application),
@@ -876,30 +856,12 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				new EnvironmentNotFoundException(application, environment));
 	}
 
-	protected void checkEnvironment(int application, String environment) {
-		check (
-				SQL.ENVIRONMENT_EXISTS_BY_ID,
-				new MapSqlParameterSource(NAME, environment).addValue(APPLICATION, application),
-				new EnvironmentNotDefinedException(application, environment));
-	}
-
 	protected void check(String sql,
 			SqlParameterSource sqlParameterSource,
 			CoreException exception) {
 		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(sql, sqlParameterSource);
 		if (list.isEmpty()) {
 			throw exception;
-		}
-	}
-
-	protected int checkWithID(String sql, String idColumn,
-			SqlParameterSource sqlParameterSource,
-			CoreException exception) {
-		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(sql, sqlParameterSource);
-		if (list.isEmpty()) {
-			throw exception;
-		} else {
-			return (Integer) list.get(0).get(idColumn);
 		}
 	}
 
@@ -910,7 +872,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		// Gets the list of applications as id:name pairs
 		List<Map<String, Object>> idNameList = getJdbcTemplate().queryForList(SQL.APPLICATIONS_FOR_USER_RIGHTS);
 		for (Map<String, Object> idName : idNameList) {
-			int id = (Integer) idName.get(ID);
+			String id = (String) idName.get(ID);
 			String name = (String) idName.get(NAME);
 			// Is this application allowed for administration of users?
 			if (hasApplicationAccess(id, AppFunction.app_users)) {
