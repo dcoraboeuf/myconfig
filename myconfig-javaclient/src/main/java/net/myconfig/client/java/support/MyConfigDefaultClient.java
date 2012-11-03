@@ -51,61 +51,61 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	}
 
 	@Override
-	public ApplicationSummary applicationCreate(String name) {
-		return put(String.format("/ui/application/%s", name), ApplicationSummary.class);
+	public ApplicationSummary applicationCreate(String id, String name) {
+		return put(String.format("/ui/application/%s/%s", name), ApplicationSummary.class);
 	}
 
 	@Override
-	public Ack applicationDelete(int id) {
-		return delete(format("/ui/application/%d", id), Ack.class);
+	public Ack applicationDelete(String id) {
+		return delete(format("/ui/application/%s", id), Ack.class);
 	}
 
 	/**
 	 * GET /ui/application/{application}
 	 */
 	@Override
-	public ApplicationConfiguration applicationConfiguration(int id) {
-		return get(format("/ui/application/%d", id), ApplicationConfiguration.class);
+	public ApplicationConfiguration applicationConfiguration(String id) {
+		return get(format("/ui/application/%s", id), ApplicationConfiguration.class);
 	}
 
 	/**
 	 * PUT /ui/version/{application}/{name:.*}
 	 */
 	@Override
-	public Ack versionCreate(int id, String name) {
-		return put (String.format("/ui/version/%d/%s", id, name), Ack.class);
+	public Ack versionCreate(String id, String name) {
+		return put (String.format("/ui/version/%s/%s", id, name), Ack.class);
 	}
 
 	/**
 	 * DELETE /ui/version/{application}/{name:.*}
 	 */
 	@Override
-	public Ack versionDelete(int id, String name) {
-		return delete (format("/ui/version/%d/%s", id, name), Ack.class);
+	public Ack versionDelete(String id, String name) {
+		return delete (format("/ui/version/%s/%s", id, name), Ack.class);
 	}
 
 	/**
 	 * PUT /ui/environment/{application}/{name:.*}
 	 */
 	@Override
-	public Ack environmentCreate(int id, String name) {
-		return put(String.format("/ui/environment/%d/%s", id, name), Ack.class);
+	public Ack environmentCreate(String id, String name) {
+		return put(String.format("/ui/environment/%s/%s", id, name), Ack.class);
 	}
 
 	/**
 	 * DELETE /ui/environment/{application}/{name}
 	 */
 	@Override
-	public Ack environmentDelete(int id, String name) {
-		return delete (format("/ui/environment/%d/%s", id, name), Ack.class);
+	public Ack environmentDelete(String id, String name) {
+		return delete (format("/ui/environment/%s/%s", id, name), Ack.class);
 	}
 
 	/**
 	 * DELETE /ui/key/{id}/{name:.*}
 	 */
 	@Override
-	public Ack keyDelete(int id, String name) {
-		return delete (format("/ui/key/%d/%s", id, name), Ack.class);
+	public Ack keyDelete(String id, String name) {
+		return delete (format("/ui/key/%s/%s", id, name), Ack.class);
 	}
 
 	/**
@@ -113,8 +113,8 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	 * <p>param: description
 	 */
 	@Override
-	public Ack keyCreate(int id, String name, String description) {
-		return post(format("/ui/key/%d/%s/create", id, name), Ack.class, Collections.singletonMap("description", description));
+	public Ack keyCreate(String id, String name, String description) {
+		return post(format("/ui/key/%s/%s/create", id, name), Ack.class, Collections.singletonMap("description", description));
 	}
 
 	/**
@@ -122,56 +122,56 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	 * <p>param: description
 	 */
 	@Override
-	public Ack keyUpdate(int id, String name, String description) {
-		return post(format("/ui/key/%d/%s/update", id, name), Ack.class, Collections.singletonMap("description", description));
+	public Ack keyUpdate(String id, String name, String description) {
+		return post(format("/ui/key/%s/%s/update", id, name), Ack.class, Collections.singletonMap("description", description));
 	}
 
 	/**
 	 * GET /ui/application/{id}/key_version
 	 */
 	@Override
-	public MatrixConfiguration keyVersionConfiguration(int id) {
-		return get(format("/ui/application/%d/key_version", id), MatrixConfiguration.class);
+	public MatrixConfiguration keyVersionConfiguration(String id) {
+		return get(format("/ui/application/%s/key_version", id), MatrixConfiguration.class);
 	}
 
 	/**
 	 * POST /ui/version/{application}/{version}/add/{key:.*}
 	 */
 	@Override
-	public Ack keyVersionAdd(int application, String version, String key) {
-		return post(format("/ui/version/%d/%s/add/%s", application, version, key), Ack.class, null);
+	public Ack keyVersionAdd(String application, String version, String key) {
+		return post(format("/ui/version/%s/%s/add/%s", application, version, key), Ack.class, null);
 	}
 
 	/**
 	 * POST /ui/version/{application}/{version}/remove/{key:.*}
 	 */
 	@Override
-	public Ack keyVersionRemove(int application, String version, String key) {
-		return post(format("/ui/version/%d/%s/remove/%s", application, version, key), Ack.class, null);
+	public Ack keyVersionRemove(String application, String version, String key) {
+		return post(format("/ui/version/%s/%s/remove/%s", application, version, key), Ack.class, null);
 	}
 
 	/**
 	 * GET /ui/configuration/version/{application}/{version:.*}
 	 */
 	@Override
-	public VersionConfiguration versionConfiguration(int application, String version) {
-		return get (format("/ui/configuration/version/%d/%s", application, version), VersionConfiguration.class);
+	public VersionConfiguration versionConfiguration(String application, String version) {
+		return get (format("/ui/configuration/version/%s/%s", application, version), VersionConfiguration.class);
 	}
 
 	/**
 	 * GET /ui/configuration/environment/{application}/{environment:.*}
 	 */
 	@Override
-	public EnvironmentConfiguration environmentConfiguration(int application, String environment) {
-		return get (format("/ui/configuration/environment/%d/%s", application, environment), EnvironmentConfiguration.class);
+	public EnvironmentConfiguration environmentConfiguration(String application, String environment) {
+		return get (format("/ui/configuration/environment/%s/%s", application, environment), EnvironmentConfiguration.class);
 	}
 
 	/**
 	 * GET /ui/configuration/key/{application}/{key:.*}
 	 */
 	@Override
-	public KeyConfiguration keyConfiguration(int application, String key) {
-		return get (format("/ui/configuration/key/%d/%s", application, key), KeyConfiguration.class);
+	public KeyConfiguration keyConfiguration(String application, String key) {
+		return get (format("/ui/configuration/key/%s/%s", application, key), KeyConfiguration.class);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	 * <p>Body: JSON updates
 	 */
 	@Override
-	public Ack updateConfiguration(int application, ConfigurationUpdates updates) {
+	public Ack updateConfiguration(String application, ConfigurationUpdates updates) {
 		return post (String.format("/ui/configuration/%s", application), Ack.class, updates);
 	}
 
@@ -229,32 +229,32 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	 * POST /ui/user/{user}/application/{application}/function/{fn}/add
 	 */
 	@Override
-	public Ack appFunctionAdd(String user, int application, AppFunction fn) {
-		return post (format("/ui/user/%s/application/%d/function/%s/add", user, application, fn), Ack.class, null);
+	public Ack appFunctionAdd(String user, String application, AppFunction fn) {
+		return post (format("/ui/user/%s/application/%s/function/%s/add", user, application, fn), Ack.class, null);
 	}
 
 	/**
 	 * POST /ui/user/{user}/application/{application}/function/{fn}/remove
 	 */
 	@Override
-	public Ack appFunctionRemove(String user, int application, AppFunction fn) {
-		return post (format("/ui/user/%s/application/%d/function/%s/remove", user, application, fn), Ack.class, null);
+	public Ack appFunctionRemove(String user, String application, AppFunction fn) {
+		return post (format("/ui/user/%s/application/%s/function/%s/remove", user, application, fn), Ack.class, null);
 	}
 
 	/**
 	 * POST /ui/user/{user}/application/{application}/environment/{environment}/function/{fn}/add
 	 */
 	@Override
-	public Ack envFunctionAdd(String user, int application, String environment, EnvFunction fn) {
-		return post (format("/ui/user/%s/application/%d/environment/%s/function/%s/add", user, application, environment, fn), Ack.class, null);
+	public Ack envFunctionAdd(String user, String application, String environment, EnvFunction fn) {
+		return post (format("/ui/user/%s/application/%s/environment/%s/function/%s/add", user, application, environment, fn), Ack.class, null);
 	}
 
 	/**
 	 * POST /ui/user/{user}/application/{application}/environment/{environment}/function/{fn}/remove
 	 */
 	@Override
-	public Ack envFunctionRemove(String user, int application, String environment, EnvFunction fn) {
-		return post (format("/ui/user/%s/application/%d/environment/%s/function/%s/remove", user, application, environment, fn), Ack.class, null);
+	public Ack envFunctionRemove(String user, String application, String environment, EnvFunction fn) {
+		return post (format("/ui/user/%s/application/%s/environment/%s/function/%s/remove", user, application, environment, fn), Ack.class, null);
 	}
 
 	/**
@@ -278,16 +278,16 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	 * GET /ui/application/{application:\\d+}/users
 	 */
 	@Override
-	public ApplicationUsers applicationUsers(int application) {
-		return get(format("/ui/application/%d/users", application), ApplicationUsers.class);
+	public ApplicationUsers applicationUsers(String application) {
+		return get(format("/ui/application/%s/users", application), ApplicationUsers.class);
 	}
 	
 	/**
 	 * GET /ui/application/{application:\\d+}/environment/{environment}/users
 	 */
 	@Override
-	public EnvironmentUsers environmentUsers(int application, String environment) {
-		return get(format("/ui/application/%d/environment/%s/users", application, environment), EnvironmentUsers.class);
+	public EnvironmentUsers environmentUsers(String application, String environment) {
+		return get(format("/ui/application/%s/environment/%s/users", application, environment), EnvironmentUsers.class);
 	}
 	
 	@Override
