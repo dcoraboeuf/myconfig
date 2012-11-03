@@ -294,7 +294,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	@Transactional
 	@UserGrant(UserFunction.app_create)
-	@Audit(category = EventCategory.APPLICATION, action = EventAction.CREATE, application = "#name") 
+	@Audit(category = EventCategory.APPLICATION, action = EventAction.CREATE, application = "#id", message = "#name") 
 	public ApplicationSummary createApplication(String id, String name) {
 		validate(ApplicationValidation.class, ID, id);
 		validate(ApplicationValidation.class, NAME, name);

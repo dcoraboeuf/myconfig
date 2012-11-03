@@ -20,23 +20,25 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 	@Test
 	public void createApplication_admin() throws DataSetException, SQLException {
 		asAdmin();
-		String appName = appName();
-		myConfigService.createApplication(appName);
+		String appId = appId()
+		String appName = appName()
+		myConfigService.createApplication(appId, appName);
 		assertRecordExists("select id from events where security = 'builtin' and user = 'admin'" +
 				" and category = 'APPLICATION' and action = 'CREATE' and identifier is null" +
-				" and application = '%s' and environment is null and version is null and appkey is null" +
-				" and message is null", appName);
+				" and application = '$appId' and environment is null and version is null and appkey is null" +
+				" and message = '$appName'");
 	}
 
 	@Test
 	public void createApplication_user() throws DataSetException, SQLException {
 		String user = asUser().grant(UserFunction.app_create).getName();
-		String appName = appName();
-		myConfigService.createApplication(appName);
-		assertRecordExists("select id from events where security = 'builtin' and user = '%s'" +
+		String appId = appId()
+		String appName = appName()
+		myConfigService.createApplication(appId, appName);
+		assertRecordExists("select id from events where security = 'builtin' and user = '$user'" +
 				" and category = 'APPLICATION' and action = 'CREATE' and identifier is null" +
-				" and application = '%s' and environment is null and version is null and appkey is null" +
-				" and message is null", user, appName);
+				" and application = '$appId' and environment is null and version is null and appkey is null" +
+				" and message = '$appName'");
 	}
 
 	@Test
@@ -44,8 +46,9 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		// User
 		String user = asUser().grant(UserFunction.app_create).getName();
 		// Application
-		String appName = appName();
-		int id = myConfigService.createApplication(appName).getId();
+		String id = appId()
+		String appName = appName()
+		myConfigService.createApplication(id, appName)
 		// Environment
 		myConfigService.createEnvironment(id, "DEV");
 		myConfigService.createEnvironment(id, "PROD");
@@ -80,8 +83,8 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		// - application
 		assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
 				" and category = 'APPLICATION' and action = 'CREATE' and identifier is null" +
-				" and application = '${appName}' and environment is null and version is null and appkey is null" +
-				" and message is null");
+				" and application = '${id}' and environment is null and version is null and appkey is null" +
+				" and message = '$appName'");
 		// - environments
 		["DEV", "PROD"].each {
 			assertRecordExists("select id from events where security = 'builtin' and user = '${user}'" +
@@ -133,7 +136,8 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 	@Test
 	public void appFunctions() throws SQLException, DataSetException {
 		asAdmin();
-		int id = myConfigService.createApplication(appName()).getId();
+		String id = appId()
+		myConfigService.createApplication(id, appName())
 		String user = createUser();
 		Ack ack = securityService.appFunctionAdd(id, user, AppFunction.app_matrix);
 		assert ack.isSuccess()
@@ -150,7 +154,8 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 	@Test
 	public void envFunctions() throws SQLException, DataSetException {
 		asAdmin();
-		int id = myConfigService.createApplication(appName()).getId();
+		String id = appId()
+		myConfigService.createApplication(id, appName())
 		myConfigService.createEnvironment(id, "TEST")
 		String user = createUser();
 		Ack ack = securityService.envFunctionAdd(id, user, "TEST", EnvFunction.env_view);
@@ -170,7 +175,8 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 	@Test
 	public void userFunctions() throws SQLException, DataSetException {
 		asAdmin();
-		int id = myConfigService.createApplication(appName()).getId();
+		String id = appId()
+		myConfigService.createApplication(id, appName())
 		String user = createUser();
 		Ack ack = securityService.userFunctionAdd(user, UserFunction.app_create)
 		assert ack.isSuccess()
