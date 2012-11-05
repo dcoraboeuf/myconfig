@@ -1,5 +1,8 @@
 package net.myconfig.acc.support;
 
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.myconfig.client.java.MyConfigClient;
 import net.sf.jstring.Strings;
 
@@ -7,6 +10,8 @@ import org.junit.After;
 import org.junit.Before;
 
 public abstract class AbstractUseCase {
+	
+	private static final AtomicInteger id = new AtomicInteger(0);
 	
 	private AccContext context;
 	
@@ -30,6 +35,18 @@ public abstract class AbstractUseCase {
 	
 	protected Strings strings() {
 		return context.getStrings();
+	}
+	
+	protected String uid (String prefix) {
+		return String.format("%s_%s", prefix, UUID.randomUUID());
+	}
+	
+	protected String appName () {
+		return uid ("app");
+	}
+	
+	protected String appId () {
+		return "APP" + id.incrementAndGet();
 	}
 
 }

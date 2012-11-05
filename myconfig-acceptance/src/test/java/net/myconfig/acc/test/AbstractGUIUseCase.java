@@ -1,7 +1,5 @@
 package net.myconfig.acc.test;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import net.myconfig.acc.page.DefaultPageContext;
@@ -49,21 +47,11 @@ public abstract class AbstractGUIUseCase extends AbstractUseCase {
 		driver.quit();
 	}
 
-	private final SimpleDateFormat uidFormat = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-
 	protected PageContext pageContext;
 	
 	@Before
 	public void initPageContext() {
 		pageContext = new DefaultPageContext(getClass().getSimpleName(), context());
-	}
-
-	protected String generateUniqueName(String prefix) {
-		return prefix + generateUniqueId();
-	}
-
-	protected String generateUniqueId() {
-		return uidFormat.format(new Date());
 	}
 
 }

@@ -2,41 +2,36 @@ package net.myconfig.acc.client;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import java.util.UUID;
-
 import net.myconfig.acc.support.AbstractUseCase;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 
 public abstract class AbstractClientUseCase extends AbstractUseCase {
 
-	protected int application_create(String appName) {
-		ApplicationSummary summary = client().applicationCreate(appName);
+	protected String application_create(String appId, String appName) {
+		ApplicationSummary summary = client().applicationCreate(appId, appName);
 		assertNotNull(summary);
 		return summary.getId();
 	}
 
-	protected void application_delete(int id) {
+	protected void application_delete(String id) {
 		Ack ack = client().applicationDelete(id);
 		assertTrue("Cannot delete application " + id, ack.isSuccess());
 	}
 
-	protected ApplicationSummary application_summary(final int id) {
+	protected ApplicationSummary application_summary(final String id) {
 		ApplicationSummaries applications = client().applications();
 		return Iterables.find(applications.getSummaries(), new Predicate<ApplicationSummary>() {
 			@Override
 			public boolean apply(ApplicationSummary o) {
-				return id == o.getId();
+				return StringUtils.equals(id, o.getId());
 			}
 		}, null);
-	}
-	
-	protected String uid (String prefix) {
-		return String.format("%s_%s", prefix, UUID.randomUUID());
 	}
 }

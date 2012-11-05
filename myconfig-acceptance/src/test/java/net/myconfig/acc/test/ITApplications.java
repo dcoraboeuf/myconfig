@@ -24,10 +24,12 @@ public class ITApplications extends AbstractGUIUseCase {
 	 */
 	@Test
 	public void createApplication() throws Exception {
-		String name = generateUniqueName("app");
-		applications.createApplication(name);
+		String name = appName();
+		applications.createApplication(appId(), name);
 		applications.checkForApplication(name);
 	}
+	
+	// FIXME Duplicate ID
 
 	/**
 	 * Given I am on the list of applications And an unique application name
@@ -37,10 +39,10 @@ public class ITApplications extends AbstractGUIUseCase {
 	 */
 	@Test
 	public void createAlreadyExistingApplication() throws Exception {
-		String name = generateUniqueName("app");
-		applications.createApplication(name);
+		String name = appName();
+		applications.createApplication(appId(), name);
 		// ... a second time
-		applications.createApplication(name);
+		applications.createApplication(appId(), name);
 		applications.checkForError("error", "[S-002] The application with name \"%s\" is already defined.", name);
 	}
 
@@ -49,8 +51,8 @@ public class ITApplications extends AbstractGUIUseCase {
 	 */
 	@Test
 	public void createAndDeleteApplication() throws Exception {
-		String name = generateUniqueName("app");
-		applications.createApplication(name);
+		String name = appName();
+		applications.createApplication(appId(), name);
 		applications.deleteApplication(name);
 		applications.checkForApplicationNotPresent(name);
 	}

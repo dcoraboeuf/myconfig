@@ -18,8 +18,9 @@ public class ApplicationsPage extends Page {
 		takeScreenshot("Applications");
 	}
 
-	public void createApplication(String name) {
-		// Creates the application with its name
+	public void createApplication(String id, String name) {
+		// Creates the application with its ID and name
+		id("application-create-id").sendKeys(id);
 		id("application-create-name").sendKeys(name);
 		id("application-create-submit").click();
 	}
