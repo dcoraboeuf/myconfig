@@ -52,7 +52,7 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 
 	@Override
 	public ApplicationSummary applicationCreate(String id, String name) {
-		return put(String.format("/ui/application/%s/%s", name), ApplicationSummary.class);
+		return put(String.format("/ui/application/%s/%s", id, name), ApplicationSummary.class);
 	}
 
 	@Override

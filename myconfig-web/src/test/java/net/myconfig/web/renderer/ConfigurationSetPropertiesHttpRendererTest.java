@@ -47,6 +47,7 @@ public class ConfigurationSetPropertiesHttpRendererTest {
 	public void properties () throws IOException {
 		// Set to render
 		ConfigurationSet set = new ConfigurationSet(
+				"APP",
 				"myapp",
 				"UAT",
 				"1.2",Arrays.asList(
@@ -75,7 +76,7 @@ public class ConfigurationSetPropertiesHttpRendererTest {
 		verify(response, times(1)).setCharacterEncoding("US-ASCII");
 		// Response
 		String text = bout.toString("US-ASCII");
-		assertEquals ("# Configuration properties for 'myapp'\n# Version: 1.2\n# Environment: UAT\n\n# aaa description\naaa = a1\n\n# bbb description\nbbb = b2\n\n# ccc accentu\\u00E9e\nccc = c\\u00E7c\n\n", text);
+		assertEquals ("# Configuration properties for 'APP' (myapp)\n# Version: 1.2\n# Environment: UAT\n\n# aaa description\naaa = a1\n\n# bbb description\nbbb = b2\n\n# ccc accentu\\u00E9e\nccc = c\\u00E7c\n\n", text);
 	}
 
 }

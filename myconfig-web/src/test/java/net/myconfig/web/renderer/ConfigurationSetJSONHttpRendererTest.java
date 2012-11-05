@@ -48,6 +48,7 @@ public class ConfigurationSetJSONHttpRendererTest {
 	@Test(expected = ConfigurationSetJSONUnknownVariantException.class)
 	public void unknownVariant () throws IOException {
 		renderer.renderer(new ConfigurationSet(
+				"APP",
 				"myapp",
 				"UAT",
 				"1.2",
@@ -76,6 +77,7 @@ public class ConfigurationSetJSONHttpRendererTest {
 			throws IOException, UnsupportedEncodingException {
 		// Set to render
 		ConfigurationSet set = new ConfigurationSet(
+				"APP",
 				"myapp",
 				"UAT",
 				"1.2",

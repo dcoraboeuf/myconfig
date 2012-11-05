@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNull
 import static org.junit.Assert.assertTrue
 import static org.junit.Assert.fail
 import groovy.json.JsonSlurper
-import net.myconfig.acc.support.AccUtils
 import net.myconfig.client.java.support.ClientMessageException
 import net.myconfig.client.java.support.MyConfigClientUtils
 import net.myconfig.core.model.ConfigurationUpdate
@@ -17,16 +16,14 @@ import org.junit.Test
 
 class ITRestGet extends AbstractClientUseCase {
 	
+	String id
+	String name
+	
 	@Before
 	void initTest() {
-		// Deletes the application if needed
-		def summaries = client().applications().getSummaries();
-		def summary = summaries.find { it -> (it.getName() == "myapp") }
-		if (summary != null) {
-			client().applicationDelete(summary.getId());
-		}
-		// Test application
-		def id = client().applicationCreate("myapp").getId();
+		// Creates a test application
+		name = appName()
+		id = client().applicationCreate(appId(), name).getId();
 		// Versions
 		client().versionCreate(id, "1.0");
 		client().versionCreate(id, "1.1");
@@ -66,26 +63,26 @@ class ITRestGet extends AbstractClientUseCase {
 	
 	@Test
 	void get_key_ok() {
-		def value = client().key("myapp", "1.2", "UAT", "jdbc.user")
+		def value = client().key(id, "1.2", "UAT", "jdbc.user")
 		assertEquals('1.2 UAT jdbc.user', value)
 	}
 	
 	@Test
 	void get_key_not_found() {
 		try {
-			client().key("myapp", "1.2", "UAT", "jdbc.usr")
+			client().key(id, "1.2", "UAT", "jdbc.usr")
 		} catch (ClientMessageException ex) {
 			def message = ex.getLocalizedMessage(strings(), Locale.ENGLISH)
 			def staticMessage = message[0..-37]
-			assertEquals("""[JC-002] An error has occurred.
-Message: [S-001] Cannot find key jdbc.usr for application myapp, version 1.2 and environment UAT.
-Reference: """, staticMessage)
+			assert """[JC-002] An error has occurred.
+Message: [S-001] Cannot find key jdbc.usr for application $id.
+Reference: """ == staticMessage
 		}
 	}
 	
 	@Test
 	void get_env_json_concise () {
-		def jsonAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "json", "concise")
+		def jsonAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "json", "concise")
 		def json = new JsonSlurper().parseText(jsonAsString)
 		assertEquals (2, json.size())
 		assertEquals ("1.2 UAT jdbc.user", json["jdbc.user"]) 
@@ -94,7 +91,7 @@ Reference: """, staticMessage)
 	
 	@Test
 	void get_env_json_complete () {
-		def jsonAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "json", "complete")
+		def jsonAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "json", "complete")
 		def json = new JsonSlurper().parseText(jsonAsString)
 		assertEquals (2, json.size())
 		assertEquals ("jdbc.password", json[0]["key"])
@@ -107,7 +104,7 @@ Reference: """, staticMessage)
 	
 	@Test
 	void get_env_json_default () {
-		def jsonAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "json")
+		def jsonAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "json")
 		def json = new JsonSlurper().parseText(jsonAsString)
 		assertEquals (2, json.size())
 		assertEquals ("jdbc.password", json[0]["key"])
@@ -120,8 +117,8 @@ Reference: """, staticMessage)
 	
 	@Test
 	void get_env_properties () {
-		def content = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "properties")
-		assertEquals ("""# Configuration properties for 'myapp'
+		def content = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "properties")
+		assert """# Configuration properties for '$id' ($name)
 # Version: 1.2
 # Environment: UAT
 
@@ -131,13 +128,13 @@ jdbc.password = 1.2 UAT jdbc.password
 # User used to connect to the database
 jdbc.user = 1.2 UAT jdbc.user
 
-""", content)
+""" == content
 	}
 	
 	@Test
 	void get_env_json_unknown_variant () {
 		try {
-			MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "json", "xxxx")
+			MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "json", "xxxx")
 		} catch (ClientMessageException ex) {
 			def expectedMessage = """\
 [JC-002] An error has occurred.
@@ -152,7 +149,7 @@ Reference: """
 	@Test
 	void get_env_xml_unknown_variant () {
 		try {
-			MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "xml", "xxxx")
+			MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml", "xxxx")
 		} catch (ClientMessageException ex) {
 			def expectedMessage = """\
 [JC-002] An error has occurred.
@@ -166,9 +163,9 @@ Reference: """
 	
 	@Test
 	void get_env_xml_attributesOnly () {
-		def xmlAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "xml", "attributesOnly")
+		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml", "attributesOnly")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals ("myapp", xml.@application.text())
+		assertEquals (id, xml.@application.text())
 		assertEquals ("UAT", xml.@environment.text())
 		assertEquals ("1.2", xml.@version.text())
 		assertEquals ("jdbc.password", xml.param[0].@name.text())
@@ -181,9 +178,9 @@ Reference: """
 	
 	@Test
 	void get_env_xml_default () {
-		def xmlAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "xml")
+		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals ("myapp", xml.@application.text())
+		assertEquals (id, xml.@application.text())
 		assertEquals ("UAT", xml.@environment.text())
 		assertEquals ("1.2", xml.@version.text())
 		assertEquals ("jdbc.password", xml.param[0].@name.text())
@@ -196,9 +193,9 @@ Reference: """
 	
 	@Test
 	void get_env_xml_mixed () {
-		def xmlAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "xml", "mixed")
+		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml", "mixed")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals ("myapp", xml.@application.text())
+		assertEquals (id, xml.@application.text())
 		assertEquals ("UAT", xml.@environment.text())
 		assertEquals ("1.2", xml.@version.text())
 		assertEquals ("jdbc.password", xml.param[0].@name.text())
@@ -209,9 +206,9 @@ Reference: """
 	
 	@Test
 	void get_env_xml_tagsOnly () {
-		def xmlAsString = MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "xml", "tagsOnly")
+		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml", "tagsOnly")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals ("myapp", xml.application.text())
+		assertEquals (id, xml.application.text())
 		assertEquals ("UAT", xml.environment.text())
 		assertEquals ("1.2", xml.version.text())
 		assertEquals ("jdbc.password", xml.param[0].name.text())
@@ -225,7 +222,7 @@ Reference: """
 	@Test
 	void get_env_unknown_mode () {
 		try {
-			MyConfigClientUtils.envAsString (client(), "myapp", "1.2", "UAT", "xxx")
+			MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xxx")
 		} catch (ClientMessageException ex) {
 			def expectedMessage = """\
 [JC-002] An error has occurred.

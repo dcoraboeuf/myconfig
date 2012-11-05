@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
+	<id>APP</id>
 	<application>myapp</application>
 	<environment>UAT</environment>
 	<version>1.2</version>

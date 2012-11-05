@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<configuration application="myapp" environment="UAT" version="1.2">
+<configuration id="APP" application="myapp" environment="UAT" version="1.2">
 		<param name="aaa">a1</param>
 		<param name="bbb">b2</param>
 		<param name="ccc">cçc</param>

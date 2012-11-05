@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <configuration>
-	<application>${model.application?xml}</application>
+	<id>${model.id?xml}</id>
+	<application>${model.name?xml}</application>
 	<environment>${model.environment?xml}</environment>
 	<version>${model.version?xml}</version>
 	<#list model.values as value>

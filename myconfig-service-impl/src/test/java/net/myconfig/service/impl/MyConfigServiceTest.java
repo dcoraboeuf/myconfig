@@ -122,6 +122,8 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	public void get_env () {
 		ConfigurationSet set = myConfigService.getEnv(APP, "1.1", "UAT");
 		assertNotNull (set);
+		assertEquals(APP, set.getId());
+		assertEquals("myapp", set.getName());
 		List<ConfigurationValue> values = set.getValues();
 		assertNotNull (values);
 		assertEquals (2, values.size());

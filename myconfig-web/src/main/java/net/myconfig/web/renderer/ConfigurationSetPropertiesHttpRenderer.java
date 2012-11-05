@@ -17,7 +17,6 @@ public class ConfigurationSetPropertiesHttpRenderer extends AbstractHttpRenderer
 	
 	@Override
 	public void renderer(ConfigurationSet set, String variant, HttpServletResponse response) throws IOException {
-		// TODO Auto-generated method stub
 		String properties = renderProperties (set);
 		// Encoding
 		byte[] bytes = properties.getBytes("US-ASCII");
@@ -38,7 +37,7 @@ public class ConfigurationSetPropertiesHttpRenderer extends AbstractHttpRenderer
 	}
 
 	protected void renderProperties(StringWriter writer, ConfigurationSet set) {
-		writer.write (String.format ("# Configuration properties for '%s'\n", set.getApplication()));
+		writer.write (String.format ("# Configuration properties for '%s' (%s)\n", set.getId(), set.getName()));
 		writer.write (String.format ("# Version: %s\n", set.getVersion()));
 		writer.write (String.format ("# Environment: %s\n\n", set.getEnvironment()));
 		for (ConfigurationValue confValue : set.getValues()) {

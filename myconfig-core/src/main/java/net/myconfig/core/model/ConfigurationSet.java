@@ -9,14 +9,16 @@ import com.google.common.collect.ImmutableList;
 @Data
 public class ConfigurationSet {
 
-	private final String application;
+	private final String id;
+	private final String name;
 	private final String environment;
 	private final String version;
 
 	private final List<ConfigurationValue> values;
 
-	public ConfigurationSet(String application, String environment, String version, List<ConfigurationValue> values) {
-		this.application = application;
+	public ConfigurationSet(String id, String name, String environment, String version, List<ConfigurationValue> values) {
+		this.id = id;
+		this.name = name;
 		this.environment = environment;
 		this.version = version;
 		this.values = ImmutableList.copyOf(values);

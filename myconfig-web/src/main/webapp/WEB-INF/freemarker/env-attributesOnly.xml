@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<configuration application="${model.application?xml}" environment="${model.environment?xml}" version="${model.version?xml}">
+<configuration id="${model.id?xml}" application="${model.name?xml}" environment="${model.environment?xml}" version="${model.version?xml}">
 	<#list model.values as value>
 		<param name="${value.key?xml}" value="${value.value?xml}" description="${value.description?html}" />
 	</#list>

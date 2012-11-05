@@ -1,7 +1,8 @@
 package net.myconfig.acc.support;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import net.myconfig.client.java.MyConfigClient;
 import net.sf.jstring.Strings;
@@ -10,8 +11,6 @@ import org.junit.After;
 import org.junit.Before;
 
 public abstract class AbstractUseCase {
-	
-	private static final AtomicInteger id = new AtomicInteger(0);
 	
 	private AccContext context;
 	
@@ -46,7 +45,7 @@ public abstract class AbstractUseCase {
 	}
 	
 	protected String appId () {
-		return "APP" + id.incrementAndGet();
+		return "AP" + new SimpleDateFormat("MMddHHmmssSSS").format(new Date());
 	}
 
 }

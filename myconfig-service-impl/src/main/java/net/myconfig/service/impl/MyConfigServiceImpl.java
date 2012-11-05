@@ -807,6 +807,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		checkApplication (id);
 		checkVersion (id, version);
 		checkEnvironment (id, environment);
+		// Application name
+		String name = getApplicationName(id);
 		// Checks for security
 		checkEnvironmentAccess(id, environment, EnvFunction.env_view);
 		// List of configuration documented values
@@ -825,7 +827,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 					}
 				});
 		// OK
-		return new ConfigurationSet(id, environment, version, values);
+		return new ConfigurationSet(id, name, environment, version, values);
 	}
 
 	protected void checkApplication(String id) {
