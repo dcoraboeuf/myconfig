@@ -6,11 +6,8 @@ import javax.validation.constraints.Size;
 
 public class ApplicationValidation {
 	
-	// FIXME Unit tests for the validation
 	@NotNull
-	@NotBlank
-	@Trimmed
-	@Size(min = 1, max = 16)
+	@Size(min = 0, max = 16)
 	@Pattern(regexp = ValidationConstants.ID_REGEXP, message = ValidationConstants.ID_REGEXP_MESSAGE)
 	public String id;
 	

@@ -216,7 +216,17 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		}
 	}
 	
-	// FIXME Unit tests on the application ID
+	@Test
+	public void applicationCreate_id_null () {
+		try {
+			myConfigService.createApplication(null, null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-008] Application ID is invalid: may not be null",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
 	
 	@Test
 	public void applicationCreate_blank () {
@@ -226,6 +236,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		} catch (ValidationException ex) {
 			assertEquals (
 					"[S-012] [V-001] Application name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void applicationCreate_id_blank () {
+		try {
+			myConfigService.createApplication("", null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-008] Application ID is invalid: must be a sequence of ASCII letters, underscore(_) or digits",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
@@ -243,6 +265,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
+	public void applicationCreate_id_spaces () {
+		try {
+			myConfigService.createApplication("   ", null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-008] Application ID is invalid: must be a sequence of ASCII letters, underscore(_) or digits",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
 	public void applicationCreate_unrecognized_characters () {
 		try {
 			myConfigService.createApplication("A", "<te/st\u00E9>");
@@ -250,6 +284,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		} catch (ValidationException ex) {
 			assertEquals (
 					"[S-012] [V-001] Application name is invalid: must be a sequence of ASCII letters, dash(-), underscore(_) and/or spaces ( )",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void applicationCreate_id_unrecognized_characters () {
+		try {
+			myConfigService.createApplication("TEST APP", null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-008] Application ID is invalid: must be a sequence of ASCII letters, underscore(_) or digits",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
@@ -267,6 +313,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	}
 	
 	@Test
+	public void applicationCreate_id_trim () {
+		try {
+			myConfigService.createApplication("  A  ", "  myapp   ");
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-008] Application ID is invalid: must be a sequence of ASCII letters, underscore(_) or digits",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
 	public void applicationCreate_too_long () {
 		try {
 			myConfigService.createApplication("A", StringUtils.repeat("x", 81));
@@ -274,6 +332,18 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		} catch (ValidationException ex) {
 			assertEquals (
 					"[S-012] [V-001] Application name is invalid: size must be between 1 and 80",
+					ex.getLocalizedMessage(strings, Locale.ENGLISH));
+		}
+	}
+	
+	@Test
+	public void applicationCreate_id_too_long () {
+		try {
+			myConfigService.createApplication(StringUtils.repeat("A",17), null);
+			fail("Should have raised a validation error");
+		} catch (ValidationException ex) {
+			assertEquals (
+					"[S-012] [V-008] Application ID is invalid: size must be between 0 and 16",
 					ex.getLocalizedMessage(strings, Locale.ENGLISH));
 		}
 	}
