@@ -20,8 +20,8 @@ public class GUIVersionConfigurationPage extends AbstractGUIPage {
 		super(ui, errorHandler);
 	}
 
-	@RequestMapping(value = "/{application:\\d+}/{version:.*}", method = RequestMethod.GET)
-	public String page(@PathVariable int application, @PathVariable String version, Model model) {
+	@RequestMapping(value = "/{application}/{version:.*}", method = RequestMethod.GET)
+	public String page(@PathVariable String application, @PathVariable String version, Model model) {
 		// Loads the configuration
 		VersionConfiguration versionConfiguration = ui.versionConfiguration (application, version);
 		model.addAttribute("versionConfiguration", versionConfiguration);

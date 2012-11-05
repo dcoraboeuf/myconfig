@@ -23,8 +23,8 @@ public class GUIApplicationUsersPage extends AbstractGUIApplicationPage {
 	}
 
 	@Override
-	@RequestMapping(value = "/gui/application/{application:\\d+}/users", method = RequestMethod.GET)
-	public String page(@PathVariable int application, Model model) {
+	@RequestMapping(value = "/gui/application/{application}/users", method = RequestMethod.GET)
+	public String page(@PathVariable String application, Model model) {
 		// Loads the application users
 		ApplicationUsers users = ui.applicationUsers(application);
 		model.addAttribute("application", users);
@@ -35,7 +35,7 @@ public class GUIApplicationUsersPage extends AbstractGUIApplicationPage {
 	}
 	
 	@Override
-	protected String pagePath(int application) {
+	protected String pagePath(String application) {
 		return "application/" + application + "/users";
 	}
 

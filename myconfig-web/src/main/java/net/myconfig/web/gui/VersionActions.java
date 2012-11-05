@@ -4,8 +4,8 @@ import org.springframework.ui.Model;
 
 public interface VersionActions {
 	
-	String versionCreate (Model model, int application, String name);
+	String versionCreate (Model model, String application, String name);
 	
-	String versionDelete (Model model, int application, String name);
+	String versionDelete (Model model, String application, String name);
 
 }

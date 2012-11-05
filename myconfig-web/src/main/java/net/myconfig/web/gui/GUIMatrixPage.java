@@ -21,8 +21,8 @@ public class GUIMatrixPage extends AbstractGUIApplicationPage {
 	}
 
 	@Override
-	@RequestMapping(value = "/{application:\\d+}", method = RequestMethod.GET)
-	public String page(@PathVariable int application, Model model) {
+	@RequestMapping(value = "/{application}", method = RequestMethod.GET)
+	public String page(@PathVariable String application, Model model) {
 		// Loads the key x version
 		MatrixConfiguration configuration = ui.keyVersionConfiguration (application);
 		model.addAttribute("configuration", configuration);
@@ -31,7 +31,7 @@ public class GUIMatrixPage extends AbstractGUIApplicationPage {
 	}
 	
 	@Override
-	protected String pagePath(int application) {
+	protected String pagePath(String application) {
 		return "matrix/" + application;
 	}
 

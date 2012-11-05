@@ -4,8 +4,8 @@ import org.springframework.ui.Model;
 
 public interface EnvironmentActions {
 	
-	String environmentCreate (Model model, int application, String name);
+	String environmentCreate (Model model, String application, String name);
 	
-	String environmentDelete (Model model, int application, String name);
+	String environmentDelete (Model model, String application, String name);
 
 }

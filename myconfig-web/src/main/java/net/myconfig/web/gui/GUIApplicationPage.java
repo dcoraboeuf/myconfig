@@ -20,19 +20,19 @@ public class GUIApplicationPage extends AbstractGUIApplicationPage {
 	}
 
 	@Override
-	@RequestMapping(value = "/{application:\\d+}", method = RequestMethod.GET)
-	public String page(@PathVariable int application, Model model) {
+	@RequestMapping(value = "/{application}", method = RequestMethod.GET)
+	public String page(@PathVariable String application, Model model) {
 		model.addAttribute("application", ui.applicationConfiguration(application));
 		return "application";
 	}
 	
 	@Override
-	protected String pagePath(int application) {
+	protected String pagePath(String application) {
 		return "application/" + application;
 	}
 	
-	@RequestMapping(value = "/{application:\\d+}/key/update", method = RequestMethod.POST)
-	public String keyUpdate(Model model, @PathVariable int application, String name, String description) {
+	@RequestMapping(value = "/{application}/key/update", method = RequestMethod.POST)
+	public String keyUpdate(Model model, @PathVariable String application, String name, String description) {
 		ui.keyUpdate (application, name, description);
 		return backToPage (application);
 	}

@@ -20,8 +20,8 @@ public class GUIKeyConfigurationPage extends AbstractGUIPage {
 		super(ui, errorHandler);
 	}
 
-	@RequestMapping(value = "/{application:\\d+}/{key:.*}", method = RequestMethod.GET)
-	public String page(@PathVariable int application, @PathVariable String key, Model model) {
+	@RequestMapping(value = "/{application}/{key:.*}", method = RequestMethod.GET)
+	public String page(@PathVariable String application, @PathVariable String key, Model model) {
 		// Loads the configuration
 		KeyConfiguration keyConfiguration = ui.keyConfiguration (application, key);
 		model.addAttribute("keyConfiguration", keyConfiguration);

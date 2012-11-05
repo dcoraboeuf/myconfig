@@ -24,7 +24,7 @@ public class FnSecChkAppFn extends AbstractFnSec {
 		Validate.notNull(list, "List of arguments is required");
 		Validate.isTrue(list.size() == 2, "List of arguments must contain one argument only");
 		// Gets the application ID
-		int application = Integer.parseInt((String) list.get(0), 10);
+		String application = (String) list.get(0);
 		// Gets the function
 		AppFunction fn = AppFunction.valueOf((String) list.get(1));
 		// Gets the current authentication

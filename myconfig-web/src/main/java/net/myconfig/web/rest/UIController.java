@@ -56,105 +56,105 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{name:.*}", method = RequestMethod.PUT)
-	public @ResponseBody ApplicationSummary applicationCreate(@PathVariable String name) {
-		return getMyConfigService().createApplication (name);
+	@RequestMapping(value = "/application/{id}/{name:.*}", method = RequestMethod.PUT)
+	public @ResponseBody ApplicationSummary applicationCreate(@PathVariable String id, @PathVariable String name) {
+		return getMyConfigService().createApplication (id, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{application}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack applicationDelete(@PathVariable int application) {
-		return getMyConfigService().deleteApplication (application);
+	@RequestMapping(value = "/application/{id:.*}", method = RequestMethod.DELETE)
+	public @ResponseBody Ack applicationDelete(@PathVariable String id) {
+		return getMyConfigService().deleteApplication (id);
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{application}", method = RequestMethod.GET)
-	public @ResponseBody ApplicationConfiguration applicationConfiguration(@PathVariable int application) {
-		return getMyConfigService().getApplicationConfiguration (application);
+	@RequestMapping(value = "/application/{id:.*}", method = RequestMethod.GET)
+	public @ResponseBody ApplicationConfiguration applicationConfiguration(@PathVariable String id) {
+		return getMyConfigService().getApplicationConfiguration (id);
 	}
 	
 	@Override
-	@RequestMapping(value = "/configuration/version/{application}/{version:.*}", method = RequestMethod.GET)
-	public @ResponseBody VersionConfiguration versionConfiguration(@PathVariable int application, @PathVariable  String version) {
-		return getMyConfigService().getVersionConfiguration (application, version);
+	@RequestMapping(value = "/configuration/version/{id}/{version:.*}", method = RequestMethod.GET)
+	public @ResponseBody VersionConfiguration versionConfiguration(@PathVariable String id, @PathVariable  String version) {
+		return getMyConfigService().getVersionConfiguration (id, version);
 	}
 	
 	@Override
-	@RequestMapping(value = "/configuration/environment/{application}/{environment:.*}", method = RequestMethod.GET)
-	public @ResponseBody EnvironmentConfiguration environmentConfiguration(@PathVariable int application, @PathVariable  String environment) {
-		return getMyConfigService().getEnvironmentConfiguration (application, environment);
+	@RequestMapping(value = "/configuration/environment/{id}/{environment:.*}", method = RequestMethod.GET)
+	public @ResponseBody EnvironmentConfiguration environmentConfiguration(@PathVariable String id, @PathVariable  String environment) {
+		return getMyConfigService().getEnvironmentConfiguration (id, environment);
 	}
 	
 	@Override
-	@RequestMapping(value = "/configuration/key/{application}/{key:.*}", method = RequestMethod.GET)
-	public @ResponseBody KeyConfiguration keyConfiguration(@PathVariable int application, @PathVariable  String key) {
-		return getMyConfigService().getKeyConfiguration (application, key);
+	@RequestMapping(value = "/configuration/key/{id}/{key:.*}", method = RequestMethod.GET)
+	public @ResponseBody KeyConfiguration keyConfiguration(@PathVariable String id, @PathVariable  String key) {
+		return getMyConfigService().getKeyConfiguration (id, key);
 	}
 	
 	@Override
-	@RequestMapping(value = "/configuration/{application:\\d+}", method = RequestMethod.POST)
-	public @ResponseBody Ack updateConfiguration(@PathVariable int application, @RequestBody ConfigurationUpdates updates) {
-		return getMyConfigService().updateConfiguration (application, updates);
+	@RequestMapping(value = "/configuration/{id:.*}", method = RequestMethod.POST)
+	public @ResponseBody Ack updateConfiguration(@PathVariable String id, @RequestBody ConfigurationUpdates updates) {
+		return getMyConfigService().updateConfiguration (id, updates);
 	}
 	
 	@Override
-	@RequestMapping(value = "/version/{application}/{name:.*}", method = RequestMethod.PUT)
-	public @ResponseBody Ack versionCreate(@PathVariable int application, @PathVariable String name) {
-		return getMyConfigService().createVersion (application, name);
+	@RequestMapping(value = "/version/{id}/{name:.*}", method = RequestMethod.PUT)
+	public @ResponseBody Ack versionCreate(@PathVariable String id, @PathVariable String name) {
+		return getMyConfigService().createVersion (id, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/version/{application}/{name:.*}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack versionDelete(@PathVariable int application, @PathVariable String name) {
-		return getMyConfigService().deleteVersion (application, name);
+	@RequestMapping(value = "/version/{id}/{name:.*}", method = RequestMethod.DELETE)
+	public @ResponseBody Ack versionDelete(@PathVariable String id, @PathVariable String name) {
+		return getMyConfigService().deleteVersion (id, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/environment/{application}/{name:.*}", method = RequestMethod.PUT)
-	public @ResponseBody Ack environmentCreate(@PathVariable int application, @PathVariable String name) {
-		return getMyConfigService().createEnvironment (application, name);
+	@RequestMapping(value = "/environment/{id}/{name:.*}", method = RequestMethod.PUT)
+	public @ResponseBody Ack environmentCreate(@PathVariable String id, @PathVariable String name) {
+		return getMyConfigService().createEnvironment (id, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/environment/{application}/{name}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack environmentDelete(@PathVariable int application, @PathVariable String name) {
-		return getMyConfigService().deleteEnvironment (application, name);
+	@RequestMapping(value = "/environment/{id}/{name:.*}", method = RequestMethod.DELETE)
+	public @ResponseBody Ack environmentDelete(@PathVariable String id, @PathVariable String name) {
+		return getMyConfigService().deleteEnvironment (id, name);
 	}
 	
 	@Override
-	@RequestMapping(value = "/key/{application}/{name}/create", method = RequestMethod.POST)
-	public @ResponseBody Ack keyCreate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
-		return getMyConfigService().createKey (application, name, description);
+	@RequestMapping(value = "/key/{id}/{name}/create", method = RequestMethod.POST)
+	public @ResponseBody Ack keyCreate(@PathVariable String id, @PathVariable String name, @RequestParam String description) {
+		return getMyConfigService().createKey (id, name, description);
 	}
 	
 	@Override
-	@RequestMapping(value = "/key/{application}/{name}/update", method = RequestMethod.POST)
-	public @ResponseBody Ack keyUpdate(@PathVariable int application, @PathVariable String name, @RequestParam String description) {
-		return getMyConfigService().updateKey (application, name, description);
+	@RequestMapping(value = "/key/{id}/{name}/update", method = RequestMethod.POST)
+	public @ResponseBody Ack keyUpdate(@PathVariable String id, @PathVariable String name, @RequestParam String description) {
+		return getMyConfigService().updateKey (id, name, description);
 	}
 	
 	@Override
 	@RequestMapping(value = "/key/{id}/{name:.*}", method = RequestMethod.DELETE)
-	public @ResponseBody Ack keyDelete(@PathVariable int id, @PathVariable String name) {
+	public @ResponseBody Ack keyDelete(@PathVariable String id, @PathVariable String name) {
 		return getMyConfigService().deleteKey (id, name);
 	}
 	
 	@Override
 	@RequestMapping(value = "/application/{id}/key_version", method = RequestMethod.GET)
-	public @ResponseBody MatrixConfiguration keyVersionConfiguration(@PathVariable int id) {
+	public @ResponseBody MatrixConfiguration keyVersionConfiguration(@PathVariable String id) {
 		return getMyConfigService().keyVersionConfiguration(id);
 	}
 
 	@Override
-	@RequestMapping(value = "/version/{application}/{version}/add/{key:.*}", method = RequestMethod.POST)
-	public @ResponseBody Ack keyVersionAdd (@PathVariable int application, @PathVariable String version, @PathVariable String key) {
-		return getMyConfigService().addKeyVersion (application, version, key);
+	@RequestMapping(value = "/version/{id}/{version}/add/{key:.*}", method = RequestMethod.POST)
+	public @ResponseBody Ack keyVersionAdd (@PathVariable String id, @PathVariable String version, @PathVariable String key) {
+		return getMyConfigService().addKeyVersion (id, version, key);
 	}
 
 	@Override
-	@RequestMapping(value = "/version/{application}/{version}/remove/{key:.*}", method = RequestMethod.POST)
-	public @ResponseBody Ack keyVersionRemove (@PathVariable int application, @PathVariable String version, @PathVariable String key) {
-		return getMyConfigService().removeKeyVersion (application, version, key);
+	@RequestMapping(value = "/version/{id}/{version}/remove/{key:.*}", method = RequestMethod.POST)
+	public @ResponseBody Ack keyVersionRemove (@PathVariable String id, @PathVariable String version, @PathVariable String key) {
+		return getMyConfigService().removeKeyVersion (id, version, key);
 	}
 	
 	@Override
@@ -189,13 +189,13 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/user/{user}/application/{application}/function/{fn}/add", method = RequestMethod.POST)
-	public @ResponseBody Ack appFunctionAdd(@PathVariable String user, @PathVariable int application, @PathVariable AppFunction fn) {
+	public @ResponseBody Ack appFunctionAdd(@PathVariable String user, @PathVariable String application, @PathVariable AppFunction fn) {
 		return securityService.appFunctionAdd (application, user, fn);
 	}
 	
 	@Override
 	@RequestMapping(value = "/user/{user}/application/{application}/function/{fn}/remove", method = RequestMethod.POST)
-	public @ResponseBody Ack appFunctionRemove(@PathVariable String user, @PathVariable int application, @PathVariable AppFunction fn) {
+	public @ResponseBody Ack appFunctionRemove(@PathVariable String user, @PathVariable String application, @PathVariable AppFunction fn) {
 		return securityService.appFunctionRemove (application, user, fn);
 	}
 
@@ -214,26 +214,26 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{application:\\d+}/users", method = RequestMethod.GET)
-	public @ResponseBody ApplicationUsers applicationUsers(@PathVariable int application) {
+	@RequestMapping(value = "/application/{application}/users", method = RequestMethod.GET)
+	public @ResponseBody ApplicationUsers applicationUsers(@PathVariable String application) {
 		return getMyConfigService().getApplicationUsers(application);
 	}
 	
 	@Override
-	@RequestMapping(value = "/application/{application:\\d+}/environment/{environment}/users", method = RequestMethod.GET)
-	public @ResponseBody EnvironmentUsers environmentUsers(@PathVariable int application, @PathVariable String environment) {
+	@RequestMapping(value = "/application/{application}/environment/{environment}/users", method = RequestMethod.GET)
+	public @ResponseBody EnvironmentUsers environmentUsers(@PathVariable String application, @PathVariable String environment) {
 		return getMyConfigService().getEnvironmentUsers(application, environment);
 	}
 	
 	@Override
 	@RequestMapping(value = "/user/{user}/application/{application}/environment/{environment}/function/{fn}/add", method = RequestMethod.POST)
-	public @ResponseBody Ack envFunctionAdd(@PathVariable String user, @PathVariable int application, @PathVariable String environment, @PathVariable EnvFunction fn) {
+	public @ResponseBody Ack envFunctionAdd(@PathVariable String user, @PathVariable String application, @PathVariable String environment, @PathVariable EnvFunction fn) {
 		return securityService.envFunctionAdd (application, user, environment, fn);
 	}
 	
 	@Override
 	@RequestMapping(value = "/user/{user}/application/{application}/environment/{environment}/function/{fn}/remove", method = RequestMethod.POST)
-	public @ResponseBody Ack envFunctionRemove(@PathVariable String user, @PathVariable int application, @PathVariable String environment, @PathVariable EnvFunction fn) {
+	public @ResponseBody Ack envFunctionRemove(@PathVariable String user, @PathVariable String application, @PathVariable String environment, @PathVariable EnvFunction fn) {
 		return securityService.envFunctionRemove (application, user, environment, fn);
 	}
 

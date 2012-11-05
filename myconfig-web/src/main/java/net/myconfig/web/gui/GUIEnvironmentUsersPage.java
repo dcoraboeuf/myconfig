@@ -22,8 +22,8 @@ public class GUIEnvironmentUsersPage extends AbstractGUIPage {
 		super(ui, errorHandler);
 	}
 
-	@RequestMapping(value = "/gui/application/{application:\\d+}/environment/users/{environment:.*}", method = RequestMethod.GET)
-	public String users(@PathVariable int application, @PathVariable String environment, Model model) {
+	@RequestMapping(value = "/gui/application/{application}/environment/users/{environment:.*}", method = RequestMethod.GET)
+	public String users(@PathVariable String application, @PathVariable String environment, Model model) {
 		// Loads the environment users
 		EnvironmentUsers users = ui.environmentUsers(application, environment);
 		model.addAttribute("context", users);

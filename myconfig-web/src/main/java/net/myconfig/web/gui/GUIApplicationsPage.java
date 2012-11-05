@@ -40,13 +40,13 @@ public class GUIApplicationsPage extends AbstractGUIPage {
 	}
 	
 	@RequestMapping(value = "/gui/applications/create", method = RequestMethod.POST)
-	public String applicationCreate (String name) {
-		ui.applicationCreate (name);
+	public String applicationCreate (String id, String name) {
+		ui.applicationCreate (id, name);
 		return redirect(VIEW_APPLICATIONS);
 	}
 	
 	@RequestMapping(value = "/gui/applications/delete", method = RequestMethod.POST)
-	public String applicationDelete (int id) {
+	public String applicationDelete (String id) {
 		ui.applicationDelete (id);
 		return redirect(VIEW_APPLICATIONS);
 	}

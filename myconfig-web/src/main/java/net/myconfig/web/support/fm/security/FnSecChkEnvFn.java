@@ -24,7 +24,7 @@ public class FnSecChkEnvFn extends AbstractFnSec {
 		Validate.notNull(list, "List of arguments is required");
 		Validate.isTrue(list.size() == 3, "List of arguments must contain one argument only");
 		// Gets the application ID
-		int application = Integer.parseInt((String) list.get(0), 10);
+		String application = (String) list.get(0);
 		// Gets the environment
 		String environment = (String) list.get(1);
 		// Gets the function

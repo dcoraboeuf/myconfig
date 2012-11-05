@@ -23,9 +23,9 @@ public abstract class AbstractGUIApplicationPage extends AbstractGUIPage impleme
 		super(ui, errorHandler);
 	}
 	
-	public abstract String page (int application, Model model);
+	public abstract String page (String application, Model model);
 	
-	protected abstract String pagePath (int application);
+	protected abstract String pagePath (String application);
 	
 	@ExceptionHandler(KeyInputException.class)
 	public ModelAndView onKeyException (Locale locale, KeyInputException ex) {
@@ -48,48 +48,48 @@ public abstract class AbstractGUIApplicationPage extends AbstractGUIPage impleme
 	}
 	
 	@Override
-	@RequestMapping(value = "/{application:\\d+}/key/create", method = RequestMethod.POST)
-	public String keyCreate(Model model, @PathVariable int application, String name, String description) {
+	@RequestMapping(value = "/{application}/key/create", method = RequestMethod.POST)
+	public String keyCreate(Model model, @PathVariable String application, String name, String description) {
 		ui.keyCreate (application, name, description);
 		return backToPage (application);
 	}
 
 	@Override
-	@RequestMapping(value = "/{application:\\d+}/key/delete", method = RequestMethod.POST)
-	public String keyDelete(Model model, @PathVariable int application, String name) {
+	@RequestMapping(value = "/{application}/key/delete", method = RequestMethod.POST)
+	public String keyDelete(Model model, @PathVariable String application, String name) {
 		ui.keyDelete(application, name);
 		return backToPage (application);
 	}
 	
 	@Override
-	@RequestMapping(value = "/{application:\\d+}/version/create", method = RequestMethod.POST)
-	public String versionCreate(Model model, @PathVariable int application, String name) {
+	@RequestMapping(value = "/{application}/version/create", method = RequestMethod.POST)
+	public String versionCreate(Model model, @PathVariable String application, String name) {
 		ui.versionCreate (application, name);
 		return backToPage (application);
 	}
 	
 	@Override
-	@RequestMapping(value = "/{application:\\d+}/version/delete", method = RequestMethod.POST)
-	public String versionDelete(Model model, @PathVariable int application, String name) {
+	@RequestMapping(value = "/{application}/version/delete", method = RequestMethod.POST)
+	public String versionDelete(Model model, @PathVariable String application, String name) {
 		ui.versionDelete(application, name);
 		return backToPage (application);
 	}
 	
 	@Override
-	@RequestMapping(value = "/{application:\\d+}/environment/create", method = RequestMethod.POST)
-	public String environmentCreate(Model model, @PathVariable int application, String name) {
+	@RequestMapping(value = "/{application}/environment/create", method = RequestMethod.POST)
+	public String environmentCreate(Model model, @PathVariable String application, String name) {
 		ui.environmentCreate (application, name);
 		return backToPage (application);
 	}
 	
 	@Override
-	@RequestMapping(value = "/{application:\\d+}/environment/delete", method = RequestMethod.POST)
-	public String environmentDelete(Model model, @PathVariable int application, String name) {
+	@RequestMapping(value = "/{application}/environment/delete", method = RequestMethod.POST)
+	public String environmentDelete(Model model, @PathVariable String application, String name) {
 		ui.environmentDelete(application, name);
 		return backToPage (application);
 	}
 	
-	protected String backToPage(int application) {
+	protected String backToPage(String application) {
 		return redirect(pagePath(application));
 	}
 

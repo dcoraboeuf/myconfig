@@ -20,8 +20,8 @@ public class GUIEnvironmentConfigurationPage extends AbstractGUIPage {
 		super(ui, errorHandler);
 	}
 
-	@RequestMapping(value = "/{application:\\d+}/{environment:.*}", method = RequestMethod.GET)
-	public String page(@PathVariable int application, @PathVariable String environment, Model model) {
+	@RequestMapping(value = "/{application}/{environment:.*}", method = RequestMethod.GET)
+	public String page(@PathVariable String application, @PathVariable String environment, Model model) {
 		// Loads the configuration
 		EnvironmentConfiguration environmentConfiguration = ui.environmentConfiguration (application, environment);
 		model.addAttribute("environmentConfiguration", environmentConfiguration);
