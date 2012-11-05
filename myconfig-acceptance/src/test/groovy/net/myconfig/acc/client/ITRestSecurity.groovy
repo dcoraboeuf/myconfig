@@ -75,7 +75,7 @@ class ITRestSecurity extends AbstractClientUseCase {
 		// Connects as this user - he still cannot create an application but is now allowed to enter the application
 		client().login(userName, "mypassword")
 		try {
-			client().applicationCreate(uid("app"))
+			client().applicationCreate(appId(), appName())
 			assert false: "Should have been forbidden"
 		} catch (ClientForbiddenException ex) {
 			// Expected exception
@@ -85,21 +85,19 @@ class ITRestSecurity extends AbstractClientUseCase {
 		ack = client().userFunctionAdd(userName, UserFunction.app_create)
 		assert ack.isSuccess()
 		// Tests the creation
-		def appName = uid("app")
 		client().login(userName, "mypassword")
-		client().applicationCreate(appName)
+		def id = client().applicationCreate(appId(), appName()).getId()
 		// Checks the application has been created
 		def applications = client().applications()
-		assert applications.getSummaries().find { it.getName() == appName } != null
+		assert applications.getSummaries().find { it.getId() == id } != null
 		// As admin, removes the app_create function
 		asAdmin()
 		ack = client().userFunctionRemove(userName, UserFunction.app_create)
 		assert ack.isSuccess()
 		// Tries to create an app
-		appName = uid("app")
 		client().login(userName, "mypassword")
 		try {
-			client().applicationCreate(appName)
+			client().applicationCreate(appId(), appName())
 			assert false: "Should have been forbidden"
 		} catch (ClientForbiddenException ex) {
 			// Expected exception
@@ -127,28 +125,27 @@ class ITRestSecurity extends AbstractClientUseCase {
 		ack = client().userFunctionAdd(userName, UserFunction.app_create)
 		assert ack.isSuccess()
 		// Creates an application
-		def appName = uid("app")
 		client().login(userName, "mypassword")
-		def appId = client().applicationCreate(appName).getId()
+		def id = client().applicationCreate(appId(), appName()).getId()
 		// Checks the application has been created
 		def applications = client().applications()
-		assert applications.getSummaries().find { it.getName() == appName } != null
+		assert applications.getSummaries().find { it.getId() == id } != null
 		// Removes all the application rights
 		asAdmin()
 		AppFunction.values().each {
-			client().appFunctionRemove(userName, appId, it)
+			client().appFunctionRemove(userName, id, it)
 		}
 		// Gets the list of applications again and checks the application cannot be seen any longer
 		client().login(userName, "mypassword")
 		applications = client().applications()
-		assert applications.getSummaries().find { it.getName() == appName } == null
+		assert applications.getSummaries().find { it.getId() == id } == null
 		// Re-assigns the app_view
 		asAdmin()
-		client().appFunctionAdd(userName, appId, AppFunction.app_view)
+		client().appFunctionAdd(userName, id, AppFunction.app_view)
 		// Checks the application is in the list again
 		client().login(userName, "mypassword")
 		applications = client().applications()
-		assert applications.getSummaries().find { it.getName() == appName } != null
+		assert applications.getSummaries().find { it.getId() == id } != null
 	}
 
 }
