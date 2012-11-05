@@ -165,7 +165,8 @@ Reference: """
 	void get_env_xml_attributesOnly () {
 		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml", "attributesOnly")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals (id, xml.@application.text())
+		assertEquals (id, xml.@id.text())
+		assertEquals (name, xml.@application.text())
 		assertEquals ("UAT", xml.@environment.text())
 		assertEquals ("1.2", xml.@version.text())
 		assertEquals ("jdbc.password", xml.param[0].@name.text())
@@ -180,7 +181,8 @@ Reference: """
 	void get_env_xml_default () {
 		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals (id, xml.@application.text())
+		assertEquals (id, xml.@id.text())
+		assertEquals (name, xml.@application.text())
 		assertEquals ("UAT", xml.@environment.text())
 		assertEquals ("1.2", xml.@version.text())
 		assertEquals ("jdbc.password", xml.param[0].@name.text())
@@ -195,7 +197,8 @@ Reference: """
 	void get_env_xml_mixed () {
 		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml", "mixed")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals (id, xml.@application.text())
+		assertEquals (id, xml.@id.text())
+		assertEquals (name, xml.@application.text())
 		assertEquals ("UAT", xml.@environment.text())
 		assertEquals ("1.2", xml.@version.text())
 		assertEquals ("jdbc.password", xml.param[0].@name.text())
@@ -208,7 +211,8 @@ Reference: """
 	void get_env_xml_tagsOnly () {
 		def xmlAsString = MyConfigClientUtils.envAsString (client(), id, "1.2", "UAT", "xml", "tagsOnly")
 		def xml = new XmlSlurper().parseText(xmlAsString)
-		assertEquals (id, xml.application.text())
+		assertEquals (id, xml.id.text())
+		assertEquals (name, xml.application.text())
 		assertEquals ("UAT", xml.environment.text())
 		assertEquals ("1.2", xml.version.text())
 		assertEquals ("jdbc.password", xml.param[0].name.text())
