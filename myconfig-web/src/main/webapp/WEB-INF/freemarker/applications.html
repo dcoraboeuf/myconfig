@@ -53,7 +53,17 @@
 			
 			<@sec_chk_user_fn fn="app_create">
 				<@items_commands>
-					<@item_create id="application-create" action="gui/applications/create" label="applications.new" />
+					<div class="item-command">
+						<form class="item-command" action="gui/applications/create" method="post" onsubmit="return Applications.validateCreate()">
+							<label>
+								<@lh key="model.application.id" />
+								<input id="application-create-id" name="id" type="text" maxlength="16" size="16" />
+								<@lh key="model.application.name" />
+								<input id="application-create-name" name="name" type="text" maxlength="80" size="20" />
+								<input id="application-create-submit" type="submit" value="<@lh key='applications.new' />" />
+							</label>
+						</form>
+					</div>
 					<@item_error />
 				</@items_commands>
 			</@sec_chk_user_fn>

@@ -10,3 +10,14 @@ $(document).ready(function()
         }); 
     } 
 );
+
+var Applications = function () {
+	
+	return {
+		validateCreate: function () {
+			return myconfig.validateTextAsName ('#application-create-id')
+				&& myconfig.validateTextAsName ('#application-create-name');
+		}
+	};
+	
+} ();
