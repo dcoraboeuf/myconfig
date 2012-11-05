@@ -45,7 +45,7 @@ public class DefaultErrorHandlerTest {
 	public void core() {
 		HttpServletRequest request = new MockHttpServletRequest();
 		ErrorMessage message = handler.handleError(request, Locale.ENGLISH, new ApplicationNotFoundException("A"));
-		assertMessage(message, "[S-004] Cannot find application 1");
+		assertMessage(message, "[S-004] Cannot find application A");
 	}
 
 	@Test

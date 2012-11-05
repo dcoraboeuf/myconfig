@@ -1,5 +1,7 @@
 package net.myconfig.web.gui;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,6 +16,8 @@ public interface GUITestHelper {
 	ModelAndView run(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 	ModelAndView run(String method, String path, String paramName, Object paramValue) throws Exception;
+
+	ModelAndView run(String method, String path, Map<String,?> params) throws Exception;
 
 	void assertErrorMessage(ModelAndView mav, String errorKey, String format, Object... parameters);
 

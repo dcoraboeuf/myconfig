@@ -3,6 +3,8 @@ package net.myconfig.web.gui;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import net.myconfig.core.MyConfigProfiles;
 
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -60,10 +61,19 @@ public class DefaultGUITestHelper implements GUITestHelper {
 	@Override
 	public ModelAndView run(String method, String path, String paramName,
 			Object paramValue) throws Exception {
+		return run (method, path, paramName != null ? Collections.singletonMap(paramName, paramValue) : null);
+	}
+	
+	@Override
+	public ModelAndView run(String method, String path, Map<String,?> params) throws Exception {
 		// Request and parameters
 		MockHttpServletRequest request = new MockHttpServletRequest(method, path);
-		if (StringUtils.isNotBlank(paramName)) {
-			request.addParameter(paramName, ObjectUtils.toString(paramValue, ""));
+		if (params != null) {
+			for (Map.Entry<String, ?> entry: params.entrySet()) {
+				String paramName = entry.getKey();
+				Object paramValue = entry.getValue();
+				request.addParameter(paramName, ObjectUtils.toString(paramValue, ""));
+			}
 		}
 		// Call
 		return run (request, new MockHttpServletResponse());

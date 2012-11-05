@@ -73,7 +73,7 @@ public class HomeControllerTest extends AbstractConfigurationTest {
 		assertNotNull (info);
 		RESTMethodInformation method = getMethod(info, "applicationCreate");
 		assertEquals ("rest.UIController.applicationCreate", method.getKey());
-		assertEquals ("/ui/application/{name:.*}", method.getPath());
+		assertEquals ("/ui/application/{id}/{name:.*}", method.getPath());
 		assertEquals ("PUT", method.getMethod());
 	}
 	
@@ -83,7 +83,7 @@ public class HomeControllerTest extends AbstractConfigurationTest {
 		assertNotNull (info);
 		RESTMethodInformation method = getMethod(info, "applicationDelete");
 		assertEquals ("rest.UIController.applicationDelete", method.getKey());
-		assertEquals ("/ui/application/{application}", method.getPath());
+		assertEquals ("/ui/application/{id:.*}", method.getPath());
 		assertEquals ("DELETE", method.getMethod());
 	}
 

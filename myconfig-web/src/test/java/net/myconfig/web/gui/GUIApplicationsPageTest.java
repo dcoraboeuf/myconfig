@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.myconfig.core.MyConfigProfiles;
 import net.myconfig.core.model.ApplicationSummary;
+import net.myconfig.core.utils.MapBuilder;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.test.AbstractConfigurationTest;
 import net.myconfig.web.test.ApplicationSummaryNamePredicate;
@@ -32,8 +33,8 @@ public class GUIApplicationsPageTest extends AbstractConfigurationTest {
 		// Initial number of applications
 		int applicationCount = ui.applications().getSummaries().size();
 		// Initial state
-		applicationCreate("app1");
-		applicationCreate("app2");
+		applicationCreate(helper.generateId("APP"), "app1");
+		applicationCreate(helper.generateId("APP"), "app2");
 		// Call
 		ModelAndView mav = helper.run("GET", "/gui/", null, null);
 		// Check
@@ -49,18 +50,20 @@ public class GUIApplicationsPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void applicationCreate_ok () throws Exception {
-		ModelAndView mav = applicationCreate(helper.generateName("applicationCreate_ok_"));
+		ModelAndView mav = applicationCreate(helper.generateId("APP"), helper.generateName("applicationCreate_ok_"));
 		assertNotNull (mav);
 		assertEquals ("redirect:/gui/applications", mav.getViewName());
 	}
 	
+	// FIXME ID already exists
+	
 	@Test
-	public void applicationCreate_already_exists () throws Exception {
+	public void applicationCreate_name_already_exists () throws Exception {
 		String appName = helper.generateName("applicationCreate_already_exists_");
 		// ... once
-		applicationCreate(appName);
+		applicationCreate(helper.generateId("APP"), appName);
 		// ... twice
-		ModelAndView mav = applicationCreate(appName);
+		ModelAndView mav = applicationCreate(helper.generateId("APP"), appName);
 		// Same page with an error message
 		assertNotNull (mav);
 		assertEquals ("applications", mav.getViewName());
@@ -74,8 +77,8 @@ public class GUIApplicationsPageTest extends AbstractConfigurationTest {
 		assertEquals ("redirect:/gui/applications", mav.getViewName());
 	}
 
-	protected ModelAndView applicationCreate(String appName) throws Exception {
-		return helper.run("POST", "/gui/applications/create", "name", appName);
+	protected ModelAndView applicationCreate(String id, String appName) throws Exception {
+		return helper.run("POST", "/gui/applications/create", MapBuilder.<String,String>create().put("name", appName).put("id", id).build());
 	}
 
 }
