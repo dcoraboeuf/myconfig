@@ -18,6 +18,7 @@ import org.springframework.ui.ExtendedModelMap;
 
 public class GUIMatrixPageTest {
 	
+	private static final String APP = "APP";
 	private GUIMatrixPage page;
 	private UIInterface ui;
 	
@@ -29,19 +30,19 @@ public class GUIMatrixPageTest {
 	
 	@Test
 	public void pagePath() {
-		assertEquals ("matrix/12", page.pagePath(12));
+		assertEquals ("matrix/APP", page.pagePath(APP));
 	}
 	
 	@Test
 	public void page() {
 		MatrixConfiguration configuration = new MatrixConfiguration(
-				10, "myapp",
+				APP, "myapp",
 				Collections.<MatrixVersionConfiguration>emptyList(),
 				Collections.<Key>emptyList());
-		when(ui.keyVersionConfiguration(10)).thenReturn(
+		when(ui.keyVersionConfiguration(APP)).thenReturn(
 				configuration);
 		ExtendedModelMap model = new ExtendedModelMap();
-		String view = page.page(10, model);
+		String view = page.page(APP, model);
 		assertEquals ("matrix", view);
 		assertSame (configuration, model.get("configuration"));
 	}

@@ -36,7 +36,8 @@ public class GetControllerTest {
 
 	private static final String VARIANT = "variant";
 	private static final String MODE = "mode";
-	private static final String APP = "myapp";
+	private static final String APP = "APP";
+	private static final String APP_NAME = "myapp";
 	private static final String VERSION = "1.0";
 	private static final String ENV = "ENV";
 	private static final String KEY = "mykey";
@@ -69,7 +70,7 @@ public class GetControllerTest {
 		// Mock: error handler
 		when(errorHandler.handleError(any(HttpServletRequest.class), any(Locale.class), any(Exception.class))).thenReturn(new ErrorMessage("xxx", "Error message"));
 		// Call
-		ResponseEntity<String> entity = get.onException(request, Locale.ENGLISH, new ApplicationNotFoundException(1));
+		ResponseEntity<String> entity = get.onException(request, Locale.ENGLISH, new ApplicationNotFoundException(APP));
 		assertNotNull (entity);
 		assertEquals ("An error has occurred.\nMessage: Error message\nReference: xxx", entity.getBody());
 		assertEquals (HttpStatus.INTERNAL_SERVER_ERROR, entity.getStatusCode());
@@ -84,8 +85,8 @@ public class GetControllerTest {
 
 	@Test
 	public void key() {
-		when(service.getKey(APP, VERSION, ENV, KEY)).thenReturn(VALUE);
-		String value = get.key(APP, VERSION, ENV, KEY);
+		when(service.getKey(APP_NAME, VERSION, ENV, KEY)).thenReturn(VALUE);
+		String value = get.key(APP_NAME, VERSION, ENV, KEY);
 		assertEquals(VALUE, value);
 	}
 
@@ -97,7 +98,7 @@ public class GetControllerTest {
 		when(httpRendererService.getRenderer(ConfigurationSet.class, MODE)).thenReturn(renderer);
 		// Call
 		MockHttpServletResponse response = new MockHttpServletResponse();
-		get.env(APP, VERSION, ENV, MODE, VARIANT, response);
+		get.env(APP_NAME, VERSION, ENV, MODE, VARIANT, response);
 		// Checks the render call
 		verify(renderer, times(1)).renderer(any(ConfigurationSet.class), eq(VARIANT), same(response));
 	}
@@ -110,7 +111,7 @@ public class GetControllerTest {
 		when(httpRendererService.getRenderer(ConfigurationSet.class, MODE)).thenReturn(renderer);
 		// Call
 		MockHttpServletResponse response = new MockHttpServletResponse();
-		get.env_default(APP, VERSION, ENV, MODE, response);
+		get.env_default(APP_NAME, VERSION, ENV, MODE, response);
 		// Checks the render call
 		verify(renderer, times(1)).renderer(any(ConfigurationSet.class), (String) isNull(), same(response));
 	}
@@ -121,7 +122,7 @@ public class GetControllerTest {
 		when(httpRendererService.getRenderer(ConfigurationSet.class, MODE)).thenThrow(new RendererNotFoundException(ConfigurationSet.class, MODE));
 		// Call
 		MockHttpServletResponse response = new MockHttpServletResponse();
-		get.env(APP, VERSION, ENV, MODE, VARIANT, response);
+		get.env(APP_NAME, VERSION, ENV, MODE, VARIANT, response);
 	}
 
 }

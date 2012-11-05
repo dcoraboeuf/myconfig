@@ -8,11 +8,11 @@ public class ApplicationSummaryBuilder {
 		return new ApplicationSummaryBuilder();
 	}
 
-	public static ApplicationSummaryBuilder create(int i, String name) {
-		return create().setId(i).setName(name);
+	public static ApplicationSummaryBuilder create(String id, String name) {
+		return create().setId(id).setName(name);
 	}
 
-	private int id;
+	private String id;
 	private String name;
 	private int versionCount;
 	private int keyCount;
@@ -28,7 +28,7 @@ public class ApplicationSummaryBuilder {
 	protected ApplicationSummaryBuilder() {
 	}
 
-	public ApplicationSummaryBuilder setId(int id) {
+	public ApplicationSummaryBuilder setId(String id) {
 		this.id = id;
 		return this;
 	}

@@ -7,6 +7,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 public interface GUITestHelper {
 
+	String generateId(String prefix);
+
 	String generateName(String prefix);
 
 	ModelAndView run(HttpServletRequest request, HttpServletResponse response) throws Exception;

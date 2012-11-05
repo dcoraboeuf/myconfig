@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +37,13 @@ public class DefaultGUITestHelper implements GUITestHelper {
 
 	@Autowired
 	private ExceptionHandlerExceptionResolver exceptionResolver;
+	
+	private final AtomicInteger id = new AtomicInteger(0);
+	
+	@Override
+	public String generateId(String prefix) {
+		return prefix + id.incrementAndGet();
+	}
 
 	@Override
 	public String generateName(String prefix) {

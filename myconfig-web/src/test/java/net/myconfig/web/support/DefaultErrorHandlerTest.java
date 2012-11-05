@@ -37,14 +37,14 @@ public class DefaultErrorHandlerTest {
 	@Test
 	public void input() {
 		HttpServletRequest request = new MockHttpServletRequest();
-		ErrorMessage message = handler.handleError(request, Locale.ENGLISH, new VersionAlreadyDefinedException(1, "version"));
+		ErrorMessage message = handler.handleError(request, Locale.ENGLISH, new VersionAlreadyDefinedException("A", "version"));
 		assertMessage(message, "[S-003] The version \"version\" is already defined.");
 	}
 
 	@Test
 	public void core() {
 		HttpServletRequest request = new MockHttpServletRequest();
-		ErrorMessage message = handler.handleError(request, Locale.ENGLISH, new ApplicationNotFoundException(1));
+		ErrorMessage message = handler.handleError(request, Locale.ENGLISH, new ApplicationNotFoundException("A"));
 		assertMessage(message, "[S-004] Cannot find application 1");
 	}
 

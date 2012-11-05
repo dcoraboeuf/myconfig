@@ -39,7 +39,8 @@ import org.junit.Test;
 public class UIControllerTest {
 
 	private static final String DESCRIPTION = "description";
-	private static final String APP = "myapp";
+	private static final String APP = "APP";
+	private static final String APP_NAME = "myapp";
 	private static final String VERSION = "1.0";
 	private static final String ENV = "ENV";
 	private static final String KEY = "mykey";
@@ -64,7 +65,7 @@ public class UIControllerTest {
 
 	@Test
 	public void application_list() {
-		ApplicationSummaries expectedApplications = new ApplicationSummaries(Arrays.asList(ApplicationSummaryBuilder.create(1, "app1").build(), ApplicationSummaryBuilder.create(2, "app2").build()));
+		ApplicationSummaries expectedApplications = new ApplicationSummaries(Arrays.asList(ApplicationSummaryBuilder.create("APP", "app1").build(), ApplicationSummaryBuilder.create("APP2", "app2").build()));
 		when(service.getApplications()).thenReturn(expectedApplications);
 		ApplicationSummaries actualApplications = ui.applications();
 		assertSame(expectedApplications, actualApplications);
@@ -72,131 +73,131 @@ public class UIControllerTest {
 
 	@Test
 	public void application_create() {
-		ApplicationSummary expectedApp = ApplicationSummaryBuilder.create(1, APP).build();
-		when(service.createApplication(APP)).thenReturn(expectedApp);
-		ApplicationSummary actualApp = ui.applicationCreate(APP);
+		ApplicationSummary expectedApp = ApplicationSummaryBuilder.create(APP, APP_NAME).build();
+		when(service.createApplication(APP, APP_NAME)).thenReturn(expectedApp);
+		ApplicationSummary actualApp = ui.applicationCreate(APP, APP_NAME);
 		assertSame(expectedApp, actualApp);
 	}
 
 	@Test
 	public void application_delete() {
-		when(service.deleteApplication(1)).thenReturn(Ack.OK);
-		Ack ack = ui.applicationDelete(1);
+		when(service.deleteApplication(APP)).thenReturn(Ack.OK);
+		Ack ack = ui.applicationDelete(APP);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
 	public void application_configuration() {
-		ApplicationConfiguration expectedConf = new ApplicationConfiguration(1, APP, Collections.<VersionSummary> emptyList(), Collections.<EnvironmentSummary> emptyList(),
+		ApplicationConfiguration expectedConf = new ApplicationConfiguration(APP, APP_NAME, Collections.<VersionSummary> emptyList(), Collections.<EnvironmentSummary> emptyList(),
 				Collections.<KeySummary> emptyList());
-		when(service.getApplicationConfiguration(1)).thenReturn(expectedConf);
-		ApplicationConfiguration actualConf = ui.applicationConfiguration(1);
+		when(service.getApplicationConfiguration(APP)).thenReturn(expectedConf);
+		ApplicationConfiguration actualConf = ui.applicationConfiguration(APP);
 		assertSame(expectedConf, actualConf);
 	}
 
 	@Test
 	public void version_configuration() {
-		VersionConfiguration expectedConf = new VersionConfiguration(1, APP, VERSION, null, null, Collections.<Key> emptyList(), Collections.<IndexedValues<String>> emptyList());
-		when(service.getVersionConfiguration(1, VERSION)).thenReturn(expectedConf);
-		VersionConfiguration actualConf = ui.versionConfiguration(1, VERSION);
+		VersionConfiguration expectedConf = new VersionConfiguration(APP, APP_NAME, VERSION, null, null, Collections.<Key> emptyList(), Collections.<IndexedValues<String>> emptyList());
+		when(service.getVersionConfiguration(APP, VERSION)).thenReturn(expectedConf);
+		VersionConfiguration actualConf = ui.versionConfiguration(APP, VERSION);
 		assertSame(expectedConf, actualConf);
 	}
 
 	@Test
 	public void version_create() {
-		when(service.createVersion(1, VERSION)).thenReturn(Ack.OK);
-		Ack ack = ui.versionCreate(1, VERSION);
+		when(service.createVersion(APP, VERSION)).thenReturn(Ack.OK);
+		Ack ack = ui.versionCreate(APP, VERSION);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
 	public void version_delete() {
-		when(service.deleteVersion(1, VERSION)).thenReturn(Ack.OK);
-		Ack ack = ui.versionDelete(1, VERSION);
+		when(service.deleteVersion(APP, VERSION)).thenReturn(Ack.OK);
+		Ack ack = ui.versionDelete(APP, VERSION);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
 	public void environment_configuration() {
-		EnvironmentConfiguration expectedConf = new EnvironmentConfiguration(1, APP, ENV, null, null, Collections.<Key> emptyList(), Collections.<IndexedValues<ConditionalValue>> emptyList());
-		when(service.getEnvironmentConfiguration(1, ENV)).thenReturn(expectedConf);
-		EnvironmentConfiguration actualConf = ui.environmentConfiguration(1, ENV);
+		EnvironmentConfiguration expectedConf = new EnvironmentConfiguration(APP, APP_NAME, ENV, null, null, Collections.<Key> emptyList(), Collections.<IndexedValues<ConditionalValue>> emptyList());
+		when(service.getEnvironmentConfiguration(APP, ENV)).thenReturn(expectedConf);
+		EnvironmentConfiguration actualConf = ui.environmentConfiguration(APP, ENV);
 		assertSame(expectedConf, actualConf);
 	}
 
 	@Test
 	public void key_configuration() {
-		KeyConfiguration expectedConf = new KeyConfiguration(1, APP, new Key(KEY, ""), null, null, Collections.<Version> emptyList(), Collections.<IndexedValues<String>> emptyList());
-		when(service.getKeyConfiguration(1, KEY)).thenReturn(expectedConf);
-		KeyConfiguration actualConf = ui.keyConfiguration(1, KEY);
+		KeyConfiguration expectedConf = new KeyConfiguration(APP, APP_NAME, new Key(KEY, ""), null, null, Collections.<Version> emptyList(), Collections.<IndexedValues<String>> emptyList());
+		when(service.getKeyConfiguration(APP, KEY)).thenReturn(expectedConf);
+		KeyConfiguration actualConf = ui.keyConfiguration(APP, KEY);
 		assertSame(expectedConf, actualConf);
 	}
 
 	@Test
 	public void environment_create() {
-		when(service.createEnvironment(1, ENV)).thenReturn(Ack.OK);
-		Ack ack = ui.environmentCreate(1, ENV);
+		when(service.createEnvironment(APP, ENV)).thenReturn(Ack.OK);
+		Ack ack = ui.environmentCreate(APP, ENV);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
 	public void environment_delete() {
-		when(service.deleteEnvironment(1, ENV)).thenReturn(Ack.OK);
-		Ack ack = ui.environmentDelete(1, ENV);
+		when(service.deleteEnvironment(APP, ENV)).thenReturn(Ack.OK);
+		Ack ack = ui.environmentDelete(APP, ENV);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
 	public void key_create() {
-		when(service.createKey(1, KEY, DESCRIPTION)).thenReturn(Ack.OK);
-		Ack ack = ui.keyCreate(1, KEY, DESCRIPTION);
+		when(service.createKey(APP, KEY, DESCRIPTION)).thenReturn(Ack.OK);
+		Ack ack = ui.keyCreate(APP, KEY, DESCRIPTION);
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
 	public void key_delete() {
-		when(service.deleteKey(1, KEY)).thenReturn(Ack.OK);
-		Ack ack = ui.keyDelete(1, KEY);
+		when(service.deleteKey(APP, KEY)).thenReturn(Ack.OK);
+		Ack ack = ui.keyDelete(APP, KEY);
 		assertTrue(ack.isSuccess());
 	}
 	
 	@Test
 	public void key_update() {
-		when(service.updateKey(1, KEY, "New description")).thenReturn(Ack.OK);
-		Ack ack = ui.keyUpdate(1, KEY, "New description");
+		when(service.updateKey(APP, KEY, "New description")).thenReturn(Ack.OK);
+		Ack ack = ui.keyUpdate(APP, KEY, "New description");
 		assertTrue(ack.isSuccess());
 	}
 
 	@Test
 	public void update_configuration() {
 		ConfigurationUpdates updates = new ConfigurationUpdates(Collections.<ConfigurationUpdate>emptyList());
-		when(service.updateConfiguration(1, updates)).thenReturn(Ack.OK);
-		Ack ack = ui.updateConfiguration(1, updates);
+		when(service.updateConfiguration(APP, updates)).thenReturn(Ack.OK);
+		Ack ack = ui.updateConfiguration(APP, updates);
 		assertTrue(ack.isSuccess());
 	}
 	
 	@Test
 	public void matrix() {
 		MatrixConfiguration expectedMatrix = new MatrixConfiguration(
-				1, APP, 
+				APP, APP_NAME, 
 				Collections.<MatrixVersionConfiguration>emptyList(),
 				Collections.<Key>emptyList()); 
-		when(service.keyVersionConfiguration(1)).thenReturn(expectedMatrix);
-		MatrixConfiguration actualMatrix = ui.keyVersionConfiguration(1);
+		when(service.keyVersionConfiguration(APP)).thenReturn(expectedMatrix);
+		MatrixConfiguration actualMatrix = ui.keyVersionConfiguration(APP);
 		assertSame (expectedMatrix, actualMatrix);
 	}
 	
 	@Test
 	public void matrix_add() {
-		when(service.addKeyVersion(1, VERSION, KEY)).thenReturn(Ack.OK);
-		Ack ack = ui.keyVersionAdd(1, VERSION, KEY);
+		when(service.addKeyVersion(APP, VERSION, KEY)).thenReturn(Ack.OK);
+		Ack ack = ui.keyVersionAdd(APP, VERSION, KEY);
 		assertTrue(ack.isSuccess());
 	}
 	
 	@Test
 	public void matrix_remove() {
-		when(service.removeKeyVersion(1, VERSION, KEY)).thenReturn(Ack.OK);
-		Ack ack = ui.keyVersionRemove(1, VERSION, KEY);
+		when(service.removeKeyVersion(APP, VERSION, KEY)).thenReturn(Ack.OK);
+		Ack ack = ui.keyVersionRemove(APP, VERSION, KEY);
 		assertTrue(ack.isSuccess());
 	}
 }

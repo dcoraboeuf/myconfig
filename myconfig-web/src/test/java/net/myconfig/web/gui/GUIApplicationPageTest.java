@@ -25,7 +25,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void application_configuration() throws Exception {
-		ApplicationSummary summary = ui.applicationCreate(helper.generateName("app_config_"));
+		ApplicationSummary summary = ui.applicationCreate(helper.generateId("APP"), helper.generateName("app_config_"));
 		ModelAndView mav = helper.run("GET", "/gui/application/"+ summary.getId(), null, null);
 		assertNotNull (mav);
 		assertEquals ("application", mav.getViewName());
@@ -46,7 +46,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void version_create () throws Exception {
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("versionCreate_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("versionCreate_"));
 		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/version/create", "name", "1.0");
 		assertNotNull (mav);
 		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
@@ -54,7 +54,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void version_create_already_exists () throws Exception {
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("versionCreate_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("versionCreate_"));
 		helper.run ("POST", "/gui/application/" + app.getId() + "/version/create", "name", "1.0");
 		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/version/create", "name", "1.0");
 		assertNotNull (mav);
@@ -78,7 +78,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	@Test
 	public void version_delete() throws Exception {
 		// Test data
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("version_delete_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("version_delete_"));
 		ui.versionCreate(app.getId(), "1.0");
 		ui.versionCreate(app.getId(), "1.1");
 		ui.versionCreate(app.getId(), "1.2");
@@ -91,7 +91,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	@Test
 	public void version_delete_none() throws Exception {
 		// Test data
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("version_delete_none_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("version_delete_none_"));
 		ui.versionCreate(app.getId(), "1.0");
 		ui.versionCreate(app.getId(), "1.1");
 		// Deletes one version
@@ -111,7 +111,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void environment_create () throws Exception {
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("environmentCreate_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("environmentCreate_"));
 		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/environment/create", "name", "1.0");
 		assertNotNull (mav);
 		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
@@ -119,7 +119,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void environment_create_already_exists () throws Exception {
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("environmentCreate_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("environmentCreate_"));
 		helper.run ("POST", "/gui/application/ " + app.getId() + "/environment/create", "name", "1.0");
 		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/environment/create", "name", "1.0");
 		assertNotNull (mav);
@@ -143,7 +143,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	@Test
 	public void environment_delete() throws Exception {
 		// Test data
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("environment_delete_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("environment_delete_"));
 		ui.environmentCreate(app.getId(), "1.0");
 		ui.environmentCreate(app.getId(), "1.1");
 		ui.environmentCreate(app.getId(), "1.2");
@@ -156,7 +156,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	@Test
 	public void environment_delete_none() throws Exception {
 		// Test data
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("environment_delete_none_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("environment_delete_none_"));
 		ui.environmentCreate(app.getId(), "1.0");
 		ui.environmentCreate(app.getId(), "1.1");
 		// Deletes one environment
@@ -176,7 +176,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void key_create () throws Exception {
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("keyCreate_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("keyCreate_"));
 		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/key/create", "name", "mykey");
 		assertNotNull (mav);
 		assertEquals ("redirect:/gui/application/" +  app.getId(), mav.getViewName());
@@ -184,7 +184,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	
 	@Test
 	public void key_create_already_exists () throws Exception {
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("keyCreate_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("keyCreate_"));
 		helper.run ("POST", "/gui/application/" + app.getId() + "/key/create", "name", "mykey");
 		ModelAndView mav = helper.run ("POST", "/gui/application/" + app.getId() + "/key/create", "name", "mykey");
 		assertNotNull (mav);
@@ -208,7 +208,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	@Test
 	public void key_delete() throws Exception {
 		// Test data
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("key_delete_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("key_delete_"));
 		ui.keyCreate(app.getId(), "key1", "Key 1");
 		ui.keyCreate(app.getId(), "key2", "Key 2");
 		ui.keyCreate(app.getId(), "key3", "Key 3");
@@ -221,7 +221,7 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	@Test
 	public void key_delete_none() throws Exception {
 		// Test data
-		ApplicationSummary app = ui.applicationCreate(helper.generateName("key_delete_none_"));
+		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("key_delete_none_"));
 		ui.keyCreate(app.getId(), "key1", "Key 1");
 		ui.keyCreate(app.getId(), "key2", "Key 2");
 		// Deletes one key
