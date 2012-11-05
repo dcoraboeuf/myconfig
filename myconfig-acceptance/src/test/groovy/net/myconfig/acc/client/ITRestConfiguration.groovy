@@ -16,20 +16,14 @@ import org.junit.Test
 
 class ITRestConfiguration extends AbstractClientUseCase {
 	
-	static final String APP = "app1"
-	
-	static int id
+	String id
+	String name
 	
 	@Before
 	void initTest() {
-		// Deletes the application if needed
-		def summaries = client().applications().getSummaries()
-		def summary = summaries.find { it -> (it.getName() == APP) }
-		if (summary != null) {
-			client().applicationDelete(summary.getId())
-		}
 		// Test application
-		id = client().applicationCreate(APP).getId()
+		name = appName()
+		id = client().applicationCreate(appId(), name).getId()
 		// Versions
 		client().versionCreate(id, "1.0")
 		client().versionCreate(id, "1.1")
@@ -64,7 +58,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		assertNotNull (configuration)
 		// Application
 		assertEquals (id, configuration.getId())
-		assertEquals (APP, configuration.getName())
+		assertEquals (name, configuration.getName())
 		// Versions
 		def versionList = configuration.getVersionSummaryList()
 		assert ["1.0", "1.1", "1.2"] == versionList*.getName()
@@ -170,7 +164,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	void versionConfiguration() {
 		def conf = client().versionConfiguration(id, "1.1")
 		assert id == conf.getId()
-		assert APP == conf.getName()
+		assert name == conf.getName()
 		assert ["1.0", "1.1", "1.2"] == [ conf.getPreviousVersion(), conf.getVersion(), conf.getNextVersion()]
 		assert ["jdbc.password", "jdbc.user"] == conf.getKeyList()*.getName()
 		["jdbc.password", "jdbc.user"].each {
@@ -190,7 +184,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	void environmentConfiguration() {
 		def conf = client().environmentConfiguration(id, "UAT")
 		assert id == conf.getId()
-		assert APP == conf.getName()
+		assert name == conf.getName()
 		assert ["PROD", "UAT", null] == [ conf.getPreviousEnvironment(), conf.getEnvironment(), conf.getNextEnvironment()]
 		assert ["jdbc.password", "jdbc.user"] == conf.getKeyList()*.getName()
 		["1.0", "1.1", "1.2"].each {
@@ -211,7 +205,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	void keyConfiguration() {
 		def conf = client().keyConfiguration(id, "jdbc.user")
 		assert id == conf.getId()
-		assert APP == conf.getName()
+		assert name == conf.getName()
 		assert ["jdbc.password", null] == [ conf.getPreviousKey(), conf.getNextKey()]
 		assert new Key("jdbc.user", "User used to connect to the database") == conf.getKey()
 		assert ["1.0", "1.1", "1.2"] == conf.getVersionList()*.getName()
