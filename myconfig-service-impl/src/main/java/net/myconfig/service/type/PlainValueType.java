@@ -1,16 +1,17 @@
 package net.myconfig.service.type;
 
 import net.myconfig.core.InputException;
+import net.myconfig.core.type.ValueType;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-@Qualifier("plain")
+@Qualifier(ValueType.PLAIN)
 public class PlainValueType extends AbstractValueType {
 
 	public PlainValueType() {
-		super("plain");
+		super(ValueType.PLAIN);
 	}
 
 	@Override

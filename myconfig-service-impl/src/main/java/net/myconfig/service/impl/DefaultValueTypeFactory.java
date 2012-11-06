@@ -32,7 +32,7 @@ public class DefaultValueTypeFactory implements ValueTypeFactory {
 	@Override
 	public  ValueType getValueType(String id) {
 		if (StringUtils.isBlank(id)) {
-			return getValueType("plain");
+			return getValueType(ValueType.PLAIN);
 		} else {
 			ValueType type = index.get(id);
 			if (type != null) {
