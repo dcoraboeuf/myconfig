@@ -28,5 +28,7 @@ public interface SQLColumns {
 	String TOKENTYPE = "tokentype";
 	String TOKENKEY = "tokenkey";
 	String CREATION = "creation";
+	String TYPEID = "typeid";
+	String TYPEPARAM = "typeparam";
 
 }
