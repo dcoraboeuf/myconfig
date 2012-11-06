@@ -1,6 +1,6 @@
 package net.myconfig.service.impl;
 
-import net.myconfig.service.exception.InputException;
+import net.myconfig.core.InputException;
 
 public class CannotUpdateUserDataException extends InputException {
 

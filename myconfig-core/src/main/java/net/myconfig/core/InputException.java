@@ -1,6 +1,5 @@
-package net.myconfig.service.exception;
+package net.myconfig.core;
 
-import net.myconfig.core.CoreException;
 
 public abstract class InputException extends CoreException {
 

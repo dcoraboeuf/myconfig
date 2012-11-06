@@ -1,5 +1,7 @@
 package net.myconfig.service.exception;
 
+import net.myconfig.core.InputException;
+
 public abstract class ApplicationRelatedException extends InputException {
 
 	private final String id;

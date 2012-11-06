@@ -4,12 +4,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import net.myconfig.core.InputException;
 import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.exception.AbstractTokenException;
-import net.myconfig.service.exception.InputException;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;

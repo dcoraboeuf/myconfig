@@ -4,6 +4,6 @@ import net.myconfig.core.type.ValueType;
 
 public interface ValueTypeFactory {
 	
-	<T> ValueType<T> getValueType (String id);
+	ValueType getValueType (String id);
 
 }

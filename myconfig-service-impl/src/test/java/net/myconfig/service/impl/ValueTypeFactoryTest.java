@@ -22,14 +22,14 @@ public class ValueTypeFactoryTest extends AbstractIntegrationTest {
 
 	@Test
 	public void null_plain() {
-		ValueType<Object> type = factory.getValueType(null);
+		ValueType type = factory.getValueType(null);
 		assertNotNull(type);
 		assertEquals("plain", type.getId());
 	}
 
 	@Test
 	public void null_blank() {
-		ValueType<Object> type = factory.getValueType(" ");
+		ValueType type = factory.getValueType(" ");
 		assertNotNull(type);
 		assertEquals("plain", type.getId());
 	}

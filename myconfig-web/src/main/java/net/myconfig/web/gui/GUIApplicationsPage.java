@@ -2,7 +2,7 @@ package net.myconfig.web.gui;
 
 import java.util.Locale;
 
-import net.myconfig.service.exception.InputException;
+import net.myconfig.core.InputException;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 

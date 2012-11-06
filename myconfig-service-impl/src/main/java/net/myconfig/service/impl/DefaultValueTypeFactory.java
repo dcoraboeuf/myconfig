@@ -17,25 +17,24 @@ import com.google.common.collect.Maps;
 @Service
 public class DefaultValueTypeFactory implements ValueTypeFactory {
 
-	private final Map<String, ValueType<?>> index;
+	private final Map<String, ValueType> index;
 
 	@Autowired
-	public DefaultValueTypeFactory(Collection<ValueType<?>> types) {
-		index = Maps.uniqueIndex(types, new Function<ValueType<?>, String>() {
+	public DefaultValueTypeFactory(Collection<ValueType> types) {
+		index = Maps.uniqueIndex(types, new Function<ValueType, String>() {
 			@Override
-			public String apply(ValueType<?> type) {
+			public String apply(ValueType type) {
 				return type.getId();
 			}
 		});
 	}
 
 	@Override
-	public <T> ValueType<T> getValueType(String id) {
+	public  ValueType getValueType(String id) {
 		if (StringUtils.isBlank(id)) {
 			return getValueType("plain");
 		} else {
-			@SuppressWarnings("unchecked")
-			ValueType<T> type = (ValueType<T>) index.get(id);
+			ValueType type = index.get(id);
 			if (type != null) {
 				return type;
 			} else {

@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.myconfig.service.exception.InputException;
+import net.myconfig.core.InputException;
 import net.myconfig.web.rest.UIInterface;
 import net.myconfig.web.support.ErrorHandler;
 import net.myconfig.web.support.ErrorMessage;

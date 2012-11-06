@@ -1,11 +1,11 @@
 package net.myconfig.core.type;
 
-public interface ValueType<T> {
+import net.myconfig.core.InputException;
+
+public interface ValueType {
 	
 	String getId();
 	
-	ValueIO<T> getStorageIO();
-	
-	ValueIO<T> getPresentationIO();
+	InputException validate (String value, String param);
 
 }

@@ -1,6 +1,6 @@
 package net.myconfig.service.security;
 
-import net.myconfig.service.exception.InputException;
+import net.myconfig.core.InputException;
 
 public class UserAlreadyDefinedException extends InputException {
 
