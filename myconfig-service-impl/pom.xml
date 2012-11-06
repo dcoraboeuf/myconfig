@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>myconfig-parent</artifactId>
 		<groupId>net.myconfig</groupId>
-		<version>0.0.3-SNAPSHOT</version>
+		<version>DEV-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 
