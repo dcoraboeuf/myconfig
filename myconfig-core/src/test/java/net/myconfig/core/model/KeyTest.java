@@ -30,7 +30,7 @@ public class KeyTest {
 	protected void json_test(ObjectMapper mapper) throws IOException, JsonGenerationException, JsonMappingException, JsonParseException {
 		Key key = new Key("mykey", "A description");
 		String json = mapper.writeValueAsString(key);
-		assertEquals("{\"name\":\"mykey\",\"description\":\"A description\"}", json);
+		assertEquals("{\"name\":\"mykey\",\"description\":\"A description\",\"typeId\":null,\"typeParam\":null}", json);
 		Key o = mapper.readValue(json, Key.class);
 		assertNotNull(o);
 		assertEquals("mykey", o.getName());
