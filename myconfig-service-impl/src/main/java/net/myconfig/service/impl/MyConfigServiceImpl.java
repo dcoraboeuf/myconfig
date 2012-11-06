@@ -71,6 +71,7 @@ import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.audit.Audit;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
+import net.myconfig.service.exception.ApplicationIDAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
@@ -299,14 +300,13 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	public ApplicationSummary createApplication(String id, String name) {
 		validate(ApplicationValidation.class, ID, id);
 		validate(ApplicationValidation.class, NAME, name);
-		try {
-			getNamedParameterJdbcTemplate().update(
-				SQL.APPLICATION_CREATE,
-				new MapSqlParameterSource(ID,id).addValue(NAME, name));
-		} catch (DuplicateKeyException ex) {
-			// FIXME Duplication on ID or NAME is possible
-			throw new ApplicationNameAlreadyDefinedException (name);
-		}
+		// Checks for uniqueness
+		checkNotExist (SQL.APPLICATION_NAME, new MapSqlParameterSource(ID, id), new ApplicationIDAlreadyDefinedException(id));
+		checkNotExist (SQL.APPLICATION_ID, new MapSqlParameterSource(NAME, name), new ApplicationNameAlreadyDefinedException(name));
+		// Inserts
+		getNamedParameterJdbcTemplate().update(
+			SQL.APPLICATION_CREATE,
+			new MapSqlParameterSource(ID,id).addValue(NAME, name));
 		// Initial grants
 		for (AppFunction fn : AppFunction.values()) {
 			grantAppFunction (id, fn);
@@ -829,6 +829,13 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				});
 		// OK
 		return new ConfigurationSet(id, name, environment, version, values);
+	}
+	
+	protected void checkNotExist (String sql, MapSqlParameterSource params, CoreException ex) {
+		List<Map<String, Object>> list = getNamedParameterJdbcTemplate().queryForList(sql, params);
+		if (!list.isEmpty()) {
+			throw ex;
+		}
 	}
 
 	protected void checkApplication(String id) {

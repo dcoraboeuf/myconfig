@@ -37,6 +37,7 @@ import net.myconfig.core.model.VersionSummary;
 import net.myconfig.core.utils.MapBuilder;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.exception.ApplicationIDAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNameAlreadyDefinedException;
 import net.myconfig.service.exception.ApplicationNotFoundException;
 import net.myconfig.service.exception.EnvironmentAlreadyDefinedException;
@@ -349,7 +350,11 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		}
 	}
 	
-	// FIXME Unit test for duplicated application ID
+	@Test(expected = ApplicationIDAlreadyDefinedException.class)
+	public void applicationCreate_id_not_unique () {
+		myConfigService.createApplication("A", "test2");
+		myConfigService.createApplication("A", "test3");
+	}
 	
 	@Test(expected = ApplicationNameAlreadyDefinedException.class)
 	public void applicationCreate_not_unique () {

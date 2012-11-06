@@ -36,6 +36,8 @@ public interface SQL {
 	String APPLICATION_DELETE = "delete from application where id = :id";
 
 	String APPLICATION_NAME = "select name from application where id = :id";
+
+	String APPLICATION_ID = "select id from application where name = :name";
 	
 	String VERSIONS = "select * from version where application = :application order by name";
 	
