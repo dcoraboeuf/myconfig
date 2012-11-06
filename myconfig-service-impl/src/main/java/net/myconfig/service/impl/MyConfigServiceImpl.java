@@ -78,6 +78,7 @@ import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.exception.MatrixNotFoundException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
 import net.myconfig.service.validation.ApplicationValidation;
@@ -718,7 +719,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			checkEnvironment(application, environment);
 			checkVersion(application, version);
 			checkKey(application, key);
-			// FIXME checkMatrix(application, version, key);
+			checkMatrix(application, version, key);
 			// Security check
 			checkEnvironmentAccess (application, environment, EnvFunction.env_config);
 			// Criteria
@@ -856,6 +857,13 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 				SQL.ENVIRONMENT_EXISTS,
 				new MapSqlParameterSource(NAME, environment).addValue(APPLICATION, application),
 				new EnvironmentNotFoundException(application, environment));
+	}
+
+	protected void checkMatrix(String application, String version, String key) {
+		check (
+				SQL.MATRIX_EXISTS,
+				new MapSqlParameterSource(APPLICATION, application).addValue(VERSION, version).addValue(KEY, key),
+				new MatrixNotFoundException(application, version, key));
 	}
 
 	protected void check(String sql,

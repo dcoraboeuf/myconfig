@@ -163,6 +163,8 @@ public interface SQL {
 			"where e.name = :name " +
 			"and e.application = :application";
 
+	String MATRIX_EXISTS = "select version from version_key where application = :application and appkey = :appkey and version = :version";
+
 	String CONFIGURATION_VALUE = "select value from configuration where name = :name";
 	String CONFIGURATION_ADD = "insert into configuration (name, value) values (:name, :value)";
 	String CONFIGURATION_UPDATE = "update configuration set value = :value where name = :name";

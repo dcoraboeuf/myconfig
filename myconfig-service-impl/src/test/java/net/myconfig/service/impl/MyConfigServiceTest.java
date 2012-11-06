@@ -44,6 +44,7 @@ import net.myconfig.service.exception.EnvironmentNotFoundException;
 import net.myconfig.service.exception.KeyAlreadyDefinedException;
 import net.myconfig.service.exception.KeyAlreadyInVersionException;
 import net.myconfig.service.exception.KeyNotFoundException;
+import net.myconfig.service.exception.MatrixNotFoundException;
 import net.myconfig.service.exception.ValidationException;
 import net.myconfig.service.exception.VersionAlreadyDefinedException;
 import net.myconfig.service.exception.VersionNotFoundException;
@@ -1250,6 +1251,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	public void configuration_update_no_key () {
 		myConfigService.updateConfiguration(APP, new ConfigurationUpdates(Arrays.asList(
 				new ConfigurationUpdate("UAT", "1.0", "jdbc.xxx", "xxx")
+				)));
+	}
+	
+	@Test(expected = MatrixNotFoundException.class)
+	public void configuration_update_no_matrix () {
+		myConfigService.updateConfiguration(APP, new ConfigurationUpdates(Arrays.asList(
+				new ConfigurationUpdate("UAT", "1.0", "jdbc.url", "xxx")
 				)));
 	}
 	
