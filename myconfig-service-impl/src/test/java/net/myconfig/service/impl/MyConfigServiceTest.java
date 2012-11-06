@@ -613,7 +613,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void key_create () throws DataSetException, SQLException {
-		Ack ack = myConfigService.createKey(APP, "key1", "Description for key 1");
+		Ack ack = myConfigService.createKey(APP, "key1", "Description for key 1", null, null);
 		assertTrue (ack.isSuccess());
 		// Checks the table
 		assertRecordExists("select * from appkey where application = 'APP' and name = 'key1' and description = 'Description for key 1'");
@@ -622,7 +622,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_null () {
 		try {
-			myConfigService.createKey(APP, null, null);
+			myConfigService.createKey(APP, null, null, null, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -634,7 +634,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_spaces () {
 		try {
-			myConfigService.createKey(APP, "  ", null);
+			myConfigService.createKey(APP, "  ", null, null, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -646,7 +646,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_trim () {
 		try {
-			myConfigService.createKey(APP, " mykey  ", null);
+			myConfigService.createKey(APP, " mykey  ", null, null, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -658,7 +658,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_blank () {
 		try {
-			myConfigService.createKey(APP, "", null);
+			myConfigService.createKey(APP, "", null, null, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -670,7 +670,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_too_long () {
 		try {
-			myConfigService.createKey(APP, StringUtils.repeat("x", 81), null);
+			myConfigService.createKey(APP, StringUtils.repeat("x", 81), null, null, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -682,7 +682,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@Test
 	public void key_create_description_too_long () {
 		try {
-			myConfigService.createKey(APP, StringUtils.repeat("x", 80), StringUtils.repeat("x", 501));
+			myConfigService.createKey(APP, StringUtils.repeat("x", 80), StringUtils.repeat("x", 501), null, null);
 			fail("Should have raised a validation error");
 		} catch (ValidationException ex) {
 			assertEquals (
@@ -693,13 +693,16 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test(expected = ApplicationNotFoundException.class)
 	public void key_create_noapp () {
-		myConfigService.createKey("app_xxx", "key2", "Description for key 2");
+		myConfigService.createKey("app_xxx", "key2", "Description for key 2", null, null);
 	}
 	
 	@Test(expected = KeyAlreadyDefinedException.class)
 	public void key_create_exists () {
-		myConfigService.createKey(APP, "jdbc.user", "New description");
+		myConfigService.createKey(APP, "jdbc.user", "New description", null, null);
 	}
+
+	// FIXME Validation of the type ID
+	// FIXME Validation of the type parameter
 
 	@Test(expected = ApplicationNotFoundException.class)
 	public void key_update_noapp() {
@@ -725,7 +728,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	
 	@Test
 	public void key_delete () throws DataSetException, SQLException {
-		myConfigService.createKey(APP, "key3", "Description for key 3");
+		myConfigService.createKey(APP, "key3", "Description for key 3", null, null);
 		assertRecordExists("select * from appkey where application = 'APP' and name = 'key3' and description = 'Description for key 3'");
 		Ack ack = myConfigService.deleteKey(APP, "key3");
 		assertTrue (ack.isSuccess());

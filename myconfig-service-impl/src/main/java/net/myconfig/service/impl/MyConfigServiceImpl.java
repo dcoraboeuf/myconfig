@@ -10,6 +10,8 @@ import static net.myconfig.service.db.SQLColumns.ID;
 import static net.myconfig.service.db.SQLColumns.KEY;
 import static net.myconfig.service.db.SQLColumns.KEY_COUNT;
 import static net.myconfig.service.db.SQLColumns.NAME;
+import static net.myconfig.service.db.SQLColumns.TYPEID;
+import static net.myconfig.service.db.SQLColumns.TYPEPARAM;
 import static net.myconfig.service.db.SQLColumns.VALUE;
 import static net.myconfig.service.db.SQLColumns.VALUE_COUNT;
 import static net.myconfig.service.db.SQLColumns.VERSION;
@@ -60,6 +62,7 @@ import net.myconfig.core.model.UserName;
 import net.myconfig.core.model.Version;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.model.VersionSummary;
+import net.myconfig.core.type.ValueType;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.AppGrantParam;
@@ -68,6 +71,8 @@ import net.myconfig.service.api.security.EnvGrantParam;
 import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
+import net.myconfig.service.api.type.KeyTypeParameterInvalidException;
+import net.myconfig.service.api.type.ValueTypeFactory;
 import net.myconfig.service.audit.Audit;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
@@ -86,6 +91,7 @@ import net.myconfig.service.validation.ApplicationValidation;
 import net.myconfig.service.validation.EnvironmentValidation;
 import net.myconfig.service.validation.KeyValidation;
 import net.myconfig.service.validation.VersionValidation;
+import net.sf.jstring.Localizable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -107,11 +113,13 @@ import com.google.common.collect.Lists;
 public class MyConfigServiceImpl extends AbstractSecureService implements MyConfigService {
 
 	private final String versionNumber;
+	private final ValueTypeFactory valueTypeFactory;
 
 	@Autowired
-	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource, Validator validator, SecuritySelector securitySelector, GrantService grantService) {
+	public MyConfigServiceImpl(@Value("${app.version}") String versionNumber, DataSource dataSource, Validator validator, SecuritySelector securitySelector, GrantService grantService, ValueTypeFactory valueTypeFactory) {
 		super(dataSource, validator, securitySelector, grantService);
 		this.versionNumber = versionNumber;
+		this.valueTypeFactory = valueTypeFactory;
 	}
 	
 	@Override
@@ -394,19 +402,37 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.CREATE, application = "#id", key = "#name", message = "#description", result = "#result.success") 
-	public Ack createKey(@AppGrantParam String id, String name, String description) {
+	public Ack createKey(@AppGrantParam String id, String name, String description, String typeId, String typeParam) {
 		validate(KeyValidation.class, NAME, name);
 		validate(KeyValidation.class, DESCRIPTION, description);
 		checkApplication(id);
+		// Validates the parameter type
+		validateType (typeId, typeParam);
+		// OK
 		try {
 			int count = getNamedParameterJdbcTemplate().update(SQL.KEY_CREATE,
-				idNameSource(id, name).addValue(DESCRIPTION, description));
+				idNameSource(id, name)
+				.addValue(DESCRIPTION, description)
+				.addValue(TYPEID, typeId)
+				.addValue(TYPEPARAM, typeParam));
 			return Ack.one (count);
 		} catch (DuplicateKeyException ex) {
 			throw new KeyAlreadyDefinedException (id, name);
 		}
 	}
 	
+	protected ValueType validateType(String typeId, String typeParam) {
+		// Validates the type
+		ValueType valueType = valueTypeFactory.getValueType(typeId);
+		// Validates the parameter
+		Localizable message = valueType.validateParameter(typeParam);
+		if (message != null) {
+			throw new KeyTypeParameterInvalidException(typeId, typeParam, message);
+		}
+		// OK
+		return valueType;
+	}
+
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)

@@ -42,7 +42,7 @@ public interface MyConfigService {
 
 	Ack deleteKey(String id, String name);
 
-	Ack createKey(String id, String name, String description);
+	Ack createKey(String id, String name, String description, String typeId, String typeParam);
 
 	MatrixConfiguration keyVersionConfiguration(String id);
 

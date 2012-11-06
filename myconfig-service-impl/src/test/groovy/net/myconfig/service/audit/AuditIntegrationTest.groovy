@@ -53,8 +53,8 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		myConfigService.createEnvironment(id, "DEV");
 		myConfigService.createEnvironment(id, "PROD");
 		// Keys
-		myConfigService.createKey(id, "key1", "Key 1");
-		myConfigService.createKey(id, "key2", "Key 2");
+		myConfigService.createKey(id, "key1", "Key 1", null, null);
+		myConfigService.createKey(id, "key2", "Key 2", null, null);
 		// Versions
 		myConfigService.createVersion(id, "1");
 		myConfigService.createVersion(id, "2");
