@@ -1,12 +1,18 @@
 package net.myconfig.service.type;
 
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateNOK;
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateOK;
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateParameterNOK;
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateParameterOK;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import net.myconfig.service.exception.ValueTypeValidationException;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 public class RegexValueTypeTest {
+	
+	private static final String PARAM_REASON = "Cannot parse regular expression: \"%s\"";
+	private static final String REASON = "\"%s\" must comply with regular expression \"%s\"";
 	
 	private RegexValueType  type = new RegexValueType();
 
@@ -15,39 +21,64 @@ public class RegexValueTypeTest {
 		assertEquals("regex", type.getId());
 	}
 	
-	@Test(expected = NullPointerException.class)
+	@Test
+	public void parameter() {
+		assertTrue(type.acceptParameter());
+	}
+
+	@Test
+	public void null_parameter() {
+		assertValidateParameterNOK(type, null, PARAM_REASON); 
+	}
+
+	@Test
+	public void blank_parameter() {
+		assertValidateParameterNOK(type, "", PARAM_REASON); 
+	}
+
+	@Test
+	public void bad_regex_parameter() {
+		assertValidateParameterNOK(type, "[\\dA-Z+", PARAM_REASON); 
+	}
+
+	@Test
+	public void good_regex_parameter() {
+		assertValidateParameterOK(type, "[\\dA-Z]+"); 
+	}
+	
+	@Test
 	public void validate_novalue_noparam() {
-		assertNull(type.validate(null, null));
+		assertValidateNOK(type, null, null, PARAM_REASON); 
 	}
 
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_novalue_param() {
-		assertNull(type.validate(null, "xxx"));
+		assertValidateNOK(type, null, "xxx", REASON); 
 	}
 
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_blankvalue_param() {
-		assertNull(type.validate("", "xxx"));
+		assertValidateNOK(type, "", "xxx", REASON);
 	}
 	
 	@Test
 	public void validate_blankvalue_blankparam() {
-		assertNull(type.validate("", ""));
+		assertValidateNOK(type, "", "", PARAM_REASON);
 	}
 
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void validate_value_noparam() {
-		assertNull(type.validate("zzz", null));
+		assertValidateNOK(type, "zzz", "", String.format(PARAM_REASON, ""));
 	}
 	
 	@Test
 	public void validate_value_param_ok() {
-		assertNull(type.validate("123", "\\d+"));
+		assertValidateOK(type, "123", "\\d+");
 	}
 	
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_value_param_no_match() {
-		assertNull(type.validate("12m", "\\d+"));
+		assertValidateNOK(type, "12m", "\\d+", REASON);
 	}
 
 }

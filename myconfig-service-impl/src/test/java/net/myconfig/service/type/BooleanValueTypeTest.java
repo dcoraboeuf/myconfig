@@ -1,12 +1,16 @@
 package net.myconfig.service.type;
 
+import static net.myconfig.service.type.ValueTypeTestUtils.NO_PARAMETER_REASON;
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateNOK;
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateOK;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import net.myconfig.service.exception.ValueTypeValidationException;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
 public class BooleanValueTypeTest {
+	
+	private static final String REASON = "\"%s\" must be a boolean: true or false";
 	
 	private BooleanValueType  type = new BooleanValueType();
 
@@ -14,40 +18,45 @@ public class BooleanValueTypeTest {
 	public void id() {
 		assertEquals("boolean", type.getId());
 	}
+	
+	@Test
+	public void no_parameter() {
+		assertFalse(type.acceptParameter());
+	}
 
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_novalue_noparam() {
-		assertNull(type.validate(null, null));
+		assertValidateNOK(type, null, null, REASON);
 	}
 
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_novalue_param() {
-		assertNull(type.validate(null, "xxx"));
+		assertValidateNOK(type, null, "xxx", NO_PARAMETER_REASON);
 	}
 
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_blankvalue_param() {
-		assertNull(type.validate("", "xxx"));
+		assertValidateNOK(type, "", "xxx", NO_PARAMETER_REASON);
 	}
 
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_blankvalue_blankparam() {
-		assertNull(type.validate("", ""));
+		assertValidateNOK(type, "", null, REASON);
 	}
 
-	@Test(expected = ValueTypeValidationException.class)
+	@Test
 	public void validate_value_noparam() {
-		assertNull(type.validate("zzz", null));
+		assertValidateNOK(type, "zzz", null, REASON);
 	}
 	
 	@Test
 	public void validate_value_param_true() {
-		assertNull(type.validate("true", ""));
+		assertValidateOK(type, "true", null);
 	}
 	
 	@Test
 	public void validate_value_param_false() {
-		assertNull(type.validate("false", ""));
+		assertValidateOK(type, "false", null);
 	}
 
 }

@@ -1,5 +1,8 @@
 package net.myconfig.service.type;
 
+import net.sf.jstring.Localizable;
+import net.sf.jstring.LocalizableMessage;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -14,23 +17,38 @@ public class IntegerValueType extends AbstractValueType {
 	public IntegerValueType() {
 		super("integer");
 	}
-	
+
 	@Override
-	protected boolean doValidate(String value, String param) {
-		// Gets the integer value
-		int i = getInteger(value, param);
-		// Gets the range
-		Range<Integer> range = getRange(param);
-		// Checks the range
-		return range.contains(i);
+	public boolean acceptParameter() {
+		return true;
 	}
 
-	protected int getInteger(String value, String param) {
+	@Override
+	public Localizable validateParameter(String param) {
 		try {
-			return Integer.parseInt(value, 10);
+			getRange(param);
+			return null;
 		} catch (NumberFormatException ex) {
-			throw exception(value, param);
+			return new LocalizableMessage("integer.badparam", param);
 		}
+	}
+
+	@Override
+	protected boolean doValidate(String value, String param) {
+		try {
+			// Gets the integer value
+			int i = getInteger(value, param);
+			// Gets the range
+			Range<Integer> range = getRange(param);
+			// Checks the range
+			return range.contains(i);
+		} catch (NumberFormatException ex) {
+			return false;
+		}
+	}
+
+	protected int getInteger(String value, String param) throws NumberFormatException {
+		return Integer.parseInt(value, 10);
 	}
 
 	protected Range<Integer> getRange(String param) {

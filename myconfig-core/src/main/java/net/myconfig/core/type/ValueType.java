@@ -1,6 +1,6 @@
 package net.myconfig.core.type;
 
-import net.myconfig.core.InputException;
+import net.sf.jstring.Localizable;
 
 public interface ValueType {
 	
@@ -8,6 +8,10 @@ public interface ValueType {
 	
 	String getId();
 	
-	InputException validate (String value, String param);
+	boolean acceptParameter();
+	
+	Localizable validateParameter (String param);
+	
+	Localizable validate (String value, String param);
 
 }

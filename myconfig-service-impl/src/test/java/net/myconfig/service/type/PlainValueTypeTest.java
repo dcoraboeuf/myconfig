@@ -1,7 +1,10 @@
 package net.myconfig.service.type;
 
+import static net.myconfig.service.type.ValueTypeTestUtils.NO_PARAMETER_REASON;
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateNOK;
+import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateOK;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 
 import org.junit.Test;
 
@@ -15,23 +18,28 @@ public class PlainValueTypeTest {
 	}
 	
 	@Test
+	public void no_parameter() {
+		assertFalse(type.acceptParameter());
+	}
+	
+	@Test
 	public void validate_novalue_noparam() {
-		assertNull(type.validate(null, null));
+		assertValidateOK(type, null, null);
 	}
 	
 	@Test
 	public void validate_novalue_param() {
-		assertNull(type.validate(null, "xxx"));
+		assertValidateNOK(type, null, "xxx", NO_PARAMETER_REASON);
 	}
 	
 	@Test
 	public void validate_value_param() {
-		assertNull(type.validate("zzz", "xxx"));
+		assertValidateNOK(type, "zzz", "xxx", "No parameter is required.");
 	}
 	
 	@Test
 	public void validate_value_noparam() {
-		assertNull(type.validate("zzz", null));
+		assertValidateOK(type, "zzz", null);
 	}
 
 }
