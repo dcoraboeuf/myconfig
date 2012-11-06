@@ -35,7 +35,7 @@ public interface MyConfigInterface {
 
 	Ack keyDelete(String id, String name);
 
-	Ack keyCreate(String id, String name, String description);
+	Ack keyCreate(String id, String name, String description, String typeId, String typeParam);
 
 	Ack keyUpdate(String id, String name, String description);
 

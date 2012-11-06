@@ -22,7 +22,9 @@ public final class MapBuilder<K, V> {
 	}
 
 	public MapBuilder<K, V> put(K key, V value) {
-		map.put(key, value);
+		if (value != null) {
+			map.put(key, value);
+		}
 		return this;
 	}
 

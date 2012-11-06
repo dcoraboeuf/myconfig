@@ -149,8 +149,8 @@ public class UIControllerTest {
 
 	@Test
 	public void key_create() {
-		when(service.createKey(APP, KEY, DESCRIPTION)).thenReturn(Ack.OK);
-		Ack ack = ui.keyCreate(APP, KEY, DESCRIPTION);
+		when(service.createKey(APP, KEY, DESCRIPTION, null, null)).thenReturn(Ack.OK);
+		Ack ack = ui.keyCreate(APP, KEY, DESCRIPTION, null, null);
 		assertTrue(ack.isSuccess());
 	}
 

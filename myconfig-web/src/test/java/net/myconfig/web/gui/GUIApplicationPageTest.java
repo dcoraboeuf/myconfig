@@ -209,9 +209,9 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	public void key_delete() throws Exception {
 		// Test data
 		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("key_delete_"));
-		ui.keyCreate(app.getId(), "key1", "Key 1");
-		ui.keyCreate(app.getId(), "key2", "Key 2");
-		ui.keyCreate(app.getId(), "key3", "Key 3");
+		ui.keyCreate(app.getId(), "key1", "Key 1", null, null);
+		ui.keyCreate(app.getId(), "key2", "Key 2", null, null);
+		ui.keyCreate(app.getId(), "key3", "Key 3", null, null);
 		// Deletes one key
 		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/key/delete", "name", "key2");
 		assertNotNull (mav);
@@ -222,8 +222,8 @@ public class GUIApplicationPageTest extends AbstractConfigurationTest {
 	public void key_delete_none() throws Exception {
 		// Test data
 		ApplicationSummary app = ui.applicationCreate(helper.generateId("APP"), helper.generateName("key_delete_none_"));
-		ui.keyCreate(app.getId(), "key1", "Key 1");
-		ui.keyCreate(app.getId(), "key2", "Key 2");
+		ui.keyCreate(app.getId(), "key1", "Key 1", null, null);
+		ui.keyCreate(app.getId(), "key2", "Key 2", null, null);
 		// Deletes one key
 		ModelAndView mav = helper.run("POST", "/gui/application/" + app.getId() + "/key/delete", "name", "key3");
 		assertNotNull (mav);

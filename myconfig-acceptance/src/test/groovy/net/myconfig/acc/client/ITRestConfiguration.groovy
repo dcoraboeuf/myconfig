@@ -14,6 +14,8 @@ import net.myconfig.core.model.Key
 import org.junit.Before
 import org.junit.Test
 
+// FIXME Integration test for the type of a key
+
 class ITRestConfiguration extends AbstractClientUseCase {
 	
 	String id
@@ -34,8 +36,8 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		client().environmentCreate(id, "UAT")
 		client().environmentCreate(id, "PROD")
 		// Keys
-		client().keyCreate(id, "jdbc.user", "User used to connect to the database")
-		client().keyCreate(id, "jdbc.password", "Password used to connect to the database")
+		client().keyCreate(id, "jdbc.user", "User used to connect to the database", null, null)
+		client().keyCreate(id, "jdbc.password", "Password used to connect to the database", null, null)
 		// Matrix & configuration
 		List<ConfigurationUpdate> updates = new ArrayList<ConfigurationUpdate>()
 		["1.0", "1.1", "1.2"].each() {
@@ -106,7 +108,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	@Test
 	void createUpdateAndDeleteKey() {
 		// Creates a version
-		client().keyCreate(id, "mykey", "A description")
+		client().keyCreate(id, "mykey", "A description", null, null)
 		// Checks it has been created
 		def key = client().applicationConfiguration(id).getKeySummaryList().find { it.getName() == "mykey" }
 		assert key != null
@@ -142,7 +144,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 	@Test
 	void matrix_remove_and_add() {
 		// Another key
-		client().keyCreate(id, "key.test", "Test key")
+		client().keyCreate(id, "key.test", "Test key", null, null)
 		try {
 			// Check before test
 			def matrix = client().keyVersionConfiguration(id)

@@ -123,8 +123,8 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	
 	@Override
 	@RequestMapping(value = "/key/{id}/{name}/create", method = RequestMethod.POST)
-	public @ResponseBody Ack keyCreate(@PathVariable String id, @PathVariable String name, @RequestParam String description) {
-		return getMyConfigService().createKey (id, name, description);
+	public @ResponseBody Ack keyCreate(@PathVariable String id, @PathVariable String name, @RequestParam String description, @RequestParam(required = false) String typeId, @RequestParam(required = false) String typeParam) {
+		return getMyConfigService().createKey (id, name, description, typeId, typeParam);
 	}
 	
 	@Override

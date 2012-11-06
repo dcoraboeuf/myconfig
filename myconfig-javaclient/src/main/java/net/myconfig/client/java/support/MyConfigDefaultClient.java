@@ -111,10 +111,16 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	/**
 	 * <p>POST /ui/key/{application}/{name}/create
 	 * <p>param: description
+	 * <p>param: typeId
+	 * <p>param: typeParam
 	 */
 	@Override
-	public Ack keyCreate(String id, String name, String description) {
-		return post(format("/ui/key/%s/%s/create", id, name), Ack.class, Collections.singletonMap("description", description));
+	public Ack keyCreate(String id, String name, String description, String typeId, String typeParam) {
+		return post(format("/ui/key/%s/%s/create", id, name), Ack.class,
+				MapBuilder.<String,String>create()
+				.put("description", description)
+				.put("typeId", typeId)
+				.put("typeParam", typeParam).build());
 	}
 
 	/**

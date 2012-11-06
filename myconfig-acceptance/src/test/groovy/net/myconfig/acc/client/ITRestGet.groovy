@@ -34,8 +34,8 @@ class ITRestGet extends AbstractClientUseCase {
 		client().environmentCreate(id, "UAT");
 		client().environmentCreate(id, "PROD");
 		// Keys
-		client().keyCreate(id, "jdbc.user", "User used to connect to the database");
-		client().keyCreate(id, "jdbc.password", "Password used to connect to the database");
+		client().keyCreate(id, "jdbc.user", "User used to connect to the database", null, null);
+		client().keyCreate(id, "jdbc.password", "Password used to connect to the database", null, null);
 		// Matrix & configuration
 		List<ConfigurationUpdate> updates = new ArrayList<ConfigurationUpdate>()
 		["1.0", "1.1", "1.2"].each() {

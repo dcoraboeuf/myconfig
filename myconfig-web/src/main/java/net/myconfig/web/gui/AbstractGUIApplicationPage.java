@@ -49,8 +49,8 @@ public abstract class AbstractGUIApplicationPage extends AbstractGUIPage impleme
 	
 	@Override
 	@RequestMapping(value = "/{application}/key/create", method = RequestMethod.POST)
-	public String keyCreate(Model model, @PathVariable String application, String name, String description) {
-		ui.keyCreate (application, name, description);
+	public String keyCreate(Model model, @PathVariable String application, String name, String description, String typeId, String typeParam) {
+		ui.keyCreate (application, name, description, typeId, typeParam);
 		return backToPage (application);
 	}
 
