@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 public abstract class AbstractRESTController {
 	
-	private final Strings strings;
+	protected final Strings strings;
 	private final MyConfigService myConfigService;
 	private final ErrorHandler errorHandler;
 	

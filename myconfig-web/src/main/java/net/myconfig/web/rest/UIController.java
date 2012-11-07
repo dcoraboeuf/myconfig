@@ -1,5 +1,7 @@
 package net.myconfig.web.rest;
 
+import java.util.Locale;
+
 import net.myconfig.core.AppFunction;
 import net.myconfig.core.EnvFunction;
 import net.myconfig.core.UserFunction;
@@ -18,6 +20,7 @@ import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.web.support.ErrorHandler;
+import net.sf.jstring.Localizable;
 import net.sf.jstring.Strings;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -235,6 +238,28 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/user/{user}/application/{application}/environment/{environment}/function/{fn}/remove", method = RequestMethod.POST)
 	public @ResponseBody Ack envFunctionRemove(@PathVariable String user, @PathVariable String application, @PathVariable String environment, @PathVariable EnvFunction fn) {
 		return securityService.envFunctionRemove (application, user, environment, fn);
+	}
+	
+	@Override
+	@RequestMapping(value = "/type/{typeId}/validate/param", method = RequestMethod.POST)
+	public @ResponseBody String typeParameterValidate(Locale locale, @PathVariable String typeId, @RequestParam String typeParam) {
+		Localizable message = getMyConfigService().validateTypeParameter (typeId, typeParam);
+		if (message != null) {
+			return message.getLocalizedMessage(strings, locale);
+		} else {
+			return "";
+		}
+	}
+	
+	@Override
+	@RequestMapping(value = "/type/{typeId}/validate/value", method = RequestMethod.POST)
+	public @ResponseBody String typeValueValidate(Locale locale, @PathVariable String typeId, @RequestParam String typeParam, @RequestParam String value) {
+		Localizable message = getMyConfigService().validateTypeValue (typeId, typeParam, value);
+		if (message != null) {
+			return message.getLocalizedMessage(strings, locale);
+		} else {
+			return "";
+		}
 	}
 
 }

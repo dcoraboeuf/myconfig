@@ -15,6 +15,7 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserApplicationRights;
 import net.myconfig.core.model.VersionConfiguration;
+import net.sf.jstring.Localizable;
 
 public interface MyConfigService {
 
@@ -65,5 +66,9 @@ public interface MyConfigService {
 	ApplicationUsers getApplicationUsers(String application);
 
 	EnvironmentUsers getEnvironmentUsers(String application, String environment);
+
+	Localizable validateTypeParameter(String typeId, String parameter);
+
+	Localizable validateTypeValue(String typeId, String parameter, String value);
 
 }

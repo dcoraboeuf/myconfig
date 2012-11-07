@@ -926,5 +926,15 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		// OK
 		return result;
 	}
+	
+	@Override
+	public Localizable validateTypeParameter(String typeId, String parameter) {
+		return valueTypeFactory.getValueType(typeId).validateParameter(parameter);
+	}
+	
+	@Override
+	public Localizable validateTypeValue(String typeId, String parameter, String value) {
+		return valueTypeFactory.getValueType(typeId).validate(value, parameter);
+	}
 
 }

@@ -1,5 +1,7 @@
 package net.myconfig.core;
 
+import java.util.Locale;
+
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
@@ -78,5 +80,9 @@ public interface MyConfigInterface {
 	Ack envFunctionAdd(String user, String application, String environment, EnvFunction fn);
 
 	Ack envFunctionRemove(String user, String application, String environment, EnvFunction fn);
+	
+	String typeParameterValidate (Locale locale, String typeId, String parameter);
+	
+	String typeValueValidate (Locale locale, String typeId, String parameter, String value);
 
 }

@@ -5,6 +5,7 @@ import static java.lang.String.format;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
+import java.util.Locale;
 
 import net.myconfig.client.java.MyConfigClient;
 import net.myconfig.core.AppFunction;
@@ -22,6 +23,7 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.type.ValueType;
 import net.myconfig.core.utils.MapBuilder;
 
 import org.apache.commons.io.IOUtils;
@@ -294,6 +296,28 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	@Override
 	public EnvironmentUsers environmentUsers(String application, String environment) {
 		return get(format("/ui/application/%s/environment/%s/users", application, environment), EnvironmentUsers.class);
+	}
+	
+	/**
+	 * POST /ui/type/{typeId}/validate/param
+	 */
+	@Override
+	public String typeParameterValidate(Locale locale, String typeId, String parameter) {
+		// TODO Locale
+		return post(format("/ui/type/%s/validate/param", normalizeTypeId(typeId)), String.class, MapBuilder.<String, String>create().put("typeParam",parameter).build());
+	}
+
+	protected String normalizeTypeId(String typeId) {
+		return StringUtils.isBlank(typeId) ? ValueType.PLAIN : typeId;
+	}
+	
+	/**
+	 * POST /ui/type/{typeId}/validate/value
+	 */
+	@Override
+	public String typeValueValidate(Locale locale, String typeId, String parameter, String value) {
+		// TODO Locale
+		return post(format("/ui/type/%s/validate/value", normalizeTypeId(typeId)), String.class, MapBuilder.<String, String>create().put("typeParam",parameter).put("value",value).build());
 	}
 	
 	@Override
