@@ -15,6 +15,7 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserApplicationRights;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.type.ValueTypeDescriptions;
 import net.sf.jstring.Localizable;
 
 public interface MyConfigService {
@@ -70,5 +71,7 @@ public interface MyConfigService {
 	Localizable validateTypeParameter(String typeId, String parameter);
 
 	Localizable validateTypeValue(String typeId, String parameter, String value);
+
+	ValueTypeDescriptions getValueTypes();
 
 }

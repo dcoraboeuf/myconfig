@@ -12,6 +12,14 @@ import org.junit.Test
 
 class ITRestTypeValidation extends AbstractClientUseCase {
 	
+	// All types
+	
+	@Test
+	void types() {
+		def list = client().types()
+		assert list.getDescriptions().find { it.getId() == "plain" } != null
+	}
+	
 	// Parameters
 	
 	@Test

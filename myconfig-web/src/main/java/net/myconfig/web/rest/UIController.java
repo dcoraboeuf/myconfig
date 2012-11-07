@@ -17,6 +17,7 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.web.support.ErrorHandler;
@@ -260,6 +261,12 @@ public class UIController extends AbstractRESTController implements UIInterface 
 		} else {
 			return "";
 		}
+	}
+	
+	@Override
+	@RequestMapping(value = "/types", method = RequestMethod.GET)
+	public @ResponseBody ValueTypeDescriptions types() {
+		return getMyConfigService().getValueTypes();
 	}
 
 }

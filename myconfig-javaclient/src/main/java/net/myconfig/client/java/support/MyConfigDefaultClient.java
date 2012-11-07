@@ -24,6 +24,7 @@ import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.type.ValueType;
+import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.core.utils.MapBuilder;
 
 import org.apache.commons.io.IOUtils;
@@ -306,10 +307,6 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 		// TODO Locale
 		return post(format("/ui/type/%s/validate/param", normalizeTypeId(typeId)), String.class, MapBuilder.<String, String>create().put("typeParam",parameter).build());
 	}
-
-	protected String normalizeTypeId(String typeId) {
-		return StringUtils.isBlank(typeId) ? ValueType.PLAIN : typeId;
-	}
 	
 	/**
 	 * POST /ui/type/{typeId}/validate/value
@@ -318,6 +315,18 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	public String typeValueValidate(Locale locale, String typeId, String parameter, String value) {
 		// TODO Locale
 		return post(format("/ui/type/%s/validate/value", normalizeTypeId(typeId)), String.class, MapBuilder.<String, String>create().put("typeParam",parameter).put("value",value).build());
+	}
+	
+	/**
+	 * GET /ui/types
+	 */
+	@Override
+	public ValueTypeDescriptions types() {
+		return get("/ui/types", ValueTypeDescriptions.class);
+	}
+
+	protected String normalizeTypeId(String typeId) {
+		return StringUtils.isBlank(typeId) ? ValueType.PLAIN : typeId;
 	}
 	
 	@Override

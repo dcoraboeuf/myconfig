@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Map;
 
 import net.myconfig.core.type.ValueType;
+import net.myconfig.core.type.ValueTypeDescription;
+import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.service.api.type.ValueTypeFactory;
 import net.myconfig.service.api.type.ValueTypeNotFoundException;
 
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 
 @Service
@@ -41,6 +44,16 @@ public class DefaultValueTypeFactory implements ValueTypeFactory {
 				throw new ValueTypeNotFoundException(id);
 			}
 		}
+	}
+	
+	@Override
+	public ValueTypeDescriptions getValueTypeDescriptions() {
+		return new ValueTypeDescriptions(Collections2.transform(index.values(), new Function<ValueType, ValueTypeDescription>() {
+			@Override
+			public ValueTypeDescription apply (ValueType type) {
+				return new ValueTypeDescription(type.getId(), type.acceptParameter());
+			}
+		}));
 	}
 
 }

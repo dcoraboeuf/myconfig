@@ -63,6 +63,7 @@ import net.myconfig.core.model.Version;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.model.VersionSummary;
 import net.myconfig.core.type.ValueType;
+import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.AppGrant;
 import net.myconfig.service.api.security.AppGrantParam;
@@ -935,6 +936,11 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Override
 	public Localizable validateTypeValue(String typeId, String parameter, String value) {
 		return valueTypeFactory.getValueType(typeId).validate(value, parameter);
+	}
+	
+	@Override
+	public ValueTypeDescriptions getValueTypes() {
+		return valueTypeFactory.getValueTypeDescriptions();
 	}
 
 }

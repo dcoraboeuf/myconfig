@@ -14,6 +14,7 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.type.ValueTypeDescriptions;
 
 public interface MyConfigInterface {
 	
@@ -80,6 +81,8 @@ public interface MyConfigInterface {
 	Ack envFunctionAdd(String user, String application, String environment, EnvFunction fn);
 
 	Ack envFunctionRemove(String user, String application, String environment, EnvFunction fn);
+	
+	ValueTypeDescriptions types ();
 	
 	String typeParameterValidate (Locale locale, String typeId, String parameter);
 	
