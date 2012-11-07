@@ -58,7 +58,11 @@
 						<tr class="<@item_row_class index=key_index />">
 							<td class="configuration-row-header">
 								<div class="configuration-row-header-name"><a href="gui/configuration/key/${environmentConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
-								<div class="configuration-row-header-description">${ellipsis(key.description,30)?html}</div>
+								<div class="configuration-row-header-description">
+									${ellipsis(key.description,30)?html}<br/>
+									<@lh key="model.key.type.id" /> ${key.typeId!''?html}<br/>
+									<@lh key="model.key.type.param" /> ${key.typeFormat!""?html}
+								</div>
 							</td>
 							<#list environmentConfiguration.versionValuesPerKeyList as versionConfiguration>
 								<td class="configuration-row-value">
