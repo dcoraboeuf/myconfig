@@ -1,6 +1,7 @@
 package net.myconfig.service.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,9 +17,6 @@ import net.myconfig.test.AbstractIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-
 public class ValueTypeFactoryTest extends AbstractIntegrationTest {
 
 	@Autowired
@@ -31,12 +29,9 @@ public class ValueTypeFactoryTest extends AbstractIntegrationTest {
 		List<ValueTypeDescription> descriptions = list.getDescriptions();
 		assertNotNull(descriptions);
 		assertTrue(descriptions.size() > 1);
-		assertNotNull(Iterables.find(descriptions, new Predicate<ValueTypeDescription>() {
-			@Override
-			public boolean apply(ValueTypeDescription o) {
-				return "plain".equals(o.getId());
-			}
-		}));
+		// The 'plain' type must be first
+		assertEquals("plain", descriptions.get(0).getId());
+		assertFalse(descriptions.get(0).isParameterized());
 	}
 
 	@Test(expected = ValueTypeNotFoundException.class)
