@@ -1,0 +1,19 @@
+<dataset>
+
+	<APPLICATION id="APP" name="myapp" />
+	
+	<VERSION application="APP" name="1.0" />
+	<VERSION application="APP" name="1.1" />
+	<VERSION application="APP" name="1.2" />
+	
+	<ENVIRONMENT application="APP" name="DEV" />
+	<ENVIRONMENT application="APP" name="ACC" />
+	<ENVIRONMENT application="APP" name="UAT" />
+	<ENVIRONMENT application="APP" name="PROD" />
+	
+	<APPKEY application="APP" name="text" description="Some text" typeid="" typeparam="" />
+	<APPKEY application="APP" name="text2" description="Some other text" typeid="plain" typeparam="" />
+	<APPKEY application="APP" name="bool" description="Some boolean" typeid="boolean" typeparam="" />
+	<APPKEY application="APP" name="regex" description="Some regular expression" typeid="regex" typeparam="\d+" />
+
+</dataset>

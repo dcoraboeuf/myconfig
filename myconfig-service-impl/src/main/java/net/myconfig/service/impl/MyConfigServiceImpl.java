@@ -94,6 +94,7 @@ import net.myconfig.service.validation.KeyValidation;
 import net.myconfig.service.validation.VersionValidation;
 import net.sf.jstring.Localizable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
@@ -280,11 +281,16 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			public KeySummary mapRow(ResultSet rs, int i) throws SQLException {
 				String key = rs.getString(NAME);
 				String description = rs.getString(SQLColumns.DESCRIPTION);
+				String typeId = rs.getString(SQLColumns.TYPEID);
+				if (StringUtils.isBlank(typeId)) {
+					typeId = ValueType.PLAIN;
+				}
+				String typeParam = rs.getString(SQLColumns.TYPEPARAM);
 				int versionCount = rs.getInt(SQLColumns.VERSION_COUNT);
 				int environmentCount = rs.getInt(SQLColumns.ENVIRONMENT_COUNT);
 				int valueCount = rs.getInt(SQLColumns.VALUE_COUNT);
 				int configCount = versionCount * environmentCount;
-				return new KeySummary(key, description, versionCount, configCount, valueCount);
+				return new KeySummary(key, description, typeId, typeParam, versionCount, configCount, valueCount);
 			}
 		});
 		// OK

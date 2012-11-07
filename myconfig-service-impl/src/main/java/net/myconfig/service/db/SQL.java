@@ -73,7 +73,7 @@ public interface SQL {
 
 	String KEYS = "select * from appkey where application = :application order by name";
 
-	String KEY_SUMMARIES = "select k.name, k.description, COUNT(vk.version) as versionCount, " +
+	String KEY_SUMMARIES = "select k.name, k.description, k.typeId, k.typeParam, COUNT(vk.version) as versionCount, " +
 			"(select COUNT(*) from environment e where e.application = k.application) as environmentCount, " + 
 			"(select COUNT(*) from config c where c.application = k.application and c.appkey  = k.name) as valueCount " +
 			"from appkey k " +
