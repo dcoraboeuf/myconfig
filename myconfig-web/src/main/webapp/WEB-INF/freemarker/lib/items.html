@@ -81,7 +81,7 @@
 
 <#macro item_column field item class="">
 	<td class="item-column item-column-${field} ${class}">
-		${item[field]?html}
+		${item[field]!""?html}
 	</td>
 </#macro>
 
