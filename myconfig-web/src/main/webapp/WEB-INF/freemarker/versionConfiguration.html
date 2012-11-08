@@ -57,7 +57,7 @@
 					<#list versionConfiguration.keyList as key>
 						<tr class="<@item_row_class index=key_index />">
 							<td class="configuration-row-header">
-								<div class="configuration-row-header-name"><a href="gui/configuration/key/${versionConfiguration.id}/${key.name?html}">${key.name?html}</a></div>
+								<div class="configuration-row-header-name"><a href="gui/configuration/key/${versionConfiguration.id}/${key.name?html}" title="<@key_type key=key/>">${key.name?html}</a></div>
 								<div class="configuration-row-header-description">${ellipsis(key.description,30)?html}</div>
 							</td>
 							<#list versionConfiguration.environmentValuesPerKeyList as environmentConfiguration>

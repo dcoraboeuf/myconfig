@@ -1,3 +1,8 @@
+// Activation of tooltips
+$(function() {
+	$( document ).tooltip();
+});
+
 var configuration = function () {
 	
 	var configurationChanges = {};
