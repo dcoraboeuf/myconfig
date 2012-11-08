@@ -786,9 +786,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new EnvironmentConfiguration(APP, "myapp", "DEV", "ACC", "PROD",
 					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database"),
-							new Key("jdbc.url", "URL used to connect to the database"),
-							new Key("jdbc.user", "User used to connect to the database")),
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<ConditionalValue>(
 									"1.0",

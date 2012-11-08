@@ -1,0 +1,10 @@
+<dataset>
+
+	<APPLICATION id="APP" name="myapp" />
+	
+	<APPKEY application="APP" name="regex" description="Some regular expression" typeId="regex" typeParam="\d+" />
+	<APPKEY application="APP" name="text" description="Some text" />
+	<APPKEY application="APP" name="text2" description="Some other text" typeId="plain" />
+	<APPKEY application="APP" name="bool" description="Some boolean" typeId="boolean" />
+
+</dataset>

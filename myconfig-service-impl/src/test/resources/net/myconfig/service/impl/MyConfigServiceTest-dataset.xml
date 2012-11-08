@@ -19,9 +19,9 @@
 	<ENVIRONMENT application="APP2" name="UAT" />
 	<ENVIRONMENT application="APP2" name="PROD" />
 	
+	<APPKEY application="APP" name="jdbc.url" description="URL used to connect to the database" typeid="regex" typeparam="jdbc:.*" />
 	<APPKEY application="APP" name="jdbc.user" description="User used to connect to the database" />
 	<APPKEY application="APP" name="jdbc.password" description="Password used to connect to the database" />
-	<APPKEY application="APP" name="jdbc.url" description="URL used to connect to the database" />
 	
 	<APPKEY application="APP2" name="key1" description="Key 1" />
 	<APPKEY application="APP2" name="key2" description="Key 2" />

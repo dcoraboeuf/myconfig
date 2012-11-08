@@ -114,13 +114,6 @@ import com.google.common.collect.Lists;
 @Service
 public class MyConfigServiceImpl extends AbstractSecureService implements MyConfigService {
 
-	public static class KeyRowMapper implements RowMapper<Key> {
-		@Override
-		public Key mapRow(ResultSet rs, int i) throws SQLException {
-			return new Key(rs.getString(NAME), rs.getString(DESCRIPTION), rs.getString(TYPEID), rs.getString(TYPEPARAM));
-		}
-	}
-
 	private final String versionNumber;
 	private final ValueTypeFactory valueTypeFactory;
 
