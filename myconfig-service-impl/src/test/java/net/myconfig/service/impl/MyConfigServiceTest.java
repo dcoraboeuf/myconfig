@@ -766,9 +766,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 									"1.3",
 									Arrays.asList("jdbc.password", "jdbc.url", "jdbc.user"))),
 					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database"),
-							new Key("jdbc.url", "URL used to connect to the database"),
-							new Key("jdbc.user", "User used to connect to the database"))
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null))
 					),
 				configuration);
 	}
@@ -835,8 +835,8 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new EnvironmentConfiguration("APP2", "anotherapp", "DEV", "ACC", "PROD",
 					Arrays.asList(
-							new Key("key1", "Key 1"),
-							new Key("key2", "Key 2")),
+							new Key("key1", "Key 1", "plain", null),
+							new Key("key2", "Key 2", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<ConditionalValue>(
 									"1.0.0",
@@ -863,9 +863,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new EnvironmentConfiguration(APP, "myapp", "UAT", "PROD", null,
 					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database"),
-							new Key("jdbc.url", "URL used to connect to the database"),
-							new Key("jdbc.user", "User used to connect to the database")),
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<ConditionalValue>(
 									"1.0",
@@ -908,9 +908,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new EnvironmentConfiguration(APP, "myapp", "ACC", null, "DEV",
 					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database"),
-							new Key("jdbc.url", "URL used to connect to the database"),
-							new Key("jdbc.user", "User used to connect to the database")),
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<ConditionalValue>(
 									"1.0",
@@ -961,7 +961,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.url");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new KeyConfiguration(APP, "myapp", new Key("jdbc.url", "URL used to connect to the database"), "jdbc.password", "jdbc.user",
+				new KeyConfiguration(APP, "myapp", new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"), "jdbc.password", "jdbc.user",
 					Arrays.asList(
 							new Version("1.2"),
 							new Version("1.3")),
@@ -997,7 +997,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.password");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new KeyConfiguration(APP, "myapp", new Key("jdbc.password", "Password used to connect to the database"), null, "jdbc.url",
+				new KeyConfiguration(APP, "myapp", new Key("jdbc.password", "Password used to connect to the database", "plain", null), null, "jdbc.url",
 					Arrays.asList(
 							new Version("1.0"),
 							new Version("1.1"),
@@ -1043,7 +1043,7 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.user");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new KeyConfiguration(APP, "myapp", new Key("jdbc.user", "User used to connect to the database"), "jdbc.url", null,
+				new KeyConfiguration(APP, "myapp", new Key("jdbc.user", "User used to connect to the database", "plain", null), "jdbc.url", null,
 					Arrays.asList(
 							new Version("1.0"),
 							new Version("1.1"),
@@ -1101,8 +1101,8 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new VersionConfiguration(APP, "myapp", "1.1", "1.0", "1.2",
 					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database"),
-							new Key("jdbc.user", "User used to connect to the database")),
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
 									"ACC",
@@ -1141,8 +1141,8 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new VersionConfiguration("APP2", "anotherapp", "1.0.1", "1.0.0", null,
 					Arrays.asList(
-							new Key("key1", "Key 1"),
-							new Key("key2", "Key 2")),
+							new Key("key1", "Key 1", "plain", null),
+							new Key("key2", "Key 2", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
 									"ACC",
@@ -1169,9 +1169,9 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new VersionConfiguration(APP, "myapp", "1.3", "1.2", null,
 					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database"),
-							new Key("jdbc.url", "URL used to connect to the database"),
-							new Key("jdbc.user", "User used to connect to the database")),
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
 									"ACC",
@@ -1198,8 +1198,8 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		assertJSONEquals (
 				new VersionConfiguration(APP, "myapp", "1.0", null, "1.1",
 					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database"),
-							new Key("jdbc.user", "User used to connect to the database")),
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
 									"ACC",
