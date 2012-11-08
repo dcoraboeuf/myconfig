@@ -5,10 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
-import net.myconfig.core.model.Key;
-import net.myconfig.core.model.MatrixConfiguration;
-import net.myconfig.core.model.MatrixVersionConfiguration;
-
 import org.junit.Test;
 
 public class MatrixConfigurationTest {
@@ -45,9 +41,9 @@ public class MatrixConfigurationTest {
 								Arrays.asList("a", "b", "c"))
 				),
 				Arrays.asList(
-						new Key("a", "aaa"),
-						new Key("b", "bbb"),
-						new Key("c", "ccc")
+						new Key("a", "aaa", "plain", null),
+						new Key("b", "bbb", "plain", null),
+						new Key("c", "ccc", "plain", null)
 				)
 		);
 	}

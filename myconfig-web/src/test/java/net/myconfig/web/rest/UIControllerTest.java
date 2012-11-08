@@ -127,7 +127,7 @@ public class UIControllerTest {
 
 	@Test
 	public void key_configuration() {
-		KeyConfiguration expectedConf = new KeyConfiguration(APP, APP_NAME, new Key(KEY, ""), null, null, Collections.<Version> emptyList(), Collections.<IndexedValues<String>> emptyList());
+		KeyConfiguration expectedConf = new KeyConfiguration(APP, APP_NAME, new Key(KEY, "", "plain", null), null, null, Collections.<Version> emptyList(), Collections.<IndexedValues<String>> emptyList());
 		when(service.getKeyConfiguration(APP, KEY)).thenReturn(expectedConf);
 		KeyConfiguration actualConf = ui.keyConfiguration(APP, KEY);
 		assertSame(expectedConf, actualConf);
