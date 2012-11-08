@@ -12,10 +12,9 @@ public class Key {
 	private final String typeId;
 	private final String typeParam;
 	
+	@Deprecated
 	public Key(String name, String description) {
 		this(name, description, null, null);
 	}
-	
-	
 
 }

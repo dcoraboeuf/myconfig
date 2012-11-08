@@ -114,6 +114,13 @@ import com.google.common.collect.Lists;
 @Service
 public class MyConfigServiceImpl extends AbstractSecureService implements MyConfigService {
 
+	public static class KeyRowMapper implements RowMapper<Key> {
+		@Override
+		public Key mapRow(ResultSet rs, int i) throws SQLException {
+			return new Key(rs.getString(NAME), rs.getString(DESCRIPTION), rs.getString(TYPEID), rs.getString(TYPEPARAM));
+		}
+	}
+
 	private final String versionNumber;
 	private final ValueTypeFactory valueTypeFactory;
 
@@ -476,12 +483,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		MapSqlParameterSource idCriteria = new MapSqlParameterSource("application", id);
 		String name = getApplicationName(id);
 		// List of keys		
-		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS, idCriteria, new RowMapper<Key>() {
-			@Override
-			public Key mapRow(ResultSet rs, int i) throws SQLException {
-				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
-			}
-		});
+		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS, idCriteria, new KeyRowMapper());
 		// List of versions
 		List<Version> versionList = getNamedParameterJdbcTemplate().query(SQL.VERSIONS, idCriteria, new RowMapper<Version>() {
 			@Override
@@ -526,12 +528,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		// Filters the list of environments
 		environments = filterEnvironments(application, environments);
 		// List of keys for the version
-		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_VERSION, versionCriteria, new RowMapper<Key>() {
-			@Override
-			public Key mapRow(ResultSet rs, int i) throws SQLException {
-				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
-			}
-		});
+		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_VERSION, versionCriteria, new KeyRowMapper());
 		// Gets the list of values per version x application
 		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_VERSION, applicationCriteria);
 		final Map<String,Map<String,String>> environmentValues = new TreeMap<String, Map<String,String>>();
@@ -587,12 +584,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		/*
 		 * The query does not depend on the environment.
 		 */
-		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_ENVIRONMENT, environmentCriteria, new RowMapper<Key>() {
-			@Override
-			public Key mapRow(ResultSet rs, int i) throws SQLException {
-				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
-			}
-		});
+		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_ENVIRONMENT, environmentCriteria, new KeyRowMapper());
 		// Gets the matrix of key x version
 		MatrixConfiguration matrix = keyVersionConfiguration(application);
 		// Gets the list of values per environment x application
@@ -666,12 +658,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		String name = getApplicationName(application);
 		
 		// Key information
-		Key key = getNamedParameterJdbcTemplate().queryForObject(SQL.KEY, keyCriteria, new RowMapper<Key>() {
-			@Override
-			public Key mapRow(ResultSet rs, int index) throws SQLException {
-				return new Key(rs.getString(NAME), rs.getString(DESCRIPTION));
-			}
-		});
+		Key key = getNamedParameterJdbcTemplate().queryForObject(SQL.KEY, keyCriteria, new KeyRowMapper());
 		
 		// List of environments
 		List<Environment> environments = getNamedParameterJdbcTemplate().query(SQL.ENVIRONMENTS, applicationCriteria, new RowMapper<Environment>() {
