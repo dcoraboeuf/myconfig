@@ -15,6 +15,11 @@ String.prototype.html = function() {
 	return $('<i></i>').text(this).html();
 };
 
+String.prototype.htmlWithLines = function() {
+	var text = this.html();
+	return text.replace(/\n/g, '<br/>');
+}
+
 function loc () {
 	var code = arguments[0];
 	var text = l[code];

@@ -45,7 +45,7 @@
 			</tbody>
 		</table>
 		<@form title="matrix.newKey">
-			<@key_create action="gui/matrix/${configuration.id}/key/create" />
+			<@key_create application=configuration.id />
 		</@form>
 	</@panel>
 	<#include "/application_navigation.html" />

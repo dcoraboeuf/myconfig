@@ -38,7 +38,7 @@
 								editField="name"
 								errorKey="key_error">
 								<@form>
-									<@key_create formClass="crud" action="gui/application/${application.id}/key/create" />
+									<@key_create formClass="crud" application=application.id />
 								</@form>
 							</@items_crud>
 							<div id="dialog-key-update" style="display:none;">
