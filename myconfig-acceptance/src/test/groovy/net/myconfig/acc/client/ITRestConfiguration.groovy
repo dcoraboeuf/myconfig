@@ -209,7 +209,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		assert id == conf.getId()
 		assert name == conf.getName()
 		assert ["jdbc.password", null] == [ conf.getPreviousKey(), conf.getNextKey()]
-		assert new Key("jdbc.user", "User used to connect to the database") == conf.getKey()
+		assert new Key("jdbc.user", "User used to connect to the database", "plain", null) == conf.getKey()
 		assert ["1.0", "1.1", "1.2"] == conf.getVersionList()*.getName()
 		["DEV", "ACC", "UAT", "PROD"].each {
 			env ->
