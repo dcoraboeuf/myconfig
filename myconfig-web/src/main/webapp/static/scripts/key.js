@@ -17,6 +17,17 @@ var KEY = function () {
 			&& myconfig.validateTextAsTrimmed ('#key-description');
 	}
 	
+	function enableFormat() {
+		$('#key-format').removeAttr('disabled');
+		$('#key-format').attr('placeholder', loc('model.key.type.param'));
+	}
+	
+	function disableFormat() {
+		$('#key-format').val('');
+		$('#key-format').attr('placeholder', loc('any.noparameter'));
+		$('#key-format').attr('disabled', 'disabled');
+	}
+	
 	return {
 		displayKeyForm: function () {
 			var name = document.getElementById('key-create-name').value;
@@ -64,6 +75,14 @@ var KEY = function () {
 			}
 			// Does not submit the form
 			return false;
+		},
+		onTypeSelection: function (input) {
+			var parameterized = $('#key-type option:selected').attr('parameterized');
+			if (parameterized == "true") {
+				enableFormat();
+			} else {
+				disableFormat();
+			}
 		}
 	};
 	

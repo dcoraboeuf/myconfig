@@ -12,7 +12,7 @@
 				<tbody>
 					<tr>
 						<td class="form-input" colspan="2">
-							<input id="key-name" name="name" maxlength="40" size="40" placeholder="<@lh key='model.key.name' />" />
+							<input id="key-name" type="text" name="name" maxlength="40" size="40" placeholder="<@lh key='model.key.name' />" />
 						</td>
 					</tr>
 					<tr>
@@ -22,13 +22,13 @@
 							</label>
 						</td>
 						<td class="form-input">
-							<select id="key-type" style="width:100%;">
+							<select id="key-type" style="width:100%;" onchange="KEY.onTypeSelection();">
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td class="form-input" colspan="2">
-							<input id="key-format" name="format" maxlength="500" size="40" placeholder="<@lh key='model.key.type.format' />" />
+							<input id="key-format" type="text" name="format" maxlength="500" size="40" placeholder="<@lh key='any.noparameter' />" disabled="disabled" />
 						</td>
 					</tr>
 					<tr>
