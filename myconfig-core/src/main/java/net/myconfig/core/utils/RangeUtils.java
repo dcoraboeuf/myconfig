@@ -1,5 +1,7 @@
 package net.myconfig.core.utils;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,6 +20,15 @@ public final class RangeUtils {
 		@Override
 		public Integer apply(String input) {
 			return Integer.parseInt(input, 10);
+		}
+		
+	};
+	
+	public static final Function<String, BigDecimal> DECIMAL = new Function<String, BigDecimal> () {
+
+		@Override
+		public BigDecimal apply(String input) {
+			return new BigDecimal(input);
 		}
 		
 	};

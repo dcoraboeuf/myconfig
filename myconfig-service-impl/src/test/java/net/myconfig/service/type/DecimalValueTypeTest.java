@@ -9,16 +9,16 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class IntegerValueTypeTest {
+public class DecimalValueTypeTest {
 	
-	private static final String PARAM_REASON = "\"%s\" does not define an integer range";
-	private static final String REASON = "\"%s\" must be an integer in the %s range";
+	private static final String PARAM_REASON = "\"%s\" does not define a decimal range";
+	private static final String REASON = "\"%s\" must be a decimal in the %s range";
 	
-	private IntegerValueType  type = new IntegerValueType();
+	private DecimalValueType  type = new DecimalValueType();
 
 	@Test
 	public void id() {
-		assertEquals("integer", type.getId());
+		assertEquals("decimal", type.getId());
 	}
 	
 	@Test
@@ -88,88 +88,98 @@ public class IntegerValueTypeTest {
 		assertValidateParameterNOK(type, "0,12m", PARAM_REASON); 
 	}
 	
-	public void not_integer_at_all() {
+	public void not_decimal_at_all() {
 		assertValidateNOK(type, "mm", null, REASON);
 	}
 	
 	@Test
-	public void not_integer() {
+	public void not_decimal() {
 		assertValidateNOK(type, "12m", null, REASON);
 	}
 	
 	@Test
-	public void integer_not_bounded() {
+	public void decimal_not_bounded() {
 		assertValidateOK(type, "12", null);
 	}
 	
 	@Test
-	public void integer_min_not_bounded() {
+	public void decimal_min_not_bounded() {
 		assertValidateOK(type, String.valueOf(Integer.MIN_VALUE), null);
 	}
 	
 	@Test
-	public void integer_max_not_bounded() {
+	public void decimal_max_not_bounded() {
 		assertValidateOK(type, String.valueOf(Integer.MAX_VALUE), null);
 	}
 	
 	@Test
-	public void integer_not_bounded_blank_range() {
+	public void decimal_not_bounded_blank_range() {
 		assertValidateOK(type, "12", "");
 	}
 	
 	@Test
-	public void integer_max_bounded() {
+	public void decimal_max_bounded() {
 		assertValidateOK(type, "12", "20");
 	}
 	
 	@Test
-	public void integer_max_bounded_limit() {
+	public void decimal_max_bounded_limit() {
 		assertValidateOK(type, "20", "20");
 	}
 	
 	@Test
-	public void integer_max_bounded_one() {
+	public void decimal_max_bounded_one() {
 		assertValidateOK(type, "1", "20");
 	}
 
 	@Test
-	public void integer_max_bounded_limit_zero() {
+	public void decimal_max_bounded_limit_zero() {
 		assertValidateNOK(type, "0", "]0..20", REASON);
 	}
 
 	@Test
-	public void integer_max_bounded_limit_more() {
+	public void decimal_max_bounded_limit_more() {
 		assertValidateNOK(type, "21", "20", REASON);
 	}
 	
 	@Test
-	public void integer_bounded() {
+	public void decimal_bounded() {
 		assertValidateOK(type, "12", "5..20");
 	}
 	
 	@Test
-	public void integer_bounded_limit_max() {
+	public void decimal_bounded_limit_max() {
 		assertValidateOK(type, "20", "5..20");
 	}
 	
 	@Test
-	public void integer_bounded_limit_min() {
+	public void decimal_bounded_limit_min() {
 		assertValidateOK(type, "5", "5..20");
 	}
 
 	@Test
-	public void integer_bounded_limit_more() {
+	public void decimal_bounded_limit_more() {
 		assertValidateNOK(type, "21", "5..20", REASON);
 	}
 
 	@Test
-	public void integer_bounded_limit_less() {
+	public void decimal_bounded_limit_less() {
 		assertValidateNOK(type, "4", "5..20", REASON);
 	}
 	
 	@Test
-	public void integer_negative_bounded() {
+	public void decimal_negative_bounded() {
 		assertValidateOK(type, "-3", "-5..20");
+	}
+	
+	@Test
+	public void decimal_closed() {
+		assertValidateOK(type, "10.1", "0..10.1");
+	}
+	
+	@Test
+	public void decimal_open() {
+		assertValidateNOK(type, "10.1", "0..10.1(", REASON);
 	}
 
 }
