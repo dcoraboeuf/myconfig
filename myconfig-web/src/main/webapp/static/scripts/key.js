@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	// Loading of key types
 	$.get('ui/types', function (data) {
 		$.each (data.descriptions, function (index, description) {
 			$('#key-type').append('<option parameterized="{1}" value="{0}">{2}</option>'.format(
@@ -41,6 +42,7 @@ var KEY = function () {
 			});
 			// Initialization of the type
 			$('#key-type').val('plain');
+			$('#key-format').attr('title', loc('plain.description'));
 		},
 		submitKeyForm: function () {
 			if (validateCreate()) {
@@ -78,6 +80,8 @@ var KEY = function () {
 		},
 		onTypeSelection: function (input) {
 			var parameterized = $('#key-type option:selected').attr('parameterized');
+			var typeId = $('#key-type').val();
+			$('#key-format').attr('title', loc('{0}.description'.format(typeId)));
 			if (parameterized == "true") {
 				enableFormat();
 			} else {
