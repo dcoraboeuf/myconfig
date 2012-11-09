@@ -6,11 +6,10 @@
 		<Arg>jdbc/myconfig</Arg>
 		<Arg>
 			<New class="org.apache.commons.dbcp.BasicDataSource">
-				<Set name="DriverClassName">org.h2.Driver</Set>
-				<Set name="Url">jdbc:h2:file:work/myconfig-prod/db/data;AUTOCOMMIT=OFF;MVCC=true
-				</Set>
-				<Set name="Username">sa</Set>
-				<Set name="Password"></Set>
+				<Set name="DriverClassName">com.mysql.jdbc.Driver</Set>
+				<Set name="Url">jdbc:mysql://mysql/myconfig</Set>
+				<Set name="Username">myconfig</Set>
+				<Set name="Password">myconfig</Set>
 				<Set name="DefaultAutoCommit">false</Set>
 				<Set name="InitialSize">3</Set>
 				<Set name="MaxActive">6</Set>
