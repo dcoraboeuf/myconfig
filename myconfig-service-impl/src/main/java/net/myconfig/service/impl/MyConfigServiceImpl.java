@@ -73,6 +73,7 @@ import net.myconfig.service.api.security.GrantService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.UserGrant;
 import net.myconfig.service.api.type.KeyTypeParameterInvalidException;
+import net.myconfig.service.api.type.KeyValueFormatException;
 import net.myconfig.service.api.type.ValueTypeFactory;
 import net.myconfig.service.audit.Audit;
 import net.myconfig.service.db.SQL;
@@ -428,6 +429,19 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		}
 	}
 	
+	protected void validateValue(String application, String keyName, String value) {
+		// Loads the key
+		Key key = getNamedParameterJdbcTemplate().queryForObject(SQL.KEY, new MapSqlParameterSource(APPLICATION, application).addValue(KEY, keyName), new KeyRowMapper());
+		// Gets its type & format
+		String typeId = key.getTypeId();
+		String typeParam = key.getTypeParam();
+		// Validation
+		Localizable message = validateTypeValue(typeId, typeParam, value);
+		if (message != null) {
+			throw new KeyValueFormatException(keyName, typeId, typeParam, value, message);
+		}
+	}
+	
 	protected ValueType validateType(String typeId, String typeParam) {
 		// Validates the type
 		ValueType valueType = valueTypeFactory.getValueType(typeId);
@@ -735,6 +749,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			checkMatrix(application, version, key);
 			// Security check
 			checkEnvironmentAccess (application, environment, EnvFunction.env_config);
+			// Key value validation
+			validateValue(application, key, value);
 			// Criteria
 			MapSqlParameterSource criteria = appCriteria
 					.addValue(ENVIRONMENT, environment)
@@ -748,7 +764,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		// OK
 		return Ack.OK;
 	}
-	
+
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_matrix)

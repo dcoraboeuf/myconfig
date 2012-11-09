@@ -38,13 +38,16 @@ var configuration = function () {
 				if (data.success) {
 					location.reload();
 				} else {
-					displayError (loc('configuration.changes.submit.error'));
-					$('#dialog-changes').dialog('close');
+					myconfig.displayError (loc('configuration.changes.submit.error'));
 				}
 			  },
 			  error: function (jqXHR, textStatus, errorThrown) {
-					displayAjaxError (loc('configuration.changes.submit.error'), jqXHR, textStatus, errorThrown);
-					$('#dialog-changes').dialog('close');
+				  	if (jqXHR.responseText && jqXHR.responseText != '') {
+				  		$('#configuration-error').html(jqXHR.responseText.htmlWithLines());
+				  		$('#configuration-error').show();
+				  	} else {
+				  		myconfig.displayAjaxError (loc('configuration.changes.submit.error'), jqXHR, textStatus, errorThrown);
+				  	}
 			  }
 			});
 	}
@@ -72,6 +75,7 @@ var configuration = function () {
 		}
 		// Check
 		if (count > 0) {
+	  		$('#configuration-error').hide();
 			// Generates the content of the dialog
 			$('#configuration-changes').empty();
 			$('#configuration-changes').append(html);
