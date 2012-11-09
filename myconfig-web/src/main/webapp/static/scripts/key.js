@@ -1,3 +1,15 @@
+$(document).ready(function() {
+	$.get('ui/types', function (data) {
+		$.each (data.descriptions, function (index, description) {
+			$('#key-type').append('<option parameterized="{1}" value="{0}">{2}</option>'.format(
+					description.id,
+					description.parameterized,
+					loc(description.id)
+					));
+		});
+	});
+});
+
 var KEY = function () {
 	
 	function validateCreate () {

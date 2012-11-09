@@ -16,6 +16,22 @@
 						</td>
 					</tr>
 					<tr>
+						<td class="form-label" width="60">
+							<label>
+								<@lh key="model.key.type.id" />
+							</label>
+						</td>
+						<td class="form-input">
+							<select id="key-type" style="width:100%;">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="form-input" colspan="2">
+							<input id="key-format" name="format" maxlength="500" size="40" placeholder="<@lh key='model.key.type.format' />" />
+						</td>
+					</tr>
+					<tr>
 						<td class="form-input" colspan="2">
 							<textarea id="key-description" name="description" rows="3" cols="40" placeholder="<@lh key='model.key.description' />"></textarea>
 						</td>
@@ -28,7 +44,7 @@
 				</tbody>
 				<tfoot>
 					<tr>
-						<td colspan="2">
+						<td colspan="2" class="form-commands">
 							<a class="form-command form-command-cancel" href="javascript:$('#key-dialog').dialog('close')"><@lh key="general.cancel" /></a>
 							<input id="key-submit" type="submit" class="form-command form-command-submit" value="<@lh key='application.key.new' />" />
 						</td>
