@@ -1,11 +1,11 @@
 package net.myconfig.service.type;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateNOK;
 import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateOK;
 import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateParameterNOK;
 import static net.myconfig.service.type.ValueTypeTestUtils.assertValidateParameterOK;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -42,13 +42,40 @@ public class IntegerValueTypeTest {
 	}
 
 	@Test
-	public void two_parameters() {
-		assertValidateParameterOK(type, "12,20"); 
+	public void range_at_most() {
+		assertValidateParameterOK(type, "..20"); 
+		assertValidateParameterOK(type, "..20)"); 
+		assertValidateParameterOK(type, "..20]"); 
+	}
+
+	@Test
+	public void range_less_than() {
+		assertValidateParameterOK(type, "..20["); 
+		assertValidateParameterOK(type, "..20("); 
+	}
+
+	@Test
+	public void range_at_least() {
+		assertValidateParameterOK(type, "10.."); 
+		assertValidateParameterOK(type, "(10.."); 
+		assertValidateParameterOK(type, "[10.."); 
+	}
+
+	@Test
+	public void range_greater_than() {
+		assertValidateParameterOK(type, "]10.."); 
+		assertValidateParameterOK(type, ")10.."); 
+	}
+
+	@Test
+	public void range_closed_closed() {
+		assertValidateParameterOK(type, "10..20"); 
+		assertValidateParameterOK(type, "[10..20]"); 
 	}
 
 	@Test
 	public void negative_parameters() {
-		assertValidateParameterOK(type, "-5,20"); 
+		assertValidateParameterOK(type, "-5..20"); 
 	}
 
 	@Test
@@ -107,7 +134,7 @@ public class IntegerValueTypeTest {
 
 	@Test
 	public void integer_max_bounded_limit_zero() {
-		assertValidateNOK(type, "0", "20", REASON);
+		assertValidateNOK(type, "0", "]0..20", REASON);
 	}
 
 	@Test
@@ -117,32 +144,32 @@ public class IntegerValueTypeTest {
 	
 	@Test
 	public void integer_bounded() {
-		assertValidateOK(type, "12", "5,20");
+		assertValidateOK(type, "12", "5..20");
 	}
 	
 	@Test
 	public void integer_bounded_limit_max() {
-		assertValidateOK(type, "20", "5,20");
+		assertValidateOK(type, "20", "5..20");
 	}
 	
 	@Test
 	public void integer_bounded_limit_min() {
-		assertValidateOK(type, "5", "5,20");
+		assertValidateOK(type, "5", "5..20");
 	}
 
 	@Test
 	public void integer_bounded_limit_more() {
-		assertValidateNOK(type, "21", "5,20", REASON);
+		assertValidateNOK(type, "21", "5..20", REASON);
 	}
 
 	@Test
 	public void integer_bounded_limit_less() {
-		assertValidateNOK(type, "4", "5,20", REASON);
+		assertValidateNOK(type, "4", "5..20", REASON);
 	}
 	
 	@Test
 	public void integer_negative_bounded() {
-		assertValidateOK(type, "-3", "-5,20");
+		assertValidateOK(type, "-3", "-5..20");
 	}
 
 }
