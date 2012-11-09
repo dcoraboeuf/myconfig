@@ -14,6 +14,8 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.type.ConfigurationValidationInput;
+import net.myconfig.core.type.ConfigurationValidationOutput;
 import net.myconfig.core.type.ValueTypeDescriptions;
 
 public interface MyConfigInterface {
@@ -87,5 +89,7 @@ public interface MyConfigInterface {
 	String typeParameterValidate (Locale locale, String typeId, String parameter);
 	
 	String typeValueValidate (Locale locale, String typeId, String parameter, String value);
+	
+	ConfigurationValidationOutput configurationValidate (Locale locale, String application, ConfigurationValidationInput input);
 
 }

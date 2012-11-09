@@ -5,8 +5,8 @@ import net.sf.jstring.Localizable;
 
 public class KeyValueFormatException extends InputException {
 
-	public KeyValueFormatException(String key, String typeId, String typeParam, String value, Localizable message) {
-		super(key, typeId, typeParam, value, message);
+	public KeyValueFormatException(String key, String value, Localizable message) {
+		super(key, value, message);
 	}
 
 }

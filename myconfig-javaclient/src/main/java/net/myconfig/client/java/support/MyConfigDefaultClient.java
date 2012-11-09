@@ -23,6 +23,8 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.type.ConfigurationValidationInput;
+import net.myconfig.core.type.ConfigurationValidationOutput;
 import net.myconfig.core.type.ValueType;
 import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.core.utils.MapBuilder;
@@ -323,6 +325,16 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	@Override
 	public ValueTypeDescriptions types() {
 		return get("/ui/types", ValueTypeDescriptions.class);
+	}
+	
+	/**
+	 * <p>POST /ui/configuration/{id}/validate
+	 * <p>Body: JSON
+	 */
+	@Override
+	public ConfigurationValidationOutput configurationValidate(Locale locale, String application, ConfigurationValidationInput input) {
+		// TODO Locale
+		return post(String.format("/ui/configuration/%s/validate", application), ConfigurationValidationOutput.class, input);
 	}
 
 	protected String normalizeTypeId(String typeId) {

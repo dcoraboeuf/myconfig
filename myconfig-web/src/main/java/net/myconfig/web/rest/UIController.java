@@ -1,5 +1,6 @@
 package net.myconfig.web.rest;
 
+import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.core.AppFunction;
@@ -17,6 +18,10 @@ import net.myconfig.core.model.KeyConfiguration;
 import net.myconfig.core.model.MatrixConfiguration;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.core.model.VersionConfiguration;
+import net.myconfig.core.type.ConfigurationValidationInput;
+import net.myconfig.core.type.ConfigurationValidationOutput;
+import net.myconfig.core.type.ConfigurationValueValidationOutput;
+import net.myconfig.core.type.ConfigurationValueValidationResult;
 import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
@@ -32,6 +37,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 @Controller
 @RequestMapping("/ui")
@@ -267,6 +275,22 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@RequestMapping(value = "/types", method = RequestMethod.GET)
 	public @ResponseBody ValueTypeDescriptions types() {
 		return getMyConfigService().getValueTypes();
+	}
+	
+	@Override
+	@RequestMapping(value = "/configuration/{id}/validate", method = RequestMethod.POST)
+	public @ResponseBody ConfigurationValidationOutput configurationValidate(final Locale locale, @PathVariable String id, @RequestBody ConfigurationValidationInput input) {
+		// Validation
+		List<ConfigurationValueValidationResult> result = getMyConfigService().validateConfiguration (id, input);
+		// Conversion
+		ConfigurationValidationOutput output = new ConfigurationValidationOutput(Lists.transform(result, new Function<ConfigurationValueValidationResult, ConfigurationValueValidationOutput>() {
+			@Override
+			public ConfigurationValueValidationOutput apply (ConfigurationValueValidationResult result) {
+				return new ConfigurationValueValidationOutput(result, strings, locale);
+			}
+		}));
+		// OK
+		return output;
 	}
 
 }

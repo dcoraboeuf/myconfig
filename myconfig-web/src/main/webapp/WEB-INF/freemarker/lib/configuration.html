@@ -9,10 +9,11 @@ ${title?html}
 </#macro>
 
 <#macro configuration_input_value application value key environment version>
+	<#assign id>value_${key.name?html}_${environment?html}_${version?html}</#assign>
 	<div class="value">
 		<input
 			class="value"
-			id="value_${key.name?html}_${environment?html}_${version?html}"
+			id="${id}"
 			name="value_${key.name?html}_${environment?html}_${version?html}"
 			oldvalue="${value?html}"
 			value="${value?html}"
@@ -27,6 +28,7 @@ ${title?html}
 			onchange="configuration.updateConfigurationValue(this)"
 			title="<@key_type key=key/>"
 			/>
+		<div id="${id}-error" class="error" style="display:none"></div>
 	</div>
 </#macro>
 

@@ -52,39 +52,84 @@ var configuration = function () {
 			});
 	}
 	
-	function controlConfigurationChanges () {
-		// HTML for the changes
-		var html = '';
-		var count = 0;
+	function validateConfigurationChanges (callback) {
+		// Data to validate
+		var application = $('#application').val();
+		var validationInput = {validations: []};
 		for (var i in configurationChanges) {
-			count++;
 			var id = configurationChanges[i];
 			var input = document.getElementById(id);
 			var key = input.getAttribute('key');
-			var environment = input.getAttribute('environment');
-			var version = input.getAttribute('version');
-			var oldValue = input.getAttribute('oldvalue');
 			var value = input.value;
-			html += '<tr id="{0}">'.format(id);
-				html += '<td class="change-environment">{0}</td>'.format(environment.html());
-				html += '<td class="change-version">{0}</td>'.format(version.html());
-				html += '<td class="change-key">{0}</td>'.format(key.html());
-				html += '<td class="change-old">{0}</td>'.format(oldValue.html());
-				html += '<td class="change-new">{0}</td>'.format(value.html());
-			html += '</tr>';
+			validationInput.validations.push({id: id, key: key, value: value});
 		}
-		// Check
-		if (count > 0) {
-	  		$('#configuration-error').hide();
-			// Generates the content of the dialog
-			$('#configuration-changes').empty();
-			$('#configuration-changes').append(html);
-			// Shows the dialog
-			$('#dialog-changes').dialog({
-				title: loc('configuration.changes.confirm'),
-				width: 'auto'
+		// TODO Waiting mask
+		$.ajax({
+			  type: 'POST',
+			  url: 'ui/configuration/{0}/validate'.format(application),
+			  contentType: 'application/json',
+			  data: JSON.stringify(validationInput),
+			  dataType: 'json',
+			  success: function (data) {
+				  var ok = true;
+				  $.each (data.validations, function (index, validation) {
+					  var error = '#' + validation.id + '-error';
+					  if (validation.message && validation.message != "") {
+						  $('#' + validation.id).addClass("invalid");
+						  $(error).html(validation.message.htmlWithLines());
+						  $(error).show();
+						  ok = false;
+					  } else {
+						  $('#' + validation.id).removeClass("invalid");
+						  $(error).hide();
+					  }
+				  });
+				  // OK
+				  if (ok) {
+					  callback();
+				  }
+			  },
+			  error: function (jqXHR, textStatus, errorThrown) {
+				  	myconfig.displayAjaxError (loc('configuration.changes.submit.error'), jqXHR, textStatus, errorThrown);
+			  }
 			});
-		}
+	}
+	
+	function controlConfigurationChanges () {
+		validateConfigurationChanges(function () {
+			// HTML for the changes
+			var html = '';
+			var count = 0;
+			for (var i in configurationChanges) {
+				count++;
+				var id = configurationChanges[i];
+				var input = document.getElementById(id);
+				var key = input.getAttribute('key');
+				var environment = input.getAttribute('environment');
+				var version = input.getAttribute('version');
+				var oldValue = input.getAttribute('oldvalue');
+				var value = input.value;
+				html += '<tr id="{0}">'.format(id);
+					html += '<td class="change-environment">{0}</td>'.format(environment.html());
+					html += '<td class="change-version">{0}</td>'.format(version.html());
+					html += '<td class="change-key">{0}</td>'.format(key.html());
+					html += '<td class="change-old">{0}</td>'.format(oldValue.html());
+					html += '<td class="change-new">{0}</td>'.format(value.html());
+				html += '</tr>';
+			}
+			// Check
+			if (count > 0) {
+		  		$('#configuration-error').hide();
+				// Generates the content of the dialog
+				$('#configuration-changes').empty();
+				$('#configuration-changes').append(html);
+				// Shows the dialog
+				$('#dialog-changes').dialog({
+					title: loc('configuration.changes.confirm'),
+					width: 'auto'
+				});
+			}
+		});
 	}
 	
 	function updateConfigurationValue (input) {

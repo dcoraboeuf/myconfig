@@ -62,6 +62,9 @@ import net.myconfig.core.model.UserName;
 import net.myconfig.core.model.Version;
 import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.model.VersionSummary;
+import net.myconfig.core.type.ConfigurationValidationInput;
+import net.myconfig.core.type.ConfigurationValueValidationInput;
+import net.myconfig.core.type.ConfigurationValueValidationResult;
 import net.myconfig.core.type.ValueType;
 import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.service.api.MyConfigService;
@@ -430,16 +433,20 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	}
 	
 	protected void validateValue(String application, String keyName, String value) {
+		Localizable message = validateKeyValue(application, keyName, value);
+		if (message != null) {
+			throw new KeyValueFormatException(keyName, value, message);
+		}
+	}
+	
+	protected Localizable validateKeyValue(String application, String keyName, String value) {
 		// Loads the key
 		Key key = getNamedParameterJdbcTemplate().queryForObject(SQL.KEY, new MapSqlParameterSource(APPLICATION, application).addValue(KEY, keyName), new KeyRowMapper());
 		// Gets its type & format
 		String typeId = key.getTypeId();
 		String typeParam = key.getTypeParam();
 		// Validation
-		Localizable message = validateTypeValue(typeId, typeParam, value);
-		if (message != null) {
-			throw new KeyValueFormatException(keyName, typeId, typeParam, value, message);
-		}
+		return validateTypeValue(typeId, typeParam, value);
 	}
 	
 	protected ValueType validateType(String typeId, String typeParam) {
@@ -944,5 +951,23 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	public ValueTypeDescriptions getValueTypes() {
 		return valueTypeFactory.getValueTypeDescriptions();
 	}
-
+	
+	@Override
+	@Transactional(readOnly = true)
+	@AppGrant(AppFunction.app_config)
+	public List<ConfigurationValueValidationResult> validateConfiguration(@AppGrantParam final String application, ConfigurationValidationInput input) {
+		// Checks
+		checkApplication(application);
+		// Results
+		List<ConfigurationValueValidationResult> results = Lists.transform(input.getValidations(), new Function<ConfigurationValueValidationInput, ConfigurationValueValidationResult>() {
+			@Override
+			public ConfigurationValueValidationResult apply (ConfigurationValueValidationInput input) {
+				Localizable message = validateKeyValue(application, input.getKey(), input.getValue());
+				return new ConfigurationValueValidationResult(input, message);
+			}
+		});
+		// OK
+		return results;
+	}
+	
 }
