@@ -53,8 +53,8 @@ var KEY = function () {
 					  url: url,
 					  data: {
 						  description: $('#key-description').val(),
-						  typeId: 'plain',
-						  typeParam: ''
+						  typeId: $('#key-type').val(),
+						  typeParam: $('#key-format').val()
 					  },
 					  success: function (data) {
 						if (data.success) {
