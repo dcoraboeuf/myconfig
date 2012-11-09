@@ -28,6 +28,8 @@ var KEY = function () {
 				title: loc('application.key.new'),
 				width: 'auto'
 			});
+			// Initialization of the type
+			$('#key-type').val('plain');
 		},
 		submitKeyForm: function () {
 			if (validateCreate()) {
