@@ -56,16 +56,17 @@ public interface SQL {
 	String ENVIRONMENTS = "select e.name " +
 			"from environment e " + 
 			"where e.application = :application " +
-			"order by e.name";
+			"order by e.ordernb";
 	
 	String ENVIRONMENT_SUMMARIES = "select e.name, " +
 			"(select COUNT(*) from version_key vk where vk.application = e.application) as keyCount, " +
 			"(select COUNT(*) from config c where c.application = e.application and c.environment = e.name) as valueCount " +
 			"from environment e " + 
 			"where e.application = :application " +
-			"order by e.name";
+			"order by e.ordernb";
 
-	String ENVIRONMENT_CREATE = "insert into environment (application, name) values (:id, :name)";
+	String ENVIRONMENT_CREATE = "insert into environment (application, name, ordernb) values (:id, :name, :ordernb)";
+	String ENVIRONMENT_COUNT = "select count(*) from ENVIRONMENT WHERE APPLICATION = :id";
 
 	String ENVIRONMENT_DELETE = "delete from environment where application = :id and name = :name";
 	
@@ -117,11 +118,13 @@ public interface SQL {
 	String VERSION_KEY_REMOVE = "delete from version_key " +
 			"where application = :application and version = :version and appkey = :appkey";
 	
-	String CONFIG_FOR_VERSION = "select * " +
-			"from config " +
-			"where application = :application " +
-			"and version = :version " +
-			"order by environment, appkey";
+	String CONFIG_FOR_VERSION = "select c.* " +
+			"from config c, environment e " +
+			"where c.application = :application " +
+			"and c.environment = e.name " +
+			"and c.application = e.application " +
+			"and c.version = :version " +
+			"order by e.ordernb, c.appkey";
 	
 	String CONFIG_FOR_ENVIRONMENT = "select * " +
 			"from config " +
@@ -129,11 +132,13 @@ public interface SQL {
 			"and environment = :environment " +
 			"order by version, appkey";
 	
-	String CONFIG_FOR_KEY = "select * " +
-			"from config " +
-			"where application = :application " +
-			"and appkey = :appkey " +
-			"order by version, environment";
+	String CONFIG_FOR_KEY = "select c.* " +
+			"from config c, environment e " +
+			"where c.application = :application " +
+			"and c.application = e.application" +
+			"and c.environment = e.name " +
+			"and c.appkey = :appkey " +
+			"order by c.version, e.ordernb";
 
 	String CONFIG_REMOVE_VALUE = "delete from config where application = :application and version = :version and environment = :environment and appkey = :appkey";
 
@@ -142,8 +147,8 @@ public interface SQL {
 	String VERSION_PREVIOUS = "select name from version where application = :application and name < :version order by name desc";
 	String VERSION_NEXT = "select name from version where application = :application and name > :version order by name asc";
 
-	String ENVIRONMENT_PREVIOUS = "select name from environment where application = :application and name < :environment order by name desc";
-	String ENVIRONMENT_NEXT = "select name from environment where application = :application and name > :environment order by name asc";
+	String ENVIRONMENT_PREVIOUS = "SELECT E.* FROM ENVIRONMENT E WHERE E.APPLICATION = :application AND E.ORDERNB < (SELECT EE.ORDERNB FROM ENVIRONMENT EE WHERE EE.APPLICATION = :application AND EE.NAME = :environment) ORDER BY E.ORDERNB DESC LIMIT 1";
+	String ENVIRONMENT_NEXT = "SELECT E.* FROM ENVIRONMENT E WHERE E.APPLICATION = :application AND E.ORDERNB > (SELECT EE.ORDERNB FROM ENVIRONMENT EE WHERE EE.APPLICATION = :application AND EE.NAME = :environment) ORDER BY E.ORDERNB ASC LIMIT 1";
 
 	String KEY_PREVIOUS = "select name from appkey  where application = :application and name < :appkey order by name desc";
 	String KEY_NEXT = "select name from appkey where application = :application and name > :appkey order by name asc";
@@ -220,4 +225,7 @@ public interface SQL {
 	String USER_ENABLE = "update users set disabled = false where name = :user";
 
 	String USER_NAMES = "select name, displayName from users where verified = true and disabled = false and admin = false";
+
+	String ENVIRONMENT_GET_ORDER = "SELECT ORDERNB FROM ENVIRONMENT WHERE APPLICATION = :id AND NAME = :name";
+	String ENVIRONMENT_REORDER_ABOVE = "UPDATE ENVIRONMENT SET ORDERNB = ORDERNB - 1 WHERE APPLICATION = :id AND ORDERNB > :ordernb";
 }

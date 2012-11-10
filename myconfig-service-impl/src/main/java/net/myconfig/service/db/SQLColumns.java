@@ -30,5 +30,6 @@ public interface SQLColumns {
 	String CREATION = "creation";
 	String TYPEID = "typeid";
 	String TYPEPARAM = "typeparam";
+	String ORDER = "ordernb";
 
 }

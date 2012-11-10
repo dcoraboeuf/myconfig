@@ -10,6 +10,7 @@ import static net.myconfig.service.db.SQLColumns.ID;
 import static net.myconfig.service.db.SQLColumns.KEY;
 import static net.myconfig.service.db.SQLColumns.KEY_COUNT;
 import static net.myconfig.service.db.SQLColumns.NAME;
+import static net.myconfig.service.db.SQLColumns.ORDER;
 import static net.myconfig.service.db.SQLColumns.TYPEID;
 import static net.myconfig.service.db.SQLColumns.TYPEPARAM;
 import static net.myconfig.service.db.SQLColumns.VALUE;
@@ -383,8 +384,13 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		validate(EnvironmentValidation.class, NAME, name);
 		checkApplication(id);
 		try {
-			int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_CREATE,
-				idNameSource(id, name));
+			MapSqlParameterSource criteria = idNameSource(id, name);
+			// Gets the number of existing environment
+			int nb = getNamedParameterJdbcTemplate().queryForInt(SQL.ENVIRONMENT_COUNT, criteria);
+			// Order nb = Count + 1
+			int ordernb = nb + 1;
+			// Insert the new environment
+			int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_CREATE, criteria.addValue(ORDER, ordernb));
 			if (count == 1) {
 				// Initial grants
 				for (EnvFunction fn : EnvFunction.values()) {
@@ -405,7 +411,15 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.DELETE, application = "#id", environment = "#name", result = "#result.success")
 	public Ack deleteEnvironment(@AppGrantParam String id, @EnvGrantParam String name) {
 		checkApplication(id);
-		int count = getNamedParameterJdbcTemplate().update(SQL.ENVIRONMENT_DELETE, idNameSource(id, name));
+		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		MapSqlParameterSource criteria = idNameSource(id, name);
+		// Gets the order nb of the environment to delete
+		int order = t.queryForInt(SQL.ENVIRONMENT_GET_ORDER, criteria);
+		// Re-ordering
+		t.update(SQL.ENVIRONMENT_REORDER_ABOVE, criteria.addValue(ORDER, order));
+		// Deletion
+		int count = t.update(SQL.ENVIRONMENT_DELETE, criteria);
+		// Ok
 		return Ack.one (count);
 	}
 	
