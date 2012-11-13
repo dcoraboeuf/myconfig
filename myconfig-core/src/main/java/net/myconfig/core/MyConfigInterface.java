@@ -38,6 +38,10 @@ public interface MyConfigInterface {
 
 	Ack environmentDelete(String id, String name);
 
+	Ack environmentUp(String id, String environment);
+
+	Ack environmentDown(String id, String environment);
+
 	Ack keyDelete(String id, String name);
 
 	Ack keyCreate(String id, String name, String description, String typeId, String typeParam);

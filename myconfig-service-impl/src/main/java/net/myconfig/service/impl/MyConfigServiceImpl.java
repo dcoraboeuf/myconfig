@@ -427,6 +427,24 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	
 	@Override
 	@Transactional
+	@AppGrant(AppFunction.app_envcreate)
+	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.UPDATE, application = "#id", environment = "#environment", result = "#result.success", message = "UP")
+	public Ack setEnvironmentUp(@AppGrantParam String id, String environment) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	@Transactional
+	@AppGrant(AppFunction.app_envcreate)
+	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.UPDATE, application = "#id", environment = "#environment", result = "#result.success", message = "DOWN")
+	public Ack setEnvironmentDown(@AppGrantParam String id, String environment) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	@Transactional
 	@AppGrant(AppFunction.app_config)
 	@Audit(category = EventCategory.KEY, action = EventAction.CREATE, application = "#id", key = "#name", message = "#description", result = "#result.success") 
 	public Ack createKey(@AppGrantParam String id, String name, String description, String typeId, String typeParam) {

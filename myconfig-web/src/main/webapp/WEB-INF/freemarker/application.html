@@ -91,6 +91,8 @@
 								id="environments"
 								headers=[ "model.environment.name", "application.environment.missingCount" ]
 								actions=true>
+								<#assign envCount = application.environmentSummaryList?size />
+								<#assign envIndex = 1 />
 								<@items items=application.environmentSummaryList ; item>
 									<@item_column field="name" item=item />
 									<@item_missing_count item=item action="gui/configuration/environment/${application.id}" actionItemField="name" />
@@ -104,7 +106,16 @@
 										<@sec_chk_env_fn application=application.id environment=item.name fn="env_users">
 											<@item_edit item=item action="gui/application/${application.id}/environment/users" itemField="name" icon="environment_users.png" />
 										</@sec_chk_env_fn>
+										<@sec_chk_app_fn application=application.id fn="app_envcreate">
+											<#if (envIndex > 1)>
+												<a href="gui/application/${application.id?html}/environment/${item.name?html}/up"><img src="static/images/arrow_up.png" title="<@lh key='application.environment.up' />"/></a>
+											</#if>
+											<#if (envIndex < envCount)>
+												<a href="gui/application/${application.id?html}/environment/${item.name?html}/down"><img src="static/images/arrow_down.png" title="<@lh key='application.environment.down' />"/></a>
+											</#if>
+										</@sec_chk_app_fn>
 									</@item_actions>
+									<#assign envIndex = envIndex + 1 />
 								</@items>
 								<@items_commands>
 									<@sec_chk_app_fn application=application.id fn="app_envcreate">

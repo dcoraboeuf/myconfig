@@ -134,6 +134,18 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
+	@RequestMapping(value = "/environment/{id}/{environment}/up", method = RequestMethod.PUT)
+	public @ResponseBody Ack environmentUp(@PathVariable String id, @PathVariable String environment) {
+		return getMyConfigService().setEnvironmentUp(id, environment);
+	}
+	
+	@Override
+	@RequestMapping(value = "/environment/{id}/{environment}/down", method = RequestMethod.PUT)
+	public @ResponseBody Ack environmentDown(@PathVariable String id, @PathVariable String environment) {
+		return getMyConfigService().setEnvironmentDown(id, environment);
+	}
+	
+	@Override
 	@RequestMapping(value = "/key/{id}/{name}/create", method = RequestMethod.POST)
 	public @ResponseBody Ack keyCreate(@PathVariable String id, @PathVariable String name, @RequestParam String description, @RequestParam(required = false) String typeId, @RequestParam(required = false) String typeParam) {
 		return getMyConfigService().createKey (id, name, description, typeId, typeParam);

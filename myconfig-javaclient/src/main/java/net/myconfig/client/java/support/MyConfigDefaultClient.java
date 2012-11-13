@@ -104,6 +104,22 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	public Ack environmentDelete(String id, String name) {
 		return delete (format("/ui/environment/%s/%s", id, name), Ack.class);
 	}
+	
+	/**
+	 * PUT /environment/{id}/{environment}/up
+	 */
+	@Override
+	public Ack environmentUp(String id, String environment) {
+		return put (format("/ui/environment/%s/%s/up", id, environment), Ack.class);
+	}
+	
+	/**
+	 * PUT /environment/{id}/{environment}/down
+	 */
+	@Override
+	public Ack environmentDown(String id, String environment) {
+		return put (format("/ui/environment/%s/%s/down", id, environment), Ack.class);
+	}
 
 	/**
 	 * DELETE /ui/key/{id}/{name:.*}

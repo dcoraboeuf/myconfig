@@ -78,4 +78,8 @@ public interface MyConfigService {
 
 	List<ConfigurationValueValidationResult> validateConfiguration(String application, ConfigurationValidationInput input);
 
+	Ack setEnvironmentUp(String id, String environment);
+
+	Ack setEnvironmentDown(String id, String environment);
+
 }
