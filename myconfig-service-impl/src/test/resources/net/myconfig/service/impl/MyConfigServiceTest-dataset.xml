@@ -10,14 +10,14 @@
 	<VERSION application="APP2" name="1.0.0" />
 	<VERSION application="APP2" name="1.0.1" />
 	
-	<ENVIRONMENT application="APP" name="DEV" />
-	<ENVIRONMENT application="APP" name="ACC" />
-	<ENVIRONMENT application="APP" name="UAT" />
-	<ENVIRONMENT application="APP" name="PROD" />
-	<ENVIRONMENT application="APP2" name="DEV" />
-	<ENVIRONMENT application="APP2" name="ACC" />
-	<ENVIRONMENT application="APP2" name="UAT" />
-	<ENVIRONMENT application="APP2" name="PROD" />
+	<ENVIRONMENT application="APP" name="DEV" ordernb="1" />
+	<ENVIRONMENT application="APP" name="ACC" ordernb="2" />
+	<ENVIRONMENT application="APP" name="UAT" ordernb="3" />
+	<ENVIRONMENT application="APP" name="PROD" ordernb="4" />
+	<ENVIRONMENT application="APP2" name="DEV" ordernb="1" />
+	<ENVIRONMENT application="APP2" name="ACC" ordernb="2" />
+	<ENVIRONMENT application="APP2" name="UAT" ordernb="3" />
+	<ENVIRONMENT application="APP2" name="PROD" ordernb="4" />
 	
 	<APPKEY application="APP" name="jdbc.url" description="URL used to connect to the database" typeid="regex" typeparam="jdbc:.*" />
 	<APPKEY application="APP" name="jdbc.user" description="User used to connect to the database" />

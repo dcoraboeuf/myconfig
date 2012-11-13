@@ -414,9 +414,11 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
 		MapSqlParameterSource criteria = idNameSource(id, name);
 		// Gets the order nb of the environment to delete
-		int order = t.queryForInt(SQL.ENVIRONMENT_GET_ORDER, criteria);
+		Integer order = getFirstItem(SQL.ENVIRONMENT_GET_ORDER, criteria, Integer.class);
 		// Re-ordering
-		t.update(SQL.ENVIRONMENT_REORDER_ABOVE, criteria.addValue(ORDER, order));
+		if (order != null) {
+			t.update(SQL.ENVIRONMENT_REORDER_ABOVE, criteria.addValue(ORDER, order));
+		}
 		// Deletion
 		int count = t.update(SQL.ENVIRONMENT_DELETE, criteria);
 		// Ok

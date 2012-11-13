@@ -2,10 +2,10 @@
 
 	<APPLICATION id="1" name="myapp" />
 	
-	<ENVIRONMENT application="1" name="DEV" />
-	<ENVIRONMENT application="1" name="ACC" />
-	<ENVIRONMENT application="1" name="UAT" />
-	<ENVIRONMENT application="1" name="PROD" />
+	<ENVIRONMENT application="1" name="DEV" ordernb="1" />
+	<ENVIRONMENT application="1" name="ACC" ordernb="2" />
+	<ENVIRONMENT application="1" name="UAT" ordernb="3" />
+	<ENVIRONMENT application="1" name="PROD" ordernb="4" />
 	
 	<CONFIGURATION name="security.mode" value="builtin" />
 	

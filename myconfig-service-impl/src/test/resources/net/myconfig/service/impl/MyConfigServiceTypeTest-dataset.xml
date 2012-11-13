@@ -6,10 +6,10 @@
 	<VERSION application="APP" name="1.1" />
 	<VERSION application="APP" name="1.2" />
 	
-	<ENVIRONMENT application="APP" name="DEV" />
-	<ENVIRONMENT application="APP" name="ACC" />
-	<ENVIRONMENT application="APP" name="UAT" />
-	<ENVIRONMENT application="APP" name="PROD" />
+	<ENVIRONMENT application="APP" name="DEV" ordernb="1" />
+	<ENVIRONMENT application="APP" name="ACC" ordernb="2" />
+	<ENVIRONMENT application="APP" name="UAT" ordernb="3" />
+	<ENVIRONMENT application="APP" name="PROD" ordernb="4" />
 	
 	<APPKEY application="APP" name="text" description="Some text" typeid="" typeparam="" />
 	<APPKEY application="APP" name="text2" description="Some other text" typeid="plain" typeparam="" />

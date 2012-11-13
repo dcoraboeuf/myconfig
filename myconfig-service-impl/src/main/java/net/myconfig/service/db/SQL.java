@@ -135,7 +135,7 @@ public interface SQL {
 	String CONFIG_FOR_KEY = "select c.* " +
 			"from config c, environment e " +
 			"where c.application = :application " +
-			"and c.application = e.application" +
+			"and c.application = e.application " +
 			"and c.environment = e.name " +
 			"and c.appkey = :appkey " +
 			"order by c.version, e.ordernb";
@@ -147,8 +147,8 @@ public interface SQL {
 	String VERSION_PREVIOUS = "select name from version where application = :application and name < :version order by name desc";
 	String VERSION_NEXT = "select name from version where application = :application and name > :version order by name asc";
 
-	String ENVIRONMENT_PREVIOUS = "SELECT E.* FROM ENVIRONMENT E WHERE E.APPLICATION = :application AND E.ORDERNB < (SELECT EE.ORDERNB FROM ENVIRONMENT EE WHERE EE.APPLICATION = :application AND EE.NAME = :environment) ORDER BY E.ORDERNB DESC LIMIT 1";
-	String ENVIRONMENT_NEXT = "SELECT E.* FROM ENVIRONMENT E WHERE E.APPLICATION = :application AND E.ORDERNB > (SELECT EE.ORDERNB FROM ENVIRONMENT EE WHERE EE.APPLICATION = :application AND EE.NAME = :environment) ORDER BY E.ORDERNB ASC LIMIT 1";
+	String ENVIRONMENT_PREVIOUS = "SELECT E.NAME FROM ENVIRONMENT E WHERE E.APPLICATION = :application AND E.ORDERNB < (SELECT EE.ORDERNB FROM ENVIRONMENT EE WHERE EE.APPLICATION = :application AND EE.NAME = :environment) ORDER BY E.ORDERNB DESC LIMIT 1";
+	String ENVIRONMENT_NEXT = "SELECT E.NAME FROM ENVIRONMENT E WHERE E.APPLICATION = :application AND E.ORDERNB > (SELECT EE.ORDERNB FROM ENVIRONMENT EE WHERE EE.APPLICATION = :application AND EE.NAME = :environment) ORDER BY E.ORDERNB ASC LIMIT 1";
 
 	String KEY_PREVIOUS = "select name from appkey  where application = :application and name < :appkey order by name desc";
 	String KEY_NEXT = "select name from appkey where application = :application and name > :appkey order by name asc";

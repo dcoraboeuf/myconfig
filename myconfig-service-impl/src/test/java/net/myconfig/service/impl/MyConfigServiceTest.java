@@ -400,10 +400,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		List<EnvironmentSummary> environments = app.getEnvironmentSummaryList();
 		assertNotNull (environments);
 		assertEquals (4, environments.size());
-		assertEnvironmentSummary ("ACC", 10, 7, environments.get(0));
-		assertEnvironmentSummary ("DEV", 10, 7, environments.get(1));
-		assertEnvironmentSummary ("PROD", 10, 7, environments.get(2));
-		assertEnvironmentSummary ("UAT", 10, 7, environments.get(3));
+		assertEnvironmentSummary ("DEV", 10, 7, environments.get(0));
+		assertEnvironmentSummary ("ACC", 10, 7, environments.get(1));
+		assertEnvironmentSummary ("UAT", 10, 7, environments.get(2));
+		assertEnvironmentSummary ("PROD", 10, 7, environments.get(3));
 		// Keys
 		List<KeySummary> keys = app.getKeySummaryList();
 		assertNotNull (keys);
@@ -701,9 +701,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		myConfigService.createKey(APP, "jdbc.user", "New description", null, null);
 	}
 
-	// FIXME Validation of the type ID
-	// FIXME Validation of the type parameter
-
 	@Test(expected = ApplicationNotFoundException.class)
 	public void key_update_noapp() {
 		myConfigService.updateKey("app_xxx", "key1", "xxx");
@@ -781,132 +778,10 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration() throws JsonGenerationException, JsonMappingException, IOException {
-		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "DEV");
-		assertNotNull (configuration);
-		assertJSONEquals (
-				new EnvironmentConfiguration(APP, "myapp", "DEV", "ACC", "PROD",
-					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
-							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
-							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
-					Arrays.asList(
-							new IndexedValues<ConditionalValue>(
-									"1.0",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, "1.0 jdbc.password DEV"))
-									.put("jdbc.url", new ConditionalValue(false, ""))
-									.put("jdbc.user", new ConditionalValue(true, "1.0 jdbc.user DEV"))
-									.build()),
-							new IndexedValues<ConditionalValue>(
-									"1.1",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, "1.1 jdbc.password DEV"))
-									.put("jdbc.url", new ConditionalValue(false, ""))
-									.put("jdbc.user", new ConditionalValue(true, "1.1 jdbc.user DEV"))
-									.build()),
-							new IndexedValues<ConditionalValue>(
-									"1.2",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password DEV"))
-									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url DEV"))
-									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user DEV"))
-									.build()),
-							new IndexedValues<ConditionalValue>(
-									"1.3",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, ""))
-									.put("jdbc.url", new ConditionalValue(true, ""))
-									.put("jdbc.user", new ConditionalValue(true, ""))
-									.build())
-							)
-					),
-				configuration);
-	}
-	
-	/**
-	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
-	 * has been added yet.
-	 */
-	@SuppressWarnings("unchecked")
-	@Test
-	public void environment_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
-		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration("APP2", "DEV");
-		assertNotNull (configuration);
-		assertJSONEquals (
-				new EnvironmentConfiguration("APP2", "anotherapp", "DEV", "ACC", "PROD",
-					Arrays.asList(
-							new Key("key1", "Key 1", "plain", null),
-							new Key("key2", "Key 2", "plain", null)),
-					Arrays.asList(
-							new IndexedValues<ConditionalValue>(
-									"1.0.0",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("key1", new ConditionalValue(true, ""))
-									.put("key2", new ConditionalValue(false, ""))
-									.build()),
-							new IndexedValues<ConditionalValue>(
-									"1.0.1",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("key1", new ConditionalValue(true, ""))
-									.put("key2", new ConditionalValue(true, ""))
-									.build())
-							)
-					),
-				configuration);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Test
-	public void environment_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
-		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "UAT");
-		assertNotNull (configuration);
-		assertJSONEquals (
-				new EnvironmentConfiguration(APP, "myapp", "UAT", "PROD", null,
-					Arrays.asList(
-							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
-							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
-							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
-					Arrays.asList(
-							new IndexedValues<ConditionalValue>(
-									"1.0",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, "1.0 jdbc.password UAT"))
-									.put("jdbc.url", new ConditionalValue(false, ""))
-									.put("jdbc.user", new ConditionalValue(true, "1.0 jdbc.user UAT"))
-									.build()),
-							new IndexedValues<ConditionalValue>(
-									"1.1",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, "1.1 jdbc.password UAT"))
-									.put("jdbc.url", new ConditionalValue(false, ""))
-									.put("jdbc.user", new ConditionalValue(true, "1.1 jdbc.user UAT"))
-									.build()),
-							new IndexedValues<ConditionalValue>(
-									"1.2",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password UAT"))
-									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url UAT"))
-									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user UAT"))
-									.build()),
-							new IndexedValues<ConditionalValue>(
-									"1.3",
-									MapBuilder.<String,ConditionalValue>create()
-									.put("jdbc.password", new ConditionalValue(true, ""))
-									.put("jdbc.url", new ConditionalValue(true, ""))
-									.put("jdbc.user", new ConditionalValue(true, ""))
-									.build())
-					)
-				),
-				configuration);
-	}
-	
-	@SuppressWarnings("unchecked")
-	@Test
-	public void environment_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
 		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "ACC");
 		assertNotNull (configuration);
 		assertJSONEquals (
-				new EnvironmentConfiguration(APP, "myapp", "ACC", null, "DEV",
+				new EnvironmentConfiguration(APP, "myapp", "ACC", "DEV", "UAT",
 					Arrays.asList(
 							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
 							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
@@ -932,6 +807,128 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password ACC"))
 									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url ACC"))
 									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user ACC"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.3",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, ""))
+									.put("jdbc.url", new ConditionalValue(true, ""))
+									.put("jdbc.user", new ConditionalValue(true, ""))
+									.build())
+							)
+					),
+				configuration);
+	}
+	
+	/**
+	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
+	 * has been added yet.
+	 */
+	@SuppressWarnings("unchecked")
+	@Test
+	public void environment_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration("APP2", "DEV");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new EnvironmentConfiguration("APP2", "anotherapp", "DEV", null, "ACC",
+					Arrays.asList(
+							new Key("key1", "Key 1", "plain", null),
+							new Key("key2", "Key 2", "plain", null)),
+					Arrays.asList(
+							new IndexedValues<ConditionalValue>(
+									"1.0.0",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("key1", new ConditionalValue(true, ""))
+									.put("key2", new ConditionalValue(false, ""))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.0.1",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("key1", new ConditionalValue(true, ""))
+									.put("key2", new ConditionalValue(true, ""))
+									.build())
+							)
+					),
+				configuration);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void environment_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "PROD");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new EnvironmentConfiguration(APP, "myapp", "PROD", "UAT", null,
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
+					Arrays.asList(
+							new IndexedValues<ConditionalValue>(
+									"1.0",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.0 jdbc.password PROD"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.0 jdbc.user PROD"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.1",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.1 jdbc.password PROD"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.1 jdbc.user PROD"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.2",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password PROD"))
+									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url PROD"))
+									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user PROD"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.3",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, ""))
+									.put("jdbc.url", new ConditionalValue(true, ""))
+									.put("jdbc.user", new ConditionalValue(true, ""))
+									.build())
+					)
+				),
+				configuration);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void environment_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
+		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "DEV");
+		assertNotNull (configuration);
+		assertJSONEquals (
+				new EnvironmentConfiguration(APP, "myapp", "DEV", null, "ACC",
+					Arrays.asList(
+							new Key("jdbc.password", "Password used to connect to the database", "plain", null),
+							new Key("jdbc.url", "URL used to connect to the database", "regex", "jdbc:.*"),
+							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
+					Arrays.asList(
+							new IndexedValues<ConditionalValue>(
+									"1.0",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.0 jdbc.password DEV"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.0 jdbc.user DEV"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.1",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.1 jdbc.password DEV"))
+									.put("jdbc.url", new ConditionalValue(false, ""))
+									.put("jdbc.user", new ConditionalValue(true, "1.1 jdbc.user DEV"))
+									.build()),
+							new IndexedValues<ConditionalValue>(
+									"1.2",
+									MapBuilder.<String,ConditionalValue>create()
+									.put("jdbc.password", new ConditionalValue(true, "1.2 jdbc.password DEV"))
+									.put("jdbc.url", new ConditionalValue(true, "1.2 jdbc.url DEV"))
+									.put("jdbc.user", new ConditionalValue(true, "1.2 jdbc.user DEV"))
 									.build()),
 							new IndexedValues<ConditionalValue>(
 									"1.3",
@@ -967,24 +964,24 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Version("1.3")),
 					Arrays.asList(
 							new IndexedValues<String>(
-									"ACC",
-									MapBuilder.<String,String>create()
-										.put("1.2", "1.2 jdbc.url ACC")
-										.build()),
-							new IndexedValues<String>(
 									"DEV",
 									MapBuilder.<String,String>create()
 										.put("1.2", "1.2 jdbc.url DEV")
 										.build()),
 							new IndexedValues<String>(
-									"PROD",
+									"ACC",
 									MapBuilder.<String,String>create()
-										.put("1.2", "1.2 jdbc.url PROD")
+										.put("1.2", "1.2 jdbc.url ACC")
 										.build()),
 							new IndexedValues<String>(
 									"UAT",
 									MapBuilder.<String,String>create()
 										.put("1.2", "1.2 jdbc.url UAT")
+										.build()),
+							new IndexedValues<String>(
+									"PROD",
+									MapBuilder.<String,String>create()
+										.put("1.2", "1.2 jdbc.url PROD")
 										.build())
 							)
 					),
@@ -1005,13 +1002,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Version("1.3")),
 					Arrays.asList(
 							new IndexedValues<String>(
-									"ACC",
-									MapBuilder.<String,String>create()
-										.put("1.0", "1.0 jdbc.password ACC")
-										.put("1.1", "1.1 jdbc.password ACC")
-										.put("1.2", "1.2 jdbc.password ACC")
-										.build()),
-							new IndexedValues<String>(
 									"DEV",
 									MapBuilder.<String,String>create()
 										.put("1.0", "1.0 jdbc.password DEV")
@@ -1019,11 +1009,11 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 										.put("1.2", "1.2 jdbc.password DEV")
 										.build()),
 							new IndexedValues<String>(
-									"PROD",
+									"ACC",
 									MapBuilder.<String,String>create()
-										.put("1.0", "1.0 jdbc.password PROD")
-										.put("1.1", "1.1 jdbc.password PROD")
-										.put("1.2", "1.2 jdbc.password PROD")
+										.put("1.0", "1.0 jdbc.password ACC")
+										.put("1.1", "1.1 jdbc.password ACC")
+										.put("1.2", "1.2 jdbc.password ACC")
 										.build()),
 							new IndexedValues<String>(
 									"UAT",
@@ -1031,6 +1021,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 										.put("1.0", "1.0 jdbc.password UAT")
 										.put("1.1", "1.1 jdbc.password UAT")
 										.put("1.2", "1.2 jdbc.password UAT")
+										.build()),
+							new IndexedValues<String>(
+									"PROD",
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.password PROD")
+										.put("1.1", "1.1 jdbc.password PROD")
+										.put("1.2", "1.2 jdbc.password PROD")
 										.build())
 							)
 					),
@@ -1051,13 +1048,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Version("1.3")),
 					Arrays.asList(
 							new IndexedValues<String>(
-									"ACC",
-									MapBuilder.<String,String>create()
-										.put("1.0", "1.0 jdbc.user ACC")
-										.put("1.1", "1.1 jdbc.user ACC")
-										.put("1.2", "1.2 jdbc.user ACC")
-										.build()),
-							new IndexedValues<String>(
 									"DEV",
 									MapBuilder.<String,String>create()
 										.put("1.0", "1.0 jdbc.user DEV")
@@ -1065,11 +1055,11 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 										.put("1.2", "1.2 jdbc.user DEV")
 										.build()),
 							new IndexedValues<String>(
-									"PROD",
+									"ACC",
 									MapBuilder.<String,String>create()
-										.put("1.0", "1.0 jdbc.user PROD")
-										.put("1.1", "1.1 jdbc.user PROD")
-										.put("1.2", "1.2 jdbc.user PROD")
+										.put("1.0", "1.0 jdbc.user ACC")
+										.put("1.1", "1.1 jdbc.user ACC")
+										.put("1.2", "1.2 jdbc.user ACC")
 										.build()),
 							new IndexedValues<String>(
 									"UAT",
@@ -1077,6 +1067,13 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 										.put("1.0", "1.0 jdbc.user UAT")
 										.put("1.1", "1.1 jdbc.user UAT")
 										.put("1.2", "1.2 jdbc.user UAT")
+										.build()),
+							new IndexedValues<String>(
+									"PROD",
+									MapBuilder.<String,String>create()
+										.put("1.0", "1.0 jdbc.user PROD")
+										.put("1.1", "1.1 jdbc.user PROD")
+										.put("1.2", "1.2 jdbc.user PROD")
 										.build())
 							)
 					),
@@ -1105,25 +1102,25 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
-									"ACC",
-									map (
-											"jdbc.password", "1.1 jdbc.password ACC",
-											"jdbc.user", "1.1 jdbc.user ACC")),
-							new IndexedValues<String>(
 									"DEV",
 									map (
 											"jdbc.password", "1.1 jdbc.password DEV",
 											"jdbc.user", "1.1 jdbc.user DEV")),
 							new IndexedValues<String>(
-									"PROD",
+									"ACC",
 									map (
-											"jdbc.password", "1.1 jdbc.password PROD",
-											"jdbc.user", "1.1 jdbc.user PROD")),
+											"jdbc.password", "1.1 jdbc.password ACC",
+											"jdbc.user", "1.1 jdbc.user ACC")),
 							new IndexedValues<String>(
 									"UAT",
 									map (
 											"jdbc.password", "1.1 jdbc.password UAT",
-											"jdbc.user", "1.1 jdbc.user UAT"))
+											"jdbc.user", "1.1 jdbc.user UAT")),
+							new IndexedValues<String>(
+									"PROD",
+									map (
+											"jdbc.password", "1.1 jdbc.password PROD",
+											"jdbc.user", "1.1 jdbc.user PROD"))
 							)
 					),
 				configuration);
@@ -1145,16 +1142,16 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("key2", "Key 2", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
-									"ACC",
-									Collections.<String,String>emptyMap()),
-							new IndexedValues<String>(
 									"DEV",
 									Collections.<String,String>emptyMap()),
 							new IndexedValues<String>(
-									"PROD",
+									"ACC",
 									Collections.<String,String>emptyMap()),
 							new IndexedValues<String>(
 									"UAT",
+									Collections.<String,String>emptyMap()),
+							new IndexedValues<String>(
+									"PROD",
 									Collections.<String,String>emptyMap())
 							)
 					),
@@ -1174,16 +1171,16 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
-									"ACC",
-									map ()),
-							new IndexedValues<String>(
 									"DEV",
 									map ()),
 							new IndexedValues<String>(
-									"PROD",
+									"ACC",
 									map ()),
 							new IndexedValues<String>(
 									"UAT",
+									map ()),
+							new IndexedValues<String>(
+									"PROD",
 									map ())
 							)
 					),
@@ -1202,25 +1199,25 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 							new Key("jdbc.user", "User used to connect to the database", "plain", null)),
 					Arrays.asList(
 							new IndexedValues<String>(
-									"ACC",
-									map (
-											"jdbc.password", "1.0 jdbc.password ACC",
-											"jdbc.user", "1.0 jdbc.user ACC")),
-							new IndexedValues<String>(
 									"DEV",
 									map (
 											"jdbc.password", "1.0 jdbc.password DEV",
 											"jdbc.user", "1.0 jdbc.user DEV")),
 							new IndexedValues<String>(
-									"PROD",
+									"ACC",
 									map (
-											"jdbc.password", "1.0 jdbc.password PROD",
-											"jdbc.user", "1.0 jdbc.user PROD")),
+											"jdbc.password", "1.0 jdbc.password ACC",
+											"jdbc.user", "1.0 jdbc.user ACC")),
 							new IndexedValues<String>(
 									"UAT",
 									map (
 											"jdbc.password", "1.0 jdbc.password UAT",
-											"jdbc.user", "1.0 jdbc.user UAT"))
+											"jdbc.user", "1.0 jdbc.user UAT")),
+							new IndexedValues<String>(
+									"PROD",
+									map (
+											"jdbc.password", "1.0 jdbc.password PROD",
+											"jdbc.user", "1.0 jdbc.user PROD"))
 							)
 					),
 				configuration);
