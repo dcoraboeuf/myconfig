@@ -69,7 +69,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		assert [8, 8, 8] == versionList*.getValueCount()
 		// Environments
 		def envList = configuration.getEnvironmentSummaryList()
-		assert ["ACC", "DEV", "PROD", "UAT"] == envList*.getName()
+		assert ["DEV", "ACC", "UAT", "PROD"] == envList*.getName()
 		assert [6, 6, 6, 6] == envList*.getConfigCount()
 		assert [6, 6, 6, 6] == envList*.getValueCount()		
 		// Keys
@@ -187,7 +187,7 @@ class ITRestConfiguration extends AbstractClientUseCase {
 		def conf = client().environmentConfiguration(id, "UAT")
 		assert id == conf.getId()
 		assert name == conf.getName()
-		assert ["PROD", "UAT", null] == [ conf.getPreviousEnvironment(), conf.getEnvironment(), conf.getNextEnvironment()]
+		assert ["ACC", "UAT", "PROD"] == [ conf.getPreviousEnvironment(), conf.getEnvironment(), conf.getNextEnvironment()]
 		assert ["jdbc.password", "jdbc.user"] == conf.getKeyList()*.getName()
 		["1.0", "1.1", "1.2"].each {
 			version ->
