@@ -227,5 +227,6 @@ public interface SQL {
 	String USER_NAMES = "select name, displayName from users where verified = true and disabled = false and admin = false";
 
 	String ENVIRONMENT_GET_ORDER = "SELECT ORDERNB FROM ENVIRONMENT WHERE APPLICATION = :id AND NAME = :name";
+	String ENVIRONMENT_SET_ORDER = "UPDATE ENVIRONMENT SET ORDERNB = :ordernb WHERE APPLICATION = :id AND NAME = :name";
 	String ENVIRONMENT_REORDER_ABOVE = "UPDATE ENVIRONMENT SET ORDERNB = ORDERNB - 1 WHERE APPLICATION = :id AND ORDERNB > :ordernb";
 }

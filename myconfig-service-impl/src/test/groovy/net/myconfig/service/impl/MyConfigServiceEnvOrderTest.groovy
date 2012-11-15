@@ -18,14 +18,7 @@ class MyConfigServiceEnvOrderTest extends AbstractIntegrationTest {
 	@Test
 	void env_create_order() {
 		String id = "APPENV1"
-		myConfigService.createApplication(id, id)
-		myConfigService.createEnvironment(id, "DEV")
-		myConfigService.createEnvironment(id, "ACC")
-		myConfigService.createEnvironment(id, "BETA")
-		myConfigService.createEnvironment(id, "PROD")
-		ApplicationConfiguration conf = myConfigService.getApplicationConfiguration(id)
-		List<EnvironmentSummary> envs = conf.getEnvironmentSummaryList()
-		assert ["DEV", "ACC", "BETA", "PROD"] == envs*.getName()
+		createTestApplication(id)
 	}
 		
 	@Test
@@ -58,5 +51,56 @@ class MyConfigServiceEnvOrderTest extends AbstractIntegrationTest {
 			int order = i + 1
 			assertRecordExists("select ordernb from environment where application = '$id' and name = '$name' and ordernb = $order")
 		}
+	}
+		
+	@Test
+	void env_down() {
+		String id = "APPENV3"
+		createTestApplication(id)
+		// 1
+		assert myConfigService.setEnvironmentDown(id, "DEV").isSuccess()
+		testEnvs(id, ["ACC", "DEV", "BETA", "PROD"])
+		// 2
+		assert myConfigService.setEnvironmentDown(id, "DEV").isSuccess()
+		testEnvs(id, ["ACC", "BETA", "DEV", "PROD"])
+		// 3
+		assert myConfigService.setEnvironmentDown(id, "DEV").isSuccess()
+		testEnvs(id, ["ACC", "BETA", "PROD", "DEV"])
+		// 4 - cannot go down any longer
+		assert !myConfigService.setEnvironmentDown(id, "DEV").isSuccess()
+		testEnvs(id, ["ACC", "BETA", "PROD", "DEV"])
+	}
+		
+	@Test
+	void env_up() {
+		String id = "APPENV4"
+		createTestApplication(id)
+		// 1
+		assert myConfigService.setEnvironmentUp(id, "PROD").isSuccess()
+		testEnvs(id, ["DEV", "ACC", "PROD", "BETA"])
+		// 2
+		assert myConfigService.setEnvironmentUp(id, "PROD").isSuccess()
+		testEnvs(id, ["DEV", "PROD", "ACC", "BETA"])
+		// 3
+		assert myConfigService.setEnvironmentUp(id, "PROD").isSuccess()
+		testEnvs(id, ["PROD", "DEV", "ACC", "BETA"])
+		// 4 - cannot go up any longer
+		assert !myConfigService.setEnvironmentUp(id, "PROD").isSuccess()
+		testEnvs(id, ["PROD", "DEV", "ACC", "BETA"])
+	}
+
+	private createTestApplication(String id) {
+		myConfigService.createApplication(id, id)
+		myConfigService.createEnvironment(id, "DEV")
+		myConfigService.createEnvironment(id, "ACC")
+		myConfigService.createEnvironment(id, "BETA")
+		myConfigService.createEnvironment(id, "PROD")
+		testEnvs(id, ["DEV", "ACC", "BETA", "PROD"])
+	}
+
+	private testEnvs(String id, List expectedEnvs) {
+		ApplicationConfiguration conf = myConfigService.getApplicationConfiguration(id)
+		List<EnvironmentSummary> envs = conf.getEnvironmentSummaryList()
+		assert expectedEnvs == envs*.getName()
 	}
 }

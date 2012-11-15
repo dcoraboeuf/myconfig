@@ -425,24 +425,61 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		return Ack.one (count);
 	}
 	
+	/**
+	 * "Up" in the sense up on the screen, meaning order + 1
+	 */
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_envcreate)
-	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.UPDATE, application = "#id", environment = "#environment", result = "#result.success", message = "UP")
-	public Ack setEnvironmentUp(@AppGrantParam String id, String environment) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	@Override
-	@Transactional
-	@AppGrant(AppFunction.app_envcreate)
-	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.UPDATE, application = "#id", environment = "#environment", result = "#result.success", message = "DOWN")
+	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.UPDATE, application = "#id", environment = "#environment", result = "#result.success", message = "'DOWN'")
 	public Ack setEnvironmentDown(@AppGrantParam String id, String environment) {
-		// TODO Auto-generated method stub
-		return null;
+		// This environment criteria
+		MapSqlParameterSource environmentCriteria = new MapSqlParameterSource(APPLICATION, id).addValue(ENVIRONMENT, environment);
+		// Gets the environment just after
+		String nextEnvironment = getFirstItem(SQL.ENVIRONMENT_NEXT, environmentCriteria, String.class);
+		// Swaps the order
+		if (nextEnvironment != null) {
+			return swapEnvironmentOrder (id, environment, nextEnvironment);
+		} else {
+			// Cannot go up, this is the last in the list
+			return Ack.NOK;
+		}
 	}
 	
+	/**
+	 * "Down" in the sense down on the screen, meaning order - 1
+	 */
+	@Override
+	@Transactional
+	@AppGrant(AppFunction.app_envcreate)
+	@Audit(category = EventCategory.ENVIRONMENT, action = EventAction.UPDATE, application = "#id", environment = "#environment", result = "#result.success", message = "'UP'")
+	public Ack setEnvironmentUp(@AppGrantParam String id, String environment) {
+		// This environment criteria
+		MapSqlParameterSource environmentCriteria = new MapSqlParameterSource(APPLICATION, id).addValue(ENVIRONMENT, environment);
+		// Gets the environment just before
+		String previousEnvironment = getFirstItem(SQL.ENVIRONMENT_PREVIOUS, environmentCriteria, String.class);
+		// Swaps the order
+		if (previousEnvironment != null) {
+			return swapEnvironmentOrder (id, environment, previousEnvironment);
+		} else {
+			// Cannot go down, this is the first in the list
+			return Ack.NOK;
+		}
+	}
+	
+	protected Ack swapEnvironmentOrder(String id, String enva, String envb) {
+		NamedParameterJdbcTemplate t = getNamedParameterJdbcTemplate();
+		MapSqlParameterSource idCriteria = new MapSqlParameterSource(ID, id);
+		// Gets the order values
+		int ordera = t.queryForInt(SQL.ENVIRONMENT_GET_ORDER, idCriteria.addValue(NAME, enva));
+		int orderb = t.queryForInt(SQL.ENVIRONMENT_GET_ORDER, idCriteria.addValue(NAME, envb));
+		// Changes the order
+		t.update(SQL.ENVIRONMENT_SET_ORDER, idCriteria.addValue(NAME, enva).addValue(ORDER, orderb));
+		t.update(SQL.ENVIRONMENT_SET_ORDER, idCriteria.addValue(NAME, envb).addValue(ORDER, ordera));
+		// OK
+		return Ack.OK;
+	}
+
 	@Override
 	@Transactional
 	@AppGrant(AppFunction.app_config)
