@@ -27,11 +27,17 @@ then
 fi
 
 ##########################
+# General MVN options
+##########################
+
+MVN_OPTIONS='-Djava.net.preferIPv4Stack=true'
+
+##########################
 # Preparation of the build
 ##########################
 
 # Gets the version number from the POM
-VERSION=`mvn help:evaluate -Dexpression=project.version | grep "^[0-9]" | sed -e 's/\-SNAPSHOT//'`
+VERSION=`mvn help:evaluate -Dexpression=project.version $MVN_OPTIONS | grep -E "^[A-Za-z\.0-9]+-SNAPSHOT$" | sed -e 's/\-SNAPSHOT//'`
 
 # Release number is made of the version and the build number
 RELEASE=${VERSION}-${BUILD_NUMBER}
@@ -45,7 +51,7 @@ git checkout -- .
 
 # Build options
 echo Building release ${RELEASE}...
-export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=128m"
+export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=128m $MVN_OPTIONS"
 
 # Changing the versions
 mvn versions:set -DnewVersion=${RELEASE} -DgenerateBackupPoms=false
