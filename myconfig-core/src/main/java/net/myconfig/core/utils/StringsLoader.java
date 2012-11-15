@@ -31,9 +31,7 @@ public class StringsLoader {
 		while (resources.hasMoreElements()) {
 			URL url = resources.nextElement();
 			logger.info("[strings] Trying to load URL {}", url);
-			// JDK7 Reads the content
-			InputStream in = url.openStream();
-			try {
+			try (InputStream in = url.openStream()) {
 				List<String> lines = IOUtils.readLines(in);
 				for (String line : lines) {
 					if (StringUtils.isNotBlank(line)) {
@@ -49,8 +47,6 @@ public class StringsLoader {
 						}
 					}
 				}
-			} finally {
-				in.close();
 			}
 		}
 		// OK

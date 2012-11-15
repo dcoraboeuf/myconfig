@@ -40,10 +40,7 @@ public class TemplateServiceImpl implements TemplateService {
 		StringWriter writer = new StringWriter();
 		try {
 			template.process(root, writer);
-		} catch (TemplateException ex) {
-			throw new TemplateMergeException (templateId, ex);
-		} catch (IOException ex) {
-			// JDK7: same code for two exceptions
+		} catch (TemplateException | IOException ex) {
 			throw new TemplateMergeException (templateId, ex);
 		}
 		// OK
