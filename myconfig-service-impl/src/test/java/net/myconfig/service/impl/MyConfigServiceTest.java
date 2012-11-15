@@ -775,7 +775,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		myConfigService.keyVersionConfiguration("app_xxx");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration() throws JsonGenerationException, JsonMappingException, IOException {
 		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "ACC");
@@ -824,7 +823,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
 	 * has been added yet.
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
 		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration("APP2", "DEV");
@@ -852,7 +850,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 				configuration);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
 		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "PROD");
@@ -897,7 +894,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 				configuration);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void environment_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
 		EnvironmentConfiguration configuration = myConfigService.getEnvironmentConfiguration(APP, "DEV");
@@ -952,7 +948,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		myConfigService.getEnvironmentConfiguration(APP, "xxx");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void key_configuration() throws JsonGenerationException, JsonMappingException, IOException {
 		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.url");
@@ -988,7 +983,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 				configuration);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void key_configuration_no_previous() throws JsonGenerationException, JsonMappingException, IOException {
 		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.password");
@@ -1034,7 +1028,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 				configuration);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void key_configuration_no_next() throws JsonGenerationException, JsonMappingException, IOException {
 		KeyConfiguration configuration = myConfigService.getKeyConfiguration(APP, "jdbc.user");
@@ -1090,7 +1083,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 		myConfigService.getKeyConfiguration(APP, "xxx");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(APP, "1.1");
@@ -1130,7 +1122,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 	 * Test for an application where environments, keys, versions and matrix have been configured, but where no value
 	 * has been added yet.
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration_no_config() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration("APP2", "1.0.1");
@@ -1158,7 +1149,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 				configuration);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration_no_next_version() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(APP, "1.3");
@@ -1187,7 +1177,6 @@ public class MyConfigServiceTest extends AbstractIntegrationTest {
 				configuration);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void version_configuration_no_previous_version() throws JsonGenerationException, JsonMappingException, IOException {
 		VersionConfiguration configuration = myConfigService.getVersionConfiguration(APP, "1.0");
