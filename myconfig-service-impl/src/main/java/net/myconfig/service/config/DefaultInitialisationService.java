@@ -26,7 +26,7 @@ public class DefaultInitialisationService implements InitialisationService {
 
 	protected void initGeneral() {
 		logger.info("[config] Using {} profile", profile);
-		logger.info("[config] Using JDK", System.getProperty("java.version"));
+		logger.info("[config] Using JDK {}", System.getProperty("java.version"));
 	}
 
 }
