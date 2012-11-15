@@ -38,13 +38,13 @@ public class GUIApplicationPage extends AbstractGUIApplicationPage {
 	}
 
 	@RequestMapping(value = "/{application}/environment/{environment}/up", method = RequestMethod.GET)
-	public String environmentUp (String application, String environment) {
+	public String environmentUp (@PathVariable String application, @PathVariable String environment) {
 		ui.environmentUp(application, environment);
 		return backToPage (application);
 	}
 
 	@RequestMapping(value = "/{application}/environment/{environment}/down", method = RequestMethod.GET)
-	public String environmentDown (String application, String environment) {
+	public String environmentDown (@PathVariable String application, @PathVariable String environment) {
 		ui.environmentDown(application, environment);
 		return backToPage (application);
 	}
