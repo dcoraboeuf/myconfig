@@ -48,4 +48,4 @@ cb_config_set "dbinit.profile" "mysql"
 
 # Deployment
 WAR=myconfig-web-${VERSION}-${BUILD}.war
-bees app:deploy --appid "${CB_ACCOUNT}/${CB_APPID}" --message "Automatic deployment for ${VERSION}-${BUILD}" $WAR
+bees app:deploy -Rjava_version=1.7 --appid "${CB_ACCOUNT}/${CB_APPID}" --message "Automatic deployment for ${VERSION}-${BUILD}" $WAR
