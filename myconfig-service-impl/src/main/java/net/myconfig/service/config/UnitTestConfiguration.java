@@ -3,7 +3,6 @@ package net.myconfig.service.config;
 import javax.sql.DataSource;
 
 import net.myconfig.core.MyConfigProfiles;
-import net.myconfig.service.api.InitialisationService;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
@@ -14,15 +13,9 @@ import org.springframework.context.annotation.Profile;
 
 @Configuration
 @Profile(MyConfigProfiles.TEST)
-public class UnitTestConfiguration extends CommonConfiguration {
+public class UnitTestConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(UnitTestConfiguration.class);
-
-	@Override
-	@Bean
-	public InitialisationService initialisationService() {
-		return new DefaultInitialisationService(MyConfigProfiles.TEST);
-	}
 
 	@Bean
 	public DataSource dataSource() {

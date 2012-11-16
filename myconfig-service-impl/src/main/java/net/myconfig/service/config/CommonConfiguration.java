@@ -8,11 +8,12 @@ import net.myconfig.core.utils.StringsLoader;
 import net.sf.jstring.Strings;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-public abstract class CommonConfiguration implements GeneralConfiguration {
+@Configuration
+public class CommonConfiguration {
 
-	@Override
 	@Bean
 	public Validator validator() {
 		return new LocalValidatorFactoryBean();
