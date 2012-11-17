@@ -10,6 +10,9 @@ var Settings = function () {
 			return myconfig.validateTextAsName ('#userDisplayName')
 				&& myconfig.validateTextAsName ('#userEmail')
 				&& myconfig.validateTextAsName ('#userPassword');
+		},
+		confirmClearAll: function() {
+			return myconfig.displayConfirmation(loc('settings.audit.clearAll.prompt'));
 		}
 	};
 	
