@@ -13,7 +13,11 @@ public final class SQLUtils {
 	}
 
 	public static Timestamp now() {
-		return new Timestamp(DateTime.now(DateTimeZone.UTC).getMillis());
+		return toTimestamp(DateTime.now(DateTimeZone.UTC));
+	}
+
+	public static Timestamp toTimestamp(DateTime dateTime) {
+		return new Timestamp(dateTime.getMillis());
 	}
 
 	public static DateTime getDateTime(ResultSet rs, String columnName) throws SQLException {

@@ -12,4 +12,6 @@ public interface EventService {
 
 	Collection<EventRecord> filter(EventFilter eventFilter);
 
+	int clean(int retentionDays);
+
 }

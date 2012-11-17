@@ -4,6 +4,7 @@ import static org.apache.commons.lang3.StringUtils.substring;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -22,6 +23,7 @@ import net.myconfig.service.db.SQLUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +58,7 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	public static final int LENGTH_FUNCTION = 20;
 	
 	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, action, identifier, application, environment, version, appkey, message, targetUser, fn) values (:security, :user, :creation, :category, :action, :identifier, :application, :environment, :version, :appkey, :message, :targetUser, :fn)";
+	private static final String EVENT_CLEAR = "delete from events where creation < :creation";
 	
 	private final Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
 	
@@ -66,6 +69,17 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 		super(dataSource, validator);
 		this.securitySelector = securitySelector;
 	}
+	
+	@Override
+	@Transactional
+	public int clean(int retentionDays) {
+		// Date cut-off
+		Timestamp cutOff = SQLUtils.toTimestamp(DateTime.now(DateTimeZone.UTC).minusDays(retentionDays));
+		// SQL
+		int count = getNamedParameterJdbcTemplate().update(EVENT_CLEAR, new MapSqlParameterSource(CREATION, cutOff));
+		// OK
+		return count;
+	}	
 
 	@Override
 	@Transactional

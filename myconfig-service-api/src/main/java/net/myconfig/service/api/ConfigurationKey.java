@@ -5,7 +5,8 @@ public enum ConfigurationKey {
 	SECURITY_MODE("security.mode", "none"),
 	APP_NAME("app.name", "myconfig"),
 	APP_REPLYTO_ADDRESS("app.replyto.address", "noreply@myconfig.net"),
-	APP_REPLYTO_NAME("app.replyto.name", "the myconfig team");
+	APP_REPLYTO_NAME("app.replyto.name", "the myconfig team"),
+	AUDIT_RETENTION_DAYS("audit.retention.days", "60");
 
 	private final String key;
 	private final String defaultValue;

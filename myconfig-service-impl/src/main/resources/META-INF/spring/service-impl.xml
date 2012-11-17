@@ -22,6 +22,8 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
     
     <aop:aspectj-autoproxy/>
     
+    <task:annotation-driven/>
+    
     <tx:annotation-driven transaction-manager="txManager"/>
 
 	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
