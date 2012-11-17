@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModelException;
 
-// FIXME Re-using code in FnLoc
 public class FnLocLink implements TemplateMethodModel {
 	
 	private final Strings strings;

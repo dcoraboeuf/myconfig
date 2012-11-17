@@ -30,7 +30,6 @@ public abstract class AbstractGUIPage {
 	/**
 	 * Generic error handler
 	 */
-	// FIXME #73 Filters on all exceptions but the AccessDeniedException
 	@ExceptionHandler(Exception.class)
 	public ModelAndView onException (HttpServletRequest request, Locale locale, Exception ex) {
 		if (ex instanceof AccessDeniedException) {
