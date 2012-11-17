@@ -28,6 +28,11 @@ public class SettingsPage extends AbstractGUIPage {
 
 	private final SecurityService securityService;
 	private final SecuritySelector securitySelector;
+	/**
+	 * Use a settings service instead
+	 * @deprecated
+	 */
+	@Deprecated
 	private final ConfigurationService configurationService;
 
 	@Autowired
@@ -67,6 +72,10 @@ public class SettingsPage extends AbstractGUIPage {
 			model.addAttribute("userDisplayName", user.getDisplayName());
 			model.addAttribute("userEmail", user.getEmail());
 		}
+		
+		// Audit settings
+		// FIXME Uses a settings service
+		model.addAttribute("auditRetentionDays", configurationService.getParameter(ConfigurationKey.AUDIT_RETENTION_DAYS));
 
 		// OK
 		return "settings";
@@ -82,6 +91,7 @@ public class SettingsPage extends AbstractGUIPage {
 
 	@RequestMapping(value = "/gui/settings/app", method = RequestMethod.POST)
 	public String setApplicationSettings (@RequestParam String name, @RequestParam String replytoAddress, @RequestParam String replytoName) {
+		// FIXME Must be admin! Use a settings service
 		configurationService.setParameter(ConfigurationKey.APP_NAME, name);
 		configurationService.setParameter(ConfigurationKey.APP_REPLYTO_ADDRESS, replytoAddress);
 		configurationService.setParameter(ConfigurationKey.APP_REPLYTO_NAME, replytoName);
@@ -95,6 +105,18 @@ public class SettingsPage extends AbstractGUIPage {
 		securityService.updateUserData (password, displayName, email);
 		// OK
 		return "redirect:/";
+	}
+	
+	@RequestMapping(value = "/gui/settings/audit/retentionDays", method = RequestMethod.POST)
+	public String setAuditRetentionDays(@RequestParam int retentionDays) {
+		if (retentionDays < 1) {
+			throw new AuditRetentionDaysMustBeDefinedException();
+		} else {
+			// FIXME Must be admin! Use a settings service
+			configurationService.setParameter(ConfigurationKey.AUDIT_RETENTION_DAYS, String.valueOf(retentionDays));
+			// OK
+			return "redirect:/gui/settings";
+		}
 	}
 
 }
