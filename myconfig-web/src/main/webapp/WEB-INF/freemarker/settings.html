@@ -109,7 +109,7 @@
 									</label>
 								</td>
 								<td class="form-input">
-									<input id="app-replyto-address" type="email" name="replytoAddress" maxlength="80" size="20" value="${applicationSettings.replytoAddress?html}" />
+									<input id="app-replyto-address" type="email" name="replytoAddress" maxlength="80" size="20" value="${applicationSettings.replyToAddress?html}" />
 								</td>
 							</tr>
 							<tr>
@@ -119,7 +119,7 @@
 									</label>
 								</td>
 								<td class="form-input">
-									<input id="app-replyto-name" type="text" name="replytoName" maxlength="80" size="20" value="${applicationSettings.replytoName?html}" />
+									<input id="app-replyto-name" type="text" name="replytoName" maxlength="80" size="20" value="${applicationSettings.replyToName?html}" />
 								</td>
 							</tr>
 						</tbody>
@@ -141,7 +141,7 @@
 				<label for="settings.audit.retentionDays">
 					<@lh key="settings.audit.retentionDays" />
 				</label>
-				<input id="settings.audit.retentionDays" name="retentionDays" type="number" min="1" value="${auditRetentionDays}" max="10000" />
+				<input id="settings.audit.retentionDays" name="retentionDays" type="number" min="1" value="${auditSettings.retentionDays}" max="10000" />
 				<input type="submit" value="<@lh key='general.submit' />" />
 			</form>
 			<form action="gui/settings/audit/clearAll" method="GET" onsubmit="return Settings.confirmClearAll();">

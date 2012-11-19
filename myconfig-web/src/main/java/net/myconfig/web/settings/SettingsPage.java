@@ -6,6 +6,7 @@ import java.util.Locale;
 import net.myconfig.core.InputException;
 import net.myconfig.service.api.ApplicationSettings;
 import net.myconfig.service.api.AuditSettings;
+import net.myconfig.service.api.EventService;
 import net.myconfig.service.api.SettingsService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
@@ -30,13 +31,15 @@ public class SettingsPage extends AbstractGUIPage {
 	private final SecurityService securityService;
 	private final SecuritySelector securitySelector;
 	private final SettingsService settingsService;
+	private final EventService eventService;
 
 	@Autowired
-	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector, SettingsService settingsService) {
+	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector, SettingsService settingsService, EventService eventService) {
 		super(ui, errorHandler);
 		this.securityService = securityService;
 		this.securitySelector = securitySelector;
 		this.settingsService = settingsService;
+		this.eventService = eventService;
 	}
 
 	@ExceptionHandler(InputException.class)
@@ -102,6 +105,12 @@ public class SettingsPage extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/settings/audit/retentionDays", method = RequestMethod.POST)
 	public String setAuditRetentionDays(@RequestParam int retentionDays) {
 		settingsService.setAuditRetentionDays(retentionDays);
+		return "redirect:/gui/settings";
+	}
+
+	@RequestMapping(value = "/gui/settings/audit/clearAll", method = RequestMethod.GET)
+	public String auditClearAll() {
+		eventService.clearAll();
 		return "redirect:/gui/settings";
 	}
 

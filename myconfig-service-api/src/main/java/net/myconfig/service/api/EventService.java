@@ -14,4 +14,6 @@ public interface EventService {
 
 	int clean(int retentionDays);
 
+	void clearAll();
+
 }

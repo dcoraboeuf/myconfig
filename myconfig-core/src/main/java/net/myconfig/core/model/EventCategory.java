@@ -22,6 +22,8 @@ public enum EventCategory {
 	
 	ENV_FUNCTION,
 	
-	USER;
+	USER,
+	
+	AUDIT;
 
 }

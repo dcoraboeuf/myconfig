@@ -58,6 +58,7 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	
 	private static final String EVENT_SAVE = "insert into events (security, user, creation, category, action, identifier, application, environment, version, appkey, message, targetUser, fn) values (:security, :user, :creation, :category, :action, :identifier, :application, :environment, :version, :appkey, :message, :targetUser, :fn)";
 	private static final String EVENT_CLEAR = "delete from events where creation < :creation";
+	private static final String EVENT_CLEAR_ALL = "delete from events";
 	
 	private final Logger logger = LoggerFactory.getLogger(EventServiceImpl.class);
 	
@@ -111,6 +112,17 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	}
 	
 	@Override
+	@Transactional
+	public void clearAll() {
+		SecurityUtils.checkIsAdmin(securitySelector);
+		// Clear all
+		getJdbcTemplate().update(EVENT_CLEAR_ALL);
+		// Inserts an event
+		saveEvent(new Event(EventCategory.AUDIT, EventAction.DELETE));
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
 	public Collection<EventRecord> filter(EventFilter filter) {
 		SecurityUtils.checkIsAdmin(securitySelector);
 		// SQL to build
