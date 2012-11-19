@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -113,9 +112,7 @@ public class EventServiceImpl extends AbstractDaoService implements EventService
 	
 	@Override
 	public Collection<EventRecord> filter(EventFilter filter) {
-		if (!securitySelector.isAdmin(SecurityUtils.authentication())) {
-			throw new AccessDeniedException("Only administrators can access audit events");
-		}
+		SecurityUtils.checkIsAdmin(securitySelector);
 		// SQL to build
 		StringBuilder sql = new StringBuilder("SELECT * FROM events");
 		// Associated parameters
