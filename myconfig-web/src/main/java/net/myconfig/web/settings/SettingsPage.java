@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Locale;
 
 import net.myconfig.core.InputException;
-import net.myconfig.service.api.ConfigurationKey;
-import net.myconfig.service.api.ConfigurationService;
+import net.myconfig.service.api.ApplicationSettings;
+import net.myconfig.service.api.AuditSettings;
+import net.myconfig.service.api.SettingsService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
@@ -28,19 +29,14 @@ public class SettingsPage extends AbstractGUIPage {
 
 	private final SecurityService securityService;
 	private final SecuritySelector securitySelector;
-	/**
-	 * Use a settings service instead
-	 * @deprecated
-	 */
-	@Deprecated
-	private final ConfigurationService configurationService;
+	private final SettingsService settingsService;
 
 	@Autowired
-	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector, ConfigurationService configurationService) {
+	public SettingsPage(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, SecuritySelector securitySelector, SettingsService settingsService) {
 		super(ui, errorHandler);
 		this.securityService = securityService;
 		this.securitySelector = securitySelector;
-		this.configurationService = configurationService;
+		this.settingsService = settingsService;
 	}
 
 	@ExceptionHandler(InputException.class)
@@ -52,11 +48,10 @@ public class SettingsPage extends AbstractGUIPage {
 
 	@RequestMapping(value = "/gui/settings", method = RequestMethod.GET)
 	public String settings(Model model) {
-		
+
 		// Application settings
-		model.addAttribute("appName", configurationService.getParameter(ConfigurationKey.APP_NAME));
-		model.addAttribute("appReplytoAddress", configurationService.getParameter(ConfigurationKey.APP_REPLYTO_ADDRESS));
-		model.addAttribute("appReplytoName", configurationService.getParameter(ConfigurationKey.APP_REPLYTO_NAME));
+		ApplicationSettings applicationSettings = settingsService.getApplicationSettings();
+		model.addAttribute("applicationSettings", applicationSettings);
 
 		// Security settings
 		// Selected security mode
@@ -72,10 +67,10 @@ public class SettingsPage extends AbstractGUIPage {
 			model.addAttribute("userDisplayName", user.getDisplayName());
 			model.addAttribute("userEmail", user.getEmail());
 		}
-		
+
 		// Audit settings
-		// FIXME Uses a settings service
-		model.addAttribute("auditRetentionDays", configurationService.getParameter(ConfigurationKey.AUDIT_RETENTION_DAYS));
+		AuditSettings auditSettings = settingsService.getAuditSettings();
+		model.addAttribute("auditSettings", auditSettings);
 
 		// OK
 		return "settings";
@@ -90,33 +85,24 @@ public class SettingsPage extends AbstractGUIPage {
 	}
 
 	@RequestMapping(value = "/gui/settings/app", method = RequestMethod.POST)
-	public String setApplicationSettings (@RequestParam String name, @RequestParam String replytoAddress, @RequestParam String replytoName) {
-		// FIXME Must be admin! Use a settings service
-		configurationService.setParameter(ConfigurationKey.APP_NAME, name);
-		configurationService.setParameter(ConfigurationKey.APP_REPLYTO_ADDRESS, replytoAddress);
-		configurationService.setParameter(ConfigurationKey.APP_REPLYTO_NAME, replytoName);
+	public String setApplicationSettings(@RequestParam String name, @RequestParam String replytoAddress, @RequestParam String replytoName) {
+		settingsService.setApplicationSettings(name, replytoAddress, replytoName);
 		// OK
 		return "redirect:/";
 	}
 
 	@RequestMapping(value = "/gui/settings/user/data", method = RequestMethod.POST)
-	public String setUserData (@RequestParam String displayName, @RequestParam String email, @RequestParam String password) {
+	public String setUserData(@RequestParam String displayName, @RequestParam String email, @RequestParam String password) {
 		// Calls the service
-		securityService.updateUserData (password, displayName, email);
+		securityService.updateUserData(password, displayName, email);
 		// OK
 		return "redirect:/";
 	}
-	
+
 	@RequestMapping(value = "/gui/settings/audit/retentionDays", method = RequestMethod.POST)
 	public String setAuditRetentionDays(@RequestParam int retentionDays) {
-		if (retentionDays < 1) {
-			throw new AuditRetentionDaysMustBeDefinedException();
-		} else {
-			// FIXME Must be admin! Use a settings service
-			configurationService.setParameter(ConfigurationKey.AUDIT_RETENTION_DAYS, String.valueOf(retentionDays));
-			// OK
-			return "redirect:/gui/settings";
-		}
+		settingsService.setAuditRetentionDays(retentionDays);
+		return "redirect:/gui/settings";
 	}
 
 }

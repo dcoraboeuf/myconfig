@@ -1,4 +1,4 @@
-package net.myconfig.web.settings;
+package net.myconfig.service.exception;
 
 import net.myconfig.core.InputException;
 
