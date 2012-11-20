@@ -55,11 +55,7 @@
 							</#if>
 						</td>
 						<td class="item-column item-column-displayName">
-							<#if user.anyUser>
-								-
-							<#else>
-								${user.displayName?html}
-							</#if>
+							${user.displayName!"-"?html}
 						</td>
 						<td class="item-column item-column-email">
 							<#if user.anyUser>

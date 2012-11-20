@@ -15,6 +15,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 
 public abstract class AbstractDaoService extends NamedParameterJdbcDaoSupport {
+
+	protected static final String USER_ALL = "*";
 	
 	private final Validator validator;
 	

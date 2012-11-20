@@ -75,8 +75,6 @@ import com.google.common.collect.Lists;
 @Service
 public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
 
-	private static final String USER_ALL = "*";
-
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
 	private final ConfigurationService configurationService;

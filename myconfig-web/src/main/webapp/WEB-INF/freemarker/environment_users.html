@@ -18,10 +18,14 @@
 				<#list context.users as user>
 					<tr>
 						<td class="item-column item-column-user-name">
-							${user.name?html}
+							<#if user.name == '*' >
+								<@lh key="users.all" />
+							<#else>
+								${user.name?html}
+							</#if>
 						</td>
 						<td class="item-column item-column-user-displayName">
-							${user.displayName?html}
+							${user.displayName!"-"?html}
 						</td>
 						<#list envFunctions as envFunction>
 							<td class="item-column env-function">

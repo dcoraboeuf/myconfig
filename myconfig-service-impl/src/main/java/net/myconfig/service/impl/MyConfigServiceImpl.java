@@ -196,14 +196,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		// Gets the application name
 		String name = getApplicationName(id);
 		// List of users
-		List<UserName> userNames = getJdbcTemplate().query(SQL.USER_NAMES, new RowMapper<UserName>() {
-
-			@Override
-			public UserName mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return new UserName(rs.getString(NAME), rs.getString(DISPLAYNAME));
-			}
-			
-		});
+		List<UserName> userNames = getUserNames();
 		// Gets the application rights for each user
 		List<ApplicationUserRights> users = Lists.transform(userNames, new Function<UserName, ApplicationUserRights>() {
 			@Override
@@ -216,14 +209,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		// OK
 		return new ApplicationUsers(id, name, users);
 	}
-	
-	@Override
-	@Transactional(readOnly = true)
-	@EnvGrant(EnvFunction.env_users)
-	public EnvironmentUsers getEnvironmentUsers(@AppGrantParam final String id, @EnvGrantParam final String environment) {
-		// Gets the application name
-		String applicationName = getApplicationName(id);
-		// List of users
+
+	protected List<UserName> getUserNames() {
 		List<UserName> userNames = getJdbcTemplate().query(SQL.USER_NAMES, new RowMapper<UserName>() {
 
 			@Override
@@ -232,6 +219,20 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 			}
 			
 		});
+		// '*' user
+		userNames.add(0, new UserName(USER_ALL, null));
+		// OK
+		return userNames;
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	@EnvGrant(EnvFunction.env_users)
+	public EnvironmentUsers getEnvironmentUsers(@AppGrantParam final String id, @EnvGrantParam final String environment) {
+		// Gets the application name
+		String applicationName = getApplicationName(id);
+		// List of users
+		List<UserName> userNames = getUserNames();
 		// Gets the environment rights for each user and this applications
 		List<EnvironmentUserRights> users = Lists.transform(userNames, new Function<UserName, EnvironmentUserRights>() {
 			@Override
