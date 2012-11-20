@@ -61,10 +61,11 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 
 	private void assertUserList(List<UserSummary> users) {
 		assertNotNull(users);
-		assertEquals(3, users.size());
-		assertUser(users.get(0), "admin", true, UserFunction.app_list);
-		assertUser(users.get(1), "user1", false, UserFunction.app_create, UserFunction.app_list);
-		assertUser(users.get(2), "user2", false, UserFunction.app_list);
+		assertEquals(4, users.size());
+		assertUser(users.get(0), "*", false, UserFunction.app_list);
+		assertUser(users.get(1), "admin", true);
+		assertUser(users.get(2), "user1", false, UserFunction.app_create);
+		assertUser(users.get(3), "user2", false);
 
 	}
 
@@ -72,7 +73,11 @@ public class SecurityServiceTest extends AbstractSecurityTest {
 		assertNotNull(user);
 		assertEquals(name, user.getName());
 		assertEquals(admin, user.isAdmin());
-		assertEquals(EnumSet.copyOf(Arrays.asList(expectedFunctions)), user.getFunctions());
+		assertEquals(
+				expectedFunctions.length == 0 ?
+					EnumSet.noneOf(UserFunction.class) :
+					EnumSet.copyOf(Arrays.asList(expectedFunctions)),
+				user.getFunctions());
 	}
 
 	@Test(expected = AccessDeniedException.class)
