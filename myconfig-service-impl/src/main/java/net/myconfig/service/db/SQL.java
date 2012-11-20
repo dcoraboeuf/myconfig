@@ -176,7 +176,7 @@ public interface SQL {
 	String CONFIGURATION_ADD = "insert into configuration (name, value) values (:name, :value)";
 	String CONFIGURATION_UPDATE = "update configuration set value = :value where name = :name";
 
-	String FUNCTIONS_USER = "select grantedfunction from usergrants where (user = :user or user = '*') order by grantedfunction";
+	String FUNCTIONS_USER = "select grantedfunction from usergrants where user = :user order by grantedfunction";
 	String FUNCTION_USER = "select grantedfunction from usergrants where (user = :user or user = '*') and grantedfunction = :grantedfunction";
 	String FUNCTIONS_USER_ADD = "insert into usergrants (user, grantedfunction) values (:user, :grantedfunction)";
 	String FUNCTIONS_USER_REMOVE = "delete from usergrants where user = :user and grantedfunction = :grantedfunction";

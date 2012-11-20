@@ -39,9 +39,6 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
 					<property name="name" value="configuration" />
 				</bean>
 				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-					<property name="name" value="userFunctions" />
-				</bean>
-				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
 					<property name="name" value="userFunction" />
 				</bean>
 				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">

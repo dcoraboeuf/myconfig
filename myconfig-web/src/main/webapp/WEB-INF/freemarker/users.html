@@ -48,13 +48,25 @@
 				<#list users as user>
 					<tr class="<@item_row_class index=user_index />"">
 						<td class="item-column item-column-name">
-							${user.name?html}
+							<#if user.anyUser>
+								<@lh key="users.all" />
+							<#else>
+								${user.name?html}
+							</#if>
 						</td>
 						<td class="item-column item-column-displayName">
-							${user.displayName?html}
+							<#if user.anyUser>
+								-
+							<#else>
+								${user.displayName?html}
+							</#if>
 						</td>
 						<td class="item-column item-column-email">
-							${user.email?html}
+							<#if user.anyUser>
+								-
+							<#else>
+								${user.email?html}
+							</#if>
 						</td>
 						<@item_column_boolean item=user field="admin" />
 						<@item_column_boolean item=user field="verified" />
@@ -81,22 +93,24 @@
 						<td class="item-actions">
 							<#-- Only non-admin users need administration -->
 							<#if !user.admin && secUserName() != user.name>
-								<#-- Deleting a user -->
-								<@item_delete item=user action="gui/user/delete" formField="name" promptKey="users.delete" />
-								<#-- Activation of a user -->
-								<#if user.disabled>
-									<form class="item-action" action="gui/user/${user.name?html}/enable" method="post">
-										<input class="item-action" type="image" src="static/images/user_enable.png" title="<@lh key='users.enable' />" />
-									</form>
-								<#else>
-									<form class="item-action" action="gui/user/${user.name?html}/disable" method="post">
-										<input class="item-action" type="image" src="static/images/user_disable.png" title="<@lh key='users.disable' />" />
-									</form>
+								<#if !user.anyUser>
+									<#-- Deleting a user -->
+									<@item_delete item=user action="gui/user/delete" formField="name" promptKey="users.delete" />
+									<#-- Activation of a user -->
+									<#if user.disabled>
+										<form class="item-action" action="gui/user/${user.name?html}/enable" method="post">
+											<input class="item-action" type="image" src="static/images/user_enable.png" title="<@lh key='users.enable' />" />
+										</form>
+									<#else>
+										<form class="item-action" action="gui/user/${user.name?html}/disable" method="post">
+											<input class="item-action" type="image" src="static/images/user_disable.png" title="<@lh key='users.disable' />" />
+										</form>
+									</#if>
+									<#-- Resetting a user -->
+									<form class="item-action" action="gui/user/${user.name?html}/reset" method="post">
+										<input class="item-action" type="image" src="static/images/user_reset.png" title="<@lh key='users.reset' />" />
+									</form>								
 								</#if>
-								<#-- Resetting a user -->
-								<form class="item-action" action="gui/user/${user.name?html}/reset" method="post">
-									<input class="item-action" type="image" src="static/images/user_reset.png" title="<@lh key='users.reset' />" />
-								</form>
 								<#-- Applications for a user -->
 								<@sec_chk_user_fn fn="security_users">
 									<form class="item-action" action="gui/user/${user.name?html}/applications" method="get">

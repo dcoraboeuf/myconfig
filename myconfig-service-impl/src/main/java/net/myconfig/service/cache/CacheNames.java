@@ -8,11 +8,6 @@ public interface CacheNames {
 	String CONFIGURATION = "configuration";
 	
 	/**
-	 * Key: user name
-	 */
-	String USER_FUNCTIONS = "userFunctions";
-	
-	/**
 	 * Key: user name + function
 	 */
 	String USER_FUNCTION = "userFunction";

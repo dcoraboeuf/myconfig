@@ -86,5 +86,28 @@ public class TestGetApplications extends AbstractSecurityTest {
 				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, true, true, true, false, false)
 				), list);
 	}
+	
+	@Test
+	public void app_any_list() throws SQLException {
+		asUser("*").grant(UserFunction.app_list);
+		asUser();
+		List<ApplicationSummary> list = service.getApplications().getSummaries();
+		assertNotNull(list);
+		assertEquals (asList(
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, false, false, false, false, false),
+				new ApplicationSummary("BB", "app2", 0, 0, 0, 0, 0, false, false, false, false, false)
+				), list);
+	}
+	
+	@Test
+	public void app_any_view() throws SQLException {
+		asUser("*").grant("A", AppFunction.app_view);
+		asUser();
+		List<ApplicationSummary> list = service.getApplications().getSummaries();
+		assertNotNull(list);
+		assertEquals (asList(
+				new ApplicationSummary("A", "app1", 0, 0, 0, 0, 0, false, false, true, false, false)
+				), list);
+	}
 
 }

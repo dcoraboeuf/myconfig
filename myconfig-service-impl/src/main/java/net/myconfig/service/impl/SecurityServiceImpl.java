@@ -75,6 +75,8 @@ import com.google.common.collect.Lists;
 @Service
 public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
 
+	private static final String USER_ALL = "*";
+
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 
 	private final ConfigurationService configurationService;
@@ -102,7 +104,6 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 	@Transactional
 	@UserGrant(UserFunction.security_setup)
 	@Caching(evict = {
-			@CacheEvict(value = CacheNames.USER_FUNCTIONS, allEntries = true),
 			@CacheEvict(value = CacheNames.USER_FUNCTION, allEntries = true),
 			@CacheEvict(value = CacheNames.APP_FUNCTION, allEntries = true),
 			@CacheEvict(value = CacheNames.ENV_FUNCTION, allEntries = true)
@@ -132,11 +133,14 @@ public class SecurityServiceImpl extends AbstractSecurityService implements Secu
 				return new User(rs.getString(NAME), rs.getString(DISPLAYNAME), rs.getString(EMAIL), rs.getBoolean(ADMIN), rs.getBoolean(VERIFIED), rs.getBoolean(DISABLED));
 			}
 		});
+		// All users
+		users.add(0, new User(USER_ALL, null, null, false, true, true));
+		// List
 		return new UserSummaries(Lists.transform(users, new Function<User, UserSummary>() {
 			@Override
 			public UserSummary apply(User user) {
 				EnumSet<UserFunction> functions = grantService.getUserFunctions(user.getName());
-				return new UserSummary(user.getName(), user.getDisplayName(), user.getEmail(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
+				return new UserSummary(USER_ALL.equals(user.getName()), user.getName(), user.getDisplayName(), user.getEmail(), user.isAdmin(), user.isVerified(), user.isDisabled(), functions);
 			}
 		}));
 	}

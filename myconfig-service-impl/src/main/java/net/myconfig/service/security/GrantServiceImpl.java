@@ -25,7 +25,6 @@ import net.myconfig.service.impl.AbstractDaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,6 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 
 	@Override
-	@Cacheable(CacheNames.USER_FUNCTIONS)
 	@Transactional(readOnly = true)
 	public EnumSet<UserFunction> getUserFunctions(String name) {
 		List<UserFunction> fns = Lists.transform(getNamedParameterJdbcTemplate().queryForList(SQL.FUNCTIONS_USER, new MapSqlParameterSource(SQLColumns.USER, name), String.class),
@@ -105,10 +103,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 
 	@Override
-	@Caching(evict = {
-			@CacheEvict(CacheNames.USER_FUNCTION),
-			@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
-		})
+	@CacheEvict(CacheNames.USER_FUNCTION)
 	@Transactional
 	public Ack userFunctionAdd(String name, UserFunction fn) {
 		userFunctionRemove(name, fn);
@@ -117,10 +112,7 @@ public class GrantServiceImpl extends AbstractDaoService implements GrantService
 	}
 
 	@Override
-	@Caching(evict = {
-			@CacheEvict(CacheNames.USER_FUNCTION),
-			@CacheEvict(value = CacheNames.USER_FUNCTIONS, key = "#name")
-		})
+	@CacheEvict(CacheNames.USER_FUNCTION)
 	@Transactional
 	public Ack userFunctionRemove(String name, UserFunction fn) {
 		int count = getNamedParameterJdbcTemplate().update(SQL.FUNCTIONS_USER_REMOVE, new MapSqlParameterSource().addValue(SQLColumns.USER, name).addValue(SQLColumns.GRANTEDFUNCTION, fn.name()));
