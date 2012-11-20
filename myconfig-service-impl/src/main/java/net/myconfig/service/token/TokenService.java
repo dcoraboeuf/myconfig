@@ -10,4 +10,6 @@ public interface TokenService {
 
 	void consumesToken(String token, TokenType type, String key);
 
+	int cleanup();
+
 }

@@ -208,6 +208,7 @@ public interface SQL {
 	String TOKEN_SAVE = "insert into tokens (token, tokentype, tokenkey, creation) values (:token, :tokentype, :tokenkey, :creation)";
 	String TOKEN_CHECK = "select creation from tokens where token = :token and tokentype = :tokentype and tokenkey = :tokenkey";
 	String TOKEN_DELETE = "delete from tokens where tokentype = :tokentype and tokenkey = :tokenkey";
+	String TOKEN_CLEANUP = "delete from tokens where creation < :creation";
 
 	String USER_CONFIRM = "update users set password = :password, verified = true where name = :user and disabled = false";
 

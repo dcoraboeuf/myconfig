@@ -28,11 +28,10 @@ import org.springframework.security.core.token.Sha512DigestUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// TODO Task to clean obsolete tokens after a while
-
 @Service
 public class TokenServiceImpl extends AbstractDaoService implements TokenService {
 
+	private static final int RETENTION_DAYS = 30;
 	private static final int EXPIRATION_DELAY = 15;
 
 	@Autowired
@@ -92,6 +91,18 @@ public class TokenServiceImpl extends AbstractDaoService implements TokenService
 				new MapSqlParameterSource()
 					.addValue(TOKENTYPE, type.name())
 					.addValue(TOKENKEY, key));
+	}
+	
+	@Override
+	@Transactional
+	public int cleanup() {
+		// Date cut-off
+		Timestamp cutOff = SQLUtils.toTimestamp(DateTime.now(DateTimeZone.UTC).minusDays(RETENTION_DAYS));
+		// SQL
+		int count = getNamedParameterJdbcTemplate().update(SQL.TOKEN_CLEANUP, new MapSqlParameterSource(CREATION, cutOff));
+		// OK
+		return count;
+		
 	}
 
 	private String createToken(TokenType type, String key) {
