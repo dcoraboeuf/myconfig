@@ -55,13 +55,11 @@
 				<@items_commands>
 					<div class="item-command">
 						<form class="item-command" action="gui/applications/create" method="post" onsubmit="return Applications.validateCreate()">
-							<label>
-								<@lh key="model.application.id" />
-								<input id="application-create-id" name="id" type="text" maxlength="16" size="16" />
-								<@lh key="model.application.name" />
-								<input id="application-create-name" name="name" type="text" maxlength="80" size="20" />
-								<input id="application-create-submit" type="submit" value="<@lh key='applications.new' />" />
-							</label>
+							<label for="application-create-id"><@lh key="model.application.id" /></label>
+							<input id="application-create-id" name="id" type="text" maxlength="16" size="16" />
+							<label for="application-create-name"><@lh key="model.application.name" /></label>
+							<input id="application-create-name" name="name" type="text" maxlength="80" size="20" />
+							<input id="application-create-submit" type="submit" value="<@lh key='applications.new' />" />
 						</form>
 					</div>
 					<@item_error />

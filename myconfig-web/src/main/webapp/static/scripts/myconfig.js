@@ -1,12 +1,34 @@
 var myconfig = function () {
 	
-	function displayConfirmation (text) {
-		return confirm (text);
+	function confirmAndCall (text, callback) {
+		$('<div>{0}</div>'.format(text)).dialog({
+			title: loc('general.confirm.title'),
+			dialogClass: 'confirm-dialog',
+			modal: true,
+			buttons: {
+				Ok: function () {
+					$( this ).dialog( "close" );
+					callback();
+				},
+				Cancel: function () {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
 	}
 	
-	function displayConfirmationID (id) {
+	function confirmIDAndCall (id, callback) {
 		var text = document.getElementById(id).value;
-		return displayConfirmation(text);
+		confirmAndCall(text, callback);
+	}
+	
+	function onConfirmedAction (form, confirmID) {
+		// Asks for confirmation
+		myconfig.confirmIDAndCall (confirmID, function () {
+			form.submit();
+		});
+		// Does not submit the form
+		return false;
 	}
 	
 	function displayError (text) {
@@ -39,10 +61,11 @@ var myconfig = function () {
 	}
 	
 	return {
-		displayConfirmation: displayConfirmation,
-		displayConfirmationID: displayConfirmationID,
+		confirmAndCall: confirmAndCall,
+		confirmIDAndCall: confirmIDAndCall,
 		displayError: displayError,
 		displayAjaxError: displayAjaxError,
+		onConfirmedAction: onConfirmedAction,
 		changeLanguage: function (lang) {
 			if (location.search.indexOf("language") > -1) {
 		      location.search = location.search.replace(/language=[a-z][a-z]/, "language=" + lang);

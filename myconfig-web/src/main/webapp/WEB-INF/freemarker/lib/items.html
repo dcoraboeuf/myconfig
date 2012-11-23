@@ -106,7 +106,7 @@
 	<#assign itemField = item[formField] />
 	<#assign itemPromptField = item[promptField] />
 	<#assign itemPrompt = loc (promptKey, itemPromptField) />
-	<form class="item-action item-action-delete" action="${action}" method="post" onsubmit="return myconfig.displayConfirmationID ('item-action-delete-${itemField}-prompt');">
+	<form class="item-action item-action-delete" action="${action}" method="post" onsubmit="return myconfig.onConfirmedAction(this,'item-action-delete-${itemField?html}-prompt');">
 		<input id="item-action-delete-${itemField}-prompt" type="hidden" value="${itemPrompt?html}" />
 		<input type="hidden" name="${formField}" value="${itemField?html}" />
 		<input class="item-action item-action-delete" type="image" src="static/images/delete.png" />
