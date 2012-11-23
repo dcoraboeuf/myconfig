@@ -10,7 +10,16 @@ var myconfig = function () {
 	}
 	
 	function displayError (text) {
-		alert(text);
+		$('<div>{0}</div>'.format(text)).dialog({
+			title: loc('general.error.title'),
+			dialogClass: 'error-dialog',
+			modal: true,
+            buttons: {
+                Ok: function() {
+                    $( this ).dialog( "close" );
+                }
+            }
+		});
 	}
 	
 	function displayAjaxError (message, jqXHR, textStatus, errorThrown) {
