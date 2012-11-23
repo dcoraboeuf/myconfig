@@ -11,8 +11,11 @@ var Settings = function () {
 				&& myconfig.validateTextAsName ('#userEmail')
 				&& myconfig.validateTextAsName ('#userPassword');
 		},
-		confirmClearAll: function() {
-			return myconfig.displayConfirmation(loc('settings.audit.clearAll.prompt'));
+		confirmClearAll: function(form) {
+			myconfig.confirmAndCall(loc('settings.audit.clearAll.prompt'), function () {
+				form.submit();
+			});
+			return false;
 		}
 	};
 	

@@ -144,7 +144,7 @@
 				<input id="settings.audit.retentionDays" name="retentionDays" type="number" min="1" value="${auditSettings.retentionDays}" max="10000" />
 				<input type="submit" value="<@lh key='general.submit' />" />
 			</form>
-			<form action="gui/settings/audit/clearAll" method="GET" onsubmit="return Settings.confirmClearAll();">
+			<form action="gui/settings/audit/clearAll" method="GET" onsubmit="return Settings.confirmClearAll(this);">
 				<input type="submit" value="<@lh key='settings.audit.clearAll' />" />
 			</form>
 		</@panel>
