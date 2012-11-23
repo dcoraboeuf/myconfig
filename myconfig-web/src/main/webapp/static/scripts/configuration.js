@@ -150,9 +150,9 @@ var configuration = function () {
 	}
 	
 	function resetConfigurationChanges () {
-		if (myconfig.displayConfirmation(loc('configuration.changes.reset.prompt'))) {
+		myconfig.confirmAndCall(loc('configuration.changes.reset.prompt'), function () {
 			location.reload();
-		}
+		});
 	}
 	
 	return {
