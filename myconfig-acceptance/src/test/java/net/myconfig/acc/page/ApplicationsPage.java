@@ -40,7 +40,7 @@ public class ApplicationsPage extends Page {
 		deleteButton.click();
 		
 		// Alert management
-		closeAlert ("Application-Delete-Alert", "[M-001-C] Do you want to delete the \"%s\" application and all its associated configuration?", name);
+		confirmDialog("Application-Delete-Alert", "Ok", "[M-001-C] Do you want to delete the \"%s\" application and all its associated configuration?", name);
 		
 		// Checks the application is not there any longer
 		checkForApplicationNotPresent(name);

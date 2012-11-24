@@ -1,6 +1,7 @@
 package net.myconfig.acc.page;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -9,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -48,14 +48,6 @@ public abstract class Page {
 		}
 	}
 
-	public void takeScreenshot(Alert alert, String name) {
-		// try {
-		// takeScreenshot((TakesScreenshot) alert, name);
-		// } catch (Exception ex) {
-		// ex.printStackTrace();
-		// }
-	}
-
 	protected void takeScreenshot(TakesScreenshot takeScreenshot, String name) {
 		File file = takeScreenshot.getScreenshotAs(OutputType.FILE);
 		// Target file name
@@ -71,19 +63,25 @@ public abstract class Page {
 		String text = String.format(textPattern, textParameters);
 		// Error element
 		WebElement error = driver.findElement(By.className(className));
-		assertEquals(StringUtils.trim(text), StringUtils.trim(error.getText()));
+		assertText(text, error.getText());
 	}
 
-	public void closeAlert(String screenshotName, String alertTextPattern, Object... alertTextParameters) {
+	protected void assertText(String expectedText, String actualText) {
+		assertEquals(StringUtils.trim(expectedText), StringUtils.trim(actualText));
+	}
+
+	public void confirmDialog(String screenshotName, String button, String alertTextPattern, Object... alertTextParameters) {
 		String alertText = String.format(alertTextPattern, alertTextParameters);
-		// Waits for the confirmation
-		Alert alert = driver.switchTo().alert();
-		// Confirms the text
-		assertEquals(alertText, alert.getText());
+		// Dialog
+		WebElement dialog = driver.findElement(By.cssSelector("div.ui-dialog.confirm-dialog"));
+		assertNotNull(dialog);
+		// Gets the text
+		WebElement dialogText = dialog.findElement(By.cssSelector("div.ui-dialog-content"));
+		assertEquals (alertText, dialogText.getText());
 		// Screenshot
-		takeScreenshot(alert, screenshotName);
-		// OK
-		alert.accept();
+		takeScreenshot(screenshotName);
+		// Clicks on the button
+		dialog.findElement(By.cssSelector("div.ui-dialog-buttonset")).findElement(byElement("span", "ui-button-text", button)).click();
 	}
 
 	public Collection<String> getLanguages() {
