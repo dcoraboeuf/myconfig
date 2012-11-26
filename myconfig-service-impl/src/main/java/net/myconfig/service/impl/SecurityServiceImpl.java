@@ -1,5 +1,6 @@
 package net.myconfig.service.impl;
 
+import static net.myconfig.service.api.security.SecurityUtils.digest;
 import static net.myconfig.service.db.SQL.USER_SUMMARIES;
 import static net.myconfig.service.db.SQLColumns.ADMIN;
 import static net.myconfig.service.db.SQLColumns.DISABLED;
@@ -73,7 +74,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 @Service
-public class SecurityServiceImpl extends AbstractSecurityService implements SecurityService {
+public class SecurityServiceImpl extends AbstractDaoService implements SecurityService {
 
 	private final Logger logger = LoggerFactory.getLogger(SecurityService.class);
 

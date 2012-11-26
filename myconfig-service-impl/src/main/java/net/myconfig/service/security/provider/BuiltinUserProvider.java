@@ -1,4 +1,4 @@
-package net.myconfig.service.impl;
+package net.myconfig.service.security.provider;
 
 import static net.myconfig.service.db.SQLColumns.ADMIN;
 import static net.myconfig.service.db.SQLColumns.DISABLED;
@@ -15,25 +15,28 @@ import java.util.List;
 import javax.sql.DataSource;
 import javax.validation.Validator;
 
+import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.db.SQL;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.security.core.token.Sha512DigestUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-public abstract class AbstractSecurityService extends AbstractDaoService {
+@Component
+public class BuiltinUserProvider extends AbstractUserProvider {
 
-	protected static String digest(String input) {
-		return Sha512DigestUtils.shaHex(input);
+	@Autowired
+	public BuiltinUserProvider(DataSource dataSource, Validator validator) {
+		super(dataSource, validator, "builtin");
 	}
 
-	public AbstractSecurityService(DataSource dataSource, Validator validator) {
-		super(dataSource, validator);
-	}
-
-	protected User getUser(String username, String password) {
-		final String digest = digest(password);
+	@Override
+	@Transactional(readOnly = true)
+	public User getUser(String username, String password) {
+		final String digest = SecurityUtils.digest(password);
 		List<User> users = getNamedParameterJdbcTemplate().query(SQL.USER, new MapSqlParameterSource().addValue(NAME, username).addValue(PASSWORD, digest), new RowMapper<User>() {
 			@Override
 			public User mapRow(ResultSet rs, int row) throws SQLException {

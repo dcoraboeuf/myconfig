@@ -17,6 +17,7 @@ import net.myconfig.core.AppFunction;
 import net.myconfig.core.UserFunction;
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.GrantService;
+import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
 import net.myconfig.test.AbstractIntegrationTest;
 
@@ -78,7 +79,7 @@ public class AuthenticationServiceTest extends AbstractIntegrationTest {
 
 	@Test
 	public void disabled_user() throws DataSetException, SQLException {
-		assertRecordExists("select * from users where name = 'disableduser' and password = '%s'", AbstractSecurityService.digest("test"));
+		assertRecordExists("select * from users where name = 'disableduser' and password = '%s'", SecurityUtils.digest("test"));
 		User user = service.getUserToken("disableduser", "test");
 		assertNull(user);
 	}
