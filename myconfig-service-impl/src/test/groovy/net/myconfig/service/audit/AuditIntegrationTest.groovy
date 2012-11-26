@@ -213,14 +213,14 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		// Creates a user as admin
 		String user = createUser()
 		// Asks for reset
-		securityService.userReset(user)
+		userManager.userReset(user)
 		// Gets the latest message for this user
 		Message message = post.getMessage (userEmail (user))
 		assert message != null
 		String token = message.getContent().getToken()
 		// Asks for reset
 		anonymous()
-		securityService.userReset(user, token, "newPassword")
+		userManager.userReset(user, token, "newPassword")
 		// Checks for audit
 		assertRecordExists("""select id from events where security = 'builtin' and user = '-'
 				and category = 'USER' and action = 'UPDATE'
@@ -234,13 +234,13 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		// Verifies this user & logs
 		verifyAndLog(user, "oldpassword")
 		// Requests for password change
-		securityService.userChangePassword()
+		userManager.userChangePassword()
 		// Gets the latest message for this user
 		Message message = post.getMessage (userEmail (user))
 		assert message != null
 		String token = message.getContent().getToken()
 		// Changes the password
-		securityService.userChangePassword(user, token, "oldpassword", "newpassword")
+		userManager.userChangePassword(user, token, "oldpassword", "newpassword")
 		// Checks for audit
 		assertRecordExists("""select id from events where security = 'builtin' and user = '${user}'
 				and category = 'USER' and action = 'UPDATE'
@@ -267,13 +267,13 @@ class AuditIntegrationTest extends AbstractSecurityTest {
 		verify(user, "oldpassword")
 		// Use forgotten
 		anonymous()
-		securityService.userForgotten(userEmail(user))
+		userManager.userForgotten(userEmail(user))
 		// Gets the latest message for this user
 		Message message = post.getMessage (userEmail (user))
 		assert message != null
 		String token = message.getContent().getToken()
 		// Asks for reset
-		securityService.userForgottenSet(user, token, "newpassword")
+		userManager.userForgottenSet(user, token, "newpassword")
 		// Checks for audit
 		assertRecordExists("""select id from events where security = 'builtin' and user = '-'
 				and category = 'USER' and action = 'UPDATE'

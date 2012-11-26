@@ -4,4 +4,6 @@ public interface UserProviderFactory {
 
 	UserProvider getProvider(String mode);
 
+	UserProvider getRequiredProvider(String mode);
+
 }

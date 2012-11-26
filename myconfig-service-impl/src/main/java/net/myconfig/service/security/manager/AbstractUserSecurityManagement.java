@@ -21,8 +21,7 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 
 	@Override
 	public String getCurrentUserName() {
-		User profile = getCurrentProfile();
-		return profile != null ? profile.getName() : null;
+		return SecurityUtils.getCurrentUserName();
 	}
 
 	@Override
@@ -51,17 +50,7 @@ public abstract class AbstractUserSecurityManagement extends AbstractSecurityMan
 
 	@Override
 	public User getCurrentProfile() {
-		Authentication authentication = SecurityUtils.authentication();
-		if (authentication != null) {
-			Object details = authentication.getDetails();
-			if (details instanceof User) {
-				return (User) details;
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
+		return SecurityUtils.getCurrentUser();
 	}
 
 	@Override

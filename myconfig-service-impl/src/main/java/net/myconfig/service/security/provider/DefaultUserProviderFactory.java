@@ -3,6 +3,8 @@ package net.myconfig.service.security.provider;
 import java.util.Collection;
 import java.util.Map;
 
+import net.myconfig.service.exception.UserProviderModeNotDefinedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +29,16 @@ public class DefaultUserProviderFactory implements UserProviderFactory {
 	@Override
 	public UserProvider getProvider(String mode) {
 		return userProviders.get(mode);
+	}
+	
+	@Override
+	public UserProvider getRequiredProvider(String mode) {
+		UserProvider p = getProvider(mode);
+		if (p != null) {
+			return p;
+		} else {
+			throw new UserProviderModeNotDefinedException(mode);
+		}
 	}
 
 }

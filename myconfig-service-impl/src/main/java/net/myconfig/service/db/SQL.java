@@ -195,7 +195,6 @@ public interface SQL {
 	String USER = "select * from users where name = :name and password = :password and verified = true and disabled = false";
 	String USER_SUMMARIES = "select name, displayname, email, admin, verified, disabled from users order by admin desc, name asc";
 	String USER_COUNT = "select count(*) from users";
-	String USER_CREATE = "insert into users (name, displayname, password, admin, email, verified, disabled) values (:name, :displayName, '', false, :email, false, false)";
 	String USER_INIT = "insert into users (name, displayname, mode, password, admin, email, verified, disabled) values (" +
 			"'admin', 'Administrator', 'builtin', " +
 			"'c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec'," +

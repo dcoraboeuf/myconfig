@@ -32,4 +32,23 @@ public final class SecurityUtils {
 		}
 	}
 
+	public static User getCurrentUser() {
+		Authentication authentication = authentication();
+		if (authentication != null) {
+			Object details = authentication.getDetails();
+			if (details instanceof User) {
+				return (User) details;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	public static String getCurrentUserName() {
+		User user = getCurrentUser();
+		return user != null ? user.getName() : null;
+	}
+
 }

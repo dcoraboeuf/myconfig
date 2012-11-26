@@ -18,6 +18,7 @@ import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.message.TestPost;
 import net.myconfig.service.security.UserAuthentication;
+import net.myconfig.service.security.provider.UserManager;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.junit.Before;
@@ -69,6 +70,9 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 
 	@Autowired
 	protected SecurityService securityService;
+	
+	@Autowired
+	protected UserManager userManager;
 
 	@Autowired
 	protected SecuritySelector securitySelector;
@@ -153,7 +157,7 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 	protected String createUser() throws SQLException {
 		asAdmin();
 		String user = userName();
-		securityService.userCreate(user, "User", userEmail(user));
+		securityService.userCreate("builtin", user, "User", userEmail(user));
 		return user;
 	}
 
@@ -182,6 +186,6 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		String token = message.getContent().getToken();
 		// Verification
 		anonymous();
-		securityService.userConfirm(name, token, password);
+		userManager.userConfirm(name, token, password);
 	}
 }
