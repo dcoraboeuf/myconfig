@@ -84,7 +84,7 @@ public class SettingsPage extends AbstractGUIPage {
 		// Saves the security mode
 		ui.setSecurityMode(mode);
 		// OK
-		return "redirect:/";
+		return "redirect:/gui/settings";
 	}
 
 	@RequestMapping(value = "/gui/settings/app", method = RequestMethod.POST)

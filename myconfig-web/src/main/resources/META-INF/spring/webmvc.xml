@@ -47,6 +47,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 				<entry key="chk_user_fn" value-ref="fnSecChkUserFn" />
 				<entry key="chk_app_fn" value-ref="fnSecChkAppFn" />
 				<entry key="chk_env_fn" value-ref="fnSecChkEnvFn" />
+				<entry key="secMode" value-ref="fnSecMode" />
 				<entry key="secAllowLogin" value-ref="fnSecAllowLogin" />
 				<entry key="secLogged" value-ref="fnSecLogged" />
 				<entry key="secUserName" value-ref="fnSecUserName" />
@@ -63,6 +64,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	<bean id="fnSecChkUserFn" class="net.myconfig.web.support.fm.security.FnSecChkUserFn" />
 	<bean id="fnSecChkAppFn" class="net.myconfig.web.support.fm.security.FnSecChkAppFn" />
 	<bean id="fnSecChkEnvFn" class="net.myconfig.web.support.fm.security.FnSecChkEnvFn" />
+	<bean id="fnSecMode" class="net.myconfig.web.support.fm.security.FnSecMode" />
 	<bean id="fnSecAllowLogin" class="net.myconfig.web.support.fm.security.FnSecAllowLogin" />
 	<bean id="fnSecLogged" class="net.myconfig.web.support.fm.security.FnSecLogged" />
 	<bean id="fnSecUserName" class="net.myconfig.web.support.fm.security.FnSecUserName" />

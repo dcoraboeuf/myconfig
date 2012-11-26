@@ -8,7 +8,7 @@
 		</p>
 	</#if>
 	
-	<#if secLogged()>
+	<#if secAllowLogin() && secLogged()>
 		<@panel title = "settings.user">
 		
 			<@form title = "settings.user.password">
@@ -71,18 +71,12 @@
 						</#list>
 					</select>
 					<input type="submit" value="<@lh key='settings.security.mode.submit'/>" />
+					<span class="info"><@lh key="settings.security.mode.submit.info" /></span>
 				</form>
 			</@sec_chk_user_fn>
-			<@sec_chk_user_fn fn="security_users">
-				<p id="builtin-settings">
-					<p>
-						<a href="gui/users"><@lh key="settings.security.builtin.users" /></a>
-					</p>
-					<p class="info">
-						<@lh key="settings.security.builtin.users.warning" />
-					</p>
-				</p>
-			</@sec_chk_user_fn>
+			<!-- Security options -->
+			<#assign mode = secMode() />
+			<#include "/settings_security_" + mode + ".html">
 		</@panel>
 	</#if>
 
