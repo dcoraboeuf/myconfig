@@ -56,7 +56,7 @@ class ITRestSecurity extends AbstractClientUseCase {
 		def userName = uid ("user")
 		def userDisplayName = uid ("user")
 		def userEmail = uid ("user") + "@test.com"
-		def ack = client().userCreate(userName, userDisplayName, userEmail)
+		def ack = client().userCreate("builtin", userName, userDisplayName, userEmail)
 		assert ack.isSuccess()
 		// Tries to log - we do not have any password yet
 		try {
@@ -111,7 +111,7 @@ class ITRestSecurity extends AbstractClientUseCase {
 		def userName = uid ("user")
 		def userDisplayName = uid ("user")
 		def userEmail = uid ("user") + "@test.com"
-		def ack = client().userCreate(userName, userDisplayName, userEmail)
+		def ack = client().userCreate("builtin", userName, userDisplayName, userEmail)
 		assert ack.isSuccess()
 		// Gets the token message for this user (integration test message box)
 		def message = itClient.getMessage (userEmail)

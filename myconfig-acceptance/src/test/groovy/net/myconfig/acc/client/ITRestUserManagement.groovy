@@ -21,7 +21,7 @@ class ITRestUserManagement extends AbstractClientUseCase {
 		def user = client().users().getSummaries().find { it.getName() == userName }
 		assert user == null
 		// Creates the user
-		def ack = client().userCreate(userName, userDisplayName, userEmail)
+		def ack = client().userCreate("builtin", userName, userDisplayName, userEmail)
 		assert ack.isSuccess()
 		// Checks the user has been created
 		user = client().users().getSummaries().find { it.getName() == userName }
@@ -41,7 +41,7 @@ class ITRestUserManagement extends AbstractClientUseCase {
 		def user = client().users().getSummaries().find { it.getName() == userName }
 		assert user == null
 		// Creates the user
-		def ack = client().userCreate(userName, userDisplayName, userEmail)
+		def ack = client().userCreate("builtin", userName, userDisplayName, userEmail)
 		assert ack.isSuccess()
 		// Checks the user has been created
 		user = client().users().getSummaries().find { it.getName() == userName }
