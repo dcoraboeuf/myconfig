@@ -3,6 +3,8 @@ package net.myconfig.service.security.provider;
 import java.util.Collection;
 import java.util.Map;
 
+import net.myconfig.service.api.security.UserProvider;
+import net.myconfig.service.api.security.UserProviderFactory;
 import net.myconfig.service.exception.UserProviderModeNotDefinedException;
 
 import org.springframework.beans.factory.annotation.Autowired;

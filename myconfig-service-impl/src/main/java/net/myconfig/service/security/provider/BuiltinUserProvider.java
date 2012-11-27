@@ -35,6 +35,7 @@ import net.myconfig.service.api.message.MessageService;
 import net.myconfig.service.api.security.SecurityUtils;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
+import net.myconfig.service.api.security.UserManager;
 import net.myconfig.service.api.template.TemplateModel;
 import net.myconfig.service.api.template.TemplateService;
 import net.myconfig.service.audit.Audit;

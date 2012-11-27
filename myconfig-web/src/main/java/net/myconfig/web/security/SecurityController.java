@@ -9,6 +9,7 @@ import net.myconfig.core.UserFunction;
 import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.UserManager;
 import net.myconfig.service.exception.AbstractTokenException;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
@@ -31,11 +32,13 @@ import org.springframework.web.servlet.ModelAndView;
 public class SecurityController extends AbstractGUIPage {
 
 	private final SecurityService securityService;
+	private final UserManager userManager;
 
 	@Autowired
-	public SecurityController(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService) {
+	public SecurityController(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, UserManager userManager) {
 		super(ui, errorHandler);
 		this.securityService = securityService;
+		this.userManager = userManager;
 	}
 
 	@RequestMapping("/login")
@@ -77,9 +80,9 @@ public class SecurityController extends AbstractGUIPage {
 	}
 
 	@RequestMapping(value = "/gui/user/create", method = RequestMethod.POST)
-	public String userCreate(@RequestParam String name, @RequestParam String displayName, @RequestParam String email) {
+	public String userCreate(@RequestParam String mode, @RequestParam String name, @RequestParam String displayName, @RequestParam String email) {
 		// Creation
-		ui.userCreate(name, displayName, email);
+		ui.userCreate(mode, name, displayName, email);
 		// OK
 		return "redirect:/gui/users";
 	}
@@ -95,7 +98,7 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/confirm/{name}/{token}", method = RequestMethod.GET)
 	public String userConfirmForm(@PathVariable String name, @PathVariable String token, Model model) {
 		// Confirms the token
-		securityService.checkUserConfirm(name, token);
+		userManager.checkUserConfirm(name, token);
 		// Fills the model
 		model.addAttribute("name", name).addAttribute("token", token);
 		// OK
@@ -105,7 +108,7 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/forgotten/{name}/{token}", method = RequestMethod.GET)
 	public String userForgottenForm(@PathVariable String name, @PathVariable String token, Model model) {
 		// Confirms the token
-		securityService.checkUserForgotten(name, token);
+		userManager.checkUserForgotten(name, token);
 		// Fills the model
 		model.addAttribute("name", name).addAttribute("token", token);
 		// OK
@@ -115,7 +118,7 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/forgotten/set", method = RequestMethod.POST)
 	public String userForgottenFormSet(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
 		try {
-			securityService.userForgottenSet(name, token, password);
+			userManager.userForgottenSet(name, token, password);
 			model.addAttribute("name", name);
 			return "userForgottenFormOK";
 		} catch (AbstractTokenException ex) {
@@ -138,7 +141,7 @@ public class SecurityController extends AbstractGUIPage {
 
 	@RequestMapping(value = "/gui/user/password", method = RequestMethod.GET)
 	public String userChangePasswordLink() {
-		securityService.userChangePassword();
+		userManager.userChangePassword();
 		// OK
 		return "userChangePasswordRequestOK";
 	}
@@ -146,7 +149,7 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/password/{name}/{token}", method = RequestMethod.GET)
 	public String userChangePasswordForm(@PathVariable String name, @PathVariable String token, Model model) {
 		// Confirms the token
-		securityService.checkUserChangePassword(name, token);
+		userManager.checkUserChangePassword(name, token);
 		// Fills the model
 		model.addAttribute("name", name).addAttribute("token", token);
 		// OK
@@ -156,7 +159,7 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/password", method = RequestMethod.POST)
 	public String userChangePassword(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String oldPassword, @RequestParam String newPassword, Model model) {
 		try {
-			securityService.userChangePassword(name, token, oldPassword, newPassword);
+			userManager.userChangePassword(name, token, oldPassword, newPassword);
 			model.addAttribute("name", name);
 			return "userChangePasswordOK";
 		} catch (InputException ex) {
@@ -175,7 +178,7 @@ public class SecurityController extends AbstractGUIPage {
 		// e-mail
 		model.addAttribute("email", email);
 		// Asks for reset
-		Ack ack = securityService.userForgotten(email);
+		Ack ack = userManager.userForgotten(email);
 		// OK
 		if (ack.isSuccess()) {
 			return "userForgottenOK";
@@ -187,14 +190,14 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/{name}/reset", method = RequestMethod.POST)
 	public String userReset(@PathVariable String name) {
 		Validate.notBlank(name);
-		securityService.userReset(name);
+		userManager.userReset(name);
 		return "redirect:/gui/users";
 	}
 
 	@RequestMapping(value = "/gui/user/reset/{name}/{token}", method = RequestMethod.GET)
 	public String userResetForm(@PathVariable String name, @PathVariable String token, Model model) {
 		// Confirms the token
-		securityService.checkUserReset(name, token);
+		userManager.checkUserReset(name, token);
 		// Fills the model
 		model.addAttribute("name", name).addAttribute("token", token);
 		// OK
@@ -204,7 +207,7 @@ public class SecurityController extends AbstractGUIPage {
 	@RequestMapping(value = "/gui/user/reset", method = RequestMethod.POST)
 	public String userResetFormSet(Locale locale, @RequestParam String name, @RequestParam String token, @RequestParam String password, Model model) {
 		try {
-			securityService.userReset(name, token, password);
+			userManager.userReset(name, token, password);
 			model.addAttribute("name", name);
 			return "userResetFormOK";
 		} catch (AbstractTokenException ex) {

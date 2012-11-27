@@ -1,4 +1,4 @@
-package net.myconfig.service.security.provider;
+package net.myconfig.service.api.security;
 
 import net.myconfig.core.model.Ack;
 

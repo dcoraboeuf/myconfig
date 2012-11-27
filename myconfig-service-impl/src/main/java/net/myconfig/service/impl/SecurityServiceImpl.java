@@ -38,13 +38,13 @@ import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
 import net.myconfig.service.api.security.UserGrant;
+import net.myconfig.service.api.security.UserProvider;
+import net.myconfig.service.api.security.UserProviderFactory;
 import net.myconfig.service.audit.Audit;
 import net.myconfig.service.cache.CacheNames;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
 import net.myconfig.service.security.SecurityManagementNotFoundException;
-import net.myconfig.service.security.provider.UserProvider;
-import net.myconfig.service.security.provider.UserProviderFactory;
 import net.myconfig.service.validation.UserValidation;
 
 import org.apache.commons.lang3.StringUtils;

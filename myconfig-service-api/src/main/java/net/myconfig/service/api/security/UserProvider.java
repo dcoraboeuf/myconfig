@@ -1,7 +1,6 @@
-package net.myconfig.service.security.provider;
+package net.myconfig.service.api.security;
 
 import net.myconfig.core.model.Ack;
-import net.myconfig.service.api.security.User;
 
 public interface UserProvider {
 	

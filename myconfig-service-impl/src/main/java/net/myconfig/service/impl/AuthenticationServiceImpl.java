@@ -5,10 +5,10 @@ import javax.validation.Validator;
 
 import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.User;
+import net.myconfig.service.api.security.UserProvider;
+import net.myconfig.service.api.security.UserProviderFactory;
 import net.myconfig.service.db.SQL;
 import net.myconfig.service.db.SQLColumns;
-import net.myconfig.service.security.provider.UserProvider;
-import net.myconfig.service.security.provider.UserProviderFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

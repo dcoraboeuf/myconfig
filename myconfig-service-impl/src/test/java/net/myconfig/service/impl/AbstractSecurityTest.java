@@ -16,9 +16,9 @@ import net.myconfig.service.api.security.AuthenticationService;
 import net.myconfig.service.api.security.SecuritySelector;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.User;
+import net.myconfig.service.api.security.UserManager;
 import net.myconfig.service.message.TestPost;
 import net.myconfig.service.security.UserAuthentication;
-import net.myconfig.service.security.provider.UserManager;
 import net.myconfig.test.AbstractIntegrationTest;
 
 import org.junit.Before;

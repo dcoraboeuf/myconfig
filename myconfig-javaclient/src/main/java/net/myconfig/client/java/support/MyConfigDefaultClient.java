@@ -219,13 +219,13 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 	}
 
 	/**
-	 * <p>POST /ui/user/{name:.*}
+	 * <p>POST /ui/user/{mode}/{name:.*}
 	 * <p>param: displayName
 	 * <p>param: email
 	 */
 	@Override
-	public Ack userCreate(String name, String displayName, String email) {
-		return post (format("/ui/user/%s", name), Ack.class, MapBuilder.<String,String>create().put("displayName", displayName).put("email", email).build());
+	public Ack userCreate(String mode, String name, String displayName, String email) {
+		return post (format("/ui/user/%s/%s", mode, name), Ack.class, MapBuilder.<String,String>create().put("displayName", displayName).put("email", email).build());
 	}
 
 	/**

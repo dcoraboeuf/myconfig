@@ -64,7 +64,7 @@ public interface MyConfigInterface {
 
 	UserSummaries users();
 
-	Ack userCreate(String name, String displayName, String email);
+	Ack userCreate(String mode, String name, String displayName, String email);
 
 	Ack userDelete(String name);
 

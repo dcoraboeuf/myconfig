@@ -29,6 +29,7 @@ import net.myconfig.core.model.VersionConfiguration;
 import net.myconfig.core.model.VersionSummary;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.UserManager;
 import net.myconfig.web.support.ErrorHandler;
 import net.myconfig.web.test.support.ApplicationSummaryBuilder;
 import net.sf.jstring.Strings;
@@ -48,6 +49,7 @@ public class UIControllerTest {
 	private UIController ui;
 	private MyConfigService service;
 	private SecurityService security;
+	private UserManager userManager;
 
 	@Before
 	public void before() {
@@ -59,8 +61,9 @@ public class UIControllerTest {
 		// Service(s)
 		service = mock(MyConfigService.class);
 		security = mock(SecurityService.class);
+		userManager = mock(UserManager.class);
 		// OK
-		ui = new UIController(strings, errorHandler, service, security);
+		ui = new UIController(strings, errorHandler, service, security, userManager);
 	}
 
 	@Test

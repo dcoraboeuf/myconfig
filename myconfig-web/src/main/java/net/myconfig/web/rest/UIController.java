@@ -25,6 +25,7 @@ import net.myconfig.core.type.ConfigurationValueValidationResult;
 import net.myconfig.core.type.ValueTypeDescriptions;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.service.api.security.SecurityService;
+import net.myconfig.service.api.security.UserManager;
 import net.myconfig.web.support.ErrorHandler;
 import net.sf.jstring.Localizable;
 import net.sf.jstring.Strings;
@@ -46,11 +47,13 @@ import com.google.common.collect.Lists;
 public class UIController extends AbstractRESTController implements UIInterface {
 
 	private final SecurityService securityService;
+	private final UserManager userManager;
 
 	@Autowired
-	public UIController(Strings strings, ErrorHandler errorHandler, MyConfigService myConfigService, SecurityService securityService) {
+	public UIController(Strings strings, ErrorHandler errorHandler, MyConfigService myConfigService, SecurityService securityService, UserManager userManager) {
 		super(strings, errorHandler, myConfigService);
 		this.securityService = securityService;
+		this.userManager = userManager;
 	}
 	
 	/**
@@ -188,9 +191,9 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	}
 	
 	@Override
-	@RequestMapping(value = "/user/{name:.*}", method = RequestMethod.POST)
-	public @ResponseBody Ack userCreate(@PathVariable String name, @RequestParam String displayName, @RequestParam String email) {
-		return securityService.userCreate(name, displayName, email);
+	@RequestMapping(value = "/user/{mode}/{name:.*}", method = RequestMethod.POST)
+	public @ResponseBody Ack userCreate(@PathVariable String mode, @PathVariable String name, @RequestParam String displayName, @RequestParam String email) {
+		return securityService.userCreate(mode, name, displayName, email);
 	}
 	
 	@Override
@@ -233,7 +236,7 @@ public class UIController extends AbstractRESTController implements UIInterface 
 	@Override
 	@RequestMapping(value = "/user/{name}/confirm/{token}", method = RequestMethod.POST)
 	public @ResponseBody Ack userConfirm(@PathVariable String name, @PathVariable String token, @RequestParam String password) {
-		securityService.userConfirm(name, token, password);
+		userManager.userConfirm(name, token, password);
 		return Ack.OK;
 	}
 	
