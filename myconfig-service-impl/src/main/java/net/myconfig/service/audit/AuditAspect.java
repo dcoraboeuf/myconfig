@@ -47,10 +47,10 @@ public class AuditAspect {
 	}
 
 	/**
-	 * Any method in <code>net.myconfig.service.impl</code> package annotated
+	 * Any method in <code>net.myconfig.service</code> packages annotated
 	 * with the {@link Audit} annotation.
 	 */
-	@Pointcut("execution(@net.myconfig.service.audit.Audit * net.myconfig.service.impl.*.*(..))")
+	@Pointcut("execution(@net.myconfig.service.audit.Audit * net.myconfig.service..*.*(..))")
 	public void auditedMethod() {
 	}
 
