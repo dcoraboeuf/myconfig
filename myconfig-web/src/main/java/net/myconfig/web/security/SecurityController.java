@@ -10,6 +10,8 @@ import net.myconfig.core.model.Ack;
 import net.myconfig.core.model.UserSummaries;
 import net.myconfig.service.api.security.SecurityService;
 import net.myconfig.service.api.security.UserManager;
+import net.myconfig.service.api.security.UserProvider;
+import net.myconfig.service.api.security.UserProviderFactory;
 import net.myconfig.service.exception.AbstractTokenException;
 import net.myconfig.web.gui.AbstractGUIPage;
 import net.myconfig.web.rest.UIInterface;
@@ -33,12 +35,14 @@ public class SecurityController extends AbstractGUIPage {
 
 	private final SecurityService securityService;
 	private final UserManager userManager;
+	private final UserProviderFactory userProviderFactory;
 
 	@Autowired
-	public SecurityController(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, UserManager userManager) {
+	public SecurityController(UIInterface ui, ErrorHandler errorHandler, SecurityService securityService, UserManager userManager, UserProviderFactory userProviderFactory) {
 		super(ui, errorHandler);
 		this.securityService = securityService;
 		this.userManager = userManager;
+		this.userProviderFactory = userProviderFactory;
 	}
 
 	@RequestMapping("/login")
@@ -72,6 +76,9 @@ public class SecurityController extends AbstractGUIPage {
 		// List of user functions
 		List<UserFunction> userFunctions = Arrays.asList(UserFunction.values());
 		model.addAttribute("userFunctions", userFunctions);
+		// List of providers
+		List<UserProvider> providers = userProviderFactory.getEnabledProviders();
+		model.addAttribute("providers", providers);
 		// List of users
 		UserSummaries users = ui.users();
 		model.addAttribute("users", users.getSummaries());

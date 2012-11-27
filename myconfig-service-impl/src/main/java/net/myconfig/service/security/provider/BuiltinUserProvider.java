@@ -5,8 +5,8 @@ import static net.myconfig.service.db.SQLColumns.ADMIN;
 import static net.myconfig.service.db.SQLColumns.DISABLED;
 import static net.myconfig.service.db.SQLColumns.DISPLAYNAME;
 import static net.myconfig.service.db.SQLColumns.EMAIL;
-import static net.myconfig.service.db.SQLColumns.NAME;
 import static net.myconfig.service.db.SQLColumns.MODE;
+import static net.myconfig.service.db.SQLColumns.NAME;
 import static net.myconfig.service.db.SQLColumns.NEWPASSWORD;
 import static net.myconfig.service.db.SQLColumns.PASSWORD;
 import static net.myconfig.service.db.SQLColumns.USER;
@@ -76,6 +76,16 @@ public class BuiltinUserProvider extends AbstractUserProvider implements UserMan
 		this.templateService = templateService;
 		this.configurationService = configurationService;
 		this.messageService = messageService;
+	}
+	
+	@Override
+	protected boolean isInternalEnabled() {
+		return true;
+	}
+	
+	@Override
+	public boolean isConfigured() {
+		return true;
 	}
 
 	@Override

@@ -5,6 +5,10 @@ import net.myconfig.core.model.Ack;
 public interface UserProvider {
 	
 	String getId();
+	
+	boolean isEnabled();
+	
+	boolean isConfigured();
 
 	User getUser(String username, String password);
 

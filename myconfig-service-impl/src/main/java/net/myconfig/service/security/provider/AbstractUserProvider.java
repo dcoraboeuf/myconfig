@@ -19,5 +19,12 @@ public abstract class AbstractUserProvider extends AbstractDaoService implements
 	public String getId() {
 		return id;
 	}
+	
+	@Override
+	public boolean isEnabled() {
+		return isConfigured() && isInternalEnabled();
+	}
+
+	protected abstract boolean isInternalEnabled();
 
 }

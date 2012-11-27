@@ -19,6 +19,9 @@
 						<@lh key="model.user" />
 					</th>
 					<th>
+						<@lh key="model.user.mode" />
+					</th>
+					<th>
 						<@lh key="model.user.displayName" />
 					</th>
 					<th>
@@ -53,6 +56,9 @@
 							<#else>
 								${user.name?html}
 							</#if>
+						</td>
+						<td class="item-column item-column-displayName">
+							TODO Mode
 						</td>
 						<td class="item-column item-column-displayName">
 							${user.displayName!"-"?html}
@@ -132,6 +138,20 @@
 								</td>
 								<td class="form-input" colspan="2">
 									<input id="user-name" autofocus="autofocus" type="text" name="name" maxlength="80" size="20" />
+								</td>
+							</tr>
+							<tr>
+								<td class="form-label">
+									<label for="user-mode">
+										<@lh key="model.user.mode" />
+									</label>
+								</td>
+								<td class="form-input" colspan="2">
+									<select id="user-mode" name="mode">
+										<#list providers as provider>
+											<@select_option value=provider.id text=provider.id selection="builtin" />
+										</#list>
+									</select>
 								</td>
 							</tr>
 							<tr>
