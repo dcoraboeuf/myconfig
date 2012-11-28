@@ -251,6 +251,8 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 	@Transactional(readOnly = true)
 	@AppGrant(AppFunction.app_view)
 	public ConfigurationDescription getConfigurationDescription(@AppGrantParam String application, String version) {
+		checkApplication(application);
+		checkVersion(application, version);
 		List<Environment> environments = getEnvironments(application);
 		List<Key> keys = getKeys(application, version);
 		return new ConfigurationDescription(environments, keys);
