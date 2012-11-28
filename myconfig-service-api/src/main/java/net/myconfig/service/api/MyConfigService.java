@@ -7,6 +7,7 @@ import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ApplicationUsers;
+import net.myconfig.core.model.ConfigurationDescription;
 import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
@@ -81,5 +82,7 @@ public interface MyConfigService {
 	Ack setEnvironmentUp(String id, String environment);
 
 	Ack setEnvironmentDown(String id, String environment);
+
+	ConfigurationDescription getConfigurationDescription(String application, String version);
 
 }

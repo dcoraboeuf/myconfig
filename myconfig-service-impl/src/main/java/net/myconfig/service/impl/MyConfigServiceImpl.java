@@ -41,6 +41,7 @@ import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ApplicationUserRights;
 import net.myconfig.core.model.ApplicationUsers;
 import net.myconfig.core.model.ConditionalValue;
+import net.myconfig.core.model.ConfigurationDescription;
 import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.core.model.ConfigurationUpdate;
 import net.myconfig.core.model.ConfigurationUpdates;
@@ -244,6 +245,18 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		});
 		// OK
 		return new EnvironmentUsers(id, applicationName, environment, users);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	@AppGrant(AppFunction.app_view)
+	public ConfigurationDescription getConfigurationDescription(@AppGrantParam String application, String version) {
+		checkApplication(application);
+		checkVersion(application, version);
+		List<Environment> environments = getEnvironments(application);
+		environments = filterEnvironments(application, environments);
+		List<Key> keys = getKeys(application, version);
+		return new ConfigurationDescription(environments, keys);
 	}
 	
 	@Override
@@ -605,16 +618,11 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		MapSqlParameterSource versionCriteria = applicationCriteria.addValue(VERSION, version);
 		String name = getApplicationName(application);
 		// List of environments
-		List<Environment> environments = getNamedParameterJdbcTemplate().query(SQL.ENVIRONMENTS, applicationCriteria, new RowMapper<Environment>() {
-			@Override
-			public Environment mapRow(ResultSet rs, int i) throws SQLException {
-				return new Environment(rs.getString(NAME));
-			}
-		});
+		List<Environment> environments = getEnvironments(application);
 		// Filters the list of environments
 		environments = filterEnvironments(application, environments);
 		// List of keys for the version
-		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_VERSION, versionCriteria, new KeyRowMapper());
+		List<Key> keyList = getKeys(application, version);
 		// Gets the list of values per version x application
 		List<Map<String, Object>> valuesMaps = getNamedParameterJdbcTemplate().queryForList(SQL.CONFIG_FOR_VERSION, applicationCriteria);
 		final Map<String,Map<String,String>> environmentValues = new TreeMap<String, Map<String,String>>();
@@ -647,6 +655,21 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		String nextVersion = getFirstItem(SQL.VERSION_NEXT, versionCriteria, String.class);
 		// OK
 		return new VersionConfiguration(application, name, version, previousVersion, nextVersion, keyList, environmentConfigurationList);
+	}
+
+	protected List<Key> getKeys(String application, String version) {
+		List<Key> keyList = getNamedParameterJdbcTemplate().query(SQL.KEYS_FOR_VERSION, new MapSqlParameterSource(APPLICATION, application).addValue(VERSION, version), new KeyRowMapper());
+		return keyList;
+	}
+
+	protected List<Environment> getEnvironments(String application) {
+		List<Environment> environments = getNamedParameterJdbcTemplate().query(SQL.ENVIRONMENTS, new MapSqlParameterSource(APPLICATION, application), new RowMapper<Environment>() {
+			@Override
+			public Environment mapRow(ResultSet rs, int i) throws SQLException {
+				return new Environment(rs.getString(NAME));
+			}
+		});
+		return environments;
 	}
 	
 	@Override

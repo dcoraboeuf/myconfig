@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+import net.myconfig.core.model.ConfigurationDescription;
 import net.myconfig.core.model.ConfigurationSet;
 import net.myconfig.service.api.MyConfigService;
 import net.myconfig.web.renderer.HttpRenderer;
@@ -31,7 +32,10 @@ public class GetController extends AbstractRESTController {
 		this.httpRendererService = httpRendererService;
 	}
 
-	// FIXME Configuration description for app x version
+	@RequestMapping("/configuration/{application}/{version:.*}")
+	public @ResponseBody ConfigurationDescription configuration (@PathVariable String application, @PathVariable String version) {
+		return getMyConfigService().getConfigurationDescription(application, version);
+	}
 
 	@RequestMapping("/key/{application}/{environment}/{version}/{key:.*}")
 	public @ResponseBody

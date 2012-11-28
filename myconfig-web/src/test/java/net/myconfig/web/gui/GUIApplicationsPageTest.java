@@ -55,7 +55,18 @@ public class GUIApplicationsPageTest extends AbstractConfigurationTest {
 		assertEquals ("redirect:/gui/applications", mav.getViewName());
 	}
 	
-	// FIXME ID already exists
+	@Test
+	public void applicationCreate_id_already_exists () throws Exception {
+		String appId = helper.generateId("APP");
+		// ... once
+		applicationCreate(appId, helper.generateName("applicationCreate_id_already_exists_"));
+		// ... twice
+		ModelAndView mav = applicationCreate(appId, helper.generateName("applicationCreate_id_already_exists_"));
+		// Same page with an error message
+		assertNotNull (mav);
+		assertEquals ("applications", mav.getViewName());
+		helper.assertErrorMessage(mav, "error", "[S-014] Application ID \"%s\" is already defined.", appId);
+	}
 	
 	@Test
 	public void applicationCreate_name_already_exists () throws Exception {

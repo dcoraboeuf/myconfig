@@ -29,7 +29,14 @@ public class ITApplications extends AbstractGUIUseCase {
 		applications.checkForApplication(name);
 	}
 	
-	// FIXME Duplicate ID
+	@Test
+	public void createAlreadyExistingApplicationID() throws Exception {
+		String appId = appId();
+		applications.createApplication(appId, appName());
+		// ... a second time
+		applications.createApplication(appId, appName());
+		applications.checkForError("error", "[S-014] Application ID \"%s\" is already defined.", appId);
+	}
 
 	/**
 	 * Given I am on the list of applications And an unique application name

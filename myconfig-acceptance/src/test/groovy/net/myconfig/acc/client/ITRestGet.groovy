@@ -62,6 +62,43 @@ class ITRestGet extends AbstractClientUseCase {
 	}
 	
 	@Test
+	void configuration_noapp() {
+		try {
+			client().configuration("X", "X")
+		} catch (ClientMessageException ex) {
+			def message = ex.getLocalizedMessage(strings(), Locale.ENGLISH)
+			def staticMessage = message[0..-37]
+			assert """[JC-002] An error has occurred.
+Message: [S-004] Cannot find application X
+Reference: """ == staticMessage
+		}
+	}
+	
+	@Test
+	void configuration_noversion() {
+		try {
+			client().configuration(id, "X")
+		} catch (ClientMessageException ex) {
+			def message = ex.getLocalizedMessage(strings(), Locale.ENGLISH)
+			def staticMessage = message[0..-37]
+			assert """[JC-002] An error has occurred.
+Message: [S-005] Cannot find version X for application $id
+Reference: """ == staticMessage
+		}
+	}
+	
+	@Test
+	void configuration() {
+		def conf = client().configuration(id, "1.0")
+		assert conf != null
+		assert ["DEV", "ACC", "UAT", "PROD"] == conf.getEnvironments()*.getName()
+		assert ["jdbc.password", "jdbc.user"] == conf.getKeys()*.getName()
+		assert ["Password used to connect to the database", "User used to connect to the database"] == conf.getKeys()*.getDescription()
+		assert ["plain", "plain"] == conf.getKeys()*.getTypeId()
+		assert [null, null] == conf.getKeys()*.getTypeParam()
+	}
+	
+	@Test
 	void get_key_ok() {
 		def value = client().key(id, "1.2", "UAT", "jdbc.user")
 		assertEquals('1.2 UAT jdbc.user', value)

@@ -14,8 +14,6 @@ import net.myconfig.core.model.Key
 import org.junit.Before
 import org.junit.Test
 
-// FIXME Integration test for the type of a key
-
 class ITRestConfiguration extends AbstractClientUseCase {
 	
 	String id

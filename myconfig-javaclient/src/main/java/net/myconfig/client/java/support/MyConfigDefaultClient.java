@@ -16,6 +16,7 @@ import net.myconfig.core.model.ApplicationConfiguration;
 import net.myconfig.core.model.ApplicationSummaries;
 import net.myconfig.core.model.ApplicationSummary;
 import net.myconfig.core.model.ApplicationUsers;
+import net.myconfig.core.model.ConfigurationDescription;
 import net.myconfig.core.model.ConfigurationUpdates;
 import net.myconfig.core.model.EnvironmentConfiguration;
 import net.myconfig.core.model.EnvironmentUsers;
@@ -366,6 +367,14 @@ public class MyConfigDefaultClient extends AbstractClient implements MyConfigCli
 				version,
 				key
 			), String.class);
+	}
+	
+	/**
+	 * GET /get/configuration/{application}/{version:.*}
+	 */
+	@Override
+	public ConfigurationDescription configuration(String application, String version) {
+		return get(String.format("/get/configuration/%s/%s", application, version), ConfigurationDescription.class);
 	}
 	
 	/**
