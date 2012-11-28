@@ -119,6 +119,33 @@ public class MyConfigServiceSecurityTest extends AbstractSecurityTest {
 		asUser().grant(APP, AppFunction.app_delete);
 		myconfig.deleteApplication("X");
 	}
+	
+	@Test
+	void getConfigurationDescription_admin() {
+		asAdmin()
+		def conf = myconfig.getConfigurationDescription(APP, "1.0")
+		assert ["DEV", "ACC", "UAT", "PROD"] == conf.getEnvironments()*.getName()
+	}
+	
+	@Test(expected = AccessDeniedException.class)
+	void getConfigurationDescription_noview() {
+		asUser()
+		myconfig.getConfigurationDescription(APP, "1.0")
+	}
+	
+	@Test
+	void getConfigurationDescription_noenv() {
+		asUser().grant(APP, AppFunction.app_view)
+		def conf = myconfig.getConfigurationDescription(APP, "1.0")
+		assert [] == conf.getEnvironments()*.getName()
+	}
+	
+	@Test
+	void getConfigurationDescription_someenv() {
+		asUser().grant(APP, AppFunction.app_view).grant(APP, "DEV", EnvFunction.env_view).grant(APP, "ACC", EnvFunction.env_view)
+		def conf = myconfig.getConfigurationDescription(APP, "1.0")
+		assert ["DEV", "ACC"] == conf.getEnvironments()*.getName()
+	}
 
 	@Test
 	public void getApplicationConfiguration_admin() throws SQLException {

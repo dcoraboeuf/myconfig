@@ -254,6 +254,7 @@ public class MyConfigServiceImpl extends AbstractSecureService implements MyConf
 		checkApplication(application);
 		checkVersion(application, version);
 		List<Environment> environments = getEnvironments(application);
+		environments = filterEnvironments(application, environments);
 		List<Key> keys = getKeys(application, version);
 		return new ConfigurationDescription(environments, keys);
 	}
