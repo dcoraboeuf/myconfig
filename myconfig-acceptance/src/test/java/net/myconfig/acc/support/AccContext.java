@@ -13,8 +13,6 @@ public class AccContext {
 	private final Strings strings;
 	
 	public void close() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

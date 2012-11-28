@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 
 import net.myconfig.acc.client.AbstractClientUseCase;
 import net.myconfig.client.java.MyConfigClient;
@@ -14,14 +13,9 @@ import net.myconfig.core.utils.StringsLoader;
 import net.sf.jstring.Strings;
 
 import org.apache.commons.lang.StringUtils;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
 
 public class AccUtils {
 
-	private static final int TIMEOUT = 15;
 	private static final String UID_FORMAT = "yyyyMMddHHmmssSSS";
 
 	public static AccContext createContext() {
@@ -53,26 +47,6 @@ public class AccUtils {
 		} catch (IOException ex) {
 			throw new RuntimeException("Cannot get acceptance test context", ex);
 		}
-	}
-
-	public static WebDriver createDriver() {
-		WebDriver aDriver;
-		String xvfbDisplay = System.getProperty("xvfb.display");
-		if (StringUtils.isNotBlank(xvfbDisplay)) {
-			System.out.println("Setting the Firefox driver on display " + xvfbDisplay);
-			FirefoxBinary firefox = new FirefoxBinary();
-			firefox.setEnvironmentProperty("DISPLAY", xvfbDisplay);
-			FirefoxProfile firefoxProfile = new FirefoxProfile();
-			aDriver = new FirefoxDriver(firefox, firefoxProfile);
-		} else {
-			aDriver = new FirefoxDriver();
-		}
-		aDriver.manage().timeouts().implicitlyWait(TIMEOUT, TimeUnit.SECONDS);
-		return aDriver;
-	}
-
-	public static String generateUniqueName(String prefix) {
-		return prefix + generateUniqueId();
 	}
 
 	public static String generateUniqueId() {
