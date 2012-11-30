@@ -20,6 +20,7 @@ import net.myconfig.service.message.TestPost;
 import net.myconfig.service.security.UserAuthentication;
 import net.myconfig.test.AbstractIntegrationTest;
 
+import org.junit.After;
 import org.junit.Before;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -99,6 +100,14 @@ public abstract class AbstractSecurityTest extends AbstractIntegrationTest {
 		for (String name : names) {
 			cacheManager.getCache(name).clear();
 		}
+		// No context
+		anonymous();
+	}
+	
+	@After
+	public void restoreContext() throws SQLException {
+		asAdmin();
+		securityService.setSecurityMode("none");
 		// No context
 		anonymous();
 	}
