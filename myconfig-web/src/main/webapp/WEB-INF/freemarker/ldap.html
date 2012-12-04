@@ -1,0 +1,13 @@
+<#include "/lib/layout.html">
+
+<@layout_std pageId="ldap">
+
+	<@panel>
+		<#if .data_model["error"]??>
+			<p class="error">
+				${.data_model["error"]?html}
+			</p>
+		</#if>
+	</@panel>
+	
+</@layout_std>

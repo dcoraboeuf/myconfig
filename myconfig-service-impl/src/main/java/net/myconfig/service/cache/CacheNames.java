@@ -22,4 +22,9 @@ public interface CacheNames {
 	 */
 	String ENV_FUNCTION = "envFunction";
 
+	/**
+	 * Configuration for the LDAP, no key
+	 */
+	String LDAP_CONFIGURATION = "ldapConfiguration";
+
 }

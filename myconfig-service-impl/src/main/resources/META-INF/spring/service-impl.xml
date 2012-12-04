@@ -47,6 +47,9 @@ http://www.springframework.org/schema/cache http://www.springframework.org/schem
 				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
 					<property name="name" value="envFunction" />
 				</bean>
+				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+					<property name="name" value="ldapConfiguration" />
+				</bean>				
 			</set>
 		</property>
 	</bean>
