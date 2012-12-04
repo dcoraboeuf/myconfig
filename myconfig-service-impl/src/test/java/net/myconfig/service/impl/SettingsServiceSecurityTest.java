@@ -39,7 +39,7 @@ public class SettingsServiceSecurityTest extends AbstractSecurityTest {
 	
 	@Test(expected = AccessDeniedException.class)
 	public void setAuditRetentionDays_user() throws SQLException {
-		asUser();
+		asUser("setAuditRetentionDays_user");
 		settingsService.setAuditRetentionDays(10);
 	}
 	
