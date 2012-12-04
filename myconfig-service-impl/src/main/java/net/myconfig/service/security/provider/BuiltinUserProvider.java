@@ -59,8 +59,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class BuiltinUserProvider extends AbstractUserProvider implements UserManager {
 
-	private static final String USER_CREATE = "insert into users (mode, name, displayname, password, admin, email, verified, disabled) values (:mode, :name, :displayName, '', false, :email, false, false)";
-
 	private final UIService uiService;
 	private final TokenService tokenService;
 	private final TemplateService templateService;
@@ -113,7 +111,7 @@ public class BuiltinUserProvider extends AbstractUserProvider implements UserMan
 		validate(UserValidation.class, EMAIL, email);
 		try {
 			// Creates the user
-			int count = getNamedParameterJdbcTemplate().update(USER_CREATE, new MapSqlParameterSource(MODE, getId()).addValue(NAME, name).addValue(DISPLAYNAME, displayName).addValue(EMAIL, email));
+			int count = getNamedParameterJdbcTemplate().update(USER_CREATE, new MapSqlParameterSource(MODE, getId()).addValue(NAME, name).addValue(DISPLAYNAME, displayName).addValue(EMAIL, email).addValue(VERIFIED, false));
 			// Its initial state is not verified and a notification must be sent
 			// to the email
 			Message message = createNewUserMessage(name, displayName);
